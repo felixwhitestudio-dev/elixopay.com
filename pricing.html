@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Primary Meta Tags -->
+    <title>ราคา - Elixopay | Payment Gateway ที่คุณจ่ายได้</title>
+    <meta name="title" content="ราคา - Elixopay | Payment Gateway ที่คุณจ่ายได้">
+    <meta name="description" content="แพ็กเกจราคาที่เหมาะกับทุกธุรกิจ เริ่มต้นฟรี ไม่มีค่าธรรมเนียมซ่อนเร้น | จ่ายเท่าที่ใช้">
+    
+    <!-- Security Meta Tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+        }
+        
+        .pricing-card {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .pricing-card:hover {
+            border-color: #635BFF;
+            box-shadow: 0 20px 60px rgba(99, 91, 255, 0.15);
+            transform: translateY(-8px);
+        }
+        
+        .pricing-card.featured {
+            border-color: #635BFF;
+            box-shadow: 0 20px 60px rgba(99, 91, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            border: 2px solid #1a1a1a;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .feature-check {
+            color: #10b981;
+        }
+        
+        .feature-unavailable {
+            color: #d1d5db;
+        }
+        
+        nav {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .mobile-menu {
+            display: none;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .toggle-container {
+            display: inline-flex;
+            background: #f3f4f6;
+            padding: 4px;
+            border-radius: 50px;
+            gap: 4px;
+        }
+        
+        .toggle-option {
+            padding: 8px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .toggle-option.active {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased bg-white text-gray-900">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-12">
+                    <a href="/index.html" class="text-2xl font-bold gradient-text">Elixopay</a>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="/index.html#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
+                        <a href="/index.html#developers" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">นักพัฒนา</a>
+                        <a href="/pricing.html" class="text-gray-900 text-sm font-bold transition border-b-2 border-purple-600">ราคา</a>
+                        <a href="#docs" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
+                        <a href="/partners.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">พาร์ทเนอร์</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
+                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-200 bg-white">
+            <div class="px-6 py-4 space-y-3">
+                <a href="/index.html#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
+                <a href="/index.html#developers" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">นักพัฒนา</a>
+                <a href="/pricing.html" class="block text-gray-900 text-sm font-bold">ราคา</a>
+                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
+                <a href="/partners.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">พาร์ทเนอร์</a>
+                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
+                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 lg:pt-40 lg:pb-20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-5xl lg:text-6xl font-bold leading-tight text-gray-900 mb-6">
+                    ราคาที่<span class="gradient-text">โปร่งใส</span><br/>เริ่มต้นฟรี
+                </h1>
+                <p class="text-xl text-gray-600 leading-relaxed mb-12">
+                    เลือกแพ็กเกจที่เหมาะกับธุรกิจของคุณ ไม่มีค่าธรรมเนียมซ่อนเร้น ไม่มีค่าติดตั้ง<br/>
+                    จ่ายเฉพาะเมื่อมีการทำธุรกรรมเท่านั้น
+                </p>
+                
+                <!-- Billing Toggle -->
+                <div class="flex justify-center mb-16">
+                    <div class="toggle-container">
+                        <div class="toggle-option active" id="monthly-toggle">รายเดือน</div>
+                        <div class="toggle-option" id="yearly-toggle">
+                            รายปี 
+                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-1">ประหยัด 20%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Cards -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                
+                <!-- Free Plan -->
+                <div class="pricing-card bg-white rounded-2xl p-8 text-left">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Free</h3>
+                        <p class="text-gray-600 text-sm">สำหรับทดลองใช้งาน</p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">฿0</span>
+                            <span class="text-gray-600 ml-2">/เดือน</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">2.9% + ฿10 ต่อธุรกรรม</p>
+                    </div>
+                    <a href="#signup" class="btn-secondary w-full text-center block py-3 rounded-full font-semibold mb-6">
+                        เริ่มใช้งานฟรี
+                    </a>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">ธุรกรรมสูงสุด 100 ต่อเดือน</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">API Access พื้นฐาน</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Dashboard พื้นฐาน</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Email Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-unavailable flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-400">Webhook</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-unavailable flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-400">Advanced Analytics</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Startup Plan -->
+                <div class="pricing-card bg-white rounded-2xl p-8 text-left">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Startup</h3>
+                        <p class="text-gray-600 text-sm">สำหรับธุรกิจเริ่มต้น</p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">฿990</span>
+                            <span class="text-gray-600 ml-2">/เดือน</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">2.5% + ฿8 ต่อธุรกรรม</p>
+                    </div>
+                    <a href="#signup" class="btn-secondary w-full text-center block py-3 rounded-full font-semibold mb-6">
+                        เริ่มทดลอง 14 วัน
+                    </a>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">ธุรกรรมไม่จำกัด</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">API Access เต็มรูปแบบ</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Dashboard & Analytics</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Webhook Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Priority Email Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Fraud Detection AI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Plan (Featured) -->
+                <div class="pricing-card featured bg-white rounded-2xl p-8 text-left relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold">
+                            แนะนำ
+                        </span>
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Business</h3>
+                        <p class="text-gray-600 text-sm">สำหรับธุรกิจที่กำลังเติบโต</p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">฿2,990</span>
+                            <span class="text-gray-600 ml-2">/เดือน</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">2.2% + ฿6 ต่อธุรกรรม</p>
+                    </div>
+                    <a href="#signup" class="btn-primary w-full text-center block py-3 rounded-full font-semibold mb-6 text-white">
+                        เริ่มทดลอง 14 วัน
+                    </a>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700"><strong>ทุกอย่างใน Startup</strong></span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Advanced Analytics & Reports</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Multi-currency Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Subscription & Recurring Billing</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Phone & Chat Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Custom Branding</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card bg-white rounded-2xl p-8 text-left">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                        <p class="text-gray-600 text-sm">สำหรับองค์กรขนาดใหญ่</p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">Custom</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">ราคาเจรจาได้</p>
+                    </div>
+                    <a href="#contact" class="btn-secondary w-full text-center block py-3 rounded-full font-semibold mb-6">
+                        ติดต่อฝ่ายขาย
+                    </a>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700"><strong>ทุกอย่างใน Business</strong></span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Dedicated Account Manager</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Custom Integration Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">SLA 99.99% Uptime</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">24/7 Priority Support</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">On-premise Deployment Option</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Comparison Table -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">เปรียบเทียบแพ็กเกจ</h2>
+                <p class="text-lg text-gray-600">ดูรายละเอียดฟีเจอร์ทั้งหมดแต่ละแพ็กเกจ</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">ฟีเจอร์</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Free</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Startup</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold gradient-text">Business</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Enterprise</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">ธุรกรรมต่อเดือน</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">100</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">ไม่จำกัด</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">ไม่จำกัด</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">ไม่จำกัด</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">ค่าธรรมเนียมต่อธุรกรรม</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">2.9% + ฿10</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">2.5% + ฿8</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">2.2% + ฿6</td>
+                                <td class="px-6 py-4 text-sm text-center text-gray-600">เจรจาได้</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">API Access</td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">Webhook</td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">Dashboard & Analytics</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">พื้นฐาน</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">มาตรฐาน</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">ขั้นสูง</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">เต็มรูปแบบ</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">Multi-currency</td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">Subscription Billing</td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">Fraud Detection AI</td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">Custom Branding</td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">Dedicated Account Manager</td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
+                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">SLA Uptime</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.9%</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.95%</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.95%</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.99%</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">Support</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">Email</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">Email (Priority)</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">Phone & Chat</td>
+                                <td class="px-6 py-4 text-center text-gray-600 text-xs">24/7 Priority</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-24">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย</h2>
+                <p class="text-lg text-gray-600">คำตอบสำหรับคำถามทั่วไปเกี่ยวกับราคาและการใช้งาน</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">มีค่าใช้จ่ายซ่อนเร้นหรือไม่?</h3>
+                    <p class="text-gray-600">
+                        ไม่มีเลยครับ ค่าธรรมเนียมที่แสดงคือทั้งหมดที่คุณต้องจ่าย ไม่มีค่าติดตั้ง ไม่มีค่าธรรมเนียมยกเลิก 
+                        ไม่มีค่าธรรมเนียม Chargeback หรือค่าใช้จ่ายแอบแฝงใดๆ
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">สามารถเปลี่ยนแพ็กเกจได้หรือไม่?</h3>
+                    <p class="text-gray-600">
+                        ได้ครับ คุณสามารถ Upgrade หรือ Downgrade ได้ตลอดเวลา การเปลี่ยนแปลงจะมีผลทันที 
+                        และเราจะคิดเงินแบบ Pro-rated ตามการใช้งานจริง
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">การทดลองใช้ 14 วันทำงานอย่างไร?</h3>
+                    <p class="text-gray-600">
+                        คุณสามารถทดลองใช้แพ็กเกจ Startup และ Business ฟรี 14 วัน โดยไม่ต้องใส่บัตรเครดิต 
+                        หากไม่พอใจสามารถยกเลิกได้ทันที ไม่มีค่าใช้จ่ายใดๆ
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">รองรับการชำระเงินด้วยวิธีใดบ้าง?</h3>
+                    <p class="text-gray-600">
+                        รองรับบัตรเครดิต/เดบิต (Visa, Mastercard, JCB, AMEX), PromptPay, QR Payment, 
+                        Internet Banking, Mobile Banking, และ Installment Payment
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">ระยะเวลาในการโอนเงินเข้าบัญชีเท่าไหร่?</h3>
+                    <p class="text-gray-600">
+                        สำหรับธุรกรรมปกติ เราจะโอนเงินเข้าบัญชีของคุณภายใน T+1 (วันทำการถัดไป) 
+                        สำหรับแพ็กเกจ Enterprise สามารถเจรจา T+0 (โอนเงินในวันเดียวกัน) ได้
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">มี Refund Policy หรือไม่?</h3>
+                    <p class="text-gray-600">
+                        เนื่องจากเราคิดค่าธรรมเนียมต่อธุรกรรมเท่านั้น จึงไม่มี Refund สำหรับธุรกรรมที่เกิดขึ้นแล้ว 
+                        แต่คุณสามารถยกเลิกบริการได้ทันที โดยไม่ต้องจ่ายค่าใช้จ่ายเพิ่มเติม
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gray-900 text-white">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+            <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+                พร้อมเริ่มต้นแล้วหรือยัง?
+            </h2>
+            <p class="text-xl text-gray-300 mb-8">
+                สร้างบัญชีฟรีและเริ่มรับชำระเงินได้ภายใน 10 นาที<br/>
+                ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ทุกเมื่อ
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#signup" class="bg-white text-gray-900 px-8 py-4 rounded-full text-base font-semibold hover:bg-gray-100 transition">
+                    เริ่มใช้งานฟรี →
+                </a>
+                <a href="#contact" class="border-2 border-white text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-white hover:text-gray-900 transition">
+                    ติดต่อฝ่ายขาย
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">ผลิตภัณฑ์</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">Payment API</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Checkout</a></li>
+                        <li><a href="/pricing.html" class="hover:text-gray-900 transition">ราคา</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">นักพัฒนา</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">เอกสาร API</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">คู่มือเริ่มต้น</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">บริษัท</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">เกี่ยวกับเรา</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">แหล่งข้อมูล</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">ศูนย์ช่วยเหลือ</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">สถานะระบบ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">ข้อกำหนด</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="/security.html" class="hover:text-gray-900 transition">ความปลอดภัย</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">นโยบายความเป็นส่วนตัว</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold gradient-text">Elixopay</span>
+                </div>
+                <p class="text-sm text-gray-600">© 2024 Elixopay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Billing Toggle (Monthly/Yearly)
+        const monthlyToggle = document.getElementById('monthly-toggle');
+        const yearlyToggle = document.getElementById('yearly-toggle');
+        
+        monthlyToggle.addEventListener('click', () => {
+            monthlyToggle.classList.add('active');
+            yearlyToggle.classList.remove('active');
+            // อัพเดทราคาเป็นรายเดือน (ถ้าต้องการ)
+        });
+        
+        yearlyToggle.addEventListener('click', () => {
+            yearlyToggle.classList.add('active');
+            monthlyToggle.classList.remove('active');
+            // อัพเดทราคาเป็นรายปี (ถ้าต้องการ)
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        });
+
+        // Navbar Shadow on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 10) {
+                nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

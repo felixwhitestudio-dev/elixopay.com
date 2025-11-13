@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Primary Meta Tags -->
+    <title>API Documentation - Elixopay | คู่มือนักพัฒนา</title>
+    <meta name="title" content="API Documentation - Elixopay | คู่มือนักพัฒนา">
+    <meta name="description" content="เอกสาร API ที่ครบถ้วน พร้อมตัวอย่างโค้ด Python, Node.js, PHP, Ruby | เริ่มผสานรวมภายใน 10 นาที">
+    
+    <!-- Security Meta Tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/ruby.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        nav {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .mobile-menu {
+            display: none;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        .sidebar a {
+            transition: all 0.2s;
+        }
+        
+        .sidebar a:hover {
+            color: #635BFF;
+            padding-left: 1rem;
+        }
+        
+        .sidebar a.active {
+            color: #635BFF;
+            font-weight: 600;
+            border-left: 3px solid #635BFF;
+            padding-left: 1rem;
+        }
+        
+        .code-block-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin: 1.5rem 0;
+        }
+        
+        .code-tabs {
+            display: flex;
+            background: #21252b;
+            border-bottom: 1px solid #181a1f;
+            padding: 0 1rem;
+        }
+        
+        .code-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: #abb2bf;
+            font-size: 0.875rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .code-tab:hover {
+            color: #fff;
+        }
+        
+        .code-tab.active {
+            color: #fff;
+            border-bottom-color: #635BFF;
+        }
+        
+        .code-content {
+            display: none;
+        }
+        
+        .code-content.active {
+            display: block;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #abb2bf;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        
+        .endpoint {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .endpoint.get {
+            background: #10b981;
+            color: white;
+        }
+        
+        .endpoint.post {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .endpoint.put {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .endpoint.delete {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .param-table {
+            width: 100%;
+            font-size: 0.875rem;
+        }
+        
+        .param-table th {
+            background: #f9fafb;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .param-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .param-table code {
+            background: #f3f4f6;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            font-size: 0.8125rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-required {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .badge-optional {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-50 text-gray-900">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-12">
+                    <a href="/index.html" class="text-2xl font-bold gradient-text">Elixopay</a>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="/index.html#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
+                        <a href="/index.html#developers" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">นักพัฒนา</a>
+                        <a href="/pricing.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">ราคา</a>
+                        <a href="/docs.html" class="text-gray-900 text-sm font-bold transition border-b-2 border-purple-600">เอกสาร API</a>
+                        <a href="/partners.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">พาร์ทเนอร์</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
+                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-200 bg-white">
+            <div class="px-6 py-4 space-y-3">
+                <a href="/index.html#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
+                <a href="/index.html#developers" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">นักพัฒนา</a>
+                <a href="/pricing.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">ราคา</a>
+                <a href="/docs.html" class="block text-gray-900 text-sm font-bold">เอกสาร API</a>
+                <a href="/partners.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">พาร์ทเนอร์</a>
+                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
+                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-12">
+                
+                <!-- Sidebar -->
+                <aside class="hidden lg:block lg:col-span-3">
+                    <div class="sidebar">
+                        <div class="space-y-1">
+                            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">เริ่มต้นใช้งาน</h3>
+                            <a href="#introduction" class="block text-sm text-gray-700 py-2 active">แนะนำ</a>
+                            <a href="#authentication" class="block text-sm text-gray-700 py-2">การยืนยันตัวตน</a>
+                            <a href="#quick-start" class="block text-sm text-gray-700 py-2">Quick Start</a>
+                            <a href="#errors" class="block text-sm text-gray-700 py-2">Error Handling</a>
+                        </div>
+                        
+                        <div class="space-y-1 mt-8">
+                            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">API Endpoints</h3>
+                            <a href="#payments" class="block text-sm text-gray-700 py-2">Payments</a>
+                            <a href="#customers" class="block text-sm text-gray-700 py-2">Customers</a>
+                            <a href="#refunds" class="block text-sm text-gray-700 py-2">Refunds</a>
+                            <a href="#webhooks" class="block text-sm text-gray-700 py-2">Webhooks</a>
+                        </div>
+                        
+                        <div class="space-y-1 mt-8">
+                            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Libraries</h3>
+                            <a href="#python-sdk" class="block text-sm text-gray-700 py-2">Python</a>
+                            <a href="#nodejs-sdk" class="block text-sm text-gray-700 py-2">Node.js</a>
+                            <a href="#php-sdk" class="block text-sm text-gray-700 py-2">PHP</a>
+                            <a href="#ruby-sdk" class="block text-sm text-gray-700 py-2">Ruby</a>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Content -->
+                <main class="lg:col-span-9">
+                    
+                    <!-- Hero -->
+                    <div class="mb-12">
+                        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                            เอกสาร <span class="gradient-text">API</span>
+                        </h1>
+                        <p class="text-xl text-gray-600">
+                            คู่มือสำหรับนักพัฒนาเพื่อผสานรวม Elixopay API เข้ากับแอปพลิเคชันของคุณ
+                        </p>
+                    </div>
+
+                    <!-- Introduction -->
+                    <section id="introduction" class="mb-16 scroll-mt-20">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">แนะนำ</h2>
+                        <div class="prose prose-lg max-w-none">
+                            <p class="text-gray-600 mb-4">
+                                Elixopay API เป็น RESTful API ที่ออกแบบมาให้ใช้งานง่าย รวดเร็ว และปลอดภัย 
+                                คุณสามารถรับชำระเงินออนไลน์ จัดการลูกค้า และติดตามธุรกรรมได้ทั้งหมดผ่าน API
+                            </p>
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-6">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-blue-700">
+                                            <strong>Base URL:</strong> <code class="bg-blue-100 px-2 py-1 rounded">https://api.elixopay.com/v1</code>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">คุณสมบัติหลัก</h3>
+                            <ul class="space-y-2 text-gray-600">
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    RESTful API ที่ใช้ JSON สำหรับ Request และ Response
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    การยืนยันตัวตนด้วย API Key แบบ Bearer Token
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Webhook สำหรับรับการแจ้งเตือนแบบ Real-time
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    รองรับ Idempotency สำหรับป้องกันธุรกรรมซ้ำ
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    เข้ารหัสด้วย TLS 1.3 และรับรอง PCI DSS Level 1
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Authentication -->
+                    <section id="authentication" class="mb-16 scroll-mt-20">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">การยืนยันตัวตน</h2>
+                        <p class="text-gray-600 mb-6">
+                            การเรียกใช้ API ทุกครั้งจำเป็นต้องส่ง API Key ผ่าน HTTP Header <code class="bg-gray-100 px-2 py-1 rounded text-sm">Authorization</code>
+                        </p>
+                        
+                        <div class="code-block-wrapper">
+                            <div class="bg-gray-800 px-6 py-3 flex items-center justify-between border-b border-gray-700">
+                                <span class="text-gray-300 text-sm font-medium">Authentication Example</span>
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-bash text-sm">curl https://api.elixopay.com/v1/payments \
+  -H "Authorization: Bearer sk_live_xxxxxxxxxxxxx" \
+  -H "Content-Type: application/json"</code></pre>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 my-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-yellow-700">
+                                        <strong>ข้อควรระวัง:</strong> ห้ามแชร์ Secret Key หรือเก็บไว้ใน Client-side Code เด็ดขาด! 
+                                        ใช้เฉพาะใน Server-side เท่านั้น
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">ประเภทของ API Keys</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <code class="text-sm font-bold text-purple-600">sk_test_xxxxx</code>
+                                <p class="text-sm text-gray-600 mt-2">Test Key - ใช้สำหรับทดสอบ ไม่มีการชำระเงินจริง</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <code class="text-sm font-bold text-green-600">sk_live_xxxxx</code>
+                                <p class="text-sm text-gray-600 mt-2">Live Key - ใช้สำหรับ Production มีการชำระเงินจริง</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Quick Start -->
+                    <section id="quick-start" class="mb-16 scroll-mt-20">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Quick Start</h2>
+                        <p class="text-gray-600 mb-6">
+                            ตัวอย่างการสร้างการชำระเงินครั้งแรกด้วย Elixopay API
+                        </p>
+
+                        <div class="code-block-wrapper">
+                            <div class="code-tabs">
+                                <div class="code-tab active" onclick="switchTab(event, 'python')">Python</div>
+                                <div class="code-tab" onclick="switchTab(event, 'nodejs')">Node.js</div>
+                                <div class="code-tab" onclick="switchTab(event, 'php')">PHP</div>
+                                <div class="code-tab" onclick="switchTab(event, 'ruby')">Ruby</div>
+                            </div>
+                            
+                            <!-- Python -->
+                            <div class="code-content active" id="python">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-python text-sm"># ติดตั้ง: pip install elixopay
+import elixopay
+
+# ตั้งค่า API Key
+elixopay.api_key = 'sk_test_xxxxxxxxxxxxx'
+
+# สร้างการชำระเงิน
+payment = elixopay.Payment.create(
+    amount=10000,  # จำนวนเงิน (สตางค์)
+    currency='thb',
+    customer={
+        'email': 'customer@example.com',
+        'name': 'สมชาย ใจดี'
+    },
+    description='ค่าสินค้า Order #12345',
+    payment_methods=['card', 'promptpay'],
+    return_url='https://yoursite.com/payment/complete'
+)
+
+print(f'Payment ID: {payment.id}')
+print(f'Checkout URL: {payment.checkout_url}')
+
+# ตรวจสอบสถานะ
+if payment.status == 'pending':
+    # เปลี่ยนเส้นทางลูกค้าไปยัง checkout_url
+    print('กรุณาชำระเงินที่:', payment.checkout_url)</code></pre>
+                            </div>
+                            
+                            <!-- Node.js -->
+                            <div class="code-content" id="nodejs">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-javascript text-sm">// ติดตั้ง: npm install elixopay
+const elixopay = require('elixopay')('sk_test_xxxxxxxxxxxxx');
+
+// สร้างการชำระเงิน
+const payment = await elixopay.payments.create({
+  amount: 10000, // จำนวนเงิน (สตางค์)
+  currency: 'thb',
+  customer: {
+    email: 'customer@example.com',
+    name: 'สมชาย ใจดี'
+  },
+  description: 'ค่าสินค้า Order #12345',
+  payment_methods: ['card', 'promptpay'],
+  return_url: 'https://yoursite.com/payment/complete'
+});
+
+console.log('Payment ID:', payment.id);
+console.log('Checkout URL:', payment.checkout_url);
+
+// ตรวจสอบสถานะ
+if (payment.status === 'pending') {
+  // เปลี่ยนเส้นทางลูกค้าไปยัง checkout_url
+  console.log('กรุณาชำระเงินที่:', payment.checkout_url);
+}</code></pre>
+                            </div>
+                            
+                            <!-- PHP -->
+                            <div class="code-content" id="php">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-php text-sm">// ติดตั้ง: composer require elixopay/elixopay-php
+require_once('vendor/autoload.php');
+
+// ตั้งค่า API Key
+\Elixopay\Elixopay::setApiKey('sk_test_xxxxxxxxxxxxx');
+
+// สร้างการชำระเงิน
+$payment = \Elixopay\Payment::create([
+  'amount' => 10000, // จำนวนเงิน (สตางค์)
+  'currency' => 'thb',
+  'customer' => [
+    'email' => 'customer@example.com',
+    'name' => 'สมชาย ใจดี'
+  ],
+  'description' => 'ค่าสินค้า Order #12345',
+  'payment_methods' => ['card', 'promptpay'],
+  'return_url' => 'https://yoursite.com/payment/complete'
+]);
+
+echo 'Payment ID: ' . $payment->id . "\n";
+echo 'Checkout URL: ' . $payment->checkout_url . "\n";
+
+// ตรวจสอบสถานะ
+if ($payment->status === 'pending') {
+  // เปลี่ยนเส้นทางลูกค้าไปยัง checkout_url
+  header('Location: ' . $payment->checkout_url);
+}</code></pre>
+                            </div>
+                            
+                            <!-- Ruby -->
+                            <div class="code-content" id="ruby">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-ruby text-sm"># ติดตั้ง: gem install elixopay
+require 'elixopay'
+
+# ตั้งค่า API Key
+Elixopay.api_key = 'sk_test_xxxxxxxxxxxxx'
+
+# สร้างการชำระเงิน
+payment = Elixopay::Payment.create(
+  amount: 10000, # จำนวนเงิน (สตางค์)
+  currency: 'thb',
+  customer: {
+    email: 'customer@example.com',
+    name: 'สมชาย ใจดี'
+  },
+  description: 'ค่าสินค้า Order #12345',
+  payment_methods: ['card', 'promptpay'],
+  return_url: 'https://yoursite.com/payment/complete'
+)
+
+puts "Payment ID: #{payment.id}"
+puts "Checkout URL: #{payment.checkout_url}"
+
+# ตรวจสอบสถานะ
+if payment.status == 'pending'
+  # เปลี่ยนเส้นทางลูกค้าไปยัง checkout_url
+  puts "กรุณาชำระเงินที่: #{payment.checkout_url}"
+end</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Payments API -->
+                    <section id="payments" class="mb-16 scroll-mt-20">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Payments API</h2>
+                        <p class="text-gray-600 mb-6">
+                            API สำหรับสร้าง ดึงข้อมูล และจัดการการชำระเงิน
+                        </p>
+
+                        <!-- Create Payment -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="endpoint post">POST</span>
+                                <code class="text-sm">/v1/payments</code>
+                            </div>
+                            <p class="text-gray-600 mb-4">สร้างการชำระเงินใหม่</p>
+                            
+                            <h4 class="font-bold text-gray-900 mb-3">Parameters</h4>
+                            <div class="overflow-x-auto">
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>amount</code></td>
+                                            <td>integer</td>
+                                            <td><span class="badge badge-required">required</span></td>
+                                            <td>จำนวนเงินเป็นสตางค์ (10000 = 100 บาท)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>currency</code></td>
+                                            <td>string</td>
+                                            <td><span class="badge badge-required">required</span></td>
+                                            <td>สกุลเงิน (thb, usd, eur)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>description</code></td>
+                                            <td>string</td>
+                                            <td><span class="badge badge-optional">optional</span></td>
+                                            <td>คำอธิบายการชำระเงิน</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>customer</code></td>
+                                            <td>object</td>
+                                            <td><span class="badge badge-optional">optional</span></td>
+                                            <td>ข้อมูลลูกค้า (email, name, phone)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>payment_methods</code></td>
+                                            <td>array</td>
+                                            <td><span class="badge badge-optional">optional</span></td>
+                                            <td>วิธีการชำระเงินที่รองรับ</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>return_url</code></td>
+                                            <td>string</td>
+                                            <td><span class="badge badge-optional">optional</span></td>
+                                            <td>URL สำหรับ redirect หลังชำระเงิน</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h4 class="font-bold text-gray-900 mt-6 mb-3">Response</h4>
+                            <div class="code-block-wrapper">
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-json text-sm">{
+  "id": "pay_1234567890",
+  "object": "payment",
+  "amount": 10000,
+  "currency": "thb",
+  "status": "pending",
+  "description": "ค่าสินค้า Order #12345",
+  "customer": {
+    "email": "customer@example.com",
+    "name": "สมชาย ใจดี"
+  },
+  "checkout_url": "https://checkout.elixopay.com/pay_1234567890",
+  "created_at": "2024-11-12T10:30:00Z",
+  "expires_at": "2024-11-12T11:30:00Z"
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Retrieve Payment -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="endpoint get">GET</span>
+                                <code class="text-sm">/v1/payments/:id</code>
+                            </div>
+                            <p class="text-gray-600 mb-4">ดึงข้อมูลการชำระเงินด้วย ID</p>
+                            
+                            <div class="code-block-wrapper">
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-bash text-sm">curl https://api.elixopay.com/v1/payments/pay_1234567890 \
+  -H "Authorization: Bearer sk_test_xxxxxxxxxxxxx"</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- List Payments -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="endpoint get">GET</span>
+                                <code class="text-sm">/v1/payments</code>
+                            </div>
+                            <p class="text-gray-600 mb-4">ดึงรายการการชำระเงินทั้งหมด (รองรับ Pagination)</p>
+                            
+                            <h4 class="font-bold text-gray-900 mb-3">Query Parameters</h4>
+                            <div class="overflow-x-auto">
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>limit</code></td>
+                                            <td>integer</td>
+                                            <td>จำนวนรายการต่อหน้า (default: 10, max: 100)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>starting_after</code></td>
+                                            <td>string</td>
+                                            <td>ID ของรายการสุดท้ายจากหน้าก่อนหน้า</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>status</code></td>
+                                            <td>string</td>
+                                            <td>กรองตามสถานะ (pending, succeeded, failed)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Webhooks -->
+                    <section id="webhooks" class="mb-16 scroll-mt-20">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Webhooks</h2>
+                        <p class="text-gray-600 mb-6">
+                            Webhook ช่วยให้คุณรับการแจ้งเตือนแบบ Real-time เมื่อมีเหตุการณ์เกิดขึ้น เช่น การชำระเงินสำเร็จ
+                        </p>
+
+                        <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">การตั้งค่า Webhook</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                                <li>เข้าสู่ Dashboard และไปที่ Settings → Webhooks</li>
+                                <li>คลิก "Add Endpoint" และใส่ URL ของคุณ</li>
+                                <li>เลือก Events ที่ต้องการรับ (เช่น payment.succeeded)</li>
+                                <li>คัดลอก Webhook Secret เพื่อใช้ในการยืนยัน Signature</li>
+                            </ol>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Webhook Events</h3>
+                        <div class="grid gap-3 mb-6">
+                            <div class="border border-gray-200 rounded p-3">
+                                <code class="text-sm font-bold">payment.succeeded</code>
+                                <p class="text-sm text-gray-600 mt-1">การชำระเงินสำเร็จ</p>
+                            </div>
+                            <div class="border border-gray-200 rounded p-3">
+                                <code class="text-sm font-bold">payment.failed</code>
+                                <p class="text-sm text-gray-600 mt-1">การชำระเงินล้มเหลว</p>
+                            </div>
+                            <div class="border border-gray-200 rounded p-3">
+                                <code class="text-sm font-bold">refund.created</code>
+                                <p class="text-sm text-gray-600 mt-1">มีการคืนเงิน</p>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">ตัวอย่าง Webhook Handler</h3>
+                        <div class="code-block-wrapper">
+                            <div class="code-tabs">
+                                <div class="code-tab active" onclick="switchTab(event, 'webhook-python')">Python</div>
+                                <div class="code-tab" onclick="switchTab(event, 'webhook-nodejs')">Node.js</div>
+                            </div>
+                            
+                            <div class="code-content active" id="webhook-python">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-python text-sm">from flask import Flask, request
+import elixopay
+
+app = Flask(__name__)
+webhook_secret = 'whsec_xxxxxxxxxxxxx'
+
+@app.route('/webhook', methods=['POST'])
+def webhook_handler():
+    payload = request.get_data()
+    sig_header = request.headers.get('Elixopay-Signature')
+    
+    try:
+        # ตรวจสอบ Signature
+        event = elixopay.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError:
+        return 'Invalid payload', 400
+    except elixopay.error.SignatureVerificationError:
+        return 'Invalid signature', 400
+    
+    # จัดการ Event
+    if event['type'] == 'payment.succeeded':
+        payment = event['data']['object']
+        print(f'Payment succeeded: {payment["id"]}')
+        # ส่งสินค้าให้ลูกค้า
+        fulfill_order(payment['id'])
+    
+    return 'Success', 200</code></pre>
+                            </div>
+                            
+                            <div class="code-content" id="webhook-nodejs">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-javascript text-sm">const express = require('express');
+const elixopay = require('elixopay')('sk_test_xxxxxxxxxxxxx');
+const app = express();
+
+const webhookSecret = 'whsec_xxxxxxxxxxxxx';
+
+app.post('/webhook', express.raw({type: 'application/json'}), (req, res) => {
+  const sig = req.headers['elixopay-signature'];
+  
+  let event;
+  try {
+    // ตรวจสอบ Signature
+    event = elixopay.webhooks.constructEvent(
+      req.body,
+      sig,
+      webhookSecret
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  
+  // จัดการ Event
+  if (event.type === 'payment.succeeded') {
+    const payment = event.data.object;
+    console.log(`Payment succeeded: ${payment.id}`);
+    // ส่งสินค้าให้ลูกค้า
+    fulfillOrder(payment.id);
+  }
+  
+  res.json({received: true});
+});</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Error Handling -->
+                    <section id="errors" class="mb-16 scroll-mt-20">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Error Handling</h2>
+                        <p class="text-gray-600 mb-6">
+                            Elixopay ใช้ HTTP Status Codes มาตรฐานเพื่อระบุความสำเร็จหรือความล้มเหลวของ API Request
+                        </p>
+
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">HTTP Status Codes</h3>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded">
+                                <code class="text-sm font-bold text-green-700">200 OK</code>
+                                <span class="text-sm text-gray-600">Request สำเร็จ</span>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded">
+                                <code class="text-sm font-bold text-red-700">400 Bad Request</code>
+                                <span class="text-sm text-gray-600">ข้อมูลที่ส่งมาไม่ถูกต้อง</span>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded">
+                                <code class="text-sm font-bold text-red-700">401 Unauthorized</code>
+                                <span class="text-sm text-gray-600">API Key ไม่ถูกต้องหรือหมดอายุ</span>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded">
+                                <code class="text-sm font-bold text-red-700">404 Not Found</code>
+                                <span class="text-sm text-gray-600">ไม่พบ Resource ที่ร้องขอ</span>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded">
+                                <code class="text-sm font-bold text-red-700">429 Too Many Requests</code>
+                                <span class="text-sm text-gray-600">เกิน Rate Limit</span>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded">
+                                <code class="text-sm font-bold text-red-700">500 Server Error</code>
+                                <span class="text-sm text-gray-600">เกิดข้อผิดพลาดในระบบ</span>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Error Response Format</h3>
+                        <div class="code-block-wrapper">
+                            <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-json text-sm">{
+  "error": {
+    "type": "invalid_request_error",
+    "code": "parameter_missing",
+    "message": "Missing required parameter: amount",
+    "param": "amount"
+  }
+}</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Support -->
+                    <section class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white text-center">
+                        <h2 class="text-3xl font-bold mb-4">ต้องการความช่วยเหลือ?</h2>
+                        <p class="text-lg mb-6 opacity-90">
+                            ทีม Developer Support พร้อมช่วยเหลือคุณตลอด 24/7
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="#" class="bg-white text-purple-600 px-6 py-3 rounded-full font-bold hover:bg-gray-100 transition">
+                                เข้าร่วม Discord Community
+                            </a>
+                            <a href="mailto:support@elixopay.com" class="border-2 border-white text-white px-6 py-3 rounded-full font-bold hover:bg-white hover:text-purple-600 transition">
+                                ติดต่อ Support
+                            </a>
+                        </div>
+                    </section>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold gradient-text">Elixopay</span>
+                </div>
+                <p class="text-sm text-gray-600">© 2024 Elixopay. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <a href="/index.html" class="text-sm text-gray-600 hover:text-gray-900">หน้าหลัก</a>
+                    <a href="/pricing.html" class="text-sm text-gray-600 hover:text-gray-900">ราคา</a>
+                    <a href="/security.html" class="text-sm text-gray-600 hover:text-gray-900">ความปลอดภัย</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Code Tab Switching
+        function switchTab(event, language) {
+            const tabsContainer = event.target.parentElement;
+            const contentContainer = tabsContainer.nextElementSibling;
+            
+            // Remove active from all tabs
+            tabsContainer.querySelectorAll('.code-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Hide all content
+            contentContainer.parentElement.querySelectorAll('.code-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activate clicked tab
+            event.target.classList.add('active');
+            
+            // Show corresponding content
+            document.getElementById(language).classList.add('active');
+        }
+
+        // Copy Code Function
+        function copyCode(button) {
+            const codeBlock = button.parentElement.nextElementSibling || button.parentElement.parentElement.querySelector('code');
+            const code = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Initialize Syntax Highlighting
+        hljs.highlightAll();
+
+        // Sidebar Active Link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Navbar Shadow on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 10) {
+                nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

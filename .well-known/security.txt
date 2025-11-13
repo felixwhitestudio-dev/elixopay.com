@@ -1,0 +1,11 @@
+Contact: security@elixopay.com
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://elixopay.com/pgp-key.txt
+Acknowledgments: https://elixopay.com/security/hall-of-fame
+Preferred-Languages: th, en
+Canonical: https://elixopay.com/.well-known/security.txt
+Policy: https://elixopay.com/security/disclosure-policy
+
+# Security Policy
+# หากพบช่องโหว่ด้านความปลอดภัย กรุณาติดต่อทีม Security ของเราทันที
+# We take security seriously. If you discover a security vulnerability, please report it to us.

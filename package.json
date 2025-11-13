@@ -1,0 +1,13 @@
+{
+  "name": "elixopay-frontend",
+  "version": "1.0.0",
+  "description": "Elixopay Payment Gateway Frontend",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'No build needed for static HTML'",
+    "preview": "python3 -m http.server 8000"
+  },
+  "keywords": ["payment", "gateway", "stripe"],
+  "author": "Elixopay",
+  "license": "MIT"
+}
