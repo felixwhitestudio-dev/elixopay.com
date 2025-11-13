@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.svg">
+    
+    <!-- Primary Meta Tags -->
+    <title>Elixopay - Payment Gateway ระดับธนาคาร | ปลอดภัย รวดเร็ว เชื่อถือได้</title>
+    <meta name="title" content="Elixopay - Payment Gateway ระดับธนาคาร | ปลอดภัย รวดเร็ว เชื่อถือได้">
+    <meta name="description" content="Payment Gateway ที่ปลอดภัยที่สุด รองรับ 135+ สกุลเงิน รับรอง PCI DSS Level 1 และ ISO 27001 | รับชำระเงินออนไลน์ได้ทันที">
+    <meta name="keywords" content="payment gateway, ปลอดภัย, PCI DSS, ชำระเงินออนไลน์, payment api, elixopay">
+    
+    <!-- Security Meta Tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https:;
+        connect-src 'self';
+        frame-ancestors 'self';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://elixopay.com/">
+    <meta property="og:title" content="Elixopay - Payment Gateway ระดับธนาคาร">
+    <meta property="og:description" content="Payment Gateway ที่ปลอดภัยที่สุด รองรับ 135+ สกุลเงิน รับรอง PCI DSS Level 1">
+    <meta property="og:image" content="https://elixopay.com/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://elixopay.com/">
+    <meta property="twitter:title" content="Elixopay - Payment Gateway ระดับธนาคาร">
+    <meta property="twitter:description" content="Payment Gateway ที่ปลอดภัยที่สุด รองรับ 135+ สกุลเงิน">
+    <meta property="twitter:image" content="https://elixopay.com/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+        }
+        
+        .gradient-border {
+            position: relative;
+            background: white;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #635BFF, #9B8EFF);
+        }
+        
+        .diagonal-section {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .diagonal-section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            transform: skewY(-2deg);
+            transform-origin: top left;
+            z-index: -1;
+        }
+        
+        .code-block-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .feature-card:hover {
+            border-color: #635BFF;
+            box-shadow: 0 10px 40px rgba(99, 91, 255, 0.1);
+            transform: translateY(-4px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            border: 2px solid #1a1a1a;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .logo-item {
+            filter: grayscale(100%);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-item:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+        
+        nav {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .mobile-menu {
+            display: none;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(99, 91, 255, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="antialiased bg-white text-gray-900">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-12">
+                    <a href="#" class="text-2xl font-bold gradient-text">Elixopay</a>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
+                        <a href="#developers" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">นักพัฒนา</a>
+                        <a href="/pricing.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">ราคา</a>
+                        <a href="/docs.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
+                        <a href="/partners.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">พาร์ทเนอร์</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
+                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-200 bg-white">
+            <div class="px-6 py-4 space-y-3">
+                <a href="#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
+                <a href="#developers" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">นักพัฒนา</a>
+                <a href="/pricing.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">ราคา</a>
+                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
+                <a href="/partners.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">พาร์ทเนอร์</a>
+                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
+                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 lg:pt-40 lg:pb-32 hero-gradient">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8">
+                    <div class="inline-block">
+                        <span class="bg-purple-50 text-purple-700 px-4 py-2 rounded-full text-sm font-medium">
+                            🚀 เปิดตัวแล้ววันนี้
+                        </span>
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
+                        โครงสร้างพื้นฐาน<br/>การชำระเงินสำหรับ<br/><span class="gradient-text">ยุคอินเทอร์เน็ต</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 leading-relaxed max-w-xl">
+                        รับชำระเงินระหว่างประเทศทันที ด้วย API ที่ทรงพลัง ปลอดภัย และใช้งานง่าย 
+                        สร้างระบบการชำระเงินระดับโลกได้ภายในไม่กี่นาที
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <a href="#start" class="btn-primary text-white px-8 py-4 rounded-full text-base font-semibold text-center">
+                            เริ่มสร้างเลย
+                        </a>
+                        <a href="/docs.html" class="btn-secondary text-gray-900 px-8 py-4 rounded-full text-base font-semibold text-center bg-white">
+                            ดูเอกสาร API
+                        </a>
+                    </div>
+                    <div class="pt-8 flex items-center gap-8 text-sm text-gray-600">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>ไม่ต้องใช้บัตรเครดิต</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>ทดลองใช้ฟรี</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden lg:block float-animation">
+                    <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" class="w-full">
+                        <defs>
+                            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#635BFF;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#9B8EFF;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="gradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#7A73FF;stop-opacity:0.8" />
+                                <stop offset="100%" style="stop-color:#635BFF;stop-opacity:0.8" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Abstract Payment Flow Illustration -->
+                        <circle cx="300" cy="300" r="200" fill="url(#gradient1)" opacity="0.1"/>
+                        <circle cx="300" cy="300" r="150" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.3"/>
+                        <circle cx="300" cy="300" r="100" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.5"/>
+                        
+                        <!-- Central Node -->
+                        <circle cx="300" cy="300" r="40" fill="url(#gradient1)"/>
+                        <circle cx="300" cy="300" r="30" fill="white"/>
+                        
+                        <!-- Payment Nodes -->
+                        <circle cx="450" cy="300" r="30" fill="url(#gradient2)"/>
+                        <circle cx="150" cy="300" r="30" fill="url(#gradient2)"/>
+                        <circle cx="300" cy="450" r="30" fill="url(#gradient2)"/>
+                        <circle cx="300" cy="150" r="30" fill="url(#gradient2)"/>
+                        
+                        <!-- Connecting Lines -->
+                        <line x1="300" y1="300" x2="450" y2="300" stroke="url(#gradient1)" stroke-width="3" opacity="0.6"/>
+                        <line x1="300" y1="300" x2="150" y2="300" stroke="url(#gradient1)" stroke-width="3" opacity="0.6"/>
+                        <line x1="300" y1="300" x2="300" y2="450" stroke="url(#gradient1)" stroke-width="3" opacity="0.6"/>
+                        <line x1="300" y1="300" x2="300" y2="150" stroke="url(#gradient1)" stroke-width="3" opacity="0.6"/>
+                        
+                        <!-- Orbital Nodes -->
+                        <circle cx="400" cy="200" r="15" fill="url(#gradient1)" opacity="0.7"/>
+                        <circle cx="200" cy="400" r="15" fill="url(#gradient1)" opacity="0.7"/>
+                        <circle cx="400" cy="400" r="15" fill="url(#gradient1)" opacity="0.7"/>
+                        <circle cx="200" cy="200" r="15" fill="url(#gradient1)" opacity="0.7"/>
+                        
+                        <!-- Data Flow Indicators -->
+                        <path d="M 300 300 Q 350 250, 400 200" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.4" stroke-dasharray="5,5"/>
+                        <path d="M 300 300 Q 250 350, 200 400" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.4" stroke-dasharray="5,5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer Focus Section -->
+    <section id="developers" class="py-24 lg:py-32 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-purple-600 font-semibold text-sm uppercase tracking-wide">สำหรับนักพัฒนา</span>
+                        <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-3 leading-tight">
+                            ผสานรวมได้<br/>ภายใน<span class="gradient-text"> 10 นาที</span>
+                        </h2>
+                    </div>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        API ที่ออกแบบมาเพื่อนักพัฒนา ด้วยเอกสารที่ชัดเจน SDK ครบทุกภาษา 
+                        และตัวอย่างโค้ดที่ใช้งานได้จริง คุณสามารถรับชำระเงินได้ในเวลาไม่ถึงชั่วโมง
+                    </p>
+                    <div class="space-y-4 pt-4">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">RESTful API ที่ใช้งานง่าย</h3>
+                                <p class="text-gray-600 text-sm mt-1">เข้าใจง่าย ตรงไปตรงมา พร้อม Response ที่ชัดเจน</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">SDK ครบทุกภาษา</h3>
+                                <p class="text-gray-600 text-sm mt-1">Python, Node.js, Ruby, PHP, Java และอื่นๆ</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">Webhook แบบ Real-time</h3>
+                                <p class="text-gray-600 text-sm mt-1">รับการแจ้งเตือนทันทีเมื่อมีการชำระเงิน</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-block-wrapper">
+                    <div class="bg-gray-800 px-6 py-3 flex items-center justify-between border-b border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <span class="text-gray-400 text-sm font-medium">payment.py</span>
+                        </div>
+                        <button class="text-gray-400 hover:text-white text-xs">Copy</button>
+                    </div>
+                    <pre class="bg-gray-900 p-6 overflow-x-auto"><code class="language-python text-sm">import elixopay
+
+# เริ่มต้นใช้งาน
+elixopay.api_key = 'your_secret_key'
+
+# สร้างการชำระเงิน
+payment = elixopay.Payment.create(
+    amount=5000,
+    currency='thb',
+    customer={
+        'email': 'customer@example.com',
+        'name': 'สมชาย ใจดี'
+    },
+    description='ค่าสินค้า Order #12345',
+    payment_methods=['card', 'promptpay', 'bank_transfer']
+)
+
+# ตรวจสอบสถานะ
+if payment.status == 'succeeded':
+    print(f'ชำระเงินสำเร็จ: {payment.id}')
+    # ส่งสินค้าให้ลูกค้า
+    fulfill_order(payment.id)
+else:
+    print(f'รอการชำระเงิน: {payment.checkout_url}')
+</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section id="features" class="py-24 lg:py-32">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <span class="text-purple-600 font-semibold text-sm uppercase tracking-wide">คุณสมบัติหลัก</span>
+                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-3 leading-tight">
+                    ทุกอย่างที่คุณต้องการสำหรับ<span class="gradient-text">การชำระเงินระดับโลก</span>
+                </h2>
+                <p class="text-lg text-gray-600 mt-6">
+                    เครื่องมือครบครัน เพื่อรองรับธุรกิจของคุณในทุกมิติ
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-8 rounded-2xl">
+                    <div class="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">รองรับ 135+ สกุลเงิน</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        รับชำระเงินในสกุลเงินท้องถิ่นได้ทันที พร้อมระบบแปลงสกุลเงินอัตโนมัติแบบเรียลไทม์
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-8 rounded-2xl">
+                    <div class="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">ความปลอดภัยระดับธนาคาร</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        ได้รับการรับรอง PCI DSS Level 1 พร้อมการเข้ารหัส 256-bit SSL และ 3D Secure
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="bg-green-50 text-green-700 px-3 py-1 rounded-full font-medium">PCI DSS Level 1</span>
+                        <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium">ISO 27001</span>
+                        <span class="bg-purple-50 text-purple-700 px-3 py-1 rounded-full font-medium">SOC 2 Type II</span>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-8 rounded-2xl">
+                    <div class="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">ประมวลผลภายใน 2 วินาที</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ระบบที่เร็วที่สุดในอุตสาหกรรม พร้อม Uptime 99.99% และ API Response Time ต่ำกว่า 200ms
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white p-8 rounded-2xl">
+                    <div class="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">ค่าธรรมเนียมโปร่งใส</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        2.9% + ฿10 ต่อธุรกรรม ไม่มีค่าธรรมเนียมซ่อนเร้น ไม่มีค่าติดตั้ง ไม่มีค่ารายเดือน
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="feature-card bg-white p-8 rounded-2xl">
+                    <div class="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Dashboard แบบเรียลไทม์</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ติดตามรายได้ การชำระเงิน และข้อมูลลูกค้าได้แบบเรียลไทม์ พร้อมรายงานที่ละเอียดครบถ้วน
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="feature-card bg-white p-8 rounded-2xl">
+                    <div class="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">ป้องกันการฉ้อโกง AI</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ระบบ Machine Learning ขั้นสูงที่ตรวจจับและป้องกันธุรกรรมที่น่าสงสัยได้อัตโนมัติ
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust / Social Proof Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <p class="text-center text-gray-500 text-sm font-medium mb-8 uppercase tracking-wide">
+                ได้รับความไว้วางใจจากบริษัทชั้นนำกว่า 10,000+ แห่งทั่วโลก
+            </p>
+            
+            <!-- Security Badges -->
+            <div class="flex flex-wrap justify-center items-center gap-8 mb-12 pb-12 border-b border-gray-200">
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-16 h-16 bg-green-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900">PCI DSS</span>
+                    <span class="text-xs text-gray-600">Level 1</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900">ISO 27001</span>
+                    <span class="text-xs text-gray-600">Certified</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-16 h-16 bg-purple-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900">SOC 2</span>
+                    <span class="text-xs text-gray-600">Type II</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-16 h-16 bg-indigo-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900">GDPR</span>
+                    <span class="text-xs text-gray-600">Compliant</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900">256-bit</span>
+                    <span class="text-xs text-gray-600">SSL/TLS</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 items-center">
+                <!-- Logo Placeholder 1 -->
+                <div class="logo-item flex items-center justify-center">
+                    <svg class="h-8" viewBox="0 0 120 40" fill="currentColor">
+                        <text x="10" y="25" font-size="20" font-weight="bold" fill="#1a1a1a">TechCorp</text>
+                    </svg>
+                </div>
+                <!-- Logo Placeholder 2 -->
+                <div class="logo-item flex items-center justify-center">
+                    <svg class="h-8" viewBox="0 0 120 40" fill="currentColor">
+                        <text x="10" y="25" font-size="20" font-weight="bold" fill="#1a1a1a">StartupX</text>
+                    </svg>
+                </div>
+                <!-- Logo Placeholder 3 -->
+                <div class="logo-item flex items-center justify-center">
+                    <svg class="h-8" viewBox="0 0 120 40" fill="currentColor">
+                        <text x="10" y="25" font-size="20" font-weight="bold" fill="#1a1a1a">DataFlow</text>
+                    </svg>
+                </div>
+                <!-- Logo Placeholder 4 -->
+                <div class="logo-item flex items-center justify-center">
+                    <svg class="h-8" viewBox="0 0 120 40" fill="currentColor">
+                        <text x="10" y="25" font-size="20" font-weight="bold" fill="#1a1a1a">CloudNet</text>
+                    </svg>
+                </div>
+                <!-- Logo Placeholder 5 -->
+                <div class="logo-item flex items-center justify-center">
+                    <svg class="h-8" viewBox="0 0 120 40" fill="currentColor">
+                        <text x="10" y="25" font-size="20" font-weight="bold" fill="#1a1a1a">PayHub</text>
+                    </svg>
+                </div>
+                <!-- Logo Placeholder 6 -->
+                <div class="logo-item flex items-center justify-center">
+                    <svg class="h-8" viewBox="0 0 120 40" fill="currentColor">
+                        <text x="10" y="25" font-size="20" font-weight="bold" fill="#1a1a1a">FinTech</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 lg:py-32 diagonal-section bg-gray-900 text-white">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center space-y-8">
+            <h2 class="text-4xl lg:text-5xl font-bold leading-tight">
+                พร้อมที่จะเริ่มต้นแล้วหรือยัง?
+            </h2>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                สร้างบัญชีฟรีและเริ่มรับชำระเงินได้ทันที ไม่ต้องใช้บัตรเครดิต ไม่มีค่าธรรมเนียมซ่อนเร้น
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <a href="#start" class="bg-white text-gray-900 px-8 py-4 rounded-full text-base font-semibold hover:bg-gray-100 transition text-center">
+                    เริ่มใช้งานฟรี →
+                </a>
+                <a href="#contact" class="border-2 border-white text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-white hover:text-gray-900 transition text-center">
+                    ติดต่อฝ่ายขาย
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                <!-- Products -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">ผลิตภัณฑ์</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">Payment API</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Checkout</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Invoicing</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Subscription</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Connect</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Developers -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">นักพัฒนา</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">เอกสาร API</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">คู่มือเริ่มต้น</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">SDK & Libraries</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Plugins</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">API Reference</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Company -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">บริษัท</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">เกี่ยวกับเรา</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">ทีมงาน</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">ร่วมงานกับเรา</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">บล็อก</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">แหล่งข้อมูล</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-gray-900 transition">ศูนย์ช่วยเหลือ</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">คู่มือการใช้งาน</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">สถานะระบบ</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Changelog</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">Community</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">ข้อกำหนด</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="/security.html" class="hover:text-gray-900 transition">ความปลอดภัย & Compliance</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">ข้อกำหนดการใช้งาน</a></li>
+                        <li><a href="/.well-known/security.txt" class="hover:text-gray-900 transition">Security.txt</a></li>
+                        <li><a href="#" class="hover:text-gray-900 transition">คุกกี้</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold gradient-text">Elixopay</span>
+                </div>
+                <p class="text-sm text-gray-600">© 2024 Elixopay. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="text-gray-600 hover:text-gray-900 transition">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 transition">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 transition">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialize Syntax Highlighting
+        hljs.highlightAll();
+
+        // Navbar Shadow on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 10) {
+                nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Copy Code Functionality
+        document.querySelector('.code-block-wrapper button').addEventListener('click', function() {
+            const code = document.querySelector('.code-block-wrapper code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                this.textContent = 'Copied!';
+                setTimeout(() => {
+                    this.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>สถานะระบบ - Elixopay</title>
+    <meta name="description" content="ตรวจสอบสถานะการทำงานของระบบ Elixopay แบบ Real-time">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-bg { background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%); }
+        .btn-primary {
+            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 91, 255, 0.3);
+        }
+        .mobile-menu { display: none; }
+        .mobile-menu.active { display: block; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-operational { background-color: #10b981; }
+        .status-degraded { background-color: #f59e0b; }
+        .status-down { background-color: #ef4444; }
+        .status-maintenance { background-color: #6366f1; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-12">
+                    <a href="/index.html" class="text-2xl font-bold gradient-text">Elixopay</a>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="/index.html#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
+                        <a href="/pricing.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">ราคา</a>
+                        <a href="/docs.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
+                        <a href="/status.html" class="text-gray-900 text-sm font-bold border-b-2 border-purple-600">สถานะระบบ</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
+                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu border-t border-gray-200 bg-white">
+            <div class="px-6 py-4 space-y-3">
+                <a href="/index.html#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
+                <a href="/pricing.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">ราคา</a>
+                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
+                <a href="/status.html" class="block text-gray-900 text-sm font-bold">สถานะระบบ</a>
+                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
+                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                    สถานะ<span class="gradient-text">ระบบ</span>
+                </h1>
+                <p class="text-xl text-gray-600">
+                    ตรวจสอบสถานะการทำงานของระบบ Elixopay แบบ Real-time
+                </p>
+            </div>
+
+            <!-- Overall Status -->
+            <div class="bg-white rounded-2xl border-2 border-green-200 p-8 text-center mb-8">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="w-4 h-4 bg-green-500 rounded-full pulse-animation"></div>
+                    <h2 class="text-3xl font-bold text-gray-900">ระบบทำงานปกติ</h2>
+                </div>
+                <p class="text-gray-600 text-lg">
+                    บริการทั้งหมดของเราทำงานได้อย่างสมบูรณ์
+                </p>
+                <p class="text-gray-500 text-sm mt-2">
+                    อัปเดตล่าสุด: <span id="last-updated">12 พฤศจิกายน 2568 14:30 น.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Components -->
+    <section class="pb-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">สถานะบริการ</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- API Service -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Payment API</h3>
+                                <p class="text-sm text-gray-500">API สำหรับการประมวลผลการชำระเงิน</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Uptime: 99.99%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Dashboard</h3>
+                                <p class="text-sm text-gray-500">แดชบอร์ดสำหรับผู้ใช้งาน</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Uptime: 99.98%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webhook Service -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Webhook Delivery</h3>
+                                <p class="text-sm text-gray-500">การส่ง Webhook แจ้งเตือน</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Uptime: 99.97%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Processing -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Payment Processing</h3>
+                                <p class="text-sm text-gray-500">การประมวลผลธุรกรรมการชำระเงิน</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Latency: 180ms</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Card -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Credit/Debit Cards</h3>
+                                <p class="text-sm text-gray-500">การชำระเงินผ่านบัตรเครดิต/เดบิต</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Success Rate: 98.5%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PromptPay -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">PromptPay</h3>
+                                <p class="text-sm text-gray-500">การชำระเงินผ่าน PromptPay QR</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Success Rate: 99.2%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Banking -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Mobile Banking</h3>
+                                <p class="text-sm text-gray-500">การชำระเงินผ่านแอปธนาคาร</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Success Rate: 97.8%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="status-indicator status-operational"></span>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Database</h3>
+                                <p class="text-sm text-gray-500">ระบบฐานข้อมูล</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-green-600 font-semibold">ทำงานปกติ</div>
+                            <div class="text-sm text-gray-500">Query Time: 45ms</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Uptime Chart -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Uptime ย้อนหลัง 90 วัน</h2>
+                <p class="text-gray-600">แต่ละช่องแทน 1 วัน (สีเขียว = ทำงานปกติ 100%)</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-8">
+                <div class="grid grid-cols-15 md:grid-cols-30 gap-2">
+                    <!-- Generate 90 days of uptime bars -->
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                    <div class="h-12 bg-green-500 rounded" title="100% Uptime"></div>
+                </div>
+                <div class="text-center mt-6 text-gray-600">
+                    <div class="text-3xl font-bold text-green-600 mb-2">99.98%</div>
+                    <div class="text-sm">Uptime เฉลี่ยย้อนหลัง 90 วัน</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Incident History -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">ประวัติเหตุการณ์</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- No incidents -->
+                <div class="bg-white rounded-xl border border-gray-200 p-8 text-center">
+                    <div class="text-5xl mb-4">✅</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">ไม่มีเหตุการณ์ในช่วง 30 วันที่ผ่านมา</h3>
+                    <p class="text-gray-600">ระบบทำงานได้อย่างเสถียรและปลอดภัย</p>
+                </div>
+
+                <!-- Past incident example (commented for reference) -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6" style="display: none;">
+                    <div class="flex items-start gap-4">
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full mt-1 flex-shrink-0"></div>
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-2">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">Scheduled Maintenance</h3>
+                                    <p class="text-sm text-gray-500">15 ตุลาคม 2568 02:00 - 04:00 น.</p>
+                                </div>
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">Resolved</span>
+                            </div>
+                            <p class="text-gray-600 mb-3">
+                                การบำรุงรักษาระบบตามแผน เพื่ออัพเกรดเซิร์ฟเวอร์และเพิ่มประสิทธิภาพ
+                            </p>
+                            <div class="text-sm text-gray-500">
+                                <div class="mb-1"><strong>Impact:</strong> Dashboard unavailable</div>
+                                <div><strong>Duration:</strong> 2 hours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Metrics -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">ประสิทธิภาพระบบ</h2>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
+                    <div class="text-green-600 mb-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">99.98%</div>
+                    <div class="text-sm text-gray-600">Uptime (90 วัน)</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200 p-6">
+                    <div class="text-blue-600 mb-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">180ms</div>
+                    <div class="text-sm text-gray-600">API Response Time</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-6">
+                    <div class="text-purple-600 mb-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">98.5%</div>
+                    <div class="text-sm text-gray-600">Success Rate</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-200 p-6">
+                    <div class="text-orange-600 mb-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">45ms</div>
+                    <div class="text-sm text-gray-600">Database Query</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscribe Section -->
+    <section class="py-16 bg-gradient-to-r from-purple-600 to-blue-600">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center text-white">
+            <div class="text-5xl mb-4">🔔</div>
+            <h2 class="text-4xl font-bold mb-4">รับการแจ้งเตือนสถานะ</h2>
+            <p class="text-xl mb-8 opacity-90">
+                สมัครรับอีเมลแจ้งเตือนเมื่อมีการเปลี่ยนแปลงสถานะระบบ
+            </p>
+            <form class="max-w-md mx-auto flex gap-3">
+                <input 
+                    type="email" 
+                    placeholder="อีเมลของคุณ" 
+                    class="flex-1 px-6 py-4 rounded-full text-gray-900 focus:outline-none"
+                    required
+                >
+                <button type="submit" class="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition">
+                    สมัคร
+                </button>
+            </form>
+            <p class="text-sm mt-4 opacity-75">รับการแจ้งเตือนเมื่อมี Incident หรือ Maintenance เท่านั้น</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 gradient-text">Elixopay</h3>
+                    <p class="text-gray-400 text-sm">Payment Gateway ที่ปลอดภัยที่สุดสำหรับธุรกิจของคุณ</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">ผลิตภัณฑ์</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="/pricing.html" class="hover:text-white">ราคา</a></li>
+                        <li><a href="/docs.html" class="hover:text-white">เอกสาร API</a></li>
+                        <li><a href="/usecases.html" class="hover:text-white">Use Cases</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">บริษัท</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="/about.html" class="hover:text-white">เกี่ยวกับเรา</a></li>
+                        <li><a href="/blog.html" class="hover:text-white">บล็อก</a></li>
+                        <li><a href="/status.html" class="hover:text-white">สถานะระบบ</a></li>
+                        <li><a href="/contact.html" class="hover:text-white">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">ติดต่อเรา</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li>support@elixopay.com</li>
+                        <li>+66 2 123 4567</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-gray-400">© 2568 Elixopay. สงวนลิขสิทธิ์.</p>
+                <div class="flex gap-4 text-sm text-gray-400">
+                    <a href="/terms.html" class="hover:text-white">ข้อกำหนด</a>
+                    <a href="/privacy.html" class="hover:text-white">ความเป็นส่วนตัว</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('active');
+        });
+
+        // Update last updated time
+        function updateLastUpdated() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const thaiDate = now.toLocaleDateString('th-TH', options);
+            document.getElementById('last-updated').textContent = thaiDate + ' น.';
+        }
+
+        // Update every 60 seconds
+        setInterval(updateLastUpdated, 60000);
+
+        // Subscribe form
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            alert('ขอบคุณที่สมัครรับการแจ้งเตือน! เราจะแจ้งให้คุณทราบเมื่อมีการเปลี่ยนแปลงสถานะระบบที่ ' + email);
+            this.reset();
+        });
+
+        // Simulate real-time status check (for demo purposes)
+        function checkSystemStatus() {
+            // In production, this would make an API call to check actual status
+            console.log('Checking system status...');
+        }
+
+        // Check status every 30 seconds
+        setInterval(checkSystemStatus, 30000);
+    </script>
+</body>
+</html>

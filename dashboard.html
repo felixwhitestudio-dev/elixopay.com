@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Dashboard - Elixopay</title>
+    
+    <!-- API Configuration -->
+    <script src="/js/api-config.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' http://localhost:3000 https://*.railway.app https://*.yourdomain.com;">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%); }
+        .hover-lift { transition: transform 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); }
+        .stat-card { background: linear-gradient(135deg, rgba(99, 91, 255, 0.05) 0%, rgba(155, 142, 255, 0.05) 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 fixed h-full z-20 transition-transform duration-300">
+            <div class="p-6 border-b border-gray-200">
+                <a href="/index.html" class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">Elixopay</a>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="#overview" onclick="showSection('overview')" class="nav-link active flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="font-medium">ภาพรวม</span>
+                </a>
+                <a href="#transactions" onclick="showSection('transactions')" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <span class="font-medium">รายการธุรกรรม</span>
+                </a>
+                <a href="#apikeys" onclick="showSection('apikeys')" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                    <span class="font-medium">API Keys</span>
+                </a>
+                <a href="#settings" onclick="showSection('settings')" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="font-medium">ตั้งค่า</span>
+                </a>
+                <a href="/docs.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="font-medium">เอกสาร API</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-64">
+            <!-- Top Header -->
+            <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+                <div class="flex items-center justify-between px-8 py-4">
+                    <button id="menuToggle" class="lg:hidden text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
+                                <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-semibold">
+                                    U
+                                </div>
+                                <span class="font-medium">user@example.com</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <div id="overview-section" class="section-content p-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">ภาพรวม</h1>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card rounded-xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm font-medium">ยอดขายวันนี้</span>
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900 total-revenue">฿0</p>
+                        <p class="text-sm text-green-600 mt-2">+12.5% จากเมื่อวาน</p>
+                    </div>
+                    <div class="stat-card rounded-xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm font-medium">รายการสำเร็จ</span>
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900 total-payments">0</p>
+                        <p class="text-sm text-green-600 mt-2">+8.2% จากเมื่อวาน</p>
+                    </div>
+                    <div class="stat-card rounded-xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm font-medium">อัตราสำเร็จ</span>
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900 success-rate">0%</p>
+                        <p class="text-sm text-gray-500 mt-2">เท่ากับเมื่อวาน</p>
+                    </div>
+                    <div class="stat-card rounded-xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600 text-sm font-medium">รายการรอดำเนินการ</span>
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900 pending-payments">0</p>
+                        <p class="text-sm text-gray-500 mt-2">รอการยืนยัน</p>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">รายการล่าสุด</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">ID</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">ลูกค้า</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">จำนวนเงิน</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">สถานะ</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">วันที่</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTransactionsBody">
+                                <tr>
+                                    <td colspan="5" class="py-8 text-center text-gray-500">กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button onclick="showSection('transactions')" class="text-purple-600 hover:text-purple-700 font-medium text-sm">
+                            ดูรายการทั้งหมด →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div id="transactions-section" class="section-content hidden p-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">รายการธุรกรรม</h1>
+                    <button class="px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition font-medium">
+                        ส่งออก CSV
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" placeholder="ค้นหา ID, ลูกค้า..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option>สถานะทั้งหมด</option>
+                            <option>สำเร็จ</option>
+                            <option>รอดำเนินการ</option>
+                            <option>ล้มเหลว</option>
+                        </select>
+                        <input type="date" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <input type="date" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Transaction ID</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">ลูกค้า</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">จำนวนเงิน</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">ค่าธรรมเนียม</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">สุทธิ</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">สถานะ</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">วันที่</th>
+                                    <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">การดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex items-center justify-between mt-6">
+                        <p class="text-sm text-gray-600">แสดง 1-20 จาก 1,234 รายการ</p>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">ก่อนหน้า</button>
+                            <button class="px-3 py-1 gradient-bg text-white rounded-lg text-sm">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">2</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">3</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">ถัดไป</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Keys Section -->
+            <div id="apikeys-section" class="section-content hidden p-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">API Keys</h1>
+                
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                    <div class="flex items-start space-x-3">
+                        <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <div>
+                            <p class="font-semibold text-yellow-800">เก็บ API Keys ของคุณให้ปลอดภัย</p>
+                            <p class="text-sm text-yellow-700 mt-1">อย่าแชร์ API Keys กับบุคคลอื่น และเก็บไว้ในที่ปลอดภัย Keys เหล่านี้ให้สิทธิ์เข้าถึงบัญชีของคุณได้อย่างเต็มที่</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-gray-900">API Keys ของคุณ</h2>
+                        <button onclick="showCreateKeyModal()" class="px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition font-medium">
+                            + สร้าง Key ใหม่
+                        </button>
+                    </div>
+                    <div id="apiKeysList" class="space-y-4">
+                        <div class="text-center py-8 text-gray-500">
+                            กำลังโหลด API Keys...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webhooks -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-gray-900">Webhook Endpoints</h2>
+                        <button onclick="showAddWebhookModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium">
+                            + เพิ่ม Endpoint
+                        </button>
+                    </div>
+                    <div id="webhooksList" class="space-y-3">
+                        <div class="text-center py-8 text-gray-500">
+                            กำลังโหลด Webhooks...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="section-content hidden p-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">ตั้งค่าบัญชี</h1>
+                
+                <!-- Profile Settings -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">ข้อมูลส่วนตัว</h2>
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label>
+                                <input type="text" value="สมชาย" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
+                                <input type="text" value="ใจดี" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                            <input type="email" value="user@example.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรศัพท์</label>
+                            <input type="tel" value="+66 81 234 5678" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <button type="submit" class="px-6 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition font-medium">
+                            บันทึกการเปลี่ยนแปลง
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">ความปลอดภัย</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-200">
+                            <div>
+                                <p class="font-medium text-gray-900">เปลี่ยนรหัสผ่าน</p>
+                                <p class="text-sm text-gray-500">เปลี่ยนรหัสผ่านล่าสุด: 15 ต.ค. 2568</p>
+                            </div>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium">
+                                เปลี่ยน
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-200">
+                            <div>
+                                <p class="font-medium text-gray-900">การยืนยันตัวตนแบบสองขั้นตอน (2FA)</p>
+                                <p class="text-sm text-gray-500">เพิ่มความปลอดภัยให้กับบัญชีของคุณ</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-900">เซสชันที่เปิดใช้งาน</p>
+                                <p class="text-sm text-gray-500">จัดการอุปกรณ์ที่เข้าสู่ระบบ</p>
+                            </div>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium">
+                                จัดการ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">การแจ้งเตือน</h2>
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-900">การชำระเงินสำเร็จ</p>
+                                <p class="text-sm text-gray-500">รับการแจ้งเตือนเมื่อมีการชำระเงินสำเร็จ</p>
+                            </div>
+                            <input type="checkbox" checked class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                        </label>
+                        <label class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-900">การชำระเงินล้มเหลว</p>
+                                <p class="text-sm text-gray-500">รับการแจ้งเตือนเมื่อมีการชำระเงินล้มเหลว</p>
+                            </div>
+                            <input type="checkbox" checked class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                        </label>
+                        <label class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-900">การคืนเงิน</p>
+                                <p class="text-sm text-gray-500">รับการแจ้งเตือนเมื่อมีการคืนเงิน</p>
+                            </div>
+                            <input type="checkbox" checked class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                        </label>
+                        <label class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-900">อัปเดตจากระบบ</p>
+                                <p class="text-sm text-gray-500">รับข่าวสารและการอัปเดตจาก Elixopay</p>
+                            </div>
+                            <input type="checkbox" class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Define functions in global scope first
+        window.showSection = function(sectionName) {
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'bg-purple-50', 'text-purple-600');
+                link.classList.add('text-gray-700');
+            });
+            
+            const activeLink = document.querySelector(`a[href="#${sectionName}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active', 'bg-purple-50', 'text-purple-600');
+                activeLink.classList.remove('text-gray-700');
+            }
+            
+            // Load data when switching to specific sections
+            if (sectionName === 'apikeys') {
+                loadAPIKeys();
+                loadWebhooks();
+            } else if (sectionName === 'transactions') {
+                populateTransactions();
+            }
+        };
+
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('menuToggle')?.addEventListener('click', function() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        });
+
+        // Copy to Clipboard
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('คัดลอก API Key สำเร็จ!');
+            });
+        };
+
+        // Populate Transactions Table
+        async function populateTransactions() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(apiUrl('/api/v1/payments?limit=20'), {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch transactions');
+                }
+                
+                const data = await response.json();
+                const transactions = data.payments || [];
+                
+                const tbody = document.getElementById('transactionsTableBody');
+                tbody.innerHTML = transactions.map(tx => {
+                    const statusClasses = {
+                        succeeded: 'bg-green-100 text-green-700',
+                        pending: 'bg-yellow-100 text-yellow-700',
+                        failed: 'bg-red-100 text-red-700'
+                    };
+                    const statusText = {
+                        succeeded: 'สำเร็จ',
+                        pending: 'รอดำเนินการ',
+                        failed: 'ล้มเหลว'
+                    };
+                    
+                    const amount = parseFloat(tx.amount) || 0;
+                    const fee = parseFloat(tx.fee) || 0;
+                    const net = amount - fee;
+                    
+                    return `
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-4 px-4 text-sm font-mono text-gray-900">${tx.id || tx.stripe_payment_id}</td>
+                            <td class="py-4 px-4 text-sm text-gray-900">${tx.customer_email || '-'}</td>
+                            <td class="py-4 px-4 text-sm font-semibold text-gray-900">฿${amount.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                            <td class="py-4 px-4 text-sm text-gray-600">฿${fee.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                            <td class="py-4 px-4 text-sm font-semibold text-gray-900">฿${net.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                            <td class="py-4 px-4"><span class="px-3 py-1 rounded-full text-xs font-medium ${statusClasses[tx.status] || 'bg-gray-100 text-gray-700'}">${statusText[tx.status] || tx.status}</span></td>
+                            <td class="py-4 px-4 text-sm text-gray-600">${new Date(tx.created_at).toLocaleString('th-TH')}</td>
+                            <td class="py-4 px-4">
+                                <button class="text-purple-600 hover:text-purple-700 text-sm font-medium">ดูรายละเอียด</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                if (transactions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-gray-500">ยังไม่มีรายการธุรกรรม</td></tr>';
+                }
+            } catch (error) {
+                console.error('Failed to load transactions:', error);
+                const tbody = document.getElementById('transactionsTableBody');
+                tbody.innerHTML = '<tr><td colspan="8" class="py-8 text-center text-red-500">ไม่สามารถโหลดรายการธุรกรรมได้</td></tr>';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Display user info
+            if (user.email) {
+                const emailElements = document.querySelectorAll('span.font-medium');
+                emailElements.forEach(el => {
+                    if (el.textContent === 'user@example.com') {
+                        el.textContent = user.email;
+                    }
+                });
+            }
+            
+            if (user.first_name && user.last_name) {
+                const initials = user.first_name.charAt(0) + user.last_name.charAt(0);
+                document.querySelectorAll('.w-10.h-10.rounded-full.gradient-bg').forEach(el => {
+                    el.textContent = initials.toUpperCase();
+                });
+            }
+            
+            // Load dashboard data
+            loadDashboardData();
+            populateTransactions();
+            
+            // Check URL hash and show correct section
+            const hash = window.location.hash.substring(1); // Remove #
+            if (hash && hash !== 'overview') {
+                showSection(hash);
+            }
+        });
+        
+        async function loadDashboardData() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                // Get user stats
+                const statsResponse = await fetch(apiUrl('/api/v1/users/stats'), {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (statsResponse.ok) {
+                    const data = await statsResponse.json();
+                    updateDashboardStats(data.stats);
+                } else if (statsResponse.status === 401) {
+                    localStorage.clear();
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                // Get recent transactions for overview
+                const paymentsResponse = await fetch(apiUrl('/api/v1/payments?limit=5'), {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (paymentsResponse.ok) {
+                    const paymentsData = await paymentsResponse.json();
+                    updateRecentTransactions(paymentsData.payments || []);
+                }
+                
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+            }
+        }
+        
+        function updateDashboardStats(stats) {
+            // Update total revenue
+            if (stats.total_revenue !== undefined) {
+                const revenue = parseFloat(stats.total_revenue) || 0;
+                document.querySelector('.total-revenue').textContent = 
+                    `฿${revenue.toLocaleString('th-TH', {minimumFractionDigits: 2})}`;
+            }
+            
+            // Update payment counts
+            if (stats.total_payments !== undefined) {
+                document.querySelector('.total-payments').textContent = 
+                    parseInt(stats.total_payments).toLocaleString('th-TH');
+            }
+            
+            if (stats.pending_payments !== undefined) {
+                document.querySelector('.pending-payments').textContent = 
+                    parseInt(stats.pending_payments).toLocaleString('th-TH');
+            }
+            
+            // Calculate success rate
+            if (stats.successful_payments !== undefined && stats.total_payments !== undefined) {
+                const total = parseInt(stats.total_payments);
+                const successful = parseInt(stats.successful_payments);
+                const rate = total > 0 ? ((successful / total) * 100).toFixed(1) : 0;
+                document.querySelector('.success-rate').textContent = `${rate}%`;
+            }
+        }
+        
+        function updateRecentTransactions(payments) {
+            const tbody = document.getElementById('recentTransactionsBody');
+            
+            if (payments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-gray-500">ยังไม่มีรายการธุรกรรม</td></tr>';
+                return;
+            }
+            
+            const statusClasses = {
+                succeeded: 'bg-green-100 text-green-700',
+                pending: 'bg-yellow-100 text-yellow-700',
+                failed: 'bg-red-100 text-red-700'
+            };
+            const statusText = {
+                succeeded: 'สำเร็จ',
+                pending: 'รอดำเนินการ',
+                failed: 'ล้มเหลว'
+            };
+            
+            tbody.innerHTML = payments.map(tx => {
+                const amount = parseFloat(tx.amount) || 0;
+                return `
+                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                        <td class="py-4 px-4 text-sm font-mono text-gray-900">${tx.id || tx.stripe_payment_id}</td>
+                        <td class="py-4 px-4 text-sm text-gray-900">${tx.customer_email || '-'}</td>
+                        <td class="py-4 px-4 text-sm font-semibold text-gray-900">฿${amount.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                        <td class="py-4 px-4"><span class="px-3 py-1 rounded-full text-xs font-medium ${statusClasses[tx.status] || 'bg-gray-100 text-gray-700'}">${statusText[tx.status] || tx.status}</span></td>
+                        <td class="py-4 px-4 text-sm text-gray-600">${new Date(tx.created_at).toLocaleString('th-TH')}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // API Keys Management
+        async function loadAPIKeys() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(apiUrl('/api/v1/api-keys'), {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load API keys');
+                }
+                
+                const data = await response.json();
+                displayAPIKeys(data.api_keys || []);
+            } catch (error) {
+                console.error('Failed to load API keys:', error);
+                document.getElementById('apiKeysList').innerHTML = 
+                    '<div class="text-center py-8 text-red-500">ไม่สามารถโหลด API Keys ได้</div>';
+            }
+        }
+        
+        function displayAPIKeys(keys) {
+            const container = document.getElementById('apiKeysList');
+            
+            if (keys.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <p class="mb-4">คุณยังไม่มี API Keys</p>
+                        <button onclick="showCreateKeyModal()" class="px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition font-medium">
+                            สร้าง API Key แรกของคุณ
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = keys.map(key => {
+                const envBadge = key.environment === 'live' 
+                    ? '<span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">Live</span>'
+                    : '<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">Test</span>';
+                
+                const statusBadge = key.is_active
+                    ? '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">ใช้งาน</span>'
+                    : '<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">ถูกเพิกถอน</span>';
+                
+                const maskedKey = key.api_key.substring(0, 15) + '••••••••••••••••••••••••••' + key.api_key.slice(-4);
+                
+                const lastUsed = key.last_used_at 
+                    ? `ใช้ล่าสุด: ${new Date(key.last_used_at).toLocaleString('th-TH')}`
+                    : 'ยังไม่เคยใช้งาน';
+                
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <p class="font-semibold text-gray-900">${key.key_name}</p>
+                                ${envBadge}
+                            </div>
+                            ${statusBadge}
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <code class="flex-1 px-3 py-2 bg-gray-50 rounded border border-gray-200 text-sm font-mono">${maskedKey}</code>
+                            <button onclick="copyToClipboard('${key.api_key}')" class="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm font-medium">
+                                คัดลอก
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="text-gray-600">
+                                <p>สร้างเมื่อ: ${new Date(key.created_at).toLocaleString('th-TH')}</p>
+                                <p>${lastUsed}</p>
+                            </div>
+                            ${key.is_active ? `
+                                <button onclick="revokeAPIKey('${key.id}', '${key.key_name}')" class="text-red-600 hover:text-red-700 font-medium">
+                                    เพิกถอน
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        window.showCreateKeyModal = function() {
+            const modal = `
+                <div id="createKeyModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">สร้าง API Key ใหม่</h3>
+                        <form onsubmit="createAPIKey(event)">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ Key</label>
+                                <input type="text" id="keyName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="เช่น Production Key">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Environment</label>
+                                <select id="keyEnvironment" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="test">Test (ทดสอบ)</option>
+                                    <option value="live">Live (ใช้งานจริง)</option>
+                                </select>
+                            </div>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                                <p class="text-sm text-yellow-800">
+                                    ⚠️ API Key และ Secret จะแสดงเพียงครั้งเดียว กรุณาเก็บรักษาไว้ในที่ปลอดภัย
+                                </p>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button type="button" onclick="closeCreateKeyModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium">
+                                    ยกเลิก
+                                </button>
+                                <button type="submit" class="flex-1 px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 font-medium">
+                                    สร้าง
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+        
+        window.closeCreateKeyModal = function() {
+            document.getElementById('createKeyModal')?.remove();
+            document.getElementById('keyCreatedModal')?.remove();
+        }
+        
+        window.createAPIKey = async function(event) {
+            event.preventDefault();
+            const token = localStorage.getItem('token');
+            const keyName = document.getElementById('keyName').value;
+            const keyEnvironment = document.getElementById('keyEnvironment').value;
+            
+            try {
+                const response = await fetch(apiUrl('/api/v1/api-keys'), {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        key_name: keyName,
+                        environment: keyEnvironment
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create API key');
+                }
+                
+                closeCreateKeyModal();
+                showKeyCreatedModal(data.api_key, data.api_secret);
+                loadAPIKeys(); // Reload list
+            } catch (error) {
+                console.error('Failed to create API key:', error);
+                alert('ไม่สามารถสร้าง API Key ได้ กรุณาลองใหม่อีกครั้ง');
+            }
+        }
+        
+        window.showKeyCreatedModal = function(apiKey, apiSecret) {
+            const modal = `
+                <div id="keyCreatedModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">✅ สร้าง API Key สำเร็จ!</h3>
+                        
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                            <p class="text-sm text-red-800 font-semibold">⚠️ สำคัญมาก!</p>
+                            <p class="text-sm text-red-700 mt-1">นี่คือครั้งเดียวที่คุณจะเห็น API Secret กรุณาคัดลอกและเก็บรักษาไว้ในที่ปลอดภัย</p>
+                        </div>
+                        
+                        <div class="space-y-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+                                <div class="flex items-center space-x-2">
+                                    <code class="flex-1 px-3 py-2 bg-gray-50 rounded border border-gray-200 text-sm font-mono">${apiKey.api_key}</code>
+                                    <button onclick="copyToClipboard('${apiKey.api_key}')" class="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm font-medium">
+                                        คัดลอก
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">API Secret (แสดงครั้งเดียว)</label>
+                                <div class="flex items-center space-x-2">
+                                    <code class="flex-1 px-3 py-2 bg-yellow-50 rounded border border-yellow-300 text-sm font-mono">${apiSecret}</code>
+                                    <button onclick="copyToClipboard('${apiSecret}')" class="px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm font-medium">
+                                        คัดลอก
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="closeCreateKeyModal()" class="w-full px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 font-medium">
+                            เข้าใจแล้ว
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+        
+        window.revokeAPIKey = async function(keyId, keyName) {
+            if (!confirm(`คุณแน่ใจหรือไม่ว่าต้องการเพิกถอน API Key "${keyName}"?\n\nการกระทำนี้ไม่สามารถยกเลิกได้`)) {
+                return;
+            }
+            
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(apiUrl(`/api/v1/api-keys/${keyId}`), {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to revoke API key');
+                }
+                
+                alert('เพิกถอน API Key สำเร็จ');
+                loadAPIKeys(); // Reload list
+            } catch (error) {
+                console.error('Failed to revoke API key:', error);
+                alert('ไม่สามารถเพิกถอน API Key ได้ กรุณาลองใหม่อีกครั้ง');
+            }
+        }
+        
+        // Webhook Management Functions
+        async function loadWebhooks() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(apiUrl('/api/v1/webhooks'), {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load webhooks');
+                }
+                
+                const data = await response.json();
+                displayWebhooks(data.webhooks || []);
+            } catch (error) {
+                console.error('Failed to load webhooks:', error);
+                document.getElementById('webhooksList').innerHTML = 
+                    '<div class="text-center py-8 text-red-500">ไม่สามารถโหลด Webhooks ได้</div>';
+            }
+        }
+        
+        function displayWebhooks(webhooks) {
+            const container = document.getElementById('webhooksList');
+            
+            if (webhooks.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <p class="mb-4">คุณยังไม่มี Webhook Endpoints</p>
+                        <button onclick="showAddWebhookModal()" class="px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 transition font-medium">
+                            เพิ่ม Webhook แรกของคุณ
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = webhooks.map(webhook => {
+                const statusBadge = webhook.is_active !== false
+                    ? '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium ml-4">เปิดใช้งาน</span>'
+                    : '<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium ml-4">ปิดใช้งาน</span>';
+                
+                const events = Array.isArray(webhook.enabled_events) 
+                    ? webhook.enabled_events.join(', ')
+                    : (webhook.events || 'payment.success, payment.failed, refund.created');
+                
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="font-mono text-sm text-gray-900 mb-1">${webhook.url}</p>
+                                <p class="text-xs text-gray-500">Events: ${events}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                ${statusBadge}
+                                <button onclick="deleteWebhook('${webhook.id}', '${webhook.url}')" class="text-red-600 hover:text-red-700 text-sm font-medium ml-2">
+                                    ลบ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        window.showAddWebhookModal = function() {
+            const modal = `
+                <div id="addWebhookModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">เพิ่ม Webhook Endpoint</h3>
+                        <form onsubmit="createWebhook(event)">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Endpoint URL</label>
+                                <input type="url" id="webhookUrl" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="https://api.example.com/webhooks/payment">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Events</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" value="payment.success" checked class="webhook-event w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                                        <span class="ml-2 text-sm text-gray-700">payment.success</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" value="payment.failed" checked class="webhook-event w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                                        <span class="ml-2 text-sm text-gray-700">payment.failed</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" value="refund.created" checked class="webhook-event w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                                        <span class="ml-2 text-sm text-gray-700">refund.created</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                                <p class="text-sm text-blue-800">
+                                    ℹ️ Webhook จะส่ง HTTP POST request ไปยัง URL นี้เมื่อเหตุการณ์ที่เลือกเกิดขึ้น
+                                </p>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button type="button" onclick="closeWebhookModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium">
+                                    ยกเลิก
+                                </button>
+                                <button type="submit" class="flex-1 px-4 py-2 gradient-bg text-white rounded-lg hover:opacity-90 font-medium">
+                                    เพิ่ม Endpoint
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+        
+        window.closeWebhookModal = function() {
+            document.getElementById('addWebhookModal')?.remove();
+        }
+        
+        window.createWebhook = async function(event) {
+            event.preventDefault();
+            const token = localStorage.getItem('token');
+            const url = document.getElementById('webhookUrl').value;
+            const checkboxes = document.querySelectorAll('.webhook-event:checked');
+            const events = Array.from(checkboxes).map(cb => cb.value);
+            
+            if (events.length === 0) {
+                alert('กรุณาเลือกอย่างน้อย 1 Event');
+                return;
+            }
+            
+            try {
+                const response = await fetch(apiUrl('/api/v1/webhooks'), {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        enabled_events: events
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to create webhook');
+                }
+                
+                const data = await response.json();
+                closeWebhookModal();
+                alert('เพิ่ม Webhook Endpoint สำเร็จ!');
+                loadWebhooks(); // Reload list
+            } catch (error) {
+                console.error('Failed to create webhook:', error);
+                alert('ไม่สามารถเพิ่ม Webhook ได้ กรุณาลองใหม่อีกครั้ง');
+            }
+        }
+        
+        window.deleteWebhook = async function(webhookId, webhookUrl) {
+            if (!confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบ Webhook "${webhookUrl}"?\n\nการกระทำนี้ไม่สามารถยกเลิกได้`)) {
+                return;
+            }
+            
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(apiUrl(`/api/v1/webhooks/${webhookId}`), {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete webhook');
+                }
+                
+                alert('ลบ Webhook สำเร็จ');
+                loadWebhooks(); // Reload list
+            } catch (error) {
+                console.error('Failed to delete webhook:', error);
+                alert('ไม่สามารถลบ Webhook ได้ กรุณาลองใหม่อีกครั้ง');
+            }
+        }
+    </script>
+</body>
+</html>
+
+```
