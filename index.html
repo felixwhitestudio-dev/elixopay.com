@@ -496,13 +496,20 @@
                 <span>Elixopay</span>
             </a>
             <ul class="nav-links">
-                <li><a href="about.html">เกี่ยวกับเรา</a></li>
-                <li><a href="pricing.html">ราคา</a></li>
-                <li><a href="usecases.html">Use Cases</a></li>
-                <li><a href="docs.html">เอกสาร</a></li>
-                <li><a href="contact.html">ติดต่อ</a></li>
-                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
-                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
+                <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
+                <li><a href="docs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary" data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
                 <li>
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
                 </li>
@@ -516,11 +523,11 @@
     <!-- Hero Section -->
     <section class="hero reveal">
         <div class="hero-content">
-            <h1>ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้</h1>
-            <p>Elixopay คือ Payment Gateway ที่ออกแบบมาเพื่อธุรกิจยุคใหม่ รองรับการชำระเงินที่รวดเร็ว ปลอดภัย และง่ายต่อการผลิตภัณฑ์</p>
+            <h1 data-i18n="index.hero.title">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้</h1>
+            <p data-i18n="index.hero.desc">Elixopay คือ Payment Gateway ที่ออกแบบมาเพื่อธุรกิจยุคใหม่ รองรับการชำระเงินที่รวดเร็ว ปลอดภัย และง่ายต่อการผลิตภัณฑ์</p>
             <div class="hero-buttons">
-                <a href="signup.html" class="btn btn-primary">เริ่มต้นใช้งานฟรี</a>
-                <a href="docs.html" class="btn btn-outline">ดูเอกสาร API</a>
+                <a href="signup.html" class="btn btn-primary" data-i18n="index.hero.ctaPrimary">เริ่มต้นใช้งานฟรี</a>
+                <a href="docs.html" class="btn btn-outline" data-i18n="index.hero.ctaSecondary">ดูเอกสาร API</a>
             </div>
             
             <div class="stats">
@@ -547,8 +554,8 @@
     <!-- Features Section -->
     <section class="features reveal">
         <div class="section-header">
-            <h2 class="section-title">ทำไมต้อง Elixopay?</h2>
-            <p class="section-subtitle">ระบบชำระเงินที่ครบครันและปลอดภัยที่สุด</p>
+            <h2 class="section-title" data-i18n="index.features.title">ทำไมต้อง Elixopay?</h2>
+            <p class="section-subtitle" data-i18n="index.features.subtitle">ระบบชำระเงินที่ครบครันและปลอดภัยที่สุด</p>
         </div>
         <div class="features-grid">
             <div class="feature-card reveal lift">
@@ -678,8 +685,8 @@
     <!-- CTA Section -->
     <section class="cta reveal">
         <div class="cta-content">
-            <h2>พร้อมเริ่มต้นแล้วหรือยัง?</h2>
-            <p>เปิดบัญชีฟรีวันนี้และเริ่มรับชำระเงินออนไลน์ได้ทันที ไม่มีค่าธรรมเนียมแรกเข้า</p>
+            <h2 data-i18n="index.cta.title">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
+            <p data-i18n="index.cta.desc">เปิดบัญชีฟรีวันนี้และเริ่มรับชำระเงินออนไลน์ได้ทันที ไม่มีค่าธรรมเนียมแรกเข้า</p>
             <div class="hero-buttons">
                 <a href="signup.html" class="btn btn-primary" style="background: white; color: var(--primary-color);">เริ่มใช้งานฟรี</a>
                 <a href="contact.html" class="btn btn-outline" style="border-color: white; color: white;">ติดต่อฝ่ายขาย</a>
@@ -695,7 +702,7 @@
                 <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
             <div class="footer-section">
-                <h4>ผลิตภัณฑ์</h4>
+                <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
                 <ul>
                     <li><a href="pricing.html">ราคา</a></li>
                     <li><a href="docs.html">เอกสาร API</a></li>
@@ -704,7 +711,7 @@
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>บริษัท</h4>
+                <h4 data-i18n="footer.company">บริษัท</h4>
                 <ul>
                     <li><a href="about.html">เกี่ยวกับเรา</a></li>
                     <li><a href="blog.html">บล็อก</a></li>
@@ -713,7 +720,7 @@
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>ช่วยเหลือ</h4>
+                <h4 data-i18n="footer.help">ช่วยเหลือ</h4>
                 <ul>
                     <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
                     <li><a href="security.html">ความปลอดภัย</a></li>
@@ -728,6 +735,7 @@
     </footer>
 
     <script src="js/ui.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

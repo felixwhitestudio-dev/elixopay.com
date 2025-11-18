@@ -48,3 +48,7 @@ body.ready #page-skeleton { display: none; }
   .nav-links.show { display: flex !important; position: absolute; right: 1rem; top: 64px; flex-direction: column; gap: 1rem; background: var(--dark-card); padding: 1rem; border-radius: 12px; border: 1px solid rgba(100,102,241,.15); width: calc(100% - 2rem); left: 1rem; }
   body.light .nav-links.show { background: #ffffff; border-color: rgba(99,102,241,.2); }
 }
+
+/* Language select */
+.lang-select { border: 2px solid var(--primary-color); background: transparent; color: var(--text-primary); padding: .45rem .6rem; border-radius: 8px; }
+body.light .lang-select { color: var(--text-primary); }

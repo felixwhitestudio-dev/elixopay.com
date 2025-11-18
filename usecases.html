@@ -323,13 +323,20 @@
                 <span>Elixopay</span>
             </a>
             <ul class="nav-links">
-                <li><a href="about.html">เกี่ยวกับเรา</a></li>
-                <li><a href="pricing.html">ราคา</a></li>
-                <li><a href="usecases.html">Use Cases</a></li>
-                <li><a href="docs.html">เอกสาร</a></li>
-                <li><a href="contact.html">ติดต่อ</a></li>
-                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
-                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
+                <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
+                <li><a href="docs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary" data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
                 <li>
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
                 </li>
@@ -338,7 +345,7 @@
     </nav>
 
     <div class="hero-small reveal">
-        <h1>Use Cases</h1>
+        <h1 data-i18n="usecases.title">Use Cases</h1>
         <p>ดูว่า Elixopay ช่วยธุรกิจในอุตสาหกรรมต่างๆ ให้เติบโตและประสบความสำเร็จได้อย่างไร</p>
     </div>
 
@@ -371,7 +378,7 @@
                 </div>
             </div>
             <div class="use-case-visual">
-                <div class="use-case-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                     <i class="fas fa-shopping-cart"></i>
                 </div>
                 <h3>ร้านค้าออนไลน์</h3>
@@ -407,7 +414,7 @@
                 </div>
             </div>
             <div class="use-case-visual">
-                <div class="use-case-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                     <i class="fas fa-cloud"></i>
                 </div>
                 <h3>SaaS Platform</h3>
@@ -443,7 +450,7 @@
                 </div>
             </div>
             <div class="use-case-visual">
-                <div class="use-case-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                     <i class="fas fa-store"></i>
                 </div>
                 <h3>Marketplace</h3>
@@ -479,7 +486,7 @@
                 </div>
             </div>
             <div class="use-case-visual">
-                <div class="use-case-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                     <i class="fas fa-utensils"></i>
                 </div>
                 <h3>Food Delivery</h3>
@@ -515,7 +522,7 @@
                 </div>
             </div>
             <div class="use-case-visual">
-                <div class="use-case-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
                 <h3>Online Learning</h3>
@@ -551,7 +558,7 @@
                 </div>
             </div>
             <div class="use-case-visual">
-                <div class="use-case-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                     <i class="fas fa-network-wired"></i>
                 </div>
                 <h3>Agency System</h3>
@@ -578,22 +585,22 @@
                 <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
             <div class="footer-section">
-                <h4>ผลิตภัณฑ์</h4>
+                <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
                 <ul>
-                    <li><a href="pricing.html">ราคา</a></li>
+                    <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
                     <li><a href="docs.html">เอกสาร API</a></li>
-                    <li><a href="usecases.html">Use Cases</a></li>
+                    <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>บริษัท</h4>
+                <h4 data-i18n="footer.company">บริษัท</h4>
                 <ul>
                     <li><a href="about.html">เกี่ยวกับเรา</a></li>
                     <li><a href="contact.html">ติดต่อเรา</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>ช่วยเหลือ</h4>
+                <h4 data-i18n="footer.help">ช่วยเหลือ</h4>
                 <ul>
                     <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
                     <li><a href="security.html">ความปลอดภัย</a></li>
@@ -606,6 +613,7 @@
         </div>
     </footer>
     <script src="js/ui.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
         document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
             document.querySelector('.nav-links')?.classList.toggle('show');

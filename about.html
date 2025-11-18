@@ -308,13 +308,20 @@
                 <span>Elixopay</span>
             </a>
             <ul class="nav-links">
-                <li><a href="about.html">เกี่ยวกับเรา</a></li>
-                <li><a href="pricing.html">ราคา</a></li>
-                <li><a href="usecases.html">Use Cases</a></li>
-                <li><a href="docs.html">เอกสาร</a></li>
-                <li><a href="contact.html">ติดต่อ</a></li>
-                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
-                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
+                <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
+                <li><a href="docs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary" data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
                 <li>
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
                 </li>
@@ -323,7 +330,7 @@
     </nav>
 
     <div class="hero-small reveal">
-        <h1>เกี่ยวกับ Elixopay</h1>
+        <h1 data-i18n="about.title">เกี่ยวกับ Elixopay</h1>
         <p>เราสร้างระบบชำระเงินที่ปลอดภัยและเชื่อถือได้เพื่อธุรกิจยุคใหม่</p>
     </div>
 
@@ -407,7 +414,7 @@
                 <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
             <div class="footer-section">
-                <h4>ผลิตภัณฑ์</h4>
+                <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
                 <ul>
                     <li><a href="pricing.html">ราคา</a></li>
                     <li><a href="docs.html">เอกสาร API</a></li>
@@ -415,14 +422,14 @@
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>บริษัท</h4>
+                <h4 data-i18n="footer.company">บริษัท</h4>
                 <ul>
                     <li><a href="about.html">เกี่ยวกับเรา</a></li>
                     <li><a href="contact.html">ติดต่อเรา</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>ช่วยเหลือ</h4>
+                <h4 data-i18n="footer.help">ช่วยเหลือ</h4>
                 <ul>
                     <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
                     <li><a href="security.html">ความปลอดภัย</a></li>
@@ -434,6 +441,8 @@
             <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
+    <script src="js/ui.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/ui.js"></script>
     <script>
         document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
