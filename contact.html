@@ -405,8 +405,10 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="styles/theme.css">
 </head>
 <body>
+    <div id="page-skeleton" aria-hidden="true"></div>
     <nav>
         <div class="container">
             <a href="/" class="logo">
@@ -421,16 +423,19 @@
                 <li><a href="contact.html">ติดต่อ</a></li>
                 <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
                 <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
+                </li>
             </ul>
         </div>
     </nav>
 
-    <div class="hero-small">
+    <div class="hero-small reveal">
         <h1>ติดต่อเรา</h1>
         <p>มีคำถามหรือต้องการความช่วยเหลือ? ทีมของเราพร้อมให้บริการตลอด 24/7</p>
     </div>
 
-    <section class="contact-section">
+    <section class="contact-section reveal">
         <div class="contact-grid">
             <div class="contact-info">
                 <div class="info-card">
@@ -458,7 +463,7 @@
                 </div>
             </div>
 
-            <div class="contact-form">
+            <div class="contact-form reveal lift">
                 <h2 class="form-title">ส่งข้อความถึงเรา</h2>
                 <form id="contactForm">
                     <div class="form-group">
@@ -496,7 +501,7 @@
         </div>
     </section>
 
-    <section class="social-section">
+    <section class="social-section reveal">
         <h2 class="section-title">ติดตามเราบนโซเชียลมีเดีย</h2>
         <p class="section-subtitle">ติดตามข่าวสารและอัพเดทล่าสุด</p>
         <div class="social-links">
@@ -518,7 +523,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer class="reveal">
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
@@ -553,11 +558,15 @@
         </div>
     </footer>
 
+    <script src="js/ui.js"></script>
     <script>
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             alert('ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด');
             this.reset();
+        });
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
+            document.querySelector('.nav-links')?.classList.toggle('show');
         });
     </script>
 </body>

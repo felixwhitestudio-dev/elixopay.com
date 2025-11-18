@@ -1,0 +1,50 @@
+/* Shared UI styles: theme, animations, skeleton, mobile menu */
+:root {
+  --primary-color: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary-color: #10b981;
+}
+
+/* Light mode overrides using CSS variables already used in pages */
+body.light {
+  --dark-bg: #ffffff;
+  --dark-card: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+}
+
+/* Adjust certain components when in light mode */
+body.light nav {
+  background: rgba(255,255,255,0.85) !important;
+  border-bottom-color: rgba(99,102,241,0.15) !important;
+}
+body.light footer {
+  background: var(--dark-card) !important;
+}
+body.light .features,
+body.light .security {
+  background: var(--dark-card) !important;
+}
+
+/* Reveal on scroll */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* Subtle hover lift utility */
+.lift:hover { transform: translateY(-5px); box-shadow: 0 10px 24px rgba(99,102,241,.18); }
+
+/* Page skeleton overlay */
+#page-skeleton { position: fixed; inset: 0; background: linear-gradient(90deg, rgba(148,163,184,.15) 25%, rgba(148,163,184,.25) 37%, rgba(148,163,184,.15) 63%); background-size: 400% 100%; animation: shimmer 1.2s infinite; z-index: 2000; }
+body.ready #page-skeleton { display: none; }
+@keyframes shimmer { 0%{background-position: 200% 0} 100%{background-position: -200% 0} }
+
+/* Theme toggle button */
+.theme-toggle { border: 2px solid var(--primary-color); color: var(--primary-color); background: transparent; padding: .5rem .75rem; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: .5rem; }
+.theme-toggle:hover { background: var(--primary-color); color: #fff; }
+
+/* Mobile menu dropdown */
+@media (max-width: 768px) {
+  .nav-links.show { display: flex !important; position: absolute; right: 1rem; top: 64px; flex-direction: column; gap: 1rem; background: var(--dark-card); padding: 1rem; border-radius: 12px; border: 1px solid rgba(100,102,241,.15); width: calc(100% - 2rem); left: 1rem; }
+  body.light .nav-links.show { background: #ffffff; border-color: rgba(99,102,241,.2); }
+}

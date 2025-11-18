@@ -297,8 +297,10 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="styles/theme.css">
 </head>
 <body>
+    <div id="page-skeleton" aria-hidden="true"></div>
     <nav>
         <div class="container">
             <a href="/" class="logo">
@@ -313,16 +315,19 @@
                 <li><a href="contact.html">ติดต่อ</a></li>
                 <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
                 <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
+                </li>
             </ul>
         </div>
     </nav>
 
-    <div class="hero-small">
+    <div class="hero-small reveal">
         <h1>เกี่ยวกับ Elixopay</h1>
         <p>เราสร้างระบบชำระเงินที่ปลอดภัยและเชื่อถือได้เพื่อธุรกิจยุคใหม่</p>
     </div>
 
-    <section class="section">
+    <section class="section reveal">
         <div class="story-content">
             <div class="story-text">
                 <h3>เรื่องราวของเรา</h3>
@@ -338,7 +343,7 @@
         </div>
     </section>
 
-    <section class="stats-section">
+    <section class="stats-section reveal">
         <h2 class="section-title">ตัวเลขที่พูดแทนเรา</h2>
         <div class="stats-grid">
             <div class="stat-item">
@@ -360,7 +365,7 @@
         </div>
     </section>
 
-    <section class="section">
+    <section class="section reveal">
         <h2 class="section-title">ค่านิยมของเรา</h2>
         <p class="section-subtitle">หลักการที่เรายึดถือในทุกสิ่งที่เราทำ</p>
         <div class="values-grid">
@@ -395,7 +400,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer class="reveal">
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
@@ -429,5 +434,11 @@
             <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
+    <script src="js/ui.js"></script>
+    <script>
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
+            document.querySelector('.nav-links')?.classList.toggle('show');
+        });
+    </script>
 </body>
 </html>

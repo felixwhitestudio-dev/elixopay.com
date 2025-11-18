@@ -411,8 +411,10 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="styles/theme.css">
 </head>
 <body>
+    <div id="page-skeleton" aria-hidden="true"></div>
     <nav>
         <div class="container">
             <a href="/" class="logo">
@@ -427,11 +429,14 @@
                 <li><a href="contact.html">ติดต่อ</a></li>
                 <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
                 <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
+                </li>
             </ul>
         </div>
     </nav>
 
-    <div class="hero-small">
+    <div class="hero-small reveal">
         <h1>แผนราคาที่เหมาะกับทุกธุรกิจ</h1>
         <p>เลือกแพ็กเกจที่เหมาะกับความต้องการของคุณ ไม่มีค่าธรรมเนียมแรกเข้า ยกเลิกได้ทุกเมื่อ</p>
         <div class="billing-toggle">
@@ -440,10 +445,10 @@
         </div>
     </div>
 
-    <section class="pricing-section">
+    <section class="pricing-section reveal">
         <div class="pricing-grid">
             <!-- Starter Plan -->
-            <div class="pricing-card">
+            <div class="pricing-card reveal lift">
                 <div class="plan-name">Starter</div>
                 <p class="plan-description">สำหรับธุรกิจขนาดเล็กที่เริ่มต้น</p>
                 <div class="price">
@@ -488,7 +493,7 @@
             </div>
 
             <!-- Professional Plan (Featured) -->
-            <div class="pricing-card featured">
+            <div class="pricing-card featured reveal lift">
                 <div class="popular-badge">✨ ยอดนิยม</div>
                 <div class="plan-name">Professional</div>
                 <p class="plan-description">สำหรับธุรกิจที่กำลังเติบโต</p>
@@ -534,7 +539,7 @@
             </div>
 
             <!-- Enterprise Plan -->
-            <div class="pricing-card">
+            <div class="pricing-card reveal lift">
                 <div class="plan-name">Enterprise</div>
                 <p class="plan-description">สำหรับองค์กรขนาดใหญ่</p>
                 <div class="price" style="font-size: 2.5rem;">
@@ -580,7 +585,7 @@
         </div>
     </section>
 
-    <section class="comparison-section">
+    <section class="comparison-section reveal">
         <h2 class="section-title">เปรียบเทียบแพ็กเกจ</h2>
         <p class="section-subtitle">ดูรายละเอียดความแตกต่างของแต่ละแพ็กเกจ</p>
         <div class="comparison-table">
@@ -653,7 +658,7 @@
         </div>
     </section>
 
-    <section class="faq-section">
+    <section class="faq-section reveal">
         <h2 class="section-title">คำถามที่พบบ่อย</h2>
         <div class="faq-item">
             <div class="faq-question">
@@ -685,7 +690,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer class="reveal">
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
@@ -719,5 +724,11 @@
             <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
+    <script src="js/ui.js"></script>
+    <script>
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
+            document.querySelector('.nav-links')?.classList.toggle('show');
+        });
+    </script>
 </body>
 </html>

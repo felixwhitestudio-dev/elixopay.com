@@ -312,8 +312,10 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="styles/theme.css">
 </head>
 <body>
+    <div id="page-skeleton" aria-hidden="true"></div>
     <nav>
         <div class="container">
             <a href="/" class="logo">
@@ -328,18 +330,21 @@
                 <li><a href="contact.html">ติดต่อ</a></li>
                 <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
                 <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
+                </li>
             </ul>
         </div>
     </nav>
 
-    <div class="hero-small">
+    <div class="hero-small reveal">
         <h1>Use Cases</h1>
         <p>ดูว่า Elixopay ช่วยธุรกิจในอุตสาหกรรมต่างๆ ให้เติบโตและประสบความสำเร็จได้อย่างไร</p>
     </div>
 
-    <section class="section">
+    <section class="section reveal">
         <!-- E-commerce -->
-        <div class="use-case">
+        <div class="use-case reveal lift">
             <div class="use-case-content">
                 <h2><i class="fas fa-shopping-cart"></i> E-commerce</h2>
                 <h3>ร้านค้าออนไลน์</h3>
@@ -375,7 +380,7 @@
         </div>
 
         <!-- SaaS -->
-        <div class="use-case">
+    <div class="use-case reveal lift">
             <div class="use-case-content">
                 <h2><i class="fas fa-cloud"></i> SaaS Platforms</h2>
                 <h3>แพลตฟอร์ม Software as a Service</h3>
@@ -411,7 +416,7 @@
         </div>
 
         <!-- Marketplace -->
-        <div class="use-case">
+    <div class="use-case reveal lift">
             <div class="use-case-content">
                 <h2><i class="fas fa-store"></i> Marketplace</h2>
                 <h3>แพลตฟอร์ม Marketplace</h3>
@@ -447,7 +452,7 @@
         </div>
 
         <!-- Food Delivery -->
-        <div class="use-case">
+    <div class="use-case reveal lift">
             <div class="use-case-content">
                 <h2><i class="fas fa-utensils"></i> Food Delivery</h2>
                 <h3>แพลตฟอร์มสั่งอาหาร</h3>
@@ -483,7 +488,7 @@
         </div>
 
         <!-- Online Course -->
-        <div class="use-case">
+    <div class="use-case reveal lift">
             <div class="use-case-content">
                 <h2><i class="fas fa-graduation-cap"></i> Online Learning</h2>
                 <h3>แพลตฟอร์มคอร์สออนไลน์</h3>
@@ -555,7 +560,7 @@
         </div>
     </section>
 
-    <section class="cta-section">
+    <section class="cta-section reveal">
         <div class="cta-content">
             <h2>พร้อมเริ่มต้นกับ Elixopay?</h2>
             <p>ไม่ว่าธุรกิจของคุณจะอยู่ในอุตสาหกรรมไหน เรามีโซลูชันที่เหมาะสมสำหรับคุณ</p>
@@ -566,7 +571,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer class="reveal">
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
@@ -600,5 +605,11 @@
             <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
+    <script src="js/ui.js"></script>
+    <script>
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
+            document.querySelector('.nav-links')?.classList.toggle('show');
+        });
+    </script>
 </body>
 </html>

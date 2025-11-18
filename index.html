@@ -482,8 +482,12 @@
             }
         }
     </style>
+    <!-- Shared theme/animation styles -->
+    <link rel="stylesheet" href="styles/theme.css">
 </head>
 <body>
+    <!-- Skeleton overlay -->
+    <div id="page-skeleton" aria-hidden="true"></div>
     <!-- Navigation -->
     <nav>
         <div class="container">
@@ -499,6 +503,9 @@
                 <li><a href="contact.html">ติดต่อ</a></li>
                 <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
                 <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
+                </li>
             </ul>
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -507,7 +514,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero reveal">
         <div class="hero-content">
             <h1>ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้</h1>
             <p>Elixopay คือ Payment Gateway ที่ออกแบบมาเพื่อธุรกิจยุคใหม่ รองรับการชำระเงินที่รวดเร็ว ปลอดภัย และง่ายต่อการผลิตภัณฑ์</p>
@@ -538,48 +545,48 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features">
+    <section class="features reveal">
         <div class="section-header">
             <h2 class="section-title">ทำไมต้อง Elixopay?</h2>
             <p class="section-subtitle">ระบบชำระเงินที่ครบครันและปลอดภัยที่สุด</p>
         </div>
         <div class="features-grid">
-            <div class="feature-card">
+            <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-lock"></i>
                 </div>
                 <h3>ความปลอดภัยระดับสูง</h3>
                 <p>เข้ารหัสข้อมูลแบบ End-to-End พร้อม JWT Authentication, Rate Limiting, และ Security Headers ตามมาตรฐาน OWASP</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-bolt"></i>
                 </div>
                 <h3>เร็วและเสถียร</h3>
                 <p>Response time ต่ำกว่า 200ms พร้อม Uptime 99.9% รองรับ Load สูงด้วย Architecture ที่ออกแบบมาอย่างดี</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-code"></i>
                 </div>
                 <h3>API ที่ใช้งานง่าย</h3>
                 <p>RESTful API ที่ออกแบบมาให้ Developer-Friendly พร้อมเอกสารครบถ้วนและ SDK สำหรับทุกภาษา</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h3>Dashboard ที่ทรงพลัง</h3>
                 <p>ติดตามธุรกรรมแบบ Real-time พร้อมรายงานและกราฟวิเคราะห์ที่ช่วยให้คุณเข้าใจธุรกิจได้ดีขึ้น</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <h3>ระบบ Multi-Level Agency</h3>
                 <p>รองรับระบบตัวแทนหลายระดับ จัดการ Commission และ Sub-agencies ได้อย่างมีประสิทธิภาพ</p>
             </div>
-            <div class="feature-card">
+            <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-headset"></i>
                 </div>
@@ -590,7 +597,7 @@
     </section>
 
     <!-- How It Works -->
-    <section class="how-it-works">
+    <section class="how-it-works reveal">
         <div class="section-header">
             <h2 class="section-title">เริ่มต้นใช้งานใน 3 ขั้นตอน</h2>
             <p class="section-subtitle">ง่ายและรวดเร็ว ไม่ต้องใช้เวลานาน</p>
@@ -615,7 +622,7 @@
     </section>
 
     <!-- Security Section -->
-    <section class="security">
+    <section class="security reveal">
         <div class="security-content">
             <div>
                 <h2 class="section-title">ความปลอดภัยคือสิ่งสำคัญ</h2>
@@ -669,7 +676,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
+    <section class="cta reveal">
         <div class="cta-content">
             <h2>พร้อมเริ่มต้นแล้วหรือยัง?</h2>
             <p>เปิดบัญชีฟรีวันนี้และเริ่มรับชำระเงินออนไลน์ได้ทันที ไม่มีค่าธรรมเนียมแรกเข้า</p>
@@ -720,6 +727,7 @@
         </div>
     </footer>
 
+    <script src="js/ui.js"></script>
     <script>
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -740,6 +748,10 @@
             } else {
                 nav.style.background = 'rgba(15, 23, 42, 0.8)';
             }
+        });
+        // Mobile menu show (in case CSS hides)
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
+            document.querySelector('.nav-links')?.classList.toggle('show');
         });
     </script>
 </body>
