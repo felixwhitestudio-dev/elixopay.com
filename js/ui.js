@@ -1,4 +1,5 @@
 // UI utilities: theme toggle, reveal animations, skeleton hide, mobile menu
+// v1.1.0 - Theme toggle with multi-language support
 (function(){
   const STORAGE_KEY = 'elixopay-theme';
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
