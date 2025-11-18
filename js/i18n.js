@@ -1228,6 +1228,8 @@
     // Update selector if present
     const sel = document.getElementById('langSelect');
     if (sel) sel.value = lang;
+    // Dispatch custom event for other components (e.g., theme toggle)
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
   }
 
   // Initialize on DOM ready
