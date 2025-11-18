@@ -113,6 +113,32 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* Light mode support */
+        body.light {
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+
+        body.light .bg-white {
+            background-color: #f9fafb;
+        }
+
+        body.light .bg-gray-50 {
+            background-color: #ffffff;
+        }
+
+        body.light .text-gray-900 {
+            color: #111827;
+        }
+
+        body.light .text-gray-600 {
+            color: #4b5563;
+        }
+
+        body.light .border-gray-200 {
+            border-color: #e5e7eb;
+        }
     </style>
 </head>
 <body class="antialiased bg-gray-50 text-gray-900">
@@ -309,8 +335,11 @@
 
         <!-- Right Side - Hero Image/Gradient -->
         <div class="hidden lg:flex flex-1 bg-gray-900 hero-gradient items-center justify-center p-12 relative overflow-hidden">
-            <!-- Language Selector -->
-            <div class="absolute top-6 right-6 z-20">
+            <!-- Language Selector & Theme Toggle -->
+            <div class="absolute top-6 right-6 z-20 flex items-center gap-3">
+                <button id="themeToggle" class="bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 text-sm hover:bg-gray-700 transition" aria-label="Toggle theme">
+                    <i class="fas fa-sun"></i> โหมดสว่าง
+                </button>
                 <select id="langSelect" class="bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 text-sm">
                     <option value="th">TH</option>
                     <option value="en">EN</option>
@@ -432,6 +461,7 @@
         </div>
     </div>
 
+    <script src="js/ui.js"></script>
     <script src="js/i18n.js"></script>
     <script>
         // Toggle Password Visibility
