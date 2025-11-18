@@ -2,14 +2,7 @@
   "name": "elixopay-frontend",
   "version": "1.0.0",
   "description": "Elixopay Payment Gateway Frontend",
-  "scripts": {
-    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"python3 -m http.server 8080\"",
-    "dev:local": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"python3 -m http.server 8080\"",
-    "dev:remote": "echo '✅ Using Railway backend' && python3 -m http.server 8080",
-    "dev:backend": "npm --prefix backend run dev",
-    "dev:frontend": "python3 -m http.server 8080",
-    "preview": "python3 -m http.server 8080"
-  },
+  "scripts": {},
   "keywords": [
     "payment",
     "gateway",
