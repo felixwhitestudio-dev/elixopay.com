@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "elixopay-frontend",
   "builds": [
     {
       "src": "*.html",
@@ -8,6 +7,10 @@
     },
     {
       "src": "js/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.svg",
       "use": "@vercel/static"
     }
   ],
@@ -32,6 +35,10 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }

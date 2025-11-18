@@ -1,416 +1,600 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="description" content="ติดต่อ Elixopay - ติดต่อเราได้ทุกช่องทาง">
     <title>ติดต่อเรา - Elixopay</title>
-    <meta name="description" content="ติดต่อทีม Elixopay เพื่อสอบถามข้อมูล ขอคำปรึกษา หรือรับการสนับสนุน">
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-text {
-            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
         }
-        .gradient-bg { background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%); }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
-            transition: all 0.3s ease;
+            background: var(--primary-color);
+            color: white;
         }
-        .btn-primary:hover {
+
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .hero-small {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+        }
+
+        .hero-small h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-small p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .info-card:nth-child(2) .info-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .info-card:nth-child(3) .info-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .info-card:nth-child(4) .info-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .info-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-content p {
+            color: var(--text-secondary);
+        }
+
+        .info-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .info-content a:hover {
+            color: var(--primary-light);
+        }
+
+        .contact-form {
+            background: var(--dark-card);
+            padding: 3rem;
+            border-radius: 16px;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--dark-bg);
+            border: 2px solid rgba(100, 102, 241, 0.2);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 91, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
         }
-        .mobile-menu { display: none; }
-        .mobile-menu.active { display: block; }
+
+        .map-section {
+            padding: 4rem 2rem;
+            background: var(--dark-card);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .map-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 400px;
+            background: var(--dark-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .map-placeholder i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .social-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--dark-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border: 2px solid rgba(100, 102, 241, 0.2);
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            color: var(--primary-color);
+        }
+
+        footer {
+            background: var(--dark-card);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(100, 102, 241, 0.1);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .hero-small h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-12">
-                    <a href="/index.html" class="text-2xl font-bold gradient-text">Elixopay</a>
-                    <div class="hidden md:flex space-x-8">
-                        <a href="/index.html#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
-                        <a href="/pricing.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">ราคา</a>
-                        <a href="/docs.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
-                        <a href="/partners.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">พาร์ทเนอร์</a>
-                        <a href="/contact.html" class="text-gray-900 text-sm font-bold border-b-2 border-purple-600">ติดต่อเรา</a>
-                    </div>
-                </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
-                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
-                </div>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu border-t border-gray-200 bg-white">
-            <div class="px-6 py-4 space-y-3">
-                <a href="/index.html#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
-                <a href="/pricing.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">ราคา</a>
-                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
-                <a href="/partners.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">พาร์ทเนอร์</a>
-                <a href="/contact.html" class="block text-gray-900 text-sm font-bold">ติดต่อเรา</a>
-                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
-                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
-            </div>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html">ราคา</a></li>
+                <li><a href="usecases.html">Use Cases</a></li>
+                <li><a href="docs.html">เอกสาร</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-16 bg-gradient-to-br from-purple-50 to-blue-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto">
-                <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                    ติดต่อ<span class="gradient-text">เรา</span>
-                </h1>
-                <p class="text-xl text-gray-600 mb-8">
-                    ทีมงานของเราพร้อมให้คำปรึกษาและสนับสนุนคุณตลอด 24/7
-                </p>
+    <div class="hero-small">
+        <h1>ติดต่อเรา</h1>
+        <p>มีคำถามหรือต้องการความช่วยเหลือ? ทีมของเราพร้อมให้บริการตลอด 24/7</p>
+    </div>
+
+    <section class="contact-section">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>อีเมล</h3>
+                        <p>ส่งอีเมลถึงเราได้ตลอดเวลา</p>
+                        <a href="mailto:support@elixopay.com">support@elixopay.com</a><br>
+                        <a href="mailto:sales@elixopay.com">sales@elixopay.com</a>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>โทรศัพท์</h3>
+                        <p>ติดต่อทีมขายและซัพพอร์ต</p>
+                        <a href="tel:+6621234567">+66 (0) 2-123-4567</a><br>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;">จันทร์-ศุกร์ 9:00-18:00 น.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>ที่อยู่สำนักงาน</h3>
+                        <p>123 ถนนสุขุมวิท แขวงคลองเตย<br>
+                        เขตคลองเตย กรุงเทพฯ 10110<br>
+                        ประเทศไทย</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>เวลาทำการ</h3>
+                        <p>จันทร์ - ศุกร์: 9:00 - 18:00 น.<br>
+                        เสาร์: 9:00 - 13:00 น.<br>
+                        อาทิตย์และวันหยุดนักขัตฤกษ์: ปิด<br>
+                        <strong style="color: var(--secondary-color);">Support 24/7 Online</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h2 class="form-title">ส่งข้อความถึงเรา</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">ชื่อ - นามสกุล *</label>
+                        <input type="text" id="name" name="name" required placeholder="กรอกชื่อของคุณ">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">อีเมล *</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">เบอร์โทรศัพท์</label>
+                        <input type="tel" id="phone" name="phone" placeholder="08X-XXX-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">หัวข้อ *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">เลือกหัวข้อ</option>
+                            <option value="sales">สอบถามข้อมูลการขาย</option>
+                            <option value="support">ขอความช่วยเหลือทางเทคนิค</option>
+                            <option value="partnership">ความร่วมมือทางธุรกิจ</option>
+                            <option value="billing">เรื่องเกี่ยวกับการเรียกเก็บเงิน</option>
+                            <option value="other">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">ข้อความ *</label>
+                        <textarea id="message" name="message" required placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> ส่งข้อความ
+                    </button>
+                </form>
             </div>
         </div>
     </section>
 
-    <!-- Contact Methods -->
-    <section class="py-16">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-8 mb-16">
-                <!-- Sales -->
-                <div class="bg-white rounded-xl border border-gray-200 p-8 text-center hover:shadow-lg transition">
-                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">ฝ่ายขาย</h3>
-                    <p class="text-gray-600 mb-4">สอบถามข้อมูลผลิตภัณฑ์และราคา</p>
-                    <a href="mailto:sales@elixopay.com" class="text-purple-600 hover:text-purple-700 font-semibold">sales@elixopay.com</a>
-                    <p class="text-gray-600 mt-2">+66 2 123 4567 ต่อ 1</p>
-                </div>
-
-                <!-- Support -->
-                <div class="bg-white rounded-xl border border-gray-200 p-8 text-center hover:shadow-lg transition">
-                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">ฝ่ายสนับสนุน</h3>
-                    <p class="text-gray-600 mb-4">ช่วยเหลือด้านเทคนิคและการใช้งาน</p>
-                    <a href="mailto:support@elixopay.com" class="text-purple-600 hover:text-purple-700 font-semibold">support@elixopay.com</a>
-                    <p class="text-gray-600 mt-2">+66 2 123 4567 ต่อ 2</p>
-                </div>
-
-                <!-- Partners -->
-                <div class="bg-white rounded-xl border border-gray-200 p-8 text-center hover:shadow-lg transition">
-                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">พาร์ทเนอร์</h3>
-                    <p class="text-gray-600 mb-4">สอบถามเกี่ยวกับโปรแกรมพาร์ทเนอร์</p>
-                    <a href="mailto:partners@elixopay.com" class="text-purple-600 hover:text-purple-700 font-semibold">partners@elixopay.com</a>
-                    <p class="text-gray-600 mt-2">+66 2 123 4567 ต่อ 3</p>
-                </div>
+    <section class="map-section">
+        <h2 class="section-title">แผนที่ตั้งสำนักงาน</h2>
+        <p class="section-subtitle">มาเยี่ยมชมเราได้ที่สำนักงานใหญ่</p>
+        <div class="map-container">
+            <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt"></i>
+                <p>Google Maps จะแสดงที่นี่</p>
             </div>
-
-            <!-- Contact Form & Info -->
-            <div class="grid lg:grid-cols-2 gap-12">
-                <!-- Contact Form -->
-                <div class="bg-white rounded-2xl border border-gray-200 p-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">ส่งข้อความถึงเรา</h2>
-                    <p class="text-gray-600 mb-6">กรอกฟอร์มด้านล่าง แล้วเราจะติดต่อกลับภายใน 24 ชั่วโมง</p>
-                    
-                    <form id="contactForm" class="space-y-6">
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label>
-                                <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="ชื่อของคุณ">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
-                                <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="นามสกุล">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
-                            <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="your@email.com">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรศัพท์</label>
-                            <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="0812345678">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">บริษัท</label>
-                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="ชื่อบริษัท (ถ้ามี)">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">เรื่องที่ต้องการติดต่อ</label>
-                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                <option>สอบถามข้อมูลผลิตภัณฑ์</option>
-                                <option>ขอใบเสนอราคา</option>
-                                <option>ปัญหาทางเทคนิค</option>
-                                <option>สนใจเป็นพาร์ทเนอร์</option>
-                                <option>อื่นๆ</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">ข้อความ</label>
-                            <textarea rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="บอกเราว่าเราจะช่วยคุณได้อย่างไร..."></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full btn-primary text-white px-6 py-4 rounded-lg font-semibold text-lg">
-                            ส่งข้อความ
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Office Info & Map -->
-                <div class="space-y-8">
-                    <!-- Office Info -->
-                    <div class="bg-white rounded-2xl border border-gray-200 p-8">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">สำนักงานใหญ่</h3>
-                        
-                        <div class="space-y-6">
-                            <div class="flex items-start space-x-4">
-                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-1">ที่อยู่</h4>
-                                    <p class="text-gray-600">123 อาคารแกรนด์ทาวเวอร์<br>ถนนสาทร แขวงสีลม<br>เขตบางรัก กรุงเทพฯ 10500</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start space-x-4">
-                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-1">โทรศัพท์</h4>
-                                    <p class="text-gray-600">+66 2 123 4567<br>+66 2 123 4568 (Fax)</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start space-x-4">
-                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-1">เวลาทำการ</h4>
-                                    <p class="text-gray-600">จันทร์ - ศุกร์: 9:00 - 18:00<br>เสาร์ - อาทิตย์: ปิด</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start space-x-4">
-                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-1">อีเมล</h4>
-                                    <p class="text-gray-600">info@elixopay.com<br>support@elixopay.com</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Map Placeholder -->
-                    <div class="bg-white rounded-2xl border border-gray-200 p-4">
-                        <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                            <div class="text-center">
-                                <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <p class="text-sm text-gray-500">แผนที่ Google Maps</p>
-                                <p class="text-xs text-gray-400 mt-1">123 สาทร กรุงเทพฯ</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- แทนที่ด้วย Google Maps embed จริงได้ -->
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="py-16 bg-white">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย</h2>
-                <p class="text-lg text-gray-600">คำตอบสำหรับคำถามทั่วไปของลูกค้า</p>
-            </div>
-
-            <div class="space-y-4">
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="faq-question w-full text-left px-6 py-4 flex items-center justify-between hover:bg-gray-50">
-                        <span class="font-semibold text-gray-900">ใช้เวลานานแค่ไหนในการเริ่มใช้งาน?</span>
-                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="faq-answer hidden px-6 pb-4 text-gray-600">
-                        คุณสามารถเริ่มใช้งานได้ภายใน 15 นาที สำหรับการ Integrate API อาจใช้เวลา 1-2 วันทำการ ขึ้นอยู่กับความซับซ้อนของระบบ
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="faq-question w-full text-left px-6 py-4 flex items-center justify-between hover:bg-gray-50">
-                        <span class="font-semibold text-gray-900">มีค่าใช้จ่ายในการติดตั้งหรือไม่?</span>
-                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="faq-answer hidden px-6 pb-4 text-gray-600">
-                        ไม่มีค่าใช้จ่ายในการติดตั้ง ไม่มีค่าธรรมเนียมรายเดือน คุณจ่ายเฉพาะตามธุรกรรมที่เกิดขึ้นจริงเท่านั้น
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="faq-question w-full text-left px-6 py-4 flex items-center justify-between hover:bg-gray-50">
-                        <span class="font-semibold text-gray-900">รองรับช่องทางการชำระเงินอะไรบ้าง?</span>
-                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="faq-answer hidden px-6 pb-4 text-gray-600">
-                        รองรับบัตรเครดิต/เดบิต, QR PromptPay, Mobile Banking, Internet Banking, และ Wallet ชั้นนำของไทย
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="faq-question w-full text-left px-6 py-4 flex items-center justify-between hover:bg-gray-50">
-                        <span class="font-semibold text-gray-900">มีทีม Support ให้คำปรึกษาหรือไม่?</span>
-                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="faq-answer hidden px-6 pb-4 text-gray-600">
-                        มี! ทีม Support ของเราพร้อมให้คำปรึกษาทางอีเมล, โทรศัพท์, และ Live Chat ตลอด 24/7 สำหรับ Business และ Enterprise Plan
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="faq-question w-full text-left px-6 py-4 flex items-center justify-between hover:bg-gray-50">
-                        <span class="font-semibold text-gray-900">ระบบปลอดภัยแค่ไหน?</span>
-                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="faq-answer hidden px-6 pb-4 text-gray-600">
-                        เรารับรอง PCI DSS Level 1, ISO 27001, และใช้การเข้ารหัส TLS 1.3 ข้อมูลบัตรเครดิตถูกเข้ารหัสและไม่เก็บบน Server ของคุณ
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-12 text-center">
-                <p class="text-gray-600 mb-4">ยังมีคำถามอื่นๆ?</p>
-                <a href="#contactForm" class="text-purple-600 hover:text-purple-700 font-semibold">ติดต่อทีม Support →</a>
-            </div>
+    <section class="social-section">
+        <h2 class="section-title">ติดตามเราบนโซเชียลมีเดีย</h2>
+        <p class="section-subtitle">ติดตามข่าวสารและอัพเดทล่าสุด</p>
+        <div class="social-links">
+            <a href="#" class="social-btn" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-btn" title="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-btn" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="social-btn" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="#" class="social-btn" title="Line">
+                <i class="fab fa-line"></i>
+            </a>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4 gradient-text">Elixopay</h3>
-                    <p class="text-gray-400 text-sm">Payment Gateway ที่ปลอดภัยที่สุดสำหรับธุรกิจของคุณ</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">ผลิตภัณฑ์</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/pricing.html" class="hover:text-white">ราคา</a></li>
-                        <li><a href="/docs.html" class="hover:text-white">เอกสาร API</a></li>
-                        <li><a href="/usecases.html" class="hover:text-white">Use Cases</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">บริษัท</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/partners.html" class="hover:text-white">พาร์ทเนอร์</a></li>
-                        <li><a href="/contact.html" class="hover:text-white">ติดต่อเรา</a></li>
-                        <li><a href="/security.html" class="hover:text-white">ความปลอดภัย</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">ติดต่อเรา</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li>support@elixopay.com</li>
-                        <li>+66 2 123 4567</li>
-                    </ul>
-                </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
+                <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-gray-400">© 2568 Elixopay. สงวนลิขสิทธิ์.</p>
-                <div class="flex gap-4 text-sm text-gray-400">
-                    <a href="/terms.html" class="hover:text-white">ข้อกำหนด</a>
-                    <a href="/privacy.html" class="hover:text-white">ความเป็นส่วนตัว</a>
-                </div>
+            <div class="footer-section">
+                <h4>ผลิตภัณฑ์</h4>
+                <ul>
+                    <li><a href="pricing.html">ราคา</a></li>
+                    <li><a href="docs.html">เอกสาร API</a></li>
+                    <li><a href="usecases.html">Use Cases</a></li>
+                </ul>
             </div>
+            <div class="footer-section">
+                <h4>บริษัท</h4>
+                <ul>
+                    <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="contact.html">ติดต่อเรา</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>ช่วยเหลือ</h4>
+                <ul>
+                    <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
+                    <li><a href="security.html">ความปลอดภัย</a></li>
+                    <li><a href="privacy.html">นโยบายความเป็นส่วนตัว</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Mobile Menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('active');
-        });
-
-        // Contact Form
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('ขอบคุณสำหรับข้อความของคุณ!\n\nเราจะติดต่อกลับภายใน 24 ชั่วโมง');
+            alert('ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด');
             this.reset();
-        });
-
-        // FAQ Accordion
-        document.querySelectorAll('.faq-question').forEach(button => {
-            button.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const icon = this.querySelector('svg');
-                
-                // Close all other answers
-                document.querySelectorAll('.faq-answer').forEach(a => {
-                    if (a !== answer) {
-                        a.classList.add('hidden');
-                        a.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
-                
-                // Toggle current answer
-                answer.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
-            });
         });
     </script>
 </body>

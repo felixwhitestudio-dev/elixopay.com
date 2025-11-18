@@ -1,444 +1,604 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 <head>
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="description" content="Use Cases - ตัวอย่างการใช้งาน Elixopay ในธุรกิจต่างๆ">
     <title>Use Cases - Elixopay</title>
-    <meta name="description" content="ดูว่า E-commerce, SaaS, Marketplace และธุรกิจอื่นๆ ใช้ Elixopay เพื่อรับชำระเงินและเติบโตอย่างไร">
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%); }
-        .hover-lift { transition: transform 0.2s ease; }
-        .hover-lift:hover { transform: translateY(-2px); }
-        .case-card { transition: all 0.3s ease; }
-        .case-card:hover { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .hero-small {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+        }
+
+        .hero-small h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-small p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .use-case {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 6rem;
+            padding: 3rem;
+            background: var(--dark-card);
+            border-radius: 16px;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .use-case:nth-child(even) {
+            direction: rtl;
+        }
+
+        .use-case:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .use-case-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .use-case-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .use-case-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .use-case-visual {
+            background: var(--dark-bg);
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .use-case-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .features-list i {
+            color: var(--secondary-color);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-box {
+            background: var(--dark-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .cta-section {
+            padding: 4rem 2rem;
+            background: var(--dark-card);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        footer {
+            background: var(--dark-card);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(100, 102, 241, 0.1);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .hero-small h1 {
+                font-size: 2rem;
+            }
+            
+            .use-case {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-<body class="bg-white">
-    <!-- Navigation -->
-    <nav class="fixed w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="/index.html" class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">Elixopay</a>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">หน้าแรก</a>
-                    <a href="/pricing.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">ราคา</a>
-                    <a href="/docs.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
-                    <a href="/usecases.html" class="text-gray-900 text-sm font-bold">Use Cases</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
-                    <a href="/signup.html" class="gradient-bg text-white px-6 py-2 rounded-full text-sm font-medium hover:opacity-90 transition">เริ่มใช้งานฟรี</a>
-                </div>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-            </div>
-            <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
-                <a href="/index.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">หน้าแรก</a>
-                <a href="/pricing.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">ราคา</a>
-                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
-                <a href="/usecases.html" class="block text-gray-900 text-sm font-bold">Use Cases</a>
-                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
-                <a href="/signup.html" class="block gradient-bg text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
-            </div>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html">ราคา</a></li>
+                <li><a href="usecases.html">Use Cases</a></li>
+                <li><a href="docs.html">เอกสาร</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-16 lg:pt-40 lg:pb-20 bg-gradient-to-br from-purple-50 to-blue-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                สร้างสรรค์ได้ทุกธุรกิจ<br/>
-                <span class="gradient-bg bg-clip-text text-transparent">ด้วย Elixopay</span>
-            </h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                ค้นพบว่าธุรกิจต่างๆ ใช้ Elixopay เพื่อรับชำระเงิน เพิ่มยอดขาย และเติบโตอย่างยั่งยืน
-            </p>
-        </div>
-    </section>
+    <div class="hero-small">
+        <h1>Use Cases</h1>
+        <p>ดูว่า Elixopay ช่วยธุรกิจในอุตสาหกรรมต่างๆ ให้เติบโตและประสบความสำเร็จได้อย่างไร</p>
+    </div>
 
-    <!-- Use Cases Grid -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- E-commerce -->
-                <div class="case-card bg-white border border-gray-200 rounded-2xl p-8 hover-lift">
-                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+    <section class="section">
+        <!-- E-commerce -->
+        <div class="use-case">
+            <div class="use-case-content">
+                <h2><i class="fas fa-shopping-cart"></i> E-commerce</h2>
+                <h3>ร้านค้าออนไลน์</h3>
+                <p>เหมาะสำหรับร้านค้าออนไลน์ที่ต้องการระบบชำระเงินที่รวดเร็วและปลอดภัย รองรับการชำระเงินแบบครั้งเดียว, ผ่อนชำระ และ Subscription</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> รองรับการชำระเงินหลายช่องทาง</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบจัดการคำสั่งซื้ออัตโนมัติ</li>
+                    <li><i class="fas fa-check-circle"></i> Webhook สำหรับอัพเดทสถานะทันที</li>
+                    <li><i class="fas fa-check-circle"></i> รองรับ Refund และ Chargeback</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">+45%</div>
+                        <div class="stat-label">Conversion Rate</div>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">E-commerce</h3>
-                    <p class="text-gray-600 mb-6">รับชำระเงินออนไลน์ได้ทุกช่องทาง พร้อมระบบจัดการคำสั่งซื้อที่ครบถ้วน</p>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">รองรับ บัตรเครดิต, พร้อมเพย์, Mobile Banking</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">One-click checkout เพิ่ม conversion rate</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Fraud detection ป้องกันธุรกรรมปลอม</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">รองรับการคืนเงินอัตโนมัติ</span>
-                        </li>
-                    </ul>
-                    <a href="/signup.html" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium">
-                        เริ่มใช้งาน
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </a>
-                </div>
-
-                <!-- SaaS & Subscriptions -->
-                <div class="case-card bg-white border border-gray-200 rounded-2xl p-8 hover-lift">
-                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <div class="stat-box">
+                        <div class="stat-number">-30%</div>
+                        <div class="stat-label">Cart Abandonment</div>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">SaaS & Subscriptions</h3>
-                    <p class="text-gray-600 mb-6">จัดการรายได้แบบ recurring ได้อย่างง่ายดาย เหมาะกับธุรกิจ subscription</p>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">เรียกเก็บเงินอัตโนมัติทุกเดือน/ปี</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">รองรับ Free trial และ Proration</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Dunning management ลด churn rate</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Invoice & Receipt อัตโนมัติ</span>
-                        </li>
-                    </ul>
-                    <a href="/signup.html" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium">
-                        เริ่มใช้งาน
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </a>
-                </div>
-
-                <!-- Marketplace & Platforms -->
-                <div class="case-card bg-white border border-gray-200 rounded-2xl p-8 hover-lift">
-                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <div class="stat-box">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Success Rate</div>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Marketplace & Platforms</h3>
-                    <p class="text-gray-600 mb-6">แพลตฟอร์มที่เชื่อมต่อผู้ซื้อกับผู้ขาย พร้อมระบบแบ่งเงินอัตโนมัติ</p>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Split payments ให้หลายผู้ขาย</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Escrow payment รักษาความปลอดภัย</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Multi-vendor dashboard</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            <span class="text-sm text-gray-700">Commission management</span>
-                        </li>
-                    </ul>
-                    <a href="/signup.html" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium">
-                        เริ่มใช้งาน
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </a>
                 </div>
+            </div>
+            <div class="use-case-visual">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>ร้านค้าออนไลน์</h3>
+                <p style="color: var(--text-secondary);">ระบบชำระเงินที่ช่วยเพิ่มยอดขาย</p>
             </div>
         </div>
-    </section>
 
-    <!-- Success Stories -->
-    <section class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">
-                    เรื่องราวความสำเร็จ
-                </h2>
-                <p class="text-xl text-gray-600">ธุรกิจชั้นนำที่เชื่อมั่นและเติบโตไปกับ Elixopay</p>
-            </div>
-
-            <!-- Story 1 -->
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 lg:p-12 mb-8">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <div class="text-purple-600 font-semibold mb-2">E-commerce</div>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-4">ShopThai</h3>
-                        <p class="text-lg text-gray-600 mb-6">
-                            "หลังจากเปลี่ยนมาใช้ Elixopay ยอดขายของเราเพิ่มขึ้น 45% ในครึ่งปีแรก 
-                            ระบบ One-click checkout ทำให้ลูกค้าซื้อของง่ายขึ้นมาก และ conversion rate ดีขึ้นเห็นได้ชัด"
-                        </p>
-                        <div class="flex items-center space-x-8 mb-6">
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">45%</div>
-                                <div class="text-sm text-gray-600">เพิ่มยอดขาย</div>
-                            </div>
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">32%</div>
-                                <div class="text-sm text-gray-600">เพิ่ม Conversion</div>
-                            </div>
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">98.9%</div>
-                                <div class="text-sm text-gray-600">Success Rate</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' rx='24' fill='%23635BFF'/%3E%3C/svg%3E" alt="Avatar" class="w-12 h-12 rounded-full">
-                            <div>
-                                <div class="font-semibold text-gray-900">สมชาย ธุรกิจดี</div>
-                                <div class="text-sm text-gray-600">CEO, ShopThai</div>
-                            </div>
-                        </div>
+        <!-- SaaS -->
+        <div class="use-case">
+            <div class="use-case-content">
+                <h2><i class="fas fa-cloud"></i> SaaS Platforms</h2>
+                <h3>แพลตฟอร์ม Software as a Service</h3>
+                <p>เหมาะสำหรับบริษัท SaaS ที่ต้องการระบบจัดการ Subscription และ Recurring Payment ที่ซับซ้อน พร้อมการจัดการ Trial และ Upgrade</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Recurring Billing อัตโนมัติ</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบจัดการ Subscription แบบยืดหยุ่น</li>
+                    <li><i class="fas fa-check-circle"></i> Upgrade/Downgrade แบบ Prorated</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบแจ้งเตือนการชำระเงิน</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">+60%</div>
+                        <div class="stat-label">Retention Rate</div>
                     </div>
-                    <div class="bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl p-8 h-80 flex items-center justify-center">
-                        <div class="text-center">
-                            <svg class="w-24 h-24 mx-auto text-purple-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                            <div class="text-4xl font-bold gradient-bg bg-clip-text text-transparent">ShopThai</div>
-                        </div>
+                    <div class="stat-box">
+                        <div class="stat-number">-50%</div>
+                        <div class="stat-label">Manual Work</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Auto Billing</div>
                     </div>
                 </div>
             </div>
+            <div class="use-case-visual">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>SaaS Platform</h3>
+                <p style="color: var(--text-secondary);">จัดการ Subscription อย่างมืออาชีพ</p>
+            </div>
+        </div>
 
-            <!-- Story 2 -->
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 lg:p-12 mb-8">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="order-2 lg:order-1 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl p-8 h-80 flex items-center justify-center">
-                        <div class="text-center">
-                            <svg class="w-24 h-24 mx-auto text-blue-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            <div class="text-4xl font-bold gradient-bg bg-clip-text text-transparent">CloudFlow</div>
-                        </div>
+        <!-- Marketplace -->
+        <div class="use-case">
+            <div class="use-case-content">
+                <h2><i class="fas fa-store"></i> Marketplace</h2>
+                <h3>แพลตฟอร์ม Marketplace</h3>
+                <p>เหมาะสำหรับแพลตฟอร์ม Marketplace ที่ต้องการระบบแบ่งเงินระหว่างผู้ขายหลายราย พร้อมระบบ Commission และ Payout</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> ระบบ Multi-Level Agency</li>
+                    <li><i class="fas fa-check-circle"></i> Split Payment อัตโนมัติ</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบคำนวณ Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Payout Schedule ที่ยืดหยุ่น</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Automated</div>
                     </div>
-                    <div class="order-1 lg:order-2">
-                        <div class="text-purple-600 font-semibold mb-2">SaaS Platform</div>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-4">CloudFlow</h3>
-                        <p class="text-lg text-gray-600 mb-6">
-                            "ระบบ subscription billing ของ Elixopay ช่วยให้เราจัดการลูกค้ากว่า 10,000 ราย
-                            ได้อย่างง่ายดาย การเรียกเก็บเงินอัตโนมัติทำให้ทีมเราประหยัดเวลาไปได้มาก"
-                        </p>
-                        <div class="flex items-center space-x-8 mb-6">
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">10K+</div>
-                                <div class="text-sm text-gray-600">Subscribers</div>
-                            </div>
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">85%</div>
-                                <div class="text-sm text-gray-600">Retention Rate</div>
-                            </div>
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">99.2%</div>
-                                <div class="text-sm text-gray-600">Uptime</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' rx='24' fill='%234F46E5'/%3E%3C/svg%3E" alt="Avatar" class="w-12 h-12 rounded-full">
-                            <div>
-                                <div class="font-semibold text-gray-900">สมหญิง เทคโนโลยี</div>
-                                <div class="text-sm text-gray-600">CTO, CloudFlow</div>
-                            </div>
-                        </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Real-time</div>
+                        <div class="stat-label">Settlement</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Multi</div>
+                        <div class="stat-label">Sellers</div>
                     </div>
                 </div>
             </div>
+            <div class="use-case-visual">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h3>Marketplace</h3>
+                <p style="color: var(--text-secondary);">จัดการผู้ขายหลายรายได้ง่าย</p>
+            </div>
+        </div>
 
-            <!-- Story 3 -->
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 lg:p-12">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <div class="text-purple-600 font-semibold mb-2">Marketplace</div>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-4">FoodHub</h3>
-                        <p class="text-lg text-gray-600 mb-6">
-                            "Elixopay ช่วยให้เราจัดการการชำระเงินระหว่างลูกค้า ร้านอาหาร และไรเดอร์ได้อย่างราบรื่น 
-                            ระบบ split payment แบ่งเงินให้แต่ละฝ่ายได้อัตโนมัติและรวดเร็ว"
-                        </p>
-                        <div class="flex items-center space-x-8 mb-6">
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">500+</div>
-                                <div class="text-sm text-gray-600">ร้านค้า</div>
-                            </div>
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">50K+</div>
-                                <div class="text-sm text-gray-600">Orders/เดือน</div>
-                            </div>
-                            <div>
-                                <div class="text-3xl font-bold text-gray-900">2.5M</div>
-                                <div class="text-sm text-gray-600">GMV/เดือน</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' rx='24' fill='%2310B981'/%3E%3C/svg%3E" alt="Avatar" class="w-12 h-12 rounded-full">
-                            <div>
-                                <div class="font-semibold text-gray-900">ประยุทธ ธุรกิจดี</div>
-                                <div class="text-sm text-gray-600">Founder, FoodHub</div>
-                            </div>
-                        </div>
+        <!-- Food Delivery -->
+        <div class="use-case">
+            <div class="use-case-content">
+                <h2><i class="fas fa-utensils"></i> Food Delivery</h2>
+                <h3>แพลตฟอร์มสั่งอาหาร</h3>
+                <p>เหมาะสำหรับแอปสั่งอาหารที่ต้องการความรวดเร็วในการประมวลผลและการแบ่งเงินระหว่างร้านค้า ไรเดอร์ และแพลตฟอร์ม</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> ประมวลผลรวดเร็ว < 200ms</li>
+                    <li><i class="fas fa-check-circle"></i> แบ่งเงินอัตโนมัติ 3 ฝ่าย</li>
+                    <li><i class="fas fa-check-circle"></i> รองรับ QR Payment</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบ Tip สำหรับไรเดอร์</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">< 1s</div>
+                        <div class="stat-label">Payment Time</div>
                     </div>
-                    <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-8 h-80 flex items-center justify-center">
-                        <div class="text-center">
-                            <svg class="w-24 h-24 mx-auto text-green-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <div class="text-4xl font-bold gradient-bg bg-clip-text text-transparent">FoodHub</div>
-                        </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Auto</div>
+                        <div class="stat-label">Split</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Available</div>
                     </div>
                 </div>
+            </div>
+            <div class="use-case-visual">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Food Delivery</h3>
+                <p style="color: var(--text-secondary);">รวดเร็วและสะดวกสบาย</p>
+            </div>
+        </div>
+
+        <!-- Online Course -->
+        <div class="use-case">
+            <div class="use-case-content">
+                <h2><i class="fas fa-graduation-cap"></i> Online Learning</h2>
+                <h3>แพลตฟอร์มคอร์สออนไลน์</h3>
+                <p>เหมาะสำหรับแพลตฟอร์มการเรียนออนไลน์ที่ต้องการระบบชำระเงินแบบครั้งเดียวหรือ Subscription พร้อมระบบแบ่งรายได้กับผู้สอน</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> One-time & Subscription Payment</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบแบ่งรายได้กับผู้สอน</li>
+                    <li><i class="fas fa-check-circle"></i> รองรับ Coupon และ Discount</li>
+                    <li><i class="fas fa-check-circle"></i> ระบบ Refund Policy</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">+40%</div>
+                        <div class="stat-label">Course Sales</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Auto</div>
+                        <div class="stat-label">Payout</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Easy</div>
+                        <div class="stat-label">Integration</div>
+                    </div>
+                </div>
+            </div>
+            <div class="use-case-visual">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Online Learning</h3>
+                <p style="color: var(--text-secondary);">สร้างรายได้จากคอร์สออนไลน์</p>
+            </div>
+        </div>
+
+        <!-- Agency Platform -->
+        <div class="use-case">
+            <div class="use-case-content">
+                <h2><i class="fas fa-network-wired"></i> Multi-Level Agency</h2>
+                <h3>ระบบตัวแทนหลายระดับ</h3>
+                <p>เหมาะสำหรับธุรกิจที่มีโครงสร้างตัวแทนหลายระดับ สามารถจัดการ Commission และ Sub-agency ได้อย่างมีประสิทธิภาพ</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> ระบบ Multi-Level Agency</li>
+                    <li><i class="fas fa-check-circle"></i> Commission Rules ที่ยืดหยุ่น</li>
+                    <li><i class="fas fa-check-circle"></i> Dashboard แยกตามระดับ</li>
+                    <li><i class="fas fa-check-circle"></i> รายงานและวิเคราะห์แบบ Real-time</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Levels</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Auto</div>
+                        <div class="stat-label">Commission</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Real-time</div>
+                        <div class="stat-label">Reports</div>
+                    </div>
+                </div>
+            </div>
+            <div class="use-case-visual">
+                <div class="use-case-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>Agency System</h3>
+                <p style="color: var(--text-secondary);">จัดการตัวแทนได้ไม่จำกัดระดับ</p>
             </div>
         </div>
     </section>
 
-    <!-- More Use Cases -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                    รองรับทุกประเภทธุรกิจ
-                </h2>
-                <p class="text-lg text-gray-600">ไม่ว่าคุณจะทำธุรกิจแบบไหน Elixopay ก็พร้อมรองรับ</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- More use cases -->
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Education</h3>
-                    <p class="text-sm text-gray-600">คอร์สออนไลน์, สถาบันการศึกษา</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Healthcare</h3>
-                    <p class="text-sm text-gray-600">โรงพยาบาล, คลินิก, Telemedicine</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Non-Profit</h3>
-                    <p class="text-sm text-gray-600">องค์กรการกุศล, บริจาคออนไลน์</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Events & Ticketing</h3>
-                    <p class="text-sm text-gray-600">จองตั๋ว, จัดงานอีเวนท์</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Freelance Services</h3>
-                    <p class="text-sm text-gray-600">บริการออนไลน์, Gig economy</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Real Estate</h3>
-                    <p class="text-sm text-gray-600">อสังหาริมทรัพย์, เช่าบ้าน</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Gaming & Entertainment</h3>
-                    <p class="text-sm text-gray-600">เกมออนไลน์, In-app purchases</p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6 hover-lift">
-                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Utilities & Services</h3>
-                    <p class="text-sm text-gray-600">ค่าน้ำ-ไฟ, บริการสาธารณูปโภค</p>
-                </div>
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>พร้อมเริ่มต้นกับ Elixopay?</h2>
+            <p>ไม่ว่าธุรกิจของคุณจะอยู่ในอุตสาหกรรมไหน เรามีโซลูชันที่เหมาะสมสำหรับคุณ</p>
+            <div class="cta-buttons">
+                <a href="signup.html" class="btn btn-primary">เริ่มใช้งานฟรี</a>
+                <a href="contact.html" class="btn btn-outline">ติดต่อฝ่ายขาย</a>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 gradient-bg">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-            <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">
-                พร้อมเริ่มต้นแล้วหรือยัง?
-            </h2>
-            <p class="text-xl text-purple-100 mb-8">
-                สร้างบัญชีฟรีและเริ่มรับชำระเงินได้ภายใน 5 นาที
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="/signup.html" class="w-full sm:w-auto bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-50 transition hover-lift">
-                    สมัครใช้งานฟรี
-                </a>
-                <a href="/docs.html" class="w-full sm:w-auto border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-purple-600 transition">
-                    ดูเอกสาร API
-                </a>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
+                <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
+            </div>
+            <div class="footer-section">
+                <h4>ผลิตภัณฑ์</h4>
+                <ul>
+                    <li><a href="pricing.html">ราคา</a></li>
+                    <li><a href="docs.html">เอกสาร API</a></li>
+                    <li><a href="usecases.html">Use Cases</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>บริษัท</h4>
+                <ul>
+                    <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="contact.html">ติดต่อเรา</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>ช่วยเหลือ</h4>
+                <ul>
+                    <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
+                    <li><a href="security.html">ความปลอดภัย</a></li>
+                    <li><a href="privacy.html">นโยบายความเป็นส่วนตัว</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4 gradient-bg bg-clip-text text-transparent">Elixopay</h3>
-                    <p class="text-gray-400 text-sm">Payment Gateway ที่ปลอดภัยที่สุดสำหรับธุรกิจของคุณ</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">ผลิตภัณฑ์</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/pricing.html" class="hover:text-white">ราคา</a></li>
-                        <li><a href="/docs.html" class="hover:text-white">เอกสาร API</a></li>
-                        <li><a href="/usecases.html" class="hover:text-white">Use Cases</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">บริษัท</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/security.html" class="hover:text-white">ความปลอดภัย</a></li>
-                        <li><a href="#" class="hover:text-white">เกี่ยวกับเรา</a></li>
-                        <li><a href="#" class="hover:text-white">ติดต่อเรา</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">ช่วยเหลือ</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white">ศูนย์ช่วยเหลือ</a></li>
-                        <li><a href="#" class="hover:text-white">สถานะระบบ</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-                <p>© 2568 Elixopay. สงวนลิขสิทธิ์.</p>
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-    </script>
 </body>
 </html>
