@@ -27,6 +27,7 @@
     const text = light ? labels[lang].dark : labels[lang].light;
     console.log('🎨 Setting text:', text);
     btn.innerHTML = light ? `<i class="fas fa-moon"></i> ${text}` : `<i class="fas fa-sun"></i> ${text}`;
+    console.log('🎨 After set, innerHTML:', btn.innerHTML);
     btn.setAttribute('aria-pressed', String(light));
   }
   document.addEventListener('DOMContentLoaded', () => {
