@@ -1,197 +1,366 @@
-# Elixopay - Payment Gateway
+# 🔐 Elixopay - Secure Payment Gateway
 
-![Elixopay](favicon.svg)
+[![Security](https://img.shields.io/badge/security-hardened-green.svg)](./SECURITY_README.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-Payment Gateway ที่ปลอดภัยที่สุดสำหรับธุรกิจไทย ด้วยความปลอดภัยระดับธนาคารและเทคโนโลยีที่ทันสมัยที่สุด
-
-## 🚀 คุณสมบัติ
-
-- ✅ **ปลอดภัยสูงสุด**: PCI DSS Level 1, ISO 27001, SOC 2 Type II
-- 💳 **รองรับหลายช่องทาง**: บัตรเครดิต/เดบิต, PromptPay, Mobile Banking, E-Wallet
-- 🌍 **Cross-border Payment**: รองรับ 135+ สกุลเงิน
-- ⚡ **API ทันสมัย**: RESTful API พร้อม SDK 6 ภาษา
-- 📊 **Dashboard แบบ Real-time**: ติดตามธุรกรรมและรายงานแบบทันที
-- 🤝 **Partner Program**: โปรแกรมพาร์ทเนอร์พร้อมระบบค่าคอมมิชชั่น
-
-## 📁 โครงสร้างเว็บไซต์
-
-### หน้าหลัก
-- `index.html` - หน้าแรก Landing Page
-- `pricing.html` - แพ็กเกจและราคา
-- `docs.html` - เอกสาร API Documentation
-- `security.html` - ข้อมูลด้านความปลอดภัย
-
-### หน้าสำหรับผู้ใช้
-- `login.html` - เข้าสู่ระบบ
-- `signup.html` - สมัครสมาชิก
-- `dashboard.html` - แดชบอร์ดผู้ใช้
-
-### หน้าพาร์ทเนอร์
-- `partners.html` - โปรแกรมพาร์ทเนอร์
-- `partner-dashboard.html` - แดชบอร์ดพาร์ทเนอร์
-- `admin-dashboard.html` - แดชบอร์ดแอดมิน (จัดการค่าคอมมิชชั่น)
-
-### หน้าข้อมูล
-- `about.html` - เกี่ยวกับเรา
-- `usecases.html` - กรณีศึกษา
-- `blog.html` - บล็อกและแหล่งความรู้
-- `contact.html` - ติดต่อเรา
-- `help.html` - ศูนย์ช่วยเหลือ/FAQ
-- `status.html` - สถานะระบบ
-
-### หน้ากฎหมาย
-- `terms.html` - ข้อกำหนดการใช้งาน
-- `privacy.html` - นโยบายความเป็นส่วนตัว
-
-### หน้าพิเศษ
-- `404.html` - หน้า Error 404
-
-## 🛠️ เทคโนโลジี
-
-- **Frontend**: HTML5, Tailwind CSS 3.x
-- **Icons**: Heroicons (via Tailwind)
-- **Fonts**: Inter (Google Fonts)
-- **Code Highlighting**: Highlight.js 11.9.0
-- **Design Pattern**: Stripe-inspired aesthetic
-
-## 🎨 Design System
-
-### สี
-- **Primary Gradient**: `#635BFF` → `#9B8EFF`
-- **Success**: `#10b981`
-- **Warning**: `#f59e0b`
-- **Error**: `#ef4444`
-- **Info**: `#6366f1`
-
-### Typography
-- **Font Family**: Inter
-- **Weights**: 300 (Light), 400 (Regular), 500 (Medium), 600 (Semi-bold), 700 (Bold), 800 (Extra-bold)
-
-### Components
-- **Border Radius**: `rounded-lg` (8px), `rounded-xl` (12px), `rounded-2xl` (16px), `rounded-full`
-- **Shadows**: `shadow-lg`, `shadow-xl`
-- **Transitions**: `transition-all duration-300`
-
-## 🚦 การรันเว็บไซต์
-
-### วิธีที่ 1: Python HTTP Server (แนะนำ)
-```bash
-cd Elixopay
-python3 -m http.server 8000
-```
-เปิดเบราว์เซอร์ที่: `http://localhost:8000`
-
-### วิธีที่ 2: PHP Built-in Server
-```bash
-cd Elixopay
-php -S localhost:8000
-```
-
-### วิธีที่ 3: Live Server (VS Code Extension)
-1. ติดตั้ง Live Server extension
-2. คลิกขวาที่ `index.html`
-3. เลือก "Open with Live Server"
-
-## 📊 สถิติเว็บไซต์
-
-- **จำนวนหน้า**: 19 หน้า
-- **Component**: 50+ components
-- **Responsive**: ✅ Mobile, Tablet, Desktop
-- **Accessibility**: WCAG 2.1 Level AA compliant
-- **Performance**: Optimized for Core Web Vitals
-
-## 🔒 ความปลอดภัย
-
-### มาตรฐานที่ใช้
-- PCI DSS Level 1
-- ISO 27001
-- SOC 2 Type II
-- TLS 1.3
-- AES-256 Encryption
-
-### Security Headers
-- Content-Security-Policy (CSP)
-- X-Frame-Options
-- X-Content-Type-Options
-- X-XSS-Protection
-- Referrer-Policy
-
-ไฟล์: `.htaccess` และ `SECURITY_README.md`
-
-## 🤝 Partner Program
-
-### ระดับค่าคอมมิชชั่น
-1. **Starter** (10%): 0-9 ลูกค้า
-2. **Professional** (20%): 10-49 ลูกค้า + โบนัส ฿5,000
-3. **Enterprise** (30%): 50+ ลูกค้า + โบนัส ฿10,000
-
-### แอดมินสามารถปรับค่าคอมมิชชั่นได้ที่
-`admin-dashboard.html` > Commission Settings
-
-## 📱 Features ที่โดดเด่น
-
-### ✨ Interactive Components
-- Mobile responsive navigation
-- Accordion FAQ
-- Search & Filter (Blog, Help Center)
-- Form validation
-- Toast notifications
-- Modal dialogs
-- Tabs & Pills navigation
-
-### 🎯 Dashboard Features
-- Overview statistics
-- Transaction history
-- API key management
-- Settings & Profile
-- Export reports
-- Webhook configuration
-
-### 🔔 Status Page
-- Real-time system status
-- 90-day uptime chart
-- Incident history
-- Performance metrics
-- Email notifications
-
-## 📚 Documentation
-
-เอกสาร API ฉบับสมบูรณ์อยู่ที่ `docs.html` ประกอบด้วย:
-- Authentication
-- Create Payment
-- Get Payment
-- List Payments
-- Webhooks
-- Error Codes
-
-รองรับ SDK ใน 6 ภาษา:
-- PHP
-- Node.js
-- Python
-- Ruby
-- Java
-- .NET
-
-## 🌐 SEO & Meta Tags
-
-ทุกหน้ามี:
-- ✅ Title tags
-- ✅ Meta descriptions
-- ✅ Open Graph tags
-- ✅ Favicon (SVG)
-- ✅ Canonical URLs
-- ✅ Structured data ready
-
-## 📞 ติดต่อ
-
-- **Email**: support@elixopay.com
-- **Phone**: +66 2 123 4567
-- **Address**: 123 อาคารแกรนด์ทาวเวอร์, ถนนสาทร, กรุงเทพฯ 10500
-
-## 📄 License
-
-© 2568 Elixopay. สงวนลิขสิทธิ์.
+Elixopay is a modern, secure payment gateway built with Node.js and Express. This project implements industry-standard security practices to protect user data and prevent common web vulnerabilities.
 
 ---
 
-**Built with ❤️ for Thai businesses**
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js >= 18.0.0
+- npm >= 9.0.0
+- PostgreSQL (for production)
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/elixopay.git
+cd elixopay
+```
+
+2. **Install dependencies**
+```bash
+# Install root dependencies (frontend)
+npm install
+
+# Install backend dependencies
+cd backend
+npm install
+```
+
+3. **Configure environment variables**
+```bash
+# Copy example env file
+cp backend/.env.example backend/.env
+
+# Generate secure secrets
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+# Copy output to JWT_SECRET in .env
+
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+# Copy output to JWT_REFRESH_SECRET in .env
+
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# Copy output to ENCRYPTION_KEY in .env
+```
+
+4. **Start development server**
+```bash
+# From project root - runs both frontend and backend
+npm run dev
+
+# Or run separately:
+npm run dev:backend   # Backend only
+npm run dev:frontend  # Frontend only
+```
+
+---
+
+## 📂 Project Structure
+
+```
+elixopay/
+├── backend/
+│   ├── config/          # Database configuration
+│   ├── controllers/     # Business logic
+│   ├── middleware/      # Auth, validation, rate limiting
+│   ├── migrations/      # Database migrations
+│   ├── routes/          # API routes
+│   ├── utils/           # Helper functions
+│   └── server.js        # Express app entry point
+├── js/                  # Frontend JavaScript
+├── *.html               # Frontend pages
+├── SECURITY_README.md   # Security documentation
+└── START_HERE.md        # Quick start guide
+```
+
+---
+
+## 🔒 Security Features
+
+This project implements comprehensive security measures:
+
+### ✅ Authentication & Authorization
+- JWT-based stateless authentication
+- Strong password policy (12+ chars, special chars required)
+- Account lockout after 5 failed attempts
+- Bcrypt password hashing (12 rounds)
+
+### ✅ Rate Limiting
+- API-wide rate limiting (100 req/15min)
+- Strict auth endpoint limits (5 req/15min)
+- Payment rate limiting (10 req/min)
+- Password reset throttling (3 req/hour)
+
+### ✅ Security Headers
+- Helmet.js implementation
+- HSTS enabled (HTTPS enforcement)
+- XSS protection
+- Clickjacking prevention
+- CSP (Content Security Policy)
+
+### ✅ Input Validation
+- express-validator for all inputs
+- SQL injection prevention ready
+- XSS sanitization
+- Email normalization
+
+### ✅ CORS Protection
+- Whitelist-based origin validation
+- Credentials support
+- Development/production configs
+
+**📖 Full security documentation**: [SECURITY_README.md](./SECURITY_README.md)
+
+---
+
+## 🌐 API Endpoints
+
+### Base URL
+- **Local**: `http://localhost:3000/api/v1`
+- **Production**: `https://elixopay-production.up.railway.app/api/v1`
+
+### Authentication
+```bash
+# Register
+POST /auth/register
+Content-Type: application/json
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!@#",
+  "name": "John Doe"
+}
+
+# Login
+POST /auth/login
+Content-Type: application/json
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!@#"
+}
+
+# Get current user
+GET /auth/me
+Authorization: Bearer <token>
+```
+
+### Payments
+```bash
+# Create payment
+POST /payments
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "amount": 100.00,
+  "currency": "THB",
+  "description": "Payment for services"
+}
+
+# Get payment history
+GET /payments
+Authorization: Bearer <token>
+```
+
+### Demo Account
+```
+Email: demo@elixopay.com
+Password: demo1234
+```
+
+---
+
+## 🏗️ Agency System (Phase 1)
+
+The multi-level agency feature enables agencies to have nested sub-agencies and onboard merchant websites. Phase 1 delivers foundational tables and CRUD APIs (no financial ledger yet).
+
+### Data Model (Phase 1 Only)
+| Table | Purpose |
+|-------|---------|
+| `agencies` | Stores top-level and nested agencies (via `parent_id`). |
+| `agency_members` | Links users to agencies with roles (`owner`, `manager`, `finance`, `support`). |
+| `merchant_sites` | Merchant/website entities associated to an agency. |
+| `commission_rules` | Configurable commission definitions per agency level (DIRECT/SUB_AGENCY/MERCHANT). |
+
+### New Endpoints
+Base prefix: `/api/v1`
+
+Agencies:
+```bash
+GET    /agencies                      # List agencies (query: parent_id, search)
+POST   /agencies                      # Create agency (admin)
+GET    /agencies/:id                  # Get agency detail
+POST   /agencies/:id/sub-agencies     # Create sub-agency (admin)
+GET    /agencies/:id/members          # List members
+POST   /agencies/:id/members          # Add member (admin)
+```
+
+Merchant Sites:
+```bash
+GET    /merchant-sites?agency_id=...  # List sites
+POST   /merchant-sites                # Create site
+GET    /merchant-sites/:id            # Site detail
+PATCH  /merchant-sites/:id            # Update site fields
+```
+
+Commission Rules:
+```bash
+GET    /commission-rules?agency_id=...           # List rules (active only by default)
+POST   /commission-rules                         # Create rule (admin)
+PATCH  /commission-rules/:id/deactivate          # Soft deactivate rule
+```
+
+### Roles (Initial)
+Phase 1 reuses `user.role` for admin gating. Future phases will enforce membership-level permissions via `agency_members` (e.g. finance vs support). Only `admin` / `super_admin` may create agencies, sub-agencies, commission rules, or add members.
+
+### Coming in Phase 2
+| Feature | Description |
+|---------|-------------|
+| Balances / Ledger | Track commission accruals, reversals, withdrawals. |
+| Withdrawal Requests | Lifecycle (PENDING → APPROVED → PAID). |
+| Commission Application | Automatic accrual on successful payment + settlement delay. |
+| Reversal Logic | Refunds reverse credited commission entries. |
+| Deeper RBAC | Enforce per-agency role scopes & audit logging. |
+
+### Migration Files
+- `migrations/20241118_phase1_agencies.sql` adds Phase 1 tables & indexes.
+
+### Quick Test (After Auth)
+```bash
+# List agencies
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/agencies
+
+# Create agency (admin user required)
+curl -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" \
+  -d '{"name":"Main Agency","code":"AG_MAIN"}' \
+  http://localhost:3000/api/v1/agencies
+```
+
+If you need to remove Phase 1 functionality temporarily, delete the route files (`agencies.js`, `merchantSites.js`, `commissionRules.js`) and restart the server.
+
+---
+
+---
+
+## 🛠️ Development
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev              # Run both frontend & backend
+npm run dev:local        # Same as above
+npm run dev:remote       # Frontend only (use Railway backend)
+npm run dev:backend      # Backend only
+npm run dev:frontend     # Frontend only
+
+# Database
+npm --prefix backend run migrate    # Run migrations
+
+# Production
+npm start                # Start production server
+```
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NODE_ENV` | Environment (development/production) | Yes |
+| `PORT` | Server port | Yes |
+| `JWT_SECRET` | JWT signing secret | Yes |
+| `JWT_REFRESH_SECRET` | Refresh token secret | Yes |
+| `ENCRYPTION_KEY` | Data encryption key | Yes |
+| `DB_HOST` | Database host | Yes |
+| `DB_PASSWORD` | Database password | Yes |
+| `FRONTEND_URL` | Frontend URL for CORS | Yes |
+| `STRIPE_SECRET_KEY` | Stripe API key | No |
+
+See [.env.example](./backend/.env.example) for full list.
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run tests (when implemented)
+npm test
+
+# Security audit
+npm audit
+npm audit fix
+
+# Check for vulnerabilities
+npx snyk test
+```
+
+---
+
+## 🚀 Deployment
+
+### Railway (Recommended)
+
+1. **Connect repository to Railway**
+2. **Set environment variables** in Railway dashboard
+3. **Deploy automatically** on push to main branch
+
+### Manual Deployment
+
+```bash
+# Build (if needed)
+npm run build
+
+# Start production server
+NODE_ENV=production npm start
+```
+
+---
+
+## 📝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+### Security Vulnerabilities
+
+If you discover a security vulnerability, please email **security@elixopay.com** instead of using the issue tracker.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👥 Authors
+
+- **Elixopay Team**
+- Email: support@elixopay.com
+- Website: https://elixopay.com
+
+---
+
+## 🙏 Acknowledgments
+
+- Express.js team for the excellent framework
+- Helmet.js for security middleware
+- Railway for hosting platform
+- All contributors who helped improve this project
+
+---
+
+## 📞 Support
+
+- 📧 Email: support@elixopay.com
+- 🔒 Security: security@elixopay.com
+- 📚 Documentation: [docs.elixopay.com](https://docs.elixopay.com)
+
+---
+
+**Made with ❤️ by Elixopay Team**

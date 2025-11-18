@@ -1,0 +1,15 @@
+# คำสั่งสำหรับ Push to GitHub (Manual)
+
+# 1. เพิ่ม remote (แทน YOUR_USERNAME ด้วย username GitHub ของคุณ)
+git remote add origin https://github.com/YOUR_USERNAME/elixopay.git
+
+# 2. Push ขึ้น GitHub
+git push -u origin main
+
+# ถ้าขึ้น error: "fatal: remote origin already exists"
+# ให้ลบ remote เก่าก่อน:
+git remote remove origin
+
+# แล้วลองใหม่:
+git remote add origin https://github.com/YOUR_USERNAME/elixopay.git
+git push -u origin main

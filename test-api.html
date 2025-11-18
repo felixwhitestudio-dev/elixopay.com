@@ -3,112 +3,551 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test API Connection</title>
+    <title>API Testing - Elixopay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/api-config.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
         }
-        .result {
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 5px;
-            white-space: pre-wrap;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            background: #635BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #7A73FF;
-        }
+        .response-success { border-left: 4px solid #10b981; }
+        .response-error { border-left: 4px solid #ef4444; }
     </style>
 </head>
-<body>
-    <h1>🔧 Test API Connection</h1>
-    
-    <div>
-        <button onclick="testHealth()">Test Health Check</button>
-        <button onclick="testLogin()">Test Login</button>
-        <button onclick="clearResults()">Clear</button>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/dashboard.html" class="text-gray-600 hover:text-gray-800 mr-4">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+                        Elixopay
+                    </h1>
+                    <span class="ml-4 px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                        API Testing
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-700" id="user-name">Loading...</span>
+                    <button onclick="logout()" class="px-4 py-2 text-sm text-red-600 hover:text-red-800 font-medium">
+                        <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">🧪 API Testing & Documentation</h2>
+            <p class="text-gray-600">ทดสอบ API endpoints และดู response แบบเรียลไทม์</p>
+        </div>
+
+        <!-- API Base URL -->
+        <div class="bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg shadow-lg p-6 mb-8 text-white">
+            <div class="flex items-center justify-between">
+                <div class="w-full">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <p class="text-sm opacity-90 mb-1">API Base URL:</p>
+                            <code class="text-lg font-mono bg-black bg-opacity-20 px-3 py-1 rounded" id="api-base-url">http://localhost:3000</code>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="flex h-3 w-3 mr-2">
+                                <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                            <span class="text-sm">Online</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input id="api-base-input" type="text" placeholder="Override API Base (e.g., https://your-domain)" class="w-full px-3 py-2 rounded bg-white text-gray-800 placeholder-gray-400">
+                        <button onclick="(function(){ const v=document.getElementById('api-base-input').value.trim(); if(v){ window.setApiBase(v);} })()" class="px-4 py-2 bg-black bg-opacity-30 hover:bg-opacity-40 rounded">Set Custom Base</button>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="window.setApiBase('http://localhost:3000')" class="px-4 py-2 bg-black bg-opacity-30 hover:bg-opacity-40 rounded">Use Local</button>
+                            <button onclick="(function(){ localStorage.removeItem('api_base_url'); window.location.reload(); })()" class="px-4 py-2 bg-black bg-opacity-30 hover:bg-opacity-40 rounded">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column - API Tests -->
+            <div class="space-y-6">
+                <!-- Health Check -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Health Check</h3>
+                            <p class="text-sm text-gray-500">GET /health</p>
+                        </div>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">GET</span>
+                    </div>
+                    <button onclick="testHealthCheck()" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-play mr-2"></i>ทดสอบ
+                    </button>
+                </div>
+
+                <!-- Login Test -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Login</h3>
+                            <p class="text-sm text-gray-500">POST /api/v1/auth/login</p>
+                        </div>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">POST</span>
+                    </div>
+                    <div class="space-y-3 mb-4">
+                        <input type="email" id="login-email" value="demo@elixopay.com" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="password" id="login-password" value="Password123" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <button onclick="testLogin()" class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-play mr-2"></i>ทดสอบ Login
+                    </button>
+                </div>
+
+                <!-- Get Current User -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Get Current User</h3>
+                            <p class="text-sm text-gray-500">GET /api/v1/auth/me</p>
+                        </div>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">GET</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">
+                        <i class="fas fa-lock text-yellow-500 mr-1"></i>
+                        ต้องมี Token (Login ก่อน)
+                    </p>
+                    <button onclick="testGetCurrentUser()" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-play mr-2"></i>ทดสอบ
+                    </button>
+                </div>
+
+                <!-- Create Payment -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Create Payment</h3>
+                            <p class="text-sm text-gray-500">POST /api/v1/payments</p>
+                        </div>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">POST</span>
+                    </div>
+                    <div class="space-y-3 mb-4">
+                        <input type="number" id="payment-amount" value="100" placeholder="Amount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select id="payment-currency" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="THB">THB</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                        <input type="text" id="payment-description" value="Test payment" placeholder="Description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">
+                        <i class="fas fa-lock text-yellow-500 mr-1"></i>
+                        ต้องมี Token (Login ก่อน)
+                    </p>
+                    <button onclick="testCreatePayment()" class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-play mr-2"></i>ทดสอบ Create Payment
+                    </button>
+                </div>
+
+                <!-- Confirm Payment -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Confirm Payment</h3>
+                            <p class="text-sm text-gray-500">POST /api/v1/payments/:id/confirm</p>
+                        </div>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">POST</span>
+                    </div>
+                    <div class="space-y-3 mb-4">
+                        <input type="text" id="confirm-payment-id" placeholder="Payment ID (จะถูกเติมอัตโนมัติหลัง Create)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select id="confirm-method" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="pm_card_visa">pm_card_visa (Test)</option>
+                        </select>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">
+                        <i class="fas fa-lock text-yellow-500 mr-1"></i>
+                        ต้องมี Token (Login ก่อน)
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <button onclick="testConfirmPayment()" class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                            <i class="fas fa-check mr-2"></i>Confirm ด้วย Test Card
+                        </button>
+                        <button onclick="testGetPayment()" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                            <i class="fas fa-search mr-2"></i>เช็คสถานะ Payment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Get Balance -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Get My Balance</h3>
+                            <p class="text-sm text-gray-500">GET /api/v1/balances/me</p>
+                        </div>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">GET</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">
+                        <i class="fas fa-lock text-yellow-500 mr-1"></i>
+                        ต้องมี Token (Login ก่อน)
+                    </p>
+                    <button onclick="testGetBalance()" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-wallet mr-2"></i>ดูยอดคงเหลือของฉัน
+                    </button>
+                </div>
+
+                <!-- Get Ledger -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Get My Ledger</h3>
+                            <p class="text-sm text-gray-500">GET /api/v1/ledger/me</p>
+                        </div>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">GET</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">
+                        <i class="fas fa-lock text-yellow-500 mr-1"></i>
+                        ต้องมี Token (Login ก่อน)
+                    </p>
+                    <button onclick="testGetLedger()" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                        <i class="fas fa-list mr-2"></i>ดูสมุดบัญชี (รายการล่าสุด)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column - Response -->
+            <div class="space-y-6">
+                <!-- Response Display -->
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <i class="fas fa-terminal mr-2 text-gray-600"></i>Response
+                        </h3>
+                        <button onclick="clearResponse()" class="text-sm text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-times mr-1"></i>Clear
+                        </button>
+                    </div>
+                    
+                    <!-- Response Container -->
+                    <div id="response-container" class="min-h-[400px]">
+                        <div class="text-center py-12 text-gray-400">
+                            <i class="fas fa-code text-4xl mb-4"></i>
+                            <p>เลือก API endpoint เพื่อทดสอบ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Info -->
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border-2 border-blue-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>ข้อมูล API
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Version:</span>
+                            <span class="font-medium">v1</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Rate Limit:</span>
+                            <span class="font-medium">100 req/15min</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Auth Type:</span>
+                            <span class="font-medium">Bearer Token</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Security:</span>
+                            <span class="font-medium text-green-600">✅ Hardened</span>
+                        </div>
+                    </div>
+                    <a href="/SECURITY_README.md" class="mt-4 block text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition">
+                        <i class="fas fa-book mr-2"></i>อ่านเอกสารเพิ่มเติม
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div id="results"></div>
 
     <script>
-        const API_URL = 'http://localhost:3000';
-        
-        function log(message, type = 'info') {
-            const div = document.createElement('div');
-            div.className = `result ${type}`;
-            div.textContent = message;
-            document.getElementById('results').appendChild(div);
+        // Check authentication
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (user.name) {
+            document.getElementById('user-name').textContent = `👋 ${user.name}`;
         }
 
-        async function testHealth() {
-            log('Testing Health Check...', 'info');
-            try {
-                const response = await fetch(`${API_URL}/health`);
-                const data = await response.json();
-                log('✅ Health Check Success:\n' + JSON.stringify(data, null, 2), 'success');
-            } catch (error) {
-                log('❌ Health Check Failed:\n' + error.message + '\n\nDetails: ' + error.stack, 'error');
+        // Set API base URL
+        document.getElementById('api-base-url').textContent = window.API_CONFIG.BASE_URL;
+
+        // Logout function
+        function logout() {
+            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                localStorage.clear();
+                window.location.href = '/login.html';
             }
         }
 
-        async function testLogin() {
-            log('Testing Login API...', 'info');
+        // Clear response
+        function clearResponse() {
+            document.getElementById('response-container').innerHTML = `
+                <div class="text-center py-12 text-gray-400">
+                    <i class="fas fa-code text-4xl mb-4"></i>
+                    <p>เลือก API endpoint เพื่อทดสอบ</p>
+                </div>
+            `;
+        }
+
+        // Display response (handles JSON objects and plain text/HTML)
+        function displayResponse(endpoint, method, status, data, error = false) {
+            const container = document.getElementById('response-container');
+            const statusClass = error ? 'response-error' : 'response-success';
+            const statusColor = error ? 'text-red-600' : 'text-green-600';
+            const statusIcon = error ? 'fa-times-circle' : 'fa-check-circle';
+
+            container.innerHTML = `
+                <div class="${statusClass} bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center">
+                            <i class="fas ${statusIcon} ${statusColor} mr-2"></i>
+                            <span class="font-medium text-gray-800">${method} ${endpoint}</span>
+                        </div>
+                        <span class="px-2 py-1 ${error ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'} text-xs font-medium rounded">
+                            ${status}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-500">${new Date().toLocaleString('th-TH')}</p>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-sm font-semibold text-gray-700">Response Body:</h4>
+                        <button onclick="copyResponse()" class="text-xs text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-copy mr-1"></i>Copy
+                        </button>
+                    </div>
+                    <pre class="code-block" id="response-json"></pre>
+                </div>
+            `;
+
+            // Fill the response block AFTER rendering to support raw text nicely
+            const pre = document.getElementById('response-json');
+            if (!pre) return;
+            if (typeof data === 'string') {
+                // Show raw text/HTML (escaped) so we can see error pages
+                pre.textContent = data;
+            } else {
+                pre.textContent = JSON.stringify(data, null, 2);
+            }
+        }
+
+        // Copy response
+        function copyResponse() {
+            const text = document.getElementById('response-json').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ คัดลอกไปยัง clipboard แล้ว!');
+            });
+        }
+
+        // Try to parse JSON, else return raw text
+        async function readBodySafe(response) {
+            const text = await response.text();
             try {
-                const response = await fetch(`${API_URL}/api/v1/auth/login`, {
+                return JSON.parse(text);
+            } catch (_) {
+                return text; // return raw body for non-JSON responses
+            }
+        }
+
+        // Test Health Check
+        async function testHealthCheck() {
+            try {
+                const response = await fetch(apiUrl('/health'));
+                const data = await readBodySafe(response);
+                displayResponse('/health', 'GET', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse('/health', 'GET', 'ERROR', { error: error.message }, true);
+            }
+        }
+
+        // Test Login
+        async function testLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(apiUrl('/api/v1/auth/login'), {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: 'demo@elixopay.com',
-                        password: 'Password123'
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
                 });
+                                const data = await readBodySafe(response);
                 
-                const data = await response.json();
+                // Save token if successful
+                                if (
+                                    response.ok &&
+                                    typeof data === 'object' && data &&
+                                    data.success && data.data && data.data.token
+                                ) {
+                                    localStorage.setItem('token', data.data.token);
+                                    alert('✅ Login สำเร็จ! Token ถูกบันทึกแล้ว');
+                                }
                 
-                if (response.ok) {
-                    log('✅ Login Success:\nEmail: ' + data.user.email + '\nName: ' + data.user.first_name + ' ' + data.user.last_name + '\nToken: ' + data.token.substring(0, 50) + '...', 'success');
-                } else {
-                    log('❌ Login Failed:\n' + JSON.stringify(data, null, 2), 'error');
+                displayResponse('/api/v1/auth/login', 'POST', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse('/api/v1/auth/login', 'POST', 'ERROR', { error: error.message }, true);
+            }
+        }
+
+        // Test Get Current User
+        async function testGetCurrentUser() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert('⚠️ กรุณา Login ก่อนเพื่อรับ Token');
+                return;
+            }
+
+            try {
+                const response = await apiFetch('/api/v1/auth/me');
+                const data = await readBodySafe(response);
+                displayResponse('/api/v1/auth/me', 'GET', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse('/api/v1/auth/me', 'GET', 'ERROR', { error: error.message }, true);
+            }
+        }
+
+        // Test Create Payment
+        async function testCreatePayment() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert('⚠️ กรุณา Login ก่อนเพื่อรับ Token');
+                return;
+            }
+
+            const amount = parseFloat(document.getElementById('payment-amount').value);
+            const currency = document.getElementById('payment-currency').value;
+            const description = document.getElementById('payment-description').value;
+
+            try {
+                const response = await apiFetch('/api/v1/payments', {
+                    method: 'POST',
+                    body: JSON.stringify({ amount, currency, description })
+                });
+                const data = await readBodySafe(response);
+                displayResponse('/api/v1/payments', 'POST', response.status, data, !response.ok);
+
+                // Autofill created payment id for confirmation
+                if (response.ok && typeof data === 'object' && data?.data?.payment?.id) {
+                    const el = document.getElementById('confirm-payment-id');
+                    if (el) el.value = data.data.payment.id;
                 }
             } catch (error) {
-                log('❌ Login Request Failed:\n' + error.message + '\n\nPossible causes:\n1. CORS issue\n2. Backend not running\n3. Network error\n\nCheck Console (F12) for details', 'error');
-                console.error('Full error:', error);
+                displayResponse('/api/v1/payments', 'POST', 'ERROR', { error: error.message }, true);
             }
         }
 
-        function clearResults() {
-            document.getElementById('results').innerHTML = '';
+        // Test Confirm Payment (server-side)
+        async function testConfirmPayment() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('⚠️ กรุณา Login ก่อนเพื่อรับ Token');
+                return;
+            }
+
+            const id = document.getElementById('confirm-payment-id').value.trim();
+            const payment_method_id = document.getElementById('confirm-method').value;
+            if (!id) {
+                alert('กรุณากรอก Payment ID ก่อน (สร้างจากขั้นตอน Create Payment)');
+                return;
+            }
+
+            try {
+                const endpoint = window.API_CONFIG.ENDPOINTS.payments.confirm(id);
+                const response = await apiFetch(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify({ payment_method_id })
+                });
+                const data = await readBodySafe(response);
+                displayResponse(endpoint, 'POST', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse(`/api/v1/payments/${id}/confirm`, 'POST', 'ERROR', { error: error.message }, true);
+            }
         }
 
-        // Auto test on load
-        window.onload = () => {
-            log('🚀 API Test Page Loaded', 'info');
-            log('Backend URL: ' + API_URL, 'info');
-            testHealth();
-        };
+        // Test Get Payment by ID
+        async function testGetPayment() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('⚠️ กรุณา Login ก่อนเพื่อรับ Token');
+                return;
+            }
+
+            const id = document.getElementById('confirm-payment-id').value.trim();
+            if (!id) {
+                alert('กรุณากรอก Payment ID ก่อน');
+                return;
+            }
+
+            try {
+                const endpoint = window.API_CONFIG.ENDPOINTS.payments.detail(id);
+                const response = await apiFetch(endpoint);
+                const data = await readBodySafe(response);
+                displayResponse(endpoint, 'GET', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse(`/api/v1/payments/${id}`, 'GET', 'ERROR', { error: error.message }, true);
+            }
+        }
+
+        // Test Get Balance
+        async function testGetBalance() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('⚠️ กรุณา Login ก่อนเพื่อรับ Token');
+                return;
+            }
+            try {
+                const endpoint = window.API_CONFIG.ENDPOINTS.balances.me;
+                const response = await apiFetch(endpoint);
+                const data = await readBodySafe(response);
+                displayResponse(endpoint, 'GET', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse('/api/v1/balances/me', 'GET', 'ERROR', { error: error.message }, true);
+            }
+        }
+
+        // Test Get Ledger
+        async function testGetLedger() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('⚠️ กรุณา Login ก่อนเพื่อรับ Token');
+                return;
+            }
+            try {
+                const endpoint = window.API_CONFIG.ENDPOINTS.ledger.me;
+                const response = await apiFetch(endpoint);
+                const data = await readBodySafe(response);
+                displayResponse(endpoint, 'GET', response.status, data, !response.ok);
+            } catch (error) {
+                displayResponse('/api/v1/ledger/me', 'GET', 'ERROR', { error: error.message }, true);
+            }
+        }
     </script>
 </body>
 </html>

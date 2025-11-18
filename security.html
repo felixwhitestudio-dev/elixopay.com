@@ -1,242 +1,73 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <title>Security & Compliance - Elixopay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        .gradient-text {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Security - Elixopay</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <div class="max-w-5xl mx-auto px-6 py-16">
-        <div class="text-center mb-16">
-            <h1 class="text-5xl font-bold text-gray-900 mb-4">
-                ความปลอดภัย & <span class="gradient-text">มาตรฐานสากล</span>
-            </h1>
-            <p class="text-xl text-gray-600">
-                Elixopay ยึดมั่นในมาตรฐานความปลอดภัยสูงสุดเพื่อปกป้องข้อมูลและการทำธุรกรรมของคุณ
-            </p>
-        </div>
+	<nav class="bg-white shadow border-b border-gray-200">
+		<div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+			<a href="/dashboard.html" class="text-xl font-bold bg-gradient-to-r from-green-600 to-blue-500 bg-clip-text text-transparent">Elixopay</a>
+			<div class="space-x-4 text-sm">
+				<a href="/docs.html" class="text-gray-600 hover:text-gray-900">Docs</a>
+				<a href="/transactions.html" class="text-gray-600 hover:text-gray-900">Transactions</a>
+				<a href="/help.html" class="text-gray-600 hover:text-gray-900">Help</a>
+			</div>
+		</div>
+	</nav>
 
-        <!-- Security Standards -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">🔒 มาตรฐานความปลอดภัย</h2>
-            
-            <div class="space-y-6">
-                <div class="border-l-4 border-green-500 pl-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">PCI DSS Level 1 Certified</h3>
-                    <p class="text-gray-600">
-                        ได้รับการรับรองมาตรฐาน PCI DSS Level 1 ซึ่งเป็นระดับสูงสุดของมาตรฐานความปลอดภัย
-                        สำหรับการประมวลผลข้อมูลบัตรเครดิต ตรวจสอบโดย Qualified Security Assessor (QSA) ทุกปี
-                    </p>
-                    <ul class="mt-3 space-y-2 text-gray-600">
-                        <li>✓ การเข้ารหัสข้อมูลบัตรเครดิตทั้งหมด</li>
-                        <li>✓ ไม่เก็บข้อมูล CVV หรือ PIN</li>
-                        <li>✓ Tokenization สำหรับการชำระเงินซ้ำ</li>
-                        <li>✓ การตรวจสอบด้านความปลอดภัยอย่างสม่ำเสมอ</li>
-                    </ul>
-                </div>
+	<header class="max-w-5xl mx-auto px-4 py-10">
+		<h1 class="text-3xl font-bold mb-2">Security Overview</h1>
+		<p class="text-gray-600">สรุปมาตรการความปลอดภัยที่ระบบ Elixopay ใช้งาน</p>
+	</header>
 
-                <div class="border-l-4 border-blue-500 pl-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">ISO/IEC 27001:2013</h3>
-                    <p class="text-gray-600">
-                        ได้รับการรับรองระบบการจัดการความมั่นคงปลอดภัยสารสนเทศมาตรฐานสากล ISO 27001
-                        ครอบคลุมทั้งระบบ กระบวนการ และบุคลากร
-                    </p>
-                </div>
+	<main class="max-w-5xl mx-auto px-4 pb-16 space-y-8">
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-shield-alt text-green-600 mr-2"></i>Core Protections</h2>
+			<ul class="list-disc ml-6 text-sm text-gray-700 space-y-2">
+				<li><strong>JWT Authentication</strong>: 128-char secrets & refresh token rotation.</li>
+				<li><strong>Password Policy</strong>: Minimum length, complexity enforced.</li>
+				<li><strong>Account Lockout</strong>: ป้องกัน brute force (จำกัดจำนวนครั้ง / เวลารอ).</li>
+				<li><strong>Rate Limiting</strong>: แยกตาม endpoints (auth, payment, apiKeys).</li>
+				<li><strong>Helmet Security Headers</strong>: ป้องกัน XSS / clickjacking เบื้องต้น.</li>
+				<li><strong>CORS Restriction</strong>: Allowlist เฉพาะ origin ที่กำหนด.</li>
+				<li><strong>Input Validation</strong>: ใช้ express-validator ลด injection risk.</li>
+				<li><strong>Stripe Integration</strong>: ใช้ Payment Intents + webhook signature verify.</li>
+			</ul>
+		</section>
 
-                <div class="border-l-4 border-purple-500 pl-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">SOC 2 Type II</h3>
-                    <p class="text-gray-600">
-                        ผ่านการตรวจสอบ SOC 2 Type II ซึ่งประเมินประสิทธิผลของการควบคุมด้านความปลอดภัย
-                        ความพร้อมใช้งาน และความลับของข้อมูลตามมาตรฐาน AICPA
-                    </p>
-                </div>
-            </div>
-        </div>
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-code text-blue-600 mr-2"></i>Headers</h2>
+			<div class="bg-gray-900 text-gray-100 text-xs rounded p-4 font-mono overflow-auto">
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'self'
+			</div>
+			<p class="text-xs text-gray-500 mt-2">(CSP สามารถขยายเพิ่มเติมในอนาคตสำหรับ script-src เฉพาะที่จำเป็น)</p>
+		</section>
 
-        <!-- Data Protection -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">🛡️ การปกป้องข้อมูล</h2>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="border border-gray-200 rounded-xl p-6">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">🔐</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">256-bit SSL/TLS Encryption</h3>
-                    <p class="text-gray-600 text-sm">
-                        ข้อมูลทั้งหมดถูกเข้ารหัสด้วย SSL/TLS 256-bit ทั้งขาเข้าและขาออก
-                    </p>
-                </div>
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-list-check text-purple-600 mr-2"></i>Hardening Roadmap</h2>
+			<ol class="list-decimal ml-6 text-sm text-gray-700 space-y-2">
+				<li>เพิ่ม Audit Log ครอบคลุมทุกการเปลี่ยนแปลงสำคัญ</li>
+				<li>Implement refresh token rotation & blacklist</li>
+				<li>เพิ่ม 2FA (TOTP) ในการล็อกอินผู้ดูแลระบบ</li>
+				<li>เพิ่ม Subresource Integrity (SRI) hash ให้ CDN scripts</li>
+				<li>แยก Secret ออกจาก build (ใช้ Vault/Secrets Manager)</li>
+			</ol>
+		</section>
 
-                <div class="border border-gray-200 rounded-xl p-6">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">🔑</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">AES-256 Data Encryption</h3>
-                    <p class="text-gray-600 text-sm">
-                        ข้อมูลที่เก็บไว้ใน Database ถูกเข้ารหัสด้วย AES-256
-                    </p>
-                </div>
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-file-alt text-gray-700 mr-2"></i>Reference</h2>
+			<p class="text-sm text-gray-700">ดูรายละเอียดเชิงลึกได้ที่ไฟล์ <code class="bg-gray-100 px-1 rounded">SECURITY_README.md</code> ใน repository.</p>
+			<a href="/SECURITY_README.md" class="inline-block mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">เปิดไฟล์ SECURITY_README.md</a>
+		</section>
+	</main>
 
-                <div class="border border-gray-200 rounded-xl p-6">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">🌐</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">GDPR Compliant</h3>
-                    <p class="text-gray-600 text-sm">
-                        ปฏิบัติตามกฎหมาย GDPR และ PDPA เพื่อปกป้องข้อมูลส่วนบุคคล
-                    </p>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-6">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">🗄️</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2">Data Residency</h3>
-                    <p class="text-gray-600 text-sm">
-                        ข้อมูลถูกเก็บใน Data Center ที่ได้รับการรับรองในประเทศไทย
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Infrastructure Security -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">⚡ ความปลอดภัยด้านโครงสร้างพื้นฐาน</h2>
-            
-            <div class="space-y-4">
-                <div class="flex items-start gap-4">
-                    <span class="text-2xl">🏢</span>
-                    <div>
-                        <h3 class="font-bold text-lg">Tier IV Data Centers</h3>
-                        <p class="text-gray-600">
-                            เซิร์ฟเวอร์ตั้งอยู่ใน Data Center ระดับ Tier IV พร้อม Uptime 99.995%
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <span class="text-2xl">🔄</span>
-                    <div>
-                        <h3 class="font-bold text-lg">Real-time Backup & Disaster Recovery</h3>
-                        <p class="text-gray-600">
-                            สำรองข้อมูลแบบเรียลไทม์และมีระบบกู้คืนภัยพิบัติ (RTO < 4 ชั่วโมง, RPO < 1 ชั่วโมง)
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <span class="text-2xl">🛡️</span>
-                    <div>
-                        <h3 class="font-bold text-lg">DDoS Protection</h3>
-                        <p class="text-gray-600">
-                            ระบบป้องกัน DDoS ขั้นสูง รองรับการโจมตีได้มากกว่า 1 Tbps
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <span class="text-2xl">👁️</span>
-                    <div>
-                        <h3 class="font-bold text-lg">24/7 Security Monitoring</h3>
-                        <p class="text-gray-600">
-                            ทีม Security Operations Center (SOC) เฝ้าระวังระบบตลอด 24 ชั่วโมง
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <span class="text-2xl">🔍</span>
-                    <div>
-                        <h3 class="font-bold text-lg">Penetration Testing</h3>
-                        <p class="text-gray-600">
-                            จ้าง White Hat Hackers ทดสอบระบบอย่างน้อยปีละ 2 ครั้ง
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fraud Prevention -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">🤖 การป้องกันการฉ้อโกง</h2>
-            
-            <div class="space-y-4 text-gray-600">
-                <p>
-                    <strong>Machine Learning Fraud Detection:</strong> ระบบ AI ที่เรียนรู้รูปแบบการทำธุรกรรม
-                    และตรวจจับความผิดปกติได้แบบเรียลไทม์
-                </p>
-                <p>
-                    <strong>3D Secure (3DS 2.0):</strong> รองรับการยืนยันตัวตนแบบสองชั้นสำหรับบัตรเครดิต/เดบิต
-                </p>
-                <p>
-                    <strong>Velocity Checks:</strong> ตรวจสอบความถี่และปริมาณธุรกรรมเพื่อป้องกัน Card Testing
-                </p>
-                <p>
-                    <strong>IP Geolocation & Device Fingerprinting:</strong> ตรวจสอบที่ตั้งและอุปกรณ์ที่ใช้ทำธุรกรรม
-                </p>
-                <p>
-                    <strong>Chargeback Protection:</strong> ระบบช่วยลด Chargeback ด้วย Evidence Submission อัตโนมัติ
-                </p>
-            </div>
-        </div>
-
-        <!-- Compliance -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">📋 การปฏิบัติตามกฎหมาย</h2>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="font-bold text-lg mb-3">🇹🇭 ประเทศไทย</h3>
-                    <ul class="space-y-2 text-gray-600">
-                        <li>✓ พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)</li>
-                        <li>✓ พ.ร.บ. การทำธุรกรรมทางอิเล็กทรอนิกส์</li>
-                        <li>✓ ธปท. - ระเบียบเกี่ยวกับการชำระเงิน</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg mb-3">🌍 สากล</h3>
-                    <ul class="space-y-2 text-gray-600">
-                        <li>✓ GDPR (General Data Protection Regulation)</li>
-                        <li>✓ PSD2 (Payment Services Directive 2)</li>
-                        <li>✓ AML/KYC Regulations</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact Security Team -->
-        <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white text-center">
-            <h2 class="text-3xl font-bold mb-4">พบช่องโหว่ด้านความปลอดภัย?</h2>
-            <p class="text-lg mb-6 opacity-90">
-                เราขอขอบคุณนักวิจัยด้านความปลอดภัยที่ช่วยทำให้ Elixopay ปลอดภัยยิ่งขึ้น
-            </p>
-            <a href="mailto:security@elixopay.com" class="inline-block bg-white text-purple-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition">
-                ติดต่อทีม Security →
-            </a>
-            <p class="mt-4 text-sm opacity-75">
-                Bug Bounty Program: รางวัลสูงสุด $10,000 USD
-            </p>
-        </div>
-
-        <!-- Back to Home -->
-        <div class="text-center mt-12">
-            <a href="/index.html" class="text-purple-600 hover:text-purple-700 font-medium">
-                ← กลับหน้าหลัก
-            </a>
-        </div>
-    </div>
+	<footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-600">© 2024 Elixopay Security</footer>
 </body>
 </html>
