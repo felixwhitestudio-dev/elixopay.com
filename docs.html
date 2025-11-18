@@ -15,25 +15,31 @@
 	<nav class="bg-white shadow border-b border-gray-200">
 		<div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
 			<a href="/dashboard.html" class="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">Elixopay</a>
-			<div class="space-x-4 text-sm">
-				<a href="/dashboard.html" class="text-gray-600 hover:text-gray-900">Dashboard</a>
-				<a href="/transactions.html" class="text-gray-600 hover:text-gray-900">Transactions</a>
-				<a href="/security.html" class="text-gray-600 hover:text-gray-900">Security</a>
-				<a href="/help.html" class="text-gray-600 hover:text-gray-900">Help</a>
+			<div class="flex items-center gap-4 text-sm">
+				<a href="/dashboard.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.dashboard">Dashboard</a>
+				<a href="/transactions.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.transactions">Transactions</a>
+				<a href="/security.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.security">Security</a>
+				<a href="/help.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.help">Help</a>
+				<select id="langSelect" class="border border-gray-300 rounded px-2 py-1">
+					<option value="th">TH</option>
+					<option value="en">EN</option>
+					<option value="zh">中文</option>
+				</select>
+				<button id="themeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle theme"></button>
 			</div>
 		</div>
 	</nav>
 
 	<header class="max-w-6xl mx-auto px-4 py-10">
-		<h1 class="text-3xl font-bold mb-2">API Documentation</h1>
-		<p class="text-gray-600">เวอร์ชันเบื้องต้นของเอกสาร API สำหรับเริ่มต้นใช้งาน</p>
+		<h1 class="text-3xl font-bold mb-2" data-i18n="docs.title">API Documentation</h1>
+		<p class="text-gray-600" data-i18n="docs.subtitle">เวอร์ชันเบื้องต้นของเอกสาร API สำหรับเริ่มต้นใช้งาน</p>
 	</header>
 
 	<main class="max-w-6xl mx-auto px-4 pb-16 space-y-10">
 		<!-- Authentication -->
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-key text-purple-600 mr-2"></i>Authentication</h2>
-			<p class="text-sm text-gray-700 mb-4">ใช้ <code class="bg-gray-100 px-1 rounded">Bearer &lt;token&gt;</code> ใน Header <code class="bg-gray-100 px-1 rounded">Authorization</code> หลังจากล็อกอินสำเร็จ.</p>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-key text-purple-600 mr-2"></i><span data-i18n="docs.auth.title">Authentication</span></h2>
+			<p class="text-sm text-gray-700 mb-4" data-i18n="[html]docs.auth.desc.html">ใช้ <code class="bg-gray-100 px-1 rounded">Bearer &lt;token&gt;</code> ใน Header <code class="bg-gray-100 px-1 rounded">Authorization</code> หลังจากล็อกอินสำเร็จ</p>
 			<div class="bg-gray-900 text-gray-100 text-xs rounded p-4 font-mono overflow-auto">
 POST /api/v1/auth/login
 Content-Type: application/json
@@ -54,14 +60,14 @@ Content-Type: application/json
 
 		<!-- Payments -->
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-credit-card text-green-600 mr-2"></i>Payments</h2>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-credit-card text-green-600 mr-2"></i><span data-i18n="docs.payments.title">Payments</span></h2>
 			<table class="w-full text-sm mb-4">
 				<thead>
 					<tr class="text-left text-gray-600">
-						<th class="py-2">Endpoint</th>
-						<th class="py-2">Method</th>
-						<th class="py-2">Description</th>
-						<th class="py-2">Auth</th>
+						<th class="py-2" data-i18n="docs.payments.th.endpoint">Endpoint</th>
+						<th class="py-2" data-i18n="docs.payments.th.method">Method</th>
+						<th class="py-2" data-i18n="docs.payments.th.description">Description</th>
+						<th class="py-2" data-i18n="docs.payments.th.auth">Auth</th>
 					</tr>
 				</thead>
 				<tbody class="divide-y">
@@ -91,13 +97,13 @@ curl -X POST "$BASE_URL/api/v1/payments" \
 	-H "Content-Type: application/json" \
 	-d '{"amount":299900,"currency":"thb","description":"Test order #1"}'
 			</div>
-			<p class="text-xs text-gray-500">หมายเหตุ: จำนวนเงิน (amount) ใช้หน่วยเป็นสตางค์ (เช่น 2,999.00 บาท = 299900)</p>
+			<p class="text-xs text-gray-500" data-i18n="docs.payments.note">หมายเหตุ: จำนวนเงิน (amount) ใช้หน่วยเป็นสตางค์ (เช่น 2,999.00 บาท = 299900)</p>
 		</section>
 
 		<!-- Webhooks -->
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-plug text-blue-600 mr-2"></i>Webhooks</h2>
-			<p class="text-sm text-gray-700 mb-4">Stripe จะส่งอีเวนต์มายัง <code class="bg-gray-100 px-1 rounded">/api/v1/webhooks/stripe</code> เพื่ออัพเดทสถานะการชำระเงิน (เช่น <code>payment_intent.succeeded</code>, <code>payment_intent.payment_failed</code>, <code>charge.refunded</code>).</p>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-plug text-blue-600 mr-2"></i><span data-i18n="docs.webhooks.title">Webhooks</span></h2>
+			<p class="text-sm text-gray-700 mb-4" data-i18n="[html]docs.webhooks.desc.html">Stripe จะส่งอีเวนต์มายัง <code class="bg-gray-100 px-1 rounded">/api/v1/webhooks/stripe</code> เพื่ออัปเดตสถานะการชำระเงิน (เช่น <code>payment_intent.succeeded</code>, <code>payment_intent.payment_failed</code>, <code>charge.refunded</code>).</p>
 			<div class="bg-gray-900 text-gray-100 text-xs rounded p-4 font-mono overflow-auto">
 stripe listen --forward-to http://localhost:3000/api/v1/webhooks/stripe
 			</div>
@@ -105,8 +111,8 @@ stripe listen --forward-to http://localhost:3000/api/v1/webhooks/stripe
 
 		<!-- Errors -->
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-bug text-red-600 mr-2"></i>Error Handling</h2>
-			<p class="text-sm text-gray-700 mb-2">ทุก Response ที่ผิดพลาดจะมีรูปแบบ:</p>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-bug text-red-600 mr-2"></i><span data-i18n="docs.errors.title">Error Handling</span></h2>
+			<p class="text-sm text-gray-700 mb-2" data-i18n="docs.errors.shape">ทุก Response ที่ผิดพลาดจะมีรูปแบบ:</p>
 			<div class="bg-gray-900 text-gray-100 text-xs rounded p-4 font-mono overflow-auto">
 {
 	"success": false,
@@ -120,43 +126,41 @@ stripe listen --forward-to http://localhost:3000/api/v1/webhooks/stripe
 	</main>
 
 	<footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-600">
-		© 2024 Elixopay API Docs
+		<p data-i18n="footer.rights">© 2024 Elixopay API Docs</p>
 	</footer>
+
+	<script>
+		// Simple runtime diagnostics to help investigate blank screen issue
+		(function(){
+			const banner = document.getElementById('debug-banner');
+			function show(msg){
+				if(banner){ banner.style.display='block'; banner.textContent='Docs debug: '+msg; }
+				console.log('[docs.html]', msg);
+			}
+			show('script start');
+			const twOk = typeof tailwind !== 'undefined';
+			show('tailwindLoaded='+twOk);
+			const header = document.querySelector('header h1');
+			show('headerFound='+(!!header));
+			const obs = new MutationObserver(()=>{
+				if(!document.body || document.body.children.length===0){
+					show('body emptied');
+				}
+			});
+			obs.observe(document.body,{childList:true});
+			window.addEventListener('load', ()=>{
+				const hasContent = document.body.textContent.trim().length > 0;
+				show('onload hasContent='+hasContent);
+				if(!hasContent){
+					const fallback = document.createElement('div');
+					fallback.innerHTML = '<h1 style="padding:2rem;font-family:sans-serif">API Docs Fallback Render</h1>';
+					document.body.appendChild(fallback);
+					show('fallback injected');
+				}
+			});
+		})();
+	</script>
+	<script src="js/ui.js"></script>
+	<script src="js/i18n.js"></script>
 </body>
-</html>
-<script>
-	// Simple runtime diagnostics to help investigate blank screen issue
-	(function(){
-		const banner = document.getElementById('debug-banner');
-		function show(msg){
-			if(banner){ banner.style.display='block'; banner.textContent='Docs debug: '+msg; }
-			console.log('[docs.html]', msg);
-		}
-		show('script start');
-		// Check Tailwind loaded
-		const twOk = typeof tailwind !== 'undefined';
-		show('tailwindLoaded='+twOk);
-		// Check main content presence
-		const header = document.querySelector('header h1');
-		show('headerFound='+(!!header));
-		// Mutation observer to catch accidental DOM wipes
-		const obs = new MutationObserver(()=>{
-			if(!document.body || document.body.children.length===0){
-				show('body emptied');
-			}
-		});
-		obs.observe(document.body,{childList:true});
-		// Fallback inject if nothing visible
-		window.addEventListener('load', ()=>{
-			const hasContent = document.body.textContent.trim().length > 0;
-			show('onload hasContent='+hasContent);
-			if(!hasContent){
-				const fallback = document.createElement('div');
-				fallback.innerHTML = '<h1 style="padding:2rem;font-family:sans-serif">API Docs Fallback Render</h1>';
-				document.body.appendChild(fallback);
-				show('fallback injected');
-			}
-		});
-	})();
-</script>
 </html>

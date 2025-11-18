@@ -11,64 +11,75 @@
 	<nav class="bg-white shadow border-b border-gray-200">
 		<div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
 			<a href="/dashboard.html" class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent">Elixopay</a>
-			<div class="space-x-4 text-sm">
-				<a href="/docs.html" class="text-gray-600 hover:text-gray-900">Docs</a>
-				<a href="/security.html" class="text-gray-600 hover:text-gray-900">Security</a>
-				<a href="/transactions.html" class="text-gray-600 hover:text-gray-900">Transactions</a>
+			<div class="flex items-center gap-4 text-sm">
+				<a href="/docs.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.docs">Docs</a>
+				<a href="/security.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.security">Security</a>
+				<a href="/transactions.html" class="text-gray-600 hover:text-gray-900" data-i18n="nav.transactions">Transactions</a>
+				<select id="langSelect" class="border border-gray-300 rounded px-2 py-1">
+					<option value="th">TH</option>
+					<option value="en">EN</option>
+					<option value="zh">中文</option>
+				</select>
+				<button id="themeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle theme"></button>
 			</div>
 		</div>
 	</nav>
 
 	<header class="max-w-4xl mx-auto px-4 py-10">
-		<h1 class="text-3xl font-bold mb-2">Help Center</h1>
-		<p class="text-gray-600">คำถามที่พบบ่อยและช่องทางการติดต่อ</p>
+		<h1 class="text-3xl font-bold mb-2" data-i18n="help.title">Help Center</h1>
+		<p class="text-gray-600" data-i18n="help.subtitle">คำถามที่พบบ่อยและช่องทางการติดต่อ</p>
 	</header>
 
 	<main class="max-w-4xl mx-auto px-4 pb-16 space-y-8">
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-circle-question text-blue-600 mr-2"></i>FAQs</h2>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-circle-question text-blue-600 mr-2"></i><span data-i18n="help.faq.title">FAQs</span></h2>
 			<div class="space-y-4 text-sm text-gray-700">
 				<details class="group bg-gray-50 rounded p-4">
-					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-lock mr-2 text-gray-600"></i>ลืมรหัสผ่านทำอย่างไร?</summary>
-					<p class="mt-2 text-gray-600">จะมีฟังก์ชัน Reset Password ในเวอร์ชันถัดไป — ขณะนี้สามารถติดต่อทีม Support เพื่อ Reset ให้ชั่วคราว.</p>
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-lock mr-2 text-gray-600"></i><span data-i18n="help.faq.q1">ลืมรหัสผ่านทำอย่างไร?</span></summary>
+					<p class="mt-2 text-gray-600" data-i18n="help.faq.a1">จะมีฟังก์ชันรีเซ็ตรหัสผ่านในเวอร์ชันถัดไป — ขณะนี้สามารถติดต่อทีม Support เพื่อรีเซ็ตให้ชั่วคราว</p>
 				</details>
 				<details class="group bg-gray-50 rounded p-4">
-					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-credit-card mr-2 text-gray-600"></i>ต้องใช้ Test Card อะไรกับ Stripe?</summary>
-					<p class="mt-2 text-gray-600">ใช้เลข 4242 4242 4242 4242, วันหมดอายุอนาคต, CVC 3 หลัก, ZIP ใดก็ได้.</p>
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-credit-card mr-2 text-gray-600"></i><span data-i18n="help.faq.q2">ต้องใช้ Test Card อะไรกับ Stripe?</span></summary>
+					<p class="mt-2 text-gray-600" data-i18n="help.faq.a2">ใช้เลข 4242 4242 4242 4242, วันหมดอายุอนาคต, CVC 3 หลัก, ZIP ใดก็ได้</p>
 				</details>
 				<details class="group bg-gray-50 rounded p-4">
-					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-plug mr-2 text-gray-600"></i>Webhook ไม่อัพเดทสถานะ?</summary>
-					<p class="mt-2 text-gray-600">ตรวจสอบว่า Stripe CLI ทำงานและสิทธิ์ถูกต้อง (<code class="bg-gray-100 px-1 rounded">stripe listen</code>) และค่า Webhook Secret อยู่ในไฟล์ <code>.env</code>.</p>
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-plug mr-2 text-gray-600"></i><span data-i18n="help.faq.q3">Webhook ไม่อัปเดตสถานะ?</span></summary>
+					<p class="mt-2 text-gray-600" data-i18n="[html]help.faq.a3.html">ตรวจสอบว่า Stripe CLI ทำงานและสิทธิ์ถูกต้อง (<code class="bg-gray-100 px-1 rounded">stripe listen</code>) และค่า Webhook Secret อยู่ในไฟล์ <code>.env</code></p>
 				</details>
 				<details class="group bg-gray-50 rounded p-4">
-					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-shield-alt mr-2 text-gray-600"></i>ระบบปลอดภัยแค่ไหน?</summary>
-					<p class="mt-2 text-gray-600">ดูสรุปที่หน้า Security หรือไฟล์ SECURITY_README.md — มี JWT, Rate Limit, Account Lockout, Helmet headers และอื่นๆ.</p>
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-shield-alt mr-2 text-gray-600"></i><span data-i18n="help.faq.q4">ระบบปลอดภัยแค่ไหน?</span></summary>
+					<p class="mt-2 text-gray-600" data-i18n="help.faq.a4">ดูสรุปที่หน้า ความปลอดภัย หรือไฟล์ SECURITY_README.md — มี JWT, Rate Limit, Account Lockout, Helmet headers และอื่นๆ</p>
 				</details>
 			</div>
 		</section>
 
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-headset text-green-600 mr-2"></i>Support Contact</h2>
-			<p class="text-sm text-gray-700 mb-4">หากพบปัญหาเร่งด่วนสามารถติดต่อได้ตามช่องทางด้านล่าง:</p>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-headset text-green-600 mr-2"></i><span data-i18n="help.contact.title">Support Contact</span></h2>
+			<p class="text-sm text-gray-700 mb-4" data-i18n="help.contact.intro">หากพบปัญหาเร่งด่วนสามารถติดต่อได้ตามช่องทางด้านล่าง:</p>
 			<ul class="text-sm text-gray-700 space-y-2">
-				<li><i class="fas fa-envelope text-gray-600 mr-2"></i>Email: <a href="mailto:support@elixopay.com" class="text-blue-600">support@elixopay.com</a></li>
-				<li><i class="fab fa-discord text-indigo-600 mr-2"></i>Discord (กำลังจัดเตรียม)</li>
-				<li><i class="fas fa-book text-gray-600 mr-2"></i>Docs: <a href="/docs.html" class="text-blue-600">API Documentation</a></li>
+				<li><i class="fas fa-envelope text-gray-600 mr-2"></i><span data-i18n="help.contact.emailLabel">อีเมล</span>: <a href="mailto:support@elixopay.com" class="text-blue-600">support@elixopay.com</a></li>
+				<li><i class="fab fa-discord text-indigo-600 mr-2"></i><span data-i18n="help.contact.discord">Discord (กำลังจัดเตรียม)</span></li>
+				<li><i class="fas fa-book text-gray-600 mr-2"></i><span data-i18n="nav.docs">Docs</span>: <a href="/docs.html" class="text-blue-600" data-i18n="help.contact.docsLink">API Documentation</a></li>
 			</ul>
 		</section>
 
 		<section class="bg-white rounded-lg shadow p-6">
-			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-rocket text-purple-600 mr-2"></i>Next Features</h2>
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-rocket text-purple-600 mr-2"></i><span data-i18n="help.next.title">Next Features</span></h2>
 			<ul class="list-disc ml-6 text-sm text-gray-700 space-y-2">
-				<li>Reset Password Flow</li>
-				<li>2FA Authentication</li>
-				<li>CSV/PDF Export</li>
-				<li>Webhook Delivery Retry UI</li>
-				<li>Developer API Keys Management</li>
+				<li data-i18n="help.next.item1">Reset Password Flow</li>
+				<li data-i18n="help.next.item2">2FA Authentication</li>
+				<li data-i18n="help.next.item3">CSV/PDF Export</li>
+				<li data-i18n="help.next.item4">Webhook Delivery Retry UI</li>
+				<li data-i18n="help.next.item5">Developer API Keys Management</li>
 			</ul>
 		</section>
 	</main>
 
-	<footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-600">© 2024 Elixopay Help Center</footer>
+	<footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-600">
+		<p data-i18n="footer.rights">© 2024 Elixopay. All rights reserved.</p>
+	</footer>
+
+	<script src="js/ui.js"></script>
+	<script src="js/i18n.js"></script>
 </body>
 </html>
