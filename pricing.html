@@ -1,719 +1,723 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="description" content="แพ็กเกจราคา Elixopay - เลือกแผนที่เหมาะกับธุรกิจของคุณ">
+    <title>ราคา - Elixopay</title>
     
-    <!-- Primary Meta Tags -->
-    <title>ราคา - Elixopay | Payment Gateway ที่คุณจ่ายได้</title>
-    <meta name="title" content="ราคา - Elixopay | Payment Gateway ที่คุณจ่ายได้">
-    <meta name="description" content="แพ็กเกจราคาที่เหมาะกับทุกธุรกิจ เริ่มต้นฟรี ไม่มีค่าธรรมเนียมซ่อนเร้น | จ่ายเท่าที่ใช้">
-    
-    <!-- Security Meta Tags -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+        }
+
         * {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 102, 241, 0.1);
         }
-        
-        .pricing-card {
-            transition: all 0.3s ease;
-            border: 2px solid #e5e7eb;
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .pricing-card:hover {
-            border-color: #635BFF;
-            box-shadow: 0 20px 60px rgba(99, 91, 255, 0.15);
-            transform: translateY(-8px);
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
         }
-        
-        .pricing-card.featured {
-            border-color: #635BFF;
-            box-shadow: 0 20px 60px rgba(99, 91, 255, 0.2);
-            transform: scale(1.05);
+
+        .logo i {
+            color: var(--primary-color);
         }
-        
-        .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-8px);
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
         }
-        
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
-        }
-        
-        .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            border: 2px solid #1a1a1a;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: #1a1a1a;
+            background: var(--primary-color);
             color: white;
         }
-        
-        .feature-check {
-            color: #10b981;
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
         }
-        
-        .feature-unavailable {
-            color: #d1d5db;
+
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
         }
-        
-        nav {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.9);
+
+        .hero-small {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
         }
-        
-        .mobile-menu {
-            display: none;
+
+        .hero-small h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
-        
-        .mobile-menu.active {
-            display: block;
+
+        .hero-small p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
         }
-        
-        .toggle-container {
-            display: inline-flex;
-            background: #f3f4f6;
-            padding: 4px;
-            border-radius: 50px;
-            gap: 4px;
+
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
         }
-        
-        .toggle-option {
-            padding: 8px 24px;
-            border-radius: 50px;
+
+        .toggle-btn {
+            background: var(--dark-card);
+            border: 2px solid var(--primary-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            color: var(--text-primary);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 14px;
+            transition: all 0.3s;
         }
-        
-        .toggle-option.active {
-            background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        .toggle-btn.active {
+            background: var(--primary-color);
+        }
+
+        .save-badge {
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .pricing-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--dark-card);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 2px solid rgba(100, 102, 241, 0.1);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(30, 41, 59, 1) 100%);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-currency {
+            font-size: 1.5rem;
+        }
+
+        .price-period {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .features-list i {
+            color: var(--secondary-color);
+            margin-top: 0.25rem;
+        }
+
+        .features-list .not-included i {
+            color: var(--text-secondary);
+            opacity: 0.3;
+        }
+
+        .comparison-section {
+            padding: 4rem 2rem;
+            background: var(--dark-card);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .comparison-table {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--dark-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .comparison-table th {
+            background: var(--dark-card);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .check-icon {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+
+        .times-icon {
+            color: var(--text-secondary);
+            opacity: 0.3;
+            font-size: 1.2rem;
+        }
+
+        .faq-section {
+            padding: 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--dark-card);
+            padding: 2rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .faq-question i {
+            color: var(--primary-color);
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        footer {
+            background: var(--dark-card);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(100, 102, 241, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(100, 102, 241, 0.1);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .hero-small h1 {
+                font-size: 2rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
-<body class="antialiased bg-white text-gray-900">
-    
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-12">
-                    <a href="/index.html" class="text-2xl font-bold gradient-text">Elixopay</a>
-                    <div class="hidden md:flex space-x-8">
-                        <a href="/index.html#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
-                        <a href="/index.html#developers" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">นักพัฒนา</a>
-                        <a href="/pricing.html" class="text-gray-900 text-sm font-bold transition border-b-2 border-purple-600">ราคา</a>
-                        <a href="#docs" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
-                        <a href="/partners.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">พาร์ทเนอร์</a>
-                    </div>
-                </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
-                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
-                </div>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-200 bg-white">
-            <div class="px-6 py-4 space-y-3">
-                <a href="/index.html#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
-                <a href="/index.html#developers" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">นักพัฒนา</a>
-                <a href="/pricing.html" class="block text-gray-900 text-sm font-bold">ราคา</a>
-                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
-                <a href="/partners.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">พาร์ทเนอร์</a>
-                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
-                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
-            </div>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html">ราคา</a></li>
+                <li><a href="usecases.html">Use Cases</a></li>
+                <li><a href="docs.html">เอกสาร</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-16 lg:pt-40 lg:pb-20">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <div class="max-w-3xl mx-auto">
-                <h1 class="text-5xl lg:text-6xl font-bold leading-tight text-gray-900 mb-6">
-                    ราคาที่<span class="gradient-text">โปร่งใส</span><br/>เริ่มต้นฟรี
-                </h1>
-                <p class="text-xl text-gray-600 leading-relaxed mb-12">
-                    เลือกแพ็กเกจที่เหมาะกับธุรกิจของคุณ ไม่มีค่าธรรมเนียมซ่อนเร้น ไม่มีค่าติดตั้ง<br/>
-                    จ่ายเฉพาะเมื่อมีการทำธุรกรรมเท่านั้น
-                </p>
-                
-                <!-- Billing Toggle -->
-                <div class="flex justify-center mb-16">
-                    <div class="toggle-container">
-                        <div class="toggle-option active" id="monthly-toggle">รายเดือน</div>
-                        <div class="toggle-option" id="yearly-toggle">
-                            รายปี 
-                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-1">ประหยัด 20%</span>
-                        </div>
-                    </div>
+    <div class="hero-small">
+        <h1>แผนราคาที่เหมาะกับทุกธุรกิจ</h1>
+        <p>เลือกแพ็กเกจที่เหมาะกับความต้องการของคุณ ไม่มีค่าธรรมเนียมแรกเข้า ยกเลิกได้ทุกเมื่อ</p>
+        <div class="billing-toggle">
+            <button class="toggle-btn active">รายเดือน</button>
+            <button class="toggle-btn">รายปี <span class="save-badge">ประหยัด 20%</span></button>
+        </div>
+    </div>
+
+    <section class="pricing-section">
+        <div class="pricing-grid">
+            <!-- Starter Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <p class="plan-description">สำหรับธุรกิจขนาดเล็กที่เริ่มต้น</p>
+                <div class="price">
+                    <span class="price-currency">฿</span>0
                 </div>
+                <p class="price-period">ฟรีตลอดกาล</p>
+                <a href="signup.html" class="btn btn-outline" style="width: 100%; text-align: center;">เริ่มใช้งานฟรี</a>
+                <ul class="features-list">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ธุรกรรมสูงสุด 100 รายการ/เดือน</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ค่าธรรมเนียม 2.9% + ฿10 ต่อรายการ</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>API Access พื้นฐาน</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Dashboard สำหรับดูรายงาน</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Support ผ่าน Email</span>
+                    </li>
+                    <li class="not-included">
+                        <i class="fas fa-times-circle"></i>
+                        <span>ระบบ Multi-Level Agency</span>
+                    </li>
+                    <li class="not-included">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Webhook & Real-time Notifications</span>
+                    </li>
+                    <li class="not-included">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Priority Support</span>
+                    </li>
+                </ul>
             </div>
 
-            <!-- Pricing Cards -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                
-                <!-- Free Plan -->
-                <div class="pricing-card bg-white rounded-2xl p-8 text-left">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Free</h3>
-                        <p class="text-gray-600 text-sm">สำหรับทดลองใช้งาน</p>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex items-baseline">
-                            <span class="text-5xl font-bold text-gray-900">฿0</span>
-                            <span class="text-gray-600 ml-2">/เดือน</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-2">2.9% + ฿10 ต่อธุรกรรม</p>
-                    </div>
-                    <a href="#signup" class="btn-secondary w-full text-center block py-3 rounded-full font-semibold mb-6">
-                        เริ่มใช้งานฟรี
-                    </a>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">ธุรกรรมสูงสุด 100 ต่อเดือน</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">API Access พื้นฐาน</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Dashboard พื้นฐาน</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Email Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-unavailable flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-400">Webhook</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-unavailable flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-400">Advanced Analytics</span>
-                        </div>
-                    </div>
+            <!-- Professional Plan (Featured) -->
+            <div class="pricing-card featured">
+                <div class="popular-badge">✨ ยอดนิยม</div>
+                <div class="plan-name">Professional</div>
+                <p class="plan-description">สำหรับธุรกิจที่กำลังเติบโต</p>
+                <div class="price">
+                    <span class="price-currency">฿</span>2,990
                 </div>
+                <p class="price-period">ต่อเดือน</p>
+                <a href="signup.html" class="btn btn-primary" style="width: 100%; text-align: center;">เริ่มทดลองใช้ฟรี 14 วัน</a>
+                <ul class="features-list">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ธุรกรรมไม่จำกัด</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ค่าธรรมเนียม 2.4% + ฿8 ต่อรายการ</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>API Access แบบเต็มรูปแบบ</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Dashboard ขั้นสูง + รายงานวิเคราะห์</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ระบบ Multi-Level Agency</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Webhook & Real-time Notifications</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Priority Support 24/7</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ระบบรักษาความปลอดภัยขั้นสูง</span>
+                    </li>
+                </ul>
+            </div>
 
-                <!-- Startup Plan -->
-                <div class="pricing-card bg-white rounded-2xl p-8 text-left">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Startup</h3>
-                        <p class="text-gray-600 text-sm">สำหรับธุรกิจเริ่มต้น</p>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex items-baseline">
-                            <span class="text-5xl font-bold text-gray-900">฿990</span>
-                            <span class="text-gray-600 ml-2">/เดือน</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-2">2.5% + ฿8 ต่อธุรกรรม</p>
-                    </div>
-                    <a href="#signup" class="btn-secondary w-full text-center block py-3 rounded-full font-semibold mb-6">
-                        เริ่มทดลอง 14 วัน
-                    </a>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">ธุรกรรมไม่จำกัด</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">API Access เต็มรูปแบบ</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Dashboard & Analytics</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Webhook Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Priority Email Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Fraud Detection AI</span>
-                        </div>
-                    </div>
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Enterprise</div>
+                <p class="plan-description">สำหรับองค์กรขนาดใหญ่</p>
+                <div class="price" style="font-size: 2.5rem;">
+                    ติดต่อเรา
                 </div>
-
-                <!-- Business Plan (Featured) -->
-                <div class="pricing-card featured bg-white rounded-2xl p-8 text-left relative">
-                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                        <span class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold">
-                            แนะนำ
-                        </span>
-                    </div>
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Business</h3>
-                        <p class="text-gray-600 text-sm">สำหรับธุรกิจที่กำลังเติบโต</p>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex items-baseline">
-                            <span class="text-5xl font-bold text-gray-900">฿2,990</span>
-                            <span class="text-gray-600 ml-2">/เดือน</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-2">2.2% + ฿6 ต่อธุรกรรม</p>
-                    </div>
-                    <a href="#signup" class="btn-primary w-full text-center block py-3 rounded-full font-semibold mb-6 text-white">
-                        เริ่มทดลอง 14 วัน
-                    </a>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700"><strong>ทุกอย่างใน Startup</strong></span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Advanced Analytics & Reports</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Multi-currency Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Subscription & Recurring Billing</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Phone & Chat Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Custom Branding</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Enterprise Plan -->
-                <div class="pricing-card bg-white rounded-2xl p-8 text-left">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
-                        <p class="text-gray-600 text-sm">สำหรับองค์กรขนาดใหญ่</p>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex items-baseline">
-                            <span class="text-5xl font-bold text-gray-900">Custom</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-2">ราคาเจรจาได้</p>
-                    </div>
-                    <a href="#contact" class="btn-secondary w-full text-center block py-3 rounded-full font-semibold mb-6">
-                        ติดต่อฝ่ายขาย
-                    </a>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700"><strong>ทุกอย่างใน Business</strong></span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Dedicated Account Manager</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">Custom Integration Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">SLA 99.99% Uptime</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">24/7 Priority Support</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 feature-check flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-gray-700">On-premise Deployment Option</span>
-                        </div>
-                    </div>
-                </div>
-
+                <p class="price-period">ราคาพิเศษสำหรับองค์กร</p>
+                <a href="contact.html" class="btn btn-outline" style="width: 100%; text-align: center;">ติดต่อฝ่ายขาย</a>
+                <ul class="features-list">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ทุกอย่างใน Professional</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>ค่าธรรมเนียมพิเศษตามปริมาณ</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Dedicated Account Manager</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Custom Integration Support</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>SLA 99.99% Uptime Guarantee</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>White-label Solution</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>On-premise Deployment (Optional)</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>การฝึกอบรมและเอกสารเฉพาะทาง</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <!-- Feature Comparison Table -->
-    <section class="py-24 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">เปรียบเทียบแพ็กเกจ</h2>
-                <p class="text-lg text-gray-600">ดูรายละเอียดฟีเจอร์ทั้งหมดแต่ละแพ็กเกจ</p>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50 border-b border-gray-200">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">ฟีเจอร์</th>
-                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Free</th>
-                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Startup</th>
-                                <th class="px-6 py-4 text-center text-sm font-semibold gradient-text">Business</th>
-                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Enterprise</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900">ธุรกรรมต่อเดือน</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">100</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">ไม่จำกัด</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">ไม่จำกัด</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">ไม่จำกัด</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">ค่าธรรมเนียมต่อธุรกรรม</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">2.9% + ฿10</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">2.5% + ฿8</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">2.2% + ฿6</td>
-                                <td class="px-6 py-4 text-sm text-center text-gray-600">เจรจาได้</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900">API Access</td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">Webhook</td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900">Dashboard & Analytics</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">พื้นฐาน</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">มาตรฐาน</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">ขั้นสูง</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">เต็มรูปแบบ</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">Multi-currency</td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900">Subscription Billing</td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">Fraud Detection AI</td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900">Custom Branding</td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">Dedicated Account Manager</td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-gray-300">—</span></td>
-                                <td class="px-6 py-4 text-center"><span class="text-green-500">✓</span></td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900">SLA Uptime</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.9%</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.95%</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.95%</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">99.99%</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">Support</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">Email</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">Email (Priority)</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">Phone & Chat</td>
-                                <td class="px-6 py-4 text-center text-gray-600 text-xs">24/7 Priority</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <section class="comparison-section">
+        <h2 class="section-title">เปรียบเทียบแพ็กเกจ</h2>
+        <p class="section-subtitle">ดูรายละเอียดความแตกต่างของแต่ละแพ็กเกจ</p>
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>คุณสมบัติ</th>
+                        <th>Starter</th>
+                        <th>Professional</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>จำนวนธุรกรรม</td>
+                        <td>100/เดือน</td>
+                        <td>ไม่จำกัด</td>
+                        <td>ไม่จำกัด</td>
+                    </tr>
+                    <tr>
+                        <td>ค่าธรรมเนียมธุรกรรม</td>
+                        <td>2.9% + ฿10</td>
+                        <td>2.4% + ฿8</td>
+                        <td>ติดต่อเรา</td>
+                    </tr>
+                    <tr>
+                        <td>API Access</td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Dashboard</td>
+                        <td>พื้นฐาน</td>
+                        <td>ขั้นสูง</td>
+                        <td>แบบกำหนดเอง</td>
+                    </tr>
+                    <tr>
+                        <td>Multi-Level Agency</td>
+                        <td><i class="fas fa-times times-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Webhooks</td>
+                        <td><i class="fas fa-times times-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Support</td>
+                        <td>Email</td>
+                        <td>24/7 Priority</td>
+                        <td>Dedicated Manager</td>
+                    </tr>
+                    <tr>
+                        <td>SLA Uptime</td>
+                        <td>99.9%</td>
+                        <td>99.9%</td>
+                        <td>99.99%</td>
+                    </tr>
+                    <tr>
+                        <td>White-label</td>
+                        <td><i class="fas fa-times times-icon"></i></td>
+                        <td><i class="fas fa-times times-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="py-24">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">คำถามที่พบบ่อย</h2>
-                <p class="text-lg text-gray-600">คำตอบสำหรับคำถามทั่วไปเกี่ยวกับราคาและการใช้งาน</p>
+    <section class="faq-section">
+        <h2 class="section-title">คำถามที่พบบ่อย</h2>
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i>
+                สามารถเปลี่ยนแพ็กเกจได้หรือไม่?
             </div>
-
-            <div class="space-y-6">
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">มีค่าใช้จ่ายซ่อนเร้นหรือไม่?</h3>
-                    <p class="text-gray-600">
-                        ไม่มีเลยครับ ค่าธรรมเนียมที่แสดงคือทั้งหมดที่คุณต้องจ่าย ไม่มีค่าติดตั้ง ไม่มีค่าธรรมเนียมยกเลิก 
-                        ไม่มีค่าธรรมเนียม Chargeback หรือค่าใช้จ่ายแอบแฝงใดๆ
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">สามารถเปลี่ยนแพ็กเกจได้หรือไม่?</h3>
-                    <p class="text-gray-600">
-                        ได้ครับ คุณสามารถ Upgrade หรือ Downgrade ได้ตลอดเวลา การเปลี่ยนแปลงจะมีผลทันที 
-                        และเราจะคิดเงินแบบ Pro-rated ตามการใช้งานจริง
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">การทดลองใช้ 14 วันทำงานอย่างไร?</h3>
-                    <p class="text-gray-600">
-                        คุณสามารถทดลองใช้แพ็กเกจ Startup และ Business ฟรี 14 วัน โดยไม่ต้องใส่บัตรเครดิต 
-                        หากไม่พอใจสามารถยกเลิกได้ทันที ไม่มีค่าใช้จ่ายใดๆ
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">รองรับการชำระเงินด้วยวิธีใดบ้าง?</h3>
-                    <p class="text-gray-600">
-                        รองรับบัตรเครดิต/เดบิต (Visa, Mastercard, JCB, AMEX), PromptPay, QR Payment, 
-                        Internet Banking, Mobile Banking, และ Installment Payment
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">ระยะเวลาในการโอนเงินเข้าบัญชีเท่าไหร่?</h3>
-                    <p class="text-gray-600">
-                        สำหรับธุรกรรมปกติ เราจะโอนเงินเข้าบัญชีของคุณภายใน T+1 (วันทำการถัดไป) 
-                        สำหรับแพ็กเกจ Enterprise สามารถเจรจา T+0 (โอนเงินในวันเดียวกัน) ได้
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">มี Refund Policy หรือไม่?</h3>
-                    <p class="text-gray-600">
-                        เนื่องจากเราคิดค่าธรรมเนียมต่อธุรกรรมเท่านั้น จึงไม่มี Refund สำหรับธุรกรรมที่เกิดขึ้นแล้ว 
-                        แต่คุณสามารถยกเลิกบริการได้ทันที โดยไม่ต้องจ่ายค่าใช้จ่ายเพิ่มเติม
-                    </p>
-                </div>
+            <p class="faq-answer">ได้ครับ คุณสามารถอัพเกรดหรือดาวน์เกรดแพ็กเกจได้ทุกเมื่อ โดยจะคิดค่าบริการตามสัดส่วนของเวลาที่เหลือ</p>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i>
+                มีค่าธรรมเนียมแรกเข้าหรือไม่?
             </div>
+            <p class="faq-answer">ไม่มีครับ ไม่มีค่าธรรมเนียมแรกเข้าหรือค่าติดตั้ง คุณจ่ายเฉพาะค่าบริการรายเดือนและค่าธรรมเนียมธุรกรรมเท่านั้น</p>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i>
+                ระยะเวลาทดลองใช้เป็นอย่างไร?
+            </div>
+            <p class="faq-answer">แพ็กเกจ Professional และ Enterprise มีระยะเวลาทดลองใช้ฟรี 14 วัน ไม่ต้องใส่บัตรเครดิต สามารถยกเลิกได้ทุกเมื่อ</p>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i>
+                การชำระเงินเป็นอย่างไร?
+            </div>
+            <p class="faq-answer">รับชำระผ่านบัตรเครดิต/เดบิต และการโอนเงินผ่านธนาคาร สำหรับแพ็กเกจ Enterprise สามารถออกใบแจ้งหนี้ได้</p>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-24 bg-gray-900 text-white">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-            <h2 class="text-4xl lg:text-5xl font-bold mb-6">
-                พร้อมเริ่มต้นแล้วหรือยัง?
-            </h2>
-            <p class="text-xl text-gray-300 mb-8">
-                สร้างบัญชีฟรีและเริ่มรับชำระเงินได้ภายใน 10 นาที<br/>
-                ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ทุกเมื่อ
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#signup" class="bg-white text-gray-900 px-8 py-4 rounded-full text-base font-semibold hover:bg-gray-100 transition">
-                    เริ่มใช้งานฟรี →
-                </a>
-                <a href="#contact" class="border-2 border-white text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-white hover:text-gray-900 transition">
-                    ติดต่อฝ่ายขาย
-                </a>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
+                <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
+            </div>
+            <div class="footer-section">
+                <h4>ผลิตภัณฑ์</h4>
+                <ul>
+                    <li><a href="pricing.html">ราคา</a></li>
+                    <li><a href="docs.html">เอกสาร API</a></li>
+                    <li><a href="usecases.html">Use Cases</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>บริษัท</h4>
+                <ul>
+                    <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="contact.html">ติดต่อเรา</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>ช่วยเหลือ</h4>
+                <ul>
+                    <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
+                    <li><a href="security.html">ความปลอดภัย</a></li>
+                    <li><a href="privacy.html">นโยบายความเป็นส่วนตัว</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 py-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-                <div>
-                    <h3 class="font-semibold text-gray-900 mb-4">ผลิตภัณฑ์</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900 transition">Payment API</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition">Checkout</a></li>
-                        <li><a href="/pricing.html" class="hover:text-gray-900 transition">ราคา</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 mb-4">นักพัฒนา</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900 transition">เอกสาร API</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition">คู่มือเริ่มต้น</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 mb-4">บริษัท</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900 transition">เกี่ยวกับเรา</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition">ติดต่อเรา</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 mb-4">แหล่งข้อมูล</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900 transition">ศูนย์ช่วยเหลือ</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition">สถานะระบบ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 mb-4">ข้อกำหนด</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="/security.html" class="hover:text-gray-900 transition">ความปลอดภัย</a></li>
-                        <li><a href="#" class="hover:text-gray-900 transition">นโยบายความเป็นส่วนตัว</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold gradient-text">Elixopay</span>
-                </div>
-                <p class="text-sm text-gray-600">© 2024 Elixopay. All rights reserved.</p>
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Elixopay. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
-        });
-
-        // Billing Toggle (Monthly/Yearly)
-        const monthlyToggle = document.getElementById('monthly-toggle');
-        const yearlyToggle = document.getElementById('yearly-toggle');
-        
-        monthlyToggle.addEventListener('click', () => {
-            monthlyToggle.classList.add('active');
-            yearlyToggle.classList.remove('active');
-            // อัพเดทราคาเป็นรายเดือน (ถ้าต้องการ)
-        });
-        
-        yearlyToggle.addEventListener('click', () => {
-            yearlyToggle.classList.add('active');
-            monthlyToggle.classList.remove('active');
-            // อัพเดทราคาเป็นรายปี (ถ้าต้องการ)
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    mobileMenu.classList.remove('active');
-                }
-            });
-        });
-
-        // Navbar Shadow on Scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 10) {
-                nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            } else {
-                nav.style.boxShadow = 'none';
-            }
-        });
-    </script>
 </body>
 </html>
