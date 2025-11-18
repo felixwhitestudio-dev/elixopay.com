@@ -99,22 +99,23 @@
 					<div>
 						<label for="country" data-i18n="signup.countryLabel">ประเทศ</label>
 						<select id="country" name="country" required>
-							<option value="" disabled selected data-i18n="signup.countrySelect">เลือกประเทศ</option>
-							<option value="th" data-i18n="signup.country.th">ไทย</option>
+							<option value="th" selected data-i18n="signup.country.th">ไทย</option>
 							<option value="us" data-i18n="signup.country.us">สหรัฐอเมริกา</option>
 							<option value="sg" data-i18n="signup.country.sg">สิงคโปร์</option>
 							<option value="cn" data-i18n="signup.country.cn">จีน</option>
+							<option value="vn" data-i18n="signup.country.vn">เวียดนาม</option>
 						</select>
 						<div class="error-msg" id="country-error"></div>
 					</div>
 					<div>
 						<label for="currency" data-i18n="signup.currencyLabel">สกุลเงินหลัก</label>
 						<select id="currency" name="currency" required>
-							<option value="" disabled selected data-i18n="signup.currencySelect">เลือกสกุลเงิน</option>
-							<option value="THB">THB</option>
-							<option value="USD">USD</option>
-							<option value="CNY">CNY</option>
-							<option value="SGD">SGD</option>
+							<option value="THB" selected data-i18n="signup.currency.thb">THB - บาท</option>
+							<option value="CNY" data-i18n="signup.currency.cny">CNY - หยวน</option>
+							<option value="VND" data-i18n="signup.currency.vnd">VND - ดอง</option>
+							<option value="BTC" data-i18n="signup.currency.btc">BTC - บิตคอยน์</option>
+							<option value="USDT" data-i18n="signup.currency.usdt">USDT - สเตเบิลคอยน์</option>
+							<option value="USD" data-i18n="signup.currency.usd">USD - ดอลลาร์</option>
 						</select>
 						<div class="error-msg" id="currency-error"></div>
 					</div>
