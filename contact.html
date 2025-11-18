@@ -439,7 +439,7 @@
 
     <div class="hero-small reveal">
         <h1 data-i18n="contact.title">ติดต่อเรา</h1>
-        <p>มีคำถามหรือต้องการความช่วยเหลือ? ทีมของเราพร้อมให้บริการตลอด 24/7</p>
+        <p data-i18n="contact.hero.desc">มีคำถามหรือต้องการความช่วยเหลือ? ทีมของเราพร้อมให้บริการตลอด 24/7</p>
     </div>
 
     <section class="contact-section reveal">
@@ -450,8 +450,8 @@
                         <i class="fas fa-envelope"></i>
                     </div>
                     <div class="info-content">
-                        <h3>อีเมล</h3>
-                        <p>ส่งอีเมลถึงเราได้ตลอดเวลา</p>
+                        <h3 data-i18n="contact.info.email">อีเมล</h3>
+                        <p data-i18n="contact.info.email.desc">ส่งอีเมลถึงเราได้ตลอดเวลา</p>
                         <a href="mailto:support@elixopay.com">support@elixopay.com</a><br>
                         <a href="mailto:sales@elixopay.com">sales@elixopay.com</a>
                     </div>
@@ -462,46 +462,46 @@
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="info-content">
-                        <h3>เวลาให้บริการ</h3>
-                        <p><strong style="color: var(--secondary-color);">Support 24/7 Online</strong><br>
-                        ทีมซัพพอร์ตพร้อมให้บริการคุณตลอด 24 ชั่วโมง<br>
-                        ตอบกลับภายใน 1 ชั่วโมง</p>
+                        <h3 data-i18n="contact.info.hours">เวลาให้บริการ</h3>
+                        <p><strong style="color: var(--secondary-color);" data-i18n="contact.info.hours.badge">Support 24/7 Online</strong><br>
+                        <span data-i18n="contact.info.hours.line1">ทีมซัพพอร์ตพร้อมให้บริการคุณตลอด 24 ชั่วโมง</span><br>
+                        <span data-i18n="contact.info.hours.line2">ตอบกลับภายใน 1 ชั่วโมง</span></p>
                     </div>
                 </div>
             </div>
 
             <div class="contact-form reveal lift">
-                <h2 class="form-title">ส่งข้อความถึงเรา</h2>
+                <h2 class="form-title" data-i18n="contact.form.title">ส่งข้อความถึงเรา</h2>
                 <form id="contactForm">
                     <div class="form-group">
-                        <label for="name">ชื่อ - นามสกุล *</label>
-                        <input type="text" id="name" name="name" required placeholder="กรอกชื่อของคุณ">
+                        <label for="name" data-i18n="contact.form.name">ชื่อ - นามสกุล *</label>
+                        <input type="text" id="name" name="name" required data-i18n="[placeholder]contact.form.name.ph" placeholder="กรอกชื่อของคุณ">
                     </div>
                     <div class="form-group">
-                        <label for="email">อีเมล *</label>
-                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                        <label for="email" data-i18n="contact.form.email">อีเมล *</label>
+                        <input type="email" id="email" name="email" required data-i18n="[placeholder]contact.form.email.ph" placeholder="your@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="phone">เบอร์โทรศัพท์</label>
-                        <input type="tel" id="phone" name="phone" placeholder="08X-XXX-XXXX">
+                        <label for="phone" data-i18n="contact.form.phone">เบอร์โทรศัพท์</label>
+                        <input type="tel" id="phone" name="phone" data-i18n="[placeholder]contact.form.phone.ph" placeholder="08X-XXX-XXXX">
                     </div>
                     <div class="form-group">
-                        <label for="subject">หัวข้อ *</label>
+                        <label for="subject" data-i18n="contact.form.subject">หัวข้อ *</label>
                         <select id="subject" name="subject" required>
-                            <option value="">เลือกหัวข้อ</option>
-                            <option value="sales">สอบถามข้อมูลการขาย</option>
-                            <option value="support">ขอความช่วยเหลือทางเทคนิค</option>
-                            <option value="partnership">ความร่วมมือทางธุรกิจ</option>
-                            <option value="billing">เรื่องเกี่ยวกับการเรียกเก็บเงิน</option>
-                            <option value="other">อื่นๆ</option>
+                            <option value="" data-i18n="contact.form.subject.placeholder">เลือกหัวข้อ</option>
+                            <option value="sales" data-i18n="contact.form.subject.sales">สอบถามข้อมูลการขาย</option>
+                            <option value="support" data-i18n="contact.form.subject.support">ขอความช่วยเหลือทางเทคนิค</option>
+                            <option value="partnership" data-i18n="contact.form.subject.partnership">ความร่วมมือทางธุรกิจ</option>
+                            <option value="billing" data-i18n="contact.form.subject.billing">เรื่องเกี่ยวกับการเรียกเก็บเงิน</option>
+                            <option value="other" data-i18n="contact.form.subject.other">อื่นๆ</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="message">ข้อความ *</label>
-                        <textarea id="message" name="message" required placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
+                        <label for="message" data-i18n="contact.form.message">ข้อความ *</label>
+                        <textarea id="message" name="message" required data-i18n="[placeholder]contact.form.message.ph" placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
                     </div>
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i> ส่งข้อความ
+                        <i class="fas fa-paper-plane"></i> <span data-i18n="contact.form.submit">ส่งข้อความ</span>
                     </button>
                 </form>
             </div>
@@ -509,8 +509,8 @@
     </section>
 
     <section class="social-section reveal">
-        <h2 class="section-title">ติดตามเราบนโซเชียลมีเดีย</h2>
-        <p class="section-subtitle">ติดตามข่าวสารและอัพเดทล่าสุด</p>
+        <h2 class="section-title" data-i18n="contact.social.title">ติดตามเราบนโซเชียลมีเดีย</h2>
+        <p class="section-subtitle" data-i18n="contact.social.subtitle">ติดตามข่าวสารและอัพเดทล่าสุด</p>
         <div class="social-links">
             <a href="#" class="social-btn" title="Facebook">
                 <i class="fab fa-facebook-f"></i>
