@@ -422,13 +422,20 @@
                 <span>Elixopay</span>
             </a>
             <ul class="nav-links">
-                <li><a href="about.html">เกี่ยวกับเรา</a></li>
-                <li><a href="pricing.html">ราคา</a></li>
-                <li><a href="usecases.html">Use Cases</a></li>
-                <li><a href="docs.html">เอกสาร</a></li>
-                <li><a href="contact.html">ติดต่อ</a></li>
-                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
-                <li><a href="signup.html" class="btn btn-primary">ลงทะเบียน</a></li>
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
+                <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
+                <li><a href="docs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="login.html" class="btn btn-outline" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary" data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
                 <li>
                     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button>
                 </li>
@@ -437,11 +444,11 @@
     </nav>
 
     <div class="hero-small reveal">
-        <h1>แผนราคาที่เหมาะกับทุกธุรกิจ</h1>
-        <p>เลือกแพ็กเกจที่เหมาะกับความต้องการของคุณ ไม่มีค่าธรรมเนียมแรกเข้า ยกเลิกได้ทุกเมื่อ</p>
+        <h1 data-i18n="pricing.title">แผนราคาที่เหมาะกับทุกธุรกิจ</h1>
+        <p data-i18n="pricing.hero.desc">เลือกแพ็กเกจที่เหมาะกับความต้องการของคุณ ไม่มีค่าธรรมเนียมแรกเข้า ยกเลิกได้ทุกเมื่อ</p>
         <div class="billing-toggle">
-            <button class="toggle-btn active">รายเดือน</button>
-            <button class="toggle-btn">รายปี <span class="save-badge">ประหยัด 20%</span></button>
+            <button class="toggle-btn active" data-i18n="pricing.billing.monthly">รายเดือน</button>
+            <button class="toggle-btn"><span data-i18n="pricing.billing.yearly">รายปี</span> <span class="save-badge" data-i18n="pricing.billing.save20">ประหยัด 20%</span></button>
         </div>
     </div>
 
@@ -449,7 +456,7 @@
         <div class="pricing-grid">
             <!-- Starter Plan -->
             <div class="pricing-card reveal lift">
-                <div class="plan-name">Starter</div>
+                <div class="plan-name" data-i18n="pricing.plan.starter">Starter</div>
                 <p class="plan-description">สำหรับธุรกิจขนาดเล็กที่เริ่มต้น</p>
                 <div class="price">
                     <span class="price-currency">฿</span>0
@@ -495,7 +502,7 @@
             <!-- Professional Plan (Featured) -->
             <div class="pricing-card featured reveal lift">
                 <div class="popular-badge">✨ ยอดนิยม</div>
-                <div class="plan-name">Professional</div>
+                <div class="plan-name" data-i18n="pricing.plan.professional">Professional</div>
                 <p class="plan-description">สำหรับธุรกิจที่กำลังเติบโต</p>
                 <div class="price">
                     <span class="price-currency">฿</span>2,990
@@ -540,7 +547,7 @@
 
             <!-- Enterprise Plan -->
             <div class="pricing-card reveal lift">
-                <div class="plan-name">Enterprise</div>
+                <div class="plan-name" data-i18n="pricing.plan.enterprise">Enterprise</div>
                 <p class="plan-description">สำหรับองค์กรขนาดใหญ่</p>
                 <div class="price" style="font-size: 2.5rem;">
                     ติดต่อเรา
@@ -593,9 +600,9 @@
                 <thead>
                     <tr>
                         <th>คุณสมบัติ</th>
-                        <th>Starter</th>
-                        <th>Professional</th>
-                        <th>Enterprise</th>
+                        <th data-i18n="pricing.plan.starter">Starter</th>
+                        <th data-i18n="pricing.plan.professional">Professional</th>
+                        <th data-i18n="pricing.plan.enterprise">Enterprise</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -697,22 +704,22 @@
                 <p style="color: var(--text-secondary);">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
             <div class="footer-section">
-                <h4>ผลิตภัณฑ์</h4>
+                <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
                 <ul>
-                    <li><a href="pricing.html">ราคา</a></li>
+                    <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
                     <li><a href="docs.html">เอกสาร API</a></li>
-                    <li><a href="usecases.html">Use Cases</a></li>
+                    <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>บริษัท</h4>
+                <h4 data-i18n="footer.company">บริษัท</h4>
                 <ul>
                     <li><a href="about.html">เกี่ยวกับเรา</a></li>
                     <li><a href="contact.html">ติดต่อเรา</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>ช่วยเหลือ</h4>
+                <h4 data-i18n="footer.help">ช่วยเหลือ</h4>
                 <ul>
                     <li><a href="help.html">ศูนย์ช่วยเหลือ</a></li>
                     <li><a href="security.html">ความปลอดภัย</a></li>
@@ -725,6 +732,7 @@
         </div>
     </footer>
     <script src="js/ui.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
         document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
             document.querySelector('.nav-links')?.classList.toggle('show');
