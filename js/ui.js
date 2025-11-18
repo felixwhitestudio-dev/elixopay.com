@@ -14,20 +14,25 @@
 
   // Theme toggle
   function updateToggleIcon(btn){
+    console.log('🎨 updateToggleIcon called', { btn, exists: !!btn });
     if(!btn) return;
     const light = document.body.classList.contains('light');
     const lang = localStorage.getItem('elixopay_lang') || 'th';
+    console.log('🎨 Theme state:', { light, lang });
     const labels = {
       th: { dark: 'โหมดมืด', light: 'โหมดสว่าง' },
       en: { dark: 'Dark Mode', light: 'Light Mode' },
       zh: { dark: '深色模式', light: '浅色模式' }
     };
     const text = light ? labels[lang].dark : labels[lang].light;
+    console.log('🎨 Setting text:', text);
     btn.innerHTML = light ? `<i class="fas fa-moon"></i> ${text}` : `<i class="fas fa-sun"></i> ${text}`;
     btn.setAttribute('aria-pressed', String(light));
   }
   document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎨 DOMContentLoaded fired');
     const toggle = document.getElementById('themeToggle');
+    console.log('🎨 Found toggle button:', toggle);
     if (toggle) {
       updateToggleIcon(toggle);
       toggle.addEventListener('click', () => {
