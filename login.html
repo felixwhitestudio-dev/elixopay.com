@@ -528,13 +528,29 @@
             // Validate
             let isValid = true;
             
+            const currentLang = localStorage.getItem('elixopay_lang') || 'th';
+            const errorMessages = {
+                th: {
+                    invalidEmail: 'กรุณากรอกอีเมลที่ถูกต้อง',
+                    shortPassword: 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'
+                },
+                en: {
+                    invalidEmail: 'Please enter a valid email address',
+                    shortPassword: 'Password must be at least 8 characters'
+                },
+                zh: {
+                    invalidEmail: '请输入有效的电子邮件地址',
+                    shortPassword: '密码长度至少为 8 个字符'
+                }
+            };
+            
             if (!validateEmail(email)) {
-                showFieldError('email', 'กรุณากรอกอีเมลที่ถูกต้อง');
+                showFieldError('email', errorMessages[currentLang].invalidEmail);
                 isValid = false;
             }
             
             if (password.length < 8) {
-                showFieldError('password', 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร');
+                showFieldError('password', errorMessages[currentLang].shortPassword);
                 isValid = false;
             }
             
@@ -547,7 +563,6 @@
             
             btn.disabled = true;
             // Get current language for button text
-            const currentLang = localStorage.getItem('elixopay_lang') || 'th';
             const submittingText = {
                 th: 'กำลังเข้าสู่ระบบ...',
                 en: 'Signing in...',
