@@ -1,5 +1,5 @@
 // UI utilities: theme toggle, reveal animations, skeleton hide, mobile menu
-// v1.1.0 - Theme toggle with multi-language support
+// v1.1.1 - Cleanup debug logs; keep multi-language theme toggle
 (function(){
   const STORAGE_KEY = 'elixopay-theme';
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -14,27 +14,21 @@
 
   // Theme toggle
   function updateToggleIcon(btn){
-    console.log('🎨 updateToggleIcon called', { btn, exists: !!btn });
     if(!btn) return;
     const light = document.body.classList.contains('light');
-  // Use same storage key as i18n.js (elixopay-lang) to stay in sync
-  const lang = localStorage.getItem('elixopay-lang') || 'th';
-    console.log('🎨 Theme state:', { light, lang });
+    // Use same storage key as i18n.js (elixopay-lang) to stay in sync
+    const lang = localStorage.getItem('elixopay-lang') || 'th';
     const labels = {
       th: { dark: 'โหมดมืด', light: 'โหมดสว่าง' },
       en: { dark: 'Dark Mode', light: 'Light Mode' },
       zh: { dark: '深色模式', light: '浅色模式' }
     };
     const text = light ? labels[lang].dark : labels[lang].light;
-    console.log('🎨 Setting text:', text);
     btn.innerHTML = light ? `<i class="fas fa-moon"></i> ${text}` : `<i class="fas fa-sun"></i> ${text}`;
-    console.log('🎨 After set, innerHTML:', btn.innerHTML);
     btn.setAttribute('aria-pressed', String(light));
   }
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎨 DOMContentLoaded fired');
     const toggle = document.getElementById('themeToggle');
-    console.log('🎨 Found toggle button:', toggle);
     if (toggle) {
       updateToggleIcon(toggle);
       toggle.addEventListener('click', () => {
