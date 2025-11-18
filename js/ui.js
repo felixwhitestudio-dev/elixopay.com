@@ -15,7 +15,14 @@
   function updateToggleIcon(btn){
     if(!btn) return;
     const light = document.body.classList.contains('light');
-    btn.innerHTML = light ? '<i class="fas fa-moon"></i> โหมดมืด' : '<i class="fas fa-sun"></i> โหมดสว่าง';
+    const lang = localStorage.getItem('elixopay_lang') || 'th';
+    const labels = {
+      th: { dark: 'โหมดมืด', light: 'โหมดสว่าง' },
+      en: { dark: 'Dark Mode', light: 'Light Mode' },
+      zh: { dark: '深色模式', light: '浅色模式' }
+    };
+    const text = light ? labels[lang].dark : labels[lang].light;
+    btn.innerHTML = light ? `<i class="fas fa-moon"></i> ${text}` : `<i class="fas fa-sun"></i> ${text}`;
     btn.setAttribute('aria-pressed', String(light));
   }
   document.addEventListener('DOMContentLoaded', () => {
@@ -26,6 +33,11 @@
         document.body.classList.toggle('light');
         const nowLight = document.body.classList.contains('light');
         localStorage.setItem(STORAGE_KEY, nowLight ? 'light' : 'dark');
+        updateToggleIcon(toggle);
+      });
+
+      // Update theme toggle text when language changes
+      window.addEventListener('languageChanged', () => {
         updateToggleIcon(toggle);
       });
     }
