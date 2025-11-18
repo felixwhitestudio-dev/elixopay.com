@@ -17,7 +17,8 @@
     console.log('🎨 updateToggleIcon called', { btn, exists: !!btn });
     if(!btn) return;
     const light = document.body.classList.contains('light');
-    const lang = localStorage.getItem('elixopay_lang') || 'th';
+  // Use same storage key as i18n.js (elixopay-lang) to stay in sync
+  const lang = localStorage.getItem('elixopay-lang') || 'th';
     console.log('🎨 Theme state:', { light, lang });
     const labels = {
       th: { dark: 'โหมดมืด', light: 'โหมดสว่าง' },
