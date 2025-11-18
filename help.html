@@ -1,592 +1,74 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <title>ศูนย์ช่วยเหลือ - Elixopay</title>
-    <meta name="description" content="คำถามที่พบบ่อย คำแนะนำ และแหล่งข้อมูลสำหรับการใช้งาน Elixopay">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-text {
-            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .gradient-bg { background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%); }
-        .btn-primary {
-            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 91, 255, 0.3);
-        }
-        .mobile-menu { display: none; }
-        .mobile-menu.active { display: block; }
-        .category-btn.active {
-            background: linear-gradient(135deg, #635BFF 0%, #9B8EFF 100%);
-            color: white;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Help Center - Elixopay</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-12">
-                    <a href="/index.html" class="text-2xl font-bold gradient-text">Elixopay</a>
-                    <div class="hidden md:flex space-x-8">
-                        <a href="/index.html#features" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">คุณสมบัติ</a>
-                        <a href="/pricing.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">ราคา</a>
-                        <a href="/docs.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เอกสาร API</a>
-                        <a href="/partners.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">พาร์ทเนอร์</a>
-                    </div>
-                </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="/login.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">เข้าสู่ระบบ</a>
-                    <a href="/signup.html" class="btn-primary text-white px-6 py-2 rounded-full text-sm font-medium">เริ่มใช้งานฟรี</a>
-                </div>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-gray-900">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu border-t border-gray-200 bg-white">
-            <div class="px-6 py-4 space-y-3">
-                <a href="/index.html#features" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">คุณสมบัติ</a>
-                <a href="/pricing.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">ราคา</a>
-                <a href="/docs.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เอกสาร API</a>
-                <a href="/partners.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">พาร์ทเนอร์</a>
-                <a href="/login.html" class="block text-gray-600 hover:text-gray-900 text-sm font-medium">เข้าสู่ระบบ</a>
-                <a href="/signup.html" class="block btn-primary text-white px-6 py-2 rounded-full text-sm font-medium text-center">เริ่มใช้งานฟรี</a>
-            </div>
-        </div>
-    </nav>
+	<nav class="bg-white shadow border-b border-gray-200">
+		<div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+			<a href="/dashboard.html" class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent">Elixopay</a>
+			<div class="space-x-4 text-sm">
+				<a href="/docs.html" class="text-gray-600 hover:text-gray-900">Docs</a>
+				<a href="/security.html" class="text-gray-600 hover:text-gray-900">Security</a>
+				<a href="/transactions.html" class="text-gray-600 hover:text-gray-900">Transactions</a>
+			</div>
+		</div>
+	</nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-16 bg-gradient-to-br from-purple-50 to-blue-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                    ศูนย์<span class="gradient-text">ช่วยเหลือ</span>
-                </h1>
-                <p class="text-xl text-gray-600 mb-8">
-                    ค้นหาคำตอบ คู่มือ และแหล่งข้อมูลทั้งหมดที่คุณต้องการ
-                </p>
-                
-                <!-- Search Bar -->
-                <div class="max-w-2xl mx-auto">
-                    <div class="relative">
-                        <input type="text" id="searchInput" placeholder="ค้นหาคำถาม เช่น วิธีการชำระเงิน, API Integration..." class="w-full px-6 py-4 pr-12 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition">
-                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
+	<header class="max-w-4xl mx-auto px-4 py-10">
+		<h1 class="text-3xl font-bold mb-2">Help Center</h1>
+		<p class="text-gray-600">คำถามที่พบบ่อยและช่องทางการติดต่อ</p>
+	</header>
 
-            <!-- Quick Links -->
-            <div class="grid md:grid-cols-4 gap-6">
-                <a href="#getting-started" class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition group">
-                    <div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-1">เริ่มต้นใช้งาน</h3>
-                    <p class="text-sm text-gray-600">คู่มือการติดตั้งและเริ่มต้น</p>
-                </a>
+	<main class="max-w-4xl mx-auto px-4 pb-16 space-y-8">
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-circle-question text-blue-600 mr-2"></i>FAQs</h2>
+			<div class="space-y-4 text-sm text-gray-700">
+				<details class="group bg-gray-50 rounded p-4">
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-lock mr-2 text-gray-600"></i>ลืมรหัสผ่านทำอย่างไร?</summary>
+					<p class="mt-2 text-gray-600">จะมีฟังก์ชัน Reset Password ในเวอร์ชันถัดไป — ขณะนี้สามารถติดต่อทีม Support เพื่อ Reset ให้ชั่วคราว.</p>
+				</details>
+				<details class="group bg-gray-50 rounded p-4">
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-credit-card mr-2 text-gray-600"></i>ต้องใช้ Test Card อะไรกับ Stripe?</summary>
+					<p class="mt-2 text-gray-600">ใช้เลข 4242 4242 4242 4242, วันหมดอายุอนาคต, CVC 3 หลัก, ZIP ใดก็ได้.</p>
+				</details>
+				<details class="group bg-gray-50 rounded p-4">
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-plug mr-2 text-gray-600"></i>Webhook ไม่อัพเดทสถานะ?</summary>
+					<p class="mt-2 text-gray-600">ตรวจสอบว่า Stripe CLI ทำงานและสิทธิ์ถูกต้อง (<code class="bg-gray-100 px-1 rounded">stripe listen</code>) และค่า Webhook Secret อยู่ในไฟล์ <code>.env</code>.</p>
+				</details>
+				<details class="group bg-gray-50 rounded p-4">
+					<summary class="cursor-pointer font-medium flex items-center"><i class="fas fa-shield-alt mr-2 text-gray-600"></i>ระบบปลอดภัยแค่ไหน?</summary>
+					<p class="mt-2 text-gray-600">ดูสรุปที่หน้า Security หรือไฟล์ SECURITY_README.md — มี JWT, Rate Limit, Account Lockout, Helmet headers และอื่นๆ.</p>
+				</details>
+			</div>
+		</section>
 
-                <a href="#payment" class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition group">
-                    <div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-1">การชำระเงิน</h3>
-                    <p class="text-sm text-gray-600">รับและจัดการการชำระเงิน</p>
-                </a>
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-headset text-green-600 mr-2"></i>Support Contact</h2>
+			<p class="text-sm text-gray-700 mb-4">หากพบปัญหาเร่งด่วนสามารถติดต่อได้ตามช่องทางด้านล่าง:</p>
+			<ul class="text-sm text-gray-700 space-y-2">
+				<li><i class="fas fa-envelope text-gray-600 mr-2"></i>Email: <a href="mailto:support@elixopay.com" class="text-blue-600">support@elixopay.com</a></li>
+				<li><i class="fab fa-discord text-indigo-600 mr-2"></i>Discord (กำลังจัดเตรียม)</li>
+				<li><i class="fas fa-book text-gray-600 mr-2"></i>Docs: <a href="/docs.html" class="text-blue-600">API Documentation</a></li>
+			</ul>
+		</section>
 
-                <a href="#integration" class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition group">
-                    <div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-1">API Integration</h3>
-                    <p class="text-sm text-gray-600">เชื่อมต่อระบบของคุณ</p>
-                </a>
+		<section class="bg-white rounded-lg shadow p-6">
+			<h2 class="text-xl font-semibold mb-4"><i class="fas fa-rocket text-purple-600 mr-2"></i>Next Features</h2>
+			<ul class="list-disc ml-6 text-sm text-gray-700 space-y-2">
+				<li>Reset Password Flow</li>
+				<li>2FA Authentication</li>
+				<li>CSV/PDF Export</li>
+				<li>Webhook Delivery Retry UI</li>
+				<li>Developer API Keys Management</li>
+			</ul>
+		</section>
+	</main>
 
-                <a href="#security" class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition group">
-                    <div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-900 mb-1">ความปลอดภัย</h3>
-                    <p class="text-sm text-gray-600">การรักษาความปลอดภัย</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Categories -->
-    <section class="py-16">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <!-- Category Tabs -->
-            <div class="flex flex-wrap gap-3 mb-12 justify-center">
-                <button class="category-btn active px-6 py-3 rounded-lg font-medium transition" data-category="all">
-                    ทั้งหมด
-                </button>
-                <button class="category-btn px-6 py-3 bg-white border border-gray-200 rounded-lg font-medium hover:border-purple-600 transition" data-category="getting-started">
-                    เริ่มต้นใช้งาน
-                </button>
-                <button class="category-btn px-6 py-3 bg-white border border-gray-200 rounded-lg font-medium hover:border-purple-600 transition" data-category="payment">
-                    การชำระเงิน
-                </button>
-                <button class="category-btn px-6 py-3 bg-white border border-gray-200 rounded-lg font-medium hover:border-purple-600 transition" data-category="integration">
-                    API & Integration
-                </button>
-                <button class="category-btn px-6 py-3 bg-white border border-gray-200 rounded-lg font-medium hover:border-purple-600 transition" data-category="account">
-                    บัญชีและการตั้งค่า
-                </button>
-                <button class="category-btn px-6 py-3 bg-white border border-gray-200 rounded-lg font-medium hover:border-purple-600 transition" data-category="security">
-                    ความปลอดภัย
-                </button>
-            </div>
-
-            <!-- FAQ Items -->
-            <div class="max-w-4xl mx-auto">
-                <!-- Getting Started -->
-                <div class="faq-item mb-4" data-category="getting-started" id="getting-started">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">เริ่มต้นใช้งาน</span>
-                                <span class="font-semibold text-gray-900">ใช้เวลานานแค่ไหนในการเริ่มใช้งาน Elixopay?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>การเริ่มใช้งานแบบพื้นฐานใช้เวลาเพียง <strong>15-30 นาที</strong> โดยมีขั้นตอนดังนี้:</p>
-                                <ol class="list-decimal ml-6 space-y-2">
-                                    <li>สมัครบัญชีและยืนยันอีเมล (5 นาที)</li>
-                                    <li>กรอกข้อมูลธุรกิจและยืนยันตัวตน (10 นาที)</li>
-                                    <li>ตั้งค่าวิธีการรับเงิน (5 นาที)</li>
-                                </ol>
-                                <p>สำหรับการ Integrate API อาจใช้เวลา 1-2 วันทำการ ขึ้นอยู่กับความซับซ้อนของระบบ</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item mb-4" data-category="getting-started">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">เริ่มต้นใช้งาน</span>
-                                <span class="font-semibold text-gray-900">ต้องมีเอกสารอะไรบ้างในการสมัคร?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p><strong>สำหรับบุคคลธรรมดา:</strong></p>
-                                <ul class="list-disc ml-6 space-y-1">
-                                    <li>สำเนาบัตรประชาชน</li>
-                                    <li>หนังสือรับรองบัญชีธนาคาร</li>
-                                </ul>
-                                <p class="mt-3"><strong>สำหรับนิติบุคคล:</strong></p>
-                                <ul class="list-disc ml-6 space-y-1">
-                                    <li>หนังสือรับรองบริษัท (อายุไม่เกิน 3 เดือน)</li>
-                                    <li>สำเนาบัตรประชาชนกรรมการ</li>
-                                    <li>หนังสือรับรองบัญชีธนาคารนิติบุคคล</li>
-                                    <li>ภพ.20 (ถ้ามี)</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment -->
-                <div class="faq-item mb-4" data-category="payment" id="payment">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">การชำระเงิน</span>
-                                <span class="font-semibold text-gray-900">รองรับช่องทางการชำระเงินอะไรบ้าง?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>Elixopay รองรับช่องทางการชำระเงินหลากหลาย:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>บัตรเครดิต/เดบิต:</strong> Visa, Mastercard, JCB, UnionPay</li>
-                                    <li><strong>QR Payment:</strong> PromptPay, Thai QR</li>
-                                    <li><strong>Mobile Banking:</strong> ทุกธนาคารในไทย</li>
-                                    <li><strong>Internet Banking:</strong> ธนาคารชั้นนำ 15 แห่ง</li>
-                                    <li><strong>E-Wallet:</strong> TrueMoney Wallet, ShopeePay, LINE Pay</li>
-                                    <li><strong>Installment:</strong> ผ่อนชำระ 0% นาน 3-10 เดือน</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item mb-4" data-category="payment">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">การชำระเงิน</span>
-                                <span class="font-semibold text-gray-900">เงินเข้าบัญชีเมื่อไหร่?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>ระยะเวลาการโอนเงินขึ้นอยู่กับช่องทางการชำระเงิน:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>QR PromptPay:</strong> ภายใน 24 ชั่วโมง</li>
-                                    <li><strong>บัตรเครดิต/เดบิต:</strong> T+3 วันทำการ (มาตรฐานอุตสาหกรรม)</li>
-                                    <li><strong>Internet/Mobile Banking:</strong> T+1 วันทำการ</li>
-                                    <li><strong>E-Wallet:</strong> T+2 วันทำการ</li>
-                                </ul>
-                                <p class="mt-3">สำหรับ Enterprise Plan สามารถขอ Express Settlement เพื่อรับเงินเร็วขึ้นได้</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item mb-4" data-category="payment">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">การชำระเงิน</span>
-                                <span class="font-semibold text-gray-900">มีค่าธรรมเนียมอะไรบ้าง?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>โครงสร้างค่าธรรมเนียมของเรา:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>ไม่มีค่าติดตั้ง:</strong> สมัครใช้ฟรี</li>
-                                    <li><strong>ไม่มีค่ารายเดือน:</strong> จ่ายตามการใช้งานจริง</li>
-                                    <li><strong>Transaction Fee:</strong> 2.9% + ฿10 ต่อรายการ (Starter)</li>
-                                    <li><strong>Cross-border Fee:</strong> +1.5% สำหรับธุรกรรมต่างประเทศ</li>
-                                    <li><strong>Chargeback Fee:</strong> ฿500 ต่อกรณี (ถ้าเกิดขึ้น)</li>
-                                </ul>
-                                <p class="mt-3">ดูรายละเอียดเพิ่มเติมที่ <a href="/pricing.html" class="text-purple-600 hover:text-purple-700 font-semibold">หน้าราคา</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Integration -->
-                <div class="faq-item mb-4" data-category="integration" id="integration">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Integration</span>
-                                <span class="font-semibold text-gray-900">API มี Rate Limit หรือไม่?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>มี Rate Limit เพื่อความเสถียรของระบบ:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>Starter Plan:</strong> 100 requests/นาที</li>
-                                    <li><strong>Business Plan:</strong> 500 requests/นาที</li>
-                                    <li><strong>Enterprise Plan:</strong> 2,000 requests/นาที หรือสูงกว่าตามที่ตกลง</li>
-                                </ul>
-                                <p class="mt-3">หาก exceed limit จะได้รับ HTTP 429 (Too Many Requests) และต้องรอ 1 นาทีก่อน retry</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item mb-4" data-category="integration">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Integration</span>
-                                <span class="font-semibold text-gray-900">รองรับ SDK ภาษาอะไรบ้าง?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>เรามี Official SDK สำหรับภาษายอดนิยม:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>PHP:</strong> elixopay/elixopay-php</li>
-                                    <li><strong>Node.js:</strong> @elixopay/node</li>
-                                    <li><strong>Python:</strong> elixopay</li>
-                                    <li><strong>Ruby:</strong> elixopay-ruby</li>
-                                    <li><strong>Java:</strong> com.elixopay:elixopay-java</li>
-                                    <li><strong>.NET:</strong> Elixopay.NET</li>
-                                </ul>
-                                <p class="mt-3">นอกจากนี้ยังมี Plugin สำหรับ WooCommerce, Magento, Shopify อีกด้วย</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Account -->
-                <div class="faq-item mb-4" data-category="account">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">บัญชี</span>
-                                <span class="font-semibold text-gray-900">ลืมรหัสผ่านต้องทำอย่างไร?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>ทำตามขั้นตอนนี้:</p>
-                                <ol class="list-decimal ml-6 space-y-2">
-                                    <li>ไปที่หน้า <a href="/login.html" class="text-purple-600 hover:text-purple-700 font-semibold">Login</a></li>
-                                    <li>คลิก "ลืมรหัสผ่าน?"</li>
-                                    <li>กรอกอีเมลที่ใช้สมัคร</li>
-                                    <li>ตรวจสอบอีเมลและคลิกลิงก์รีเซ็ตรหัสผ่าน (ใช้ได้ 1 ชั่วโมง)</li>
-                                    <li>ตั้งรหัสผ่านใหม่</li>
-                                </ol>
-                                <p class="mt-3">ถ้าไม่ได้รับอีเมล ตรวจสอบ Spam folder หรือติดต่อ support@elixopay.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item mb-4" data-category="account">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">บัญชี</span>
-                                <span class="font-semibold text-gray-900">สามารถเปลี่ยนแปลง Plan ได้หรือไม่?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>สามารถเปลี่ยน Plan ได้ตลอดเวลา:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>Upgrade:</strong> มีผลทันที และจะคิดค่าบริการตามแผนใหม่จากวันที่เปลี่ยน</li>
-                                    <li><strong>Downgrade:</strong> มีผลในรอบบิลถัดไป เพื่อให้คุณได้ใช้ฟีเจอร์ที่จ่ายไปแล้วครบ</li>
-                                </ul>
-                                <p class="mt-3">เปลี่ยนได้ที่ Dashboard → Settings → Billing → Change Plan</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security -->
-                <div class="faq-item mb-4" data-category="security" id="security">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">ความปลอดภัย</span>
-                                <span class="font-semibold text-gray-900">ระบบปลอดภัยแค่ไหน?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>เรามีมาตรฐานความปลอดภัยระดับโลก:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>PCI DSS Level 1 Certified:</strong> มาตรฐานสูงสุดสำหรับการจัดการข้อมูลบัตรเครดิต</li>
-                                    <li><strong>ISO 27001:2013:</strong> มาตรฐานการจัดการความปลอดภัยสารสนเทศ</li>
-                                    <li><strong>TLS 1.3 Encryption:</strong> การเข้ารหัสข้อมูลระดับสูงสุด</li>
-                                    <li><strong>3D Secure 2.0:</strong> ป้องกัน Fraud และ Chargeback</li>
-                                    <li><strong>Tokenization:</strong> ไม่เก็บข้อมูลบัตรจริงบนระบบของคุณ</li>
-                                </ul>
-                                <p class="mt-3">อ่านเพิ่มเติมที่ <a href="/security.html" class="text-purple-600 hover:text-purple-700 font-semibold">หน้าความปลอดภัย</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item mb-4" data-category="security">
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <button class="faq-question w-full text-left px-6 py-5 flex items-center justify-between hover:bg-gray-50">
-                            <div class="flex items-start space-x-4">
-                                <span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">ความปลอดภัย</span>
-                                <span class="font-semibold text-gray-900">จัดการกับ Fraud และ Chargeback อย่างไร?</span>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-500 transform transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="faq-answer hidden px-6 pb-5">
-                            <div class="ml-24 text-gray-600 space-y-3">
-                                <p>เรามีระบบป้องกันอัตโนมัติ:</p>
-                                <ul class="list-disc ml-6 space-y-2">
-                                    <li><strong>ML-based Fraud Detection:</strong> ตรวจจับธุรกรรมผิดปกติด้วย Machine Learning</li>
-                                    <li><strong>Risk Scoring:</strong> ให้คะแนนความเสี่ยงแต่ละธุรกรรม</li>
-                                    <li><strong>3D Secure:</strong> OTP verification สำหรับธุรกรรมเสี่ยง</li>
-                                    <li><strong>Velocity Checks:</strong> จำกัดจำนวนธุรกรรมต่อช่วงเวลา</li>
-                                    <li><strong>Chargeback Protection:</strong> ช่วยจัดการเมื่อเกิด dispute</li>
-                                </ul>
-                                <p class="mt-3">คุณสามารถตั้งค่ากฎการป้องกัน Fraud ได้เองใน Dashboard</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Support -->
-    <section class="py-16 bg-gradient-to-r from-purple-600 to-blue-600">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center text-white">
-            <h2 class="text-3xl font-bold mb-4">ไม่พบคำตอบที่ต้องการ?</h2>
-            <p class="text-lg mb-8 opacity-90">ทีมงานของเราพร้อมช่วยเหลือคุณตลอด 24/7</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/contact.html" class="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition">
-                    ติดต่อ Support
-                </a>
-                <a href="/docs.html" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition">
-                    ดูเอกสาร API
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4 gradient-text">Elixopay</h3>
-                    <p class="text-gray-400 text-sm">Payment Gateway ที่ปลอดภัยที่สุดสำหรับธุรกิจของคุณ</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">ผลิตภัณฑ์</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/pricing.html" class="hover:text-white">ราคา</a></li>
-                        <li><a href="/docs.html" class="hover:text-white">เอกสาร API</a></li>
-                        <li><a href="/usecases.html" class="hover:text-white">Use Cases</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">บริษัท</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/partners.html" class="hover:text-white">พาร์ทเนอร์</a></li>
-                        <li><a href="/contact.html" class="hover:text-white">ติดต่อเรา</a></li>
-                        <li><a href="/security.html" class="hover:text-white">ความปลอดภัย</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">ติดต่อเรา</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li>support@elixopay.com</li>
-                        <li>+66 2 123 4567</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-gray-400">© 2568 Elixopay. สงวนลิขสิทธิ์.</p>
-                <div class="flex gap-4 text-sm text-gray-400">
-                    <a href="/terms.html" class="hover:text-white">ข้อกำหนด</a>
-                    <a href="/privacy.html" class="hover:text-white">ความเป็นส่วนตัว</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Mobile Menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('active');
-        });
-
-        // FAQ Accordion
-        document.querySelectorAll('.faq-question').forEach(button => {
-            button.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const icon = this.querySelector('svg');
-                
-                // Toggle current answer
-                answer.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
-            });
-        });
-
-        // Category Filter
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        const faqItems = document.querySelectorAll('.faq-item');
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const category = this.dataset.category;
-                
-                // Update active button
-                categoryButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.classList.add('bg-white', 'border', 'border-gray-200');
-                });
-                this.classList.add('active');
-                this.classList.remove('bg-white', 'border', 'border-gray-200');
-                
-                // Filter FAQ items
-                faqItems.forEach(item => {
-                    if (category === 'all' || item.dataset.category === category) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-        });
-
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            
-            faqItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    </script>
+	<footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-600">© 2024 Elixopay Help Center</footer>
 </body>
 </html>

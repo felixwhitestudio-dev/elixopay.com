@@ -3,16 +3,32 @@
 
 (function() {
   // Preferred production API URL
-  const PROD_BASE = 'https://elixopay-production.up.railway.app';
+  const PROD_BASE = 'https://elixopay-production-de65.up.railway.app'; // 👈 ค่าเริ่มต้นชี้ไปยัง Railway ของคุณ
   const DEV_BASE = 'http://localhost:3000';
   
   // Allow overriding the API base via localStorage for flexibility
   // e.g. localStorage.setItem('api_base_url', 'http://localhost:3000')
   const overrideBase = localStorage.getItem('api_base_url');
   
-  // Default to production API even when served from localhost
-  // (helps when backend isn't running locally)
-  const BASE = overrideBase || PROD_BASE;
+  // Default to DEV when on localhost, otherwise use production
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  // Check for explicit mode
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceMode = urlParams.get('api'); // ?api=local or ?api=remote
+  
+  let BASE;
+  if (forceMode === 'remote') {
+    BASE = PROD_BASE;
+  } else if (forceMode === 'local') {
+    BASE = DEV_BASE;
+  } else if (overrideBase) {
+    BASE = overrideBase;
+  } else if (isLocalhost) {
+    BASE = DEV_BASE;
+  } else {
+    BASE = PROD_BASE;
+  }
   
   // API Configuration
   window.API_CONFIG = {
@@ -32,6 +48,12 @@
         confirm: (id) => `/api/v1/payments/${id}/confirm`,
         cancel: (id) => `/api/v1/payments/${id}/cancel`,
         refund: (id) => `/api/v1/payments/${id}/refund`,
+      },
+      balances: {
+        me: '/api/v1/balances/me',
+      },
+      ledger: {
+        me: '/api/v1/ledger/me',
       },
       users: {
         stats: '/api/v1/users/stats',

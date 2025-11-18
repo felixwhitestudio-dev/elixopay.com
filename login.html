@@ -19,6 +19,20 @@
     
     <!-- API Configuration -->
     <script src="/js/api-config.js"></script>
+        <!-- Force local API during local development -->
+            <script>
+                (function(){
+                    try {
+                        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                        const currentOverride = localStorage.getItem('api_base_url');
+                        if (isLocal && window.setApiBase && currentOverride !== 'http://localhost:3000') {
+                            // Persist override so all pages use localhost API, but do it only once
+                            window.setApiBase('http://localhost:3000');
+                            console.log('🔧 Forcing API Base to localhost for development');
+                        }
+                    } catch (e) { console.warn('API base override failed', e); }
+                })();
+            </script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -504,17 +518,24 @@
                 })
             })
             .then(async response => {
-                const data = await response.json();
+                const result = await response.json();
                 
                 btn.disabled = false;
                 btnText.textContent = 'เข้าสู่ระบบ';
                 spinner.classList.add('hidden');
                 
-                if (response.ok && data.token) {
+                // Check if login successful - API returns { success: true, data: { user, token } }
+                if (response.ok && result.success && result.data && result.data.token) {
                     // Save token
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('refreshToken', data.refreshToken);
-                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('token', result.data.token);
+                    // Maintain backward compatibility: also store under 'authToken'
+                    localStorage.setItem('authToken', result.data.token);
+                    if (result.data.refreshToken) {
+                        localStorage.setItem('refreshToken', result.data.refreshToken);
+                        // Mirror refresh token if future code expects authRefreshToken
+                        localStorage.setItem('authRefreshToken', result.data.refreshToken);
+                    }
+                    localStorage.setItem('user', JSON.stringify(result.data.user));
                     
                     if (rememberMe) {
                         localStorage.setItem('rememberMe', 'true');
@@ -523,7 +544,9 @@
                     // Redirect to dashboard
                     window.location.href = '/dashboard.html';
                 } else {
-                    showFormError(data.error || data.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+                    // Handle error from API response
+                    const errorMsg = result.error?.message || result.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
+                    showFormError(errorMsg);
                 }
             })
             .catch(error => {
