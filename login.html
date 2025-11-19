@@ -513,6 +513,12 @@
             return re.test(email);
         }
 
+        // Check if admin mode
+        function isAdminMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('admin') === 'true';
+        }
+
         // Handle Login Form Submit
         function handleLogin(event) {
             event.preventDefault();
@@ -524,6 +530,26 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const rememberMe = document.getElementById('remember-me').checked;
+            
+            // Check if admin mode
+            const adminMode = isAdminMode();
+            
+            // Admin login shortcut (demo mode)
+            if (adminMode) {
+                if (email === 'admin@elixopay.com' && password === 'Ng@12345') {
+                    localStorage.setItem('elixopay-admin-logged-in', 'true');
+                    localStorage.setItem('admin-user', JSON.stringify({
+                        email: email,
+                        role: 'admin',
+                        name: 'Admin User'
+                    }));
+                    window.location.href = 'admin-dashboard.html';
+                    return;
+                } else {
+                    showFormError('🔒 Admin credentials invalid. Use: admin@elixopay.com / Ng@12345');
+                    return;
+                }
+            }
             
             // Validate
             let isValid = true;
@@ -683,6 +709,46 @@
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if admin mode
+            if (isAdminMode()) {
+                // Show admin login hint
+                const title = document.querySelector('h1');
+                if (title) {
+                    title.innerHTML = '🔐 Admin Login';
+                    title.style.color = '#ef4444';
+                }
+                
+                // Add admin info banner
+                const form = document.querySelector('form');
+                if (form) {
+                    const banner = document.createElement('div');
+                    banner.style.cssText = 'background:#fef3c7; border:1px solid #f59e0b; padding:1rem; border-radius:8px; margin-bottom:1rem; font-size:0.9rem;';
+                    banner.innerHTML = `
+                        <div style="display:flex; align-items:start; gap:0.5rem;">
+                            <span style="font-size:1.25rem;">🔑</span>
+                            <div>
+                                <strong>Admin Demo Login:</strong><br>
+                                Email: <code style="background:#fff; padding:2px 6px; border-radius:4px;">admin@elixopay.com</code><br>
+                                Password: <code style="background:#fff; padding:2px 6px; border-radius:4px;">Ng@12345</code>
+                            </div>
+                        </div>
+                    `;
+                    form.insertBefore(banner, form.firstChild);
+                }
+            } else {
+                // Auto-fill demo credentials if present
+                const demoUser = localStorage.getItem('elixopay-demo-user');
+                if (demoUser) {
+                    try {
+                        const user = JSON.parse(demoUser);
+                        document.getElementById('email').value = user.email;
+                    } catch(e) {}
+                }
+            }
+        });
     </script>
 </body>
 </html>

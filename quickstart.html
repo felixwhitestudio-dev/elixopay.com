@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quick Start Guide - Elixopay</title>
+	<link rel="stylesheet" href="styles/theme.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" defer></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<style>
+		body { font-family: 'Inter', system-ui, sans-serif; background: #0d1117; color: #e2e8f0; margin:0; }
+		body.light { background:#f8fafc; color:#0f172a; }
+		nav { background:#1e293b; padding:1rem 2rem; border-bottom:1px solid rgba(255,255,255,.08); }
+		body.light nav { background:#ffffff; border-bottom-color:#e2e8f0; }
+		.logo { font-weight:700; font-size:1.5rem; color:#6366f1; text-decoration:none; }
+		.container { max-width:900px; margin:0 auto; padding:3rem 1.5rem; }
+		h1 { font-size:2.5rem; margin:0 0 1rem; }
+		h2 { font-size:1.75rem; margin:2rem 0 1rem; color:#6366f1; }
+		h3 { font-size:1.25rem; margin:1.5rem 0 .75rem; }
+		.step { background:#1e293b; padding:2rem; border-radius:12px; margin:1.5rem 0; border:1px solid rgba(255,255,255,.08); }
+		body.light .step { background:#ffffff; border-color:#e2e8f0; }
+		.step-number { display:inline-flex; width:2.5rem; height:2.5rem; background:#6366f1; color:#fff; border-radius:50%; align-items:center; justify-content:center; font-weight:700; font-size:1.25rem; margin-right:1rem; }
+		.step-header { display:flex; align-items:center; margin-bottom:1rem; }
+		.step-title { font-size:1.5rem; font-weight:700; }
+		pre { background:#0d1117; padding:1.5rem; border-radius:8px; overflow-x:auto; border:1px solid rgba(255,255,255,.08); }
+		body.light pre { background:#f8fafc; border-color:#e2e8f0; }
+		code { font-family: 'Courier New', monospace; font-size:.9rem; }
+		.inline-code { background:rgba(99,102,241,.15); padding:.2rem .5rem; border-radius:4px; color:#6366f1; }
+		.btn { padding:.75rem 1.5rem; border-radius:8px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:.5rem; transition:all .2s; }
+		.btn-primary { background:#6366f1; color:#fff; }
+		.btn-primary:hover { background:#4f46e5; }
+		.alert { padding:1rem 1.5rem; border-radius:8px; margin:1rem 0; }
+		.alert-info { background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.3); }
+		.alert-warning { background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.3); }
+		.alert-success { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); }
+	</style>
+</head>
+<body>
+	<nav>
+		<a href="index.html" class="logo">Elixopay</a>
+	</nav>
+
+	<div class="container">
+		<h1>🚀 Quick Start Guide</h1>
+		<p style="font-size:1.1rem; color:#94a3b8; margin-bottom:3rem;">
+			เริ่มต้นใช้งาน Elixopay ใน 5 ขั้นตอนง่ายๆ
+		</p>
+
+		<!-- Step 1 -->
+		<div class="step">
+			<div class="step-header">
+				<div class="step-number">1</div>
+				<div class="step-title">สมัครสมาชิก</div>
+			</div>
+			<p>สร้างบัญชี Elixopay ฟรีและรับ API Keys ทันที</p>
+			<a href="signup.html" class="btn btn-primary">
+				<i class="fas fa-user-plus"></i> สมัครเลย
+			</a>
+		</div>
+
+		<!-- Step 2 -->
+		<div class="step">
+			<div class="step-header">
+				<div class="step-number">2</div>
+				<div class="step-title">ติดตั้ง SDK</div>
+			</div>
+			<p>ติดตั้ง Elixopay SDK สำหรับภาษาที่คุณใช้</p>
+			
+			<h3>Node.js / JavaScript</h3>
+			<pre><code class="language-bash">npm install @elixopay/node-sdk</code></pre>
+
+			<h3>Python</h3>
+			<pre><code class="language-bash">pip install elixopay</code></pre>
+
+			<h3>PHP</h3>
+			<pre><code class="language-bash">composer require elixopay/php-sdk</code></pre>
+
+			<div class="alert alert-info">
+				<strong>💡 ไม่มี SDK?</strong> คุณสามารถใช้ REST API โดยตรงได้ ดู <a href="docs.html" style="color:#6366f1; font-weight:600;">API Documentation</a>
+			</div>
+		</div>
+
+		<!-- Step 3 -->
+		<div class="step">
+			<div class="step-header">
+				<div class="step-number">3</div>
+				<div class="step-title">ตั้งค่า API Key</div>
+			</div>
+			<p>นำ API Key ที่ได้จากหน้า Dashboard มาใช้งาน</p>
+
+			<h3>Node.js Example</h3>
+			<pre><code class="language-javascript">const Elixopay = require('@elixopay/node-sdk');
+
+const elixopay = new Elixopay({
+  apiKey: 'sk_test_your_api_key_here',
+  environment: 'test' // หรือ 'live' สำหรับ production
+});
+</code></pre>
+
+			<h3>Python Example</h3>
+			<pre><code class="language-python">import elixopay
+
+elixopay.api_key = 'sk_test_your_api_key_here'
+elixopay.environment = 'test'
+</code></pre>
+
+			<div class="alert alert-warning">
+				<strong>⚠️ Security Warning:</strong> อย่าเปิดเผย API Key ใน code ที่เป็น public หรือ frontend
+				ใช้ environment variables แทน
+			</div>
+		</div>
+
+		<!-- Step 4 -->
+		<div class="step">
+			<div class="step-header">
+				<div class="step-number">4</div>
+				<div class="step-title">สร้าง Payment</div>
+			</div>
+			<p>สร้างการชำระเงินครั้งแรกของคุณ</p>
+
+			<h3>Node.js Example</h3>
+			<pre><code class="language-javascript">// สร้าง Payment Intent
+const payment = await elixopay.payments.create({
+  amount: 10000, // 100.00 THB (in cents)
+  currency: 'THB',
+  description: 'ซื้อสินค้า #12345',
+  customer: {
+    email: 'customer@example.com',
+    name: 'สมชาย ใจดี'
+  },
+  metadata: {
+    order_id: '12345'
+  }
+});
+
+console.log('Payment ID:', payment.id);
+console.log('Status:', payment.status);
+</code></pre>
+
+			<h3>cURL Example</h3>
+			<pre><code class="language-bash">curl -X POST https://api.elixopay.com/v1/payments \
+  -H "Authorization: Bearer sk_test_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 10000,
+    "currency": "THB",
+    "description": "ซื้อสินค้า #12345",
+    "customer_email": "customer@example.com"
+  }'
+</code></pre>
+		</div>
+
+		<!-- Step 5 -->
+		<div class="step">
+			<div class="step-header">
+				<div class="step-number">5</div>
+				<div class="step-title">ตั้งค่า Webhook</div>
+			</div>
+			<p>รับการแจ้งเตือนเมื่อสถานะการชำระเงินเปลี่ยนแปลง</p>
+
+			<h3>Webhook Endpoint</h3>
+			<pre><code class="language-javascript">// Express.js example
+app.post('/webhooks/elixopay', async (req, res) => {
+  const signature = req.headers['elixopay-signature'];
+  
+  // ตรวจสอบ signature
+  const isValid = elixopay.webhooks.verify(
+    req.body,
+    signature,
+    process.env.WEBHOOK_SECRET
+  );
+  
+  if (!isValid) {
+    return res.status(400).send('Invalid signature');
+  }
+  
+  const event = req.body;
+  
+  // จัดการ event ตามประเภท
+  switch (event.type) {
+    case 'payment.succeeded':
+      console.log('Payment succeeded:', event.data);
+      // อัปเดตฐานข้อมูลว่าชำระเงินสำเร็จ
+      break;
+      
+    case 'payment.failed':
+      console.log('Payment failed:', event.data);
+      // แจ้งเตือนลูกค้า
+      break;
+      
+    default:
+      console.log('Unhandled event type:', event.type);
+  }
+  
+  res.json({ received: true });
+});
+</code></pre>
+
+			<div class="alert alert-success">
+				<strong>✅ เสร็จแล้ว!</strong> ตอนนี้คุณพร้อมรับชำระเงินแล้ว
+			</div>
+		</div>
+
+		<!-- Next Steps -->
+		<div style="background:rgba(99,102,241,.05); padding:2rem; border-radius:12px; margin:3rem 0; border:1px solid rgba(99,102,241,.2);">
+			<h2 style="margin-top:0;">📚 ขั้นตอนถัดไป</h2>
+			<ul style="line-height:2; font-size:1.05rem;">
+				<li><a href="docs.html" style="color:#6366f1; font-weight:600;">อ่าน API Documentation</a> แบบละเอียด</li>
+				<li><a href="test-api.html" style="color:#6366f1; font-weight:600;">ทดสอบ API</a> ด้วย Test Cards</li>
+				<li><a href="usecases.html" style="color:#6366f1; font-weight:600;">ดูตัวอย่างการใช้งาน</a> จาก Use Cases</li>
+				<li><a href="security.html" style="color:#6366f1; font-weight:600;">เรียนรู้เรื่อง Security Best Practices</a></li>
+				<li><a href="contact.html" style="color:#6366f1; font-weight:600;">ติดต่อ Support Team</a> ถ้ามีคำถาม</li>
+			</ul>
+		</div>
+	</div>
+
+	<script>hljs.highlightAll();</script>
+</body>
+</html>
