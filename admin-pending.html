@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>รออนุมัติ - Admin Dashboard | Elixopay</title>
+	<link rel="stylesheet" href="styles/theme.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" defer></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		body { font-family: 'Inter', system-ui, sans-serif; background: #0d1117; color: #e2e8f0; margin:0; }
+		body.light { background:#f8fafc; color:#0f172a; }
+		.container { max-width:1400px; margin:0 auto; padding:2rem 1.5rem; }
+		.header { background:#1e293b; padding:1.5rem; border-radius:12px; margin-bottom:2rem; display:flex; justify-content:space-between; align-items:center; }
+		body.light .header { background:#ffffff; border:1px solid #e2e8f0; }
+		.stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem; margin-bottom:2rem; }
+		.stat-card { background:#1e293b; padding:1.5rem; border-radius:12px; border:1px solid rgba(255,255,255,.08); }
+		body.light .stat-card { background:#ffffff; border-color:#e2e8f0; }
+		.stat-value { font-size:2rem; font-weight:700; color:#6366f1; }
+		.stat-label { font-size:.85rem; color:#94a3b8; margin-top:.5rem; }
+		.card { background:#1e293b; border-radius:12px; border:1px solid rgba(255,255,255,.08); overflow:hidden; }
+		body.light .card { background:#ffffff; border-color:#e2e8f0; }
+		.card-header { padding:1.5rem; border-bottom:1px solid rgba(255,255,255,.08); display:flex; justify-content:space-between; align-items:center; }
+		body.light .card-header { border-bottom-color:#e2e8f0; }
+		table { width:100%; border-collapse:collapse; }
+		th { text-align:left; padding:1rem 1.5rem; font-size:.85rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:.5px; background:rgba(99,102,241,.05); }
+		td { padding:1rem 1.5rem; border-top:1px solid rgba(255,255,255,.08); }
+		body.light td { border-top-color:#e2e8f0; }
+		.badge { display:inline-block; padding:.35rem .75rem; border-radius:6px; font-size:.75rem; font-weight:600; }
+		.badge-pending { background:rgba(251,191,36,.15); color:#fbbf24; }
+		.badge-approved { background:rgba(34,197,94,.15); color:#22c55e; }
+		.badge-rejected { background:rgba(239,68,68,.15); color:#ef4444; }
+		.btn { padding:.5rem 1rem; border-radius:6px; font-size:.85rem; font-weight:600; cursor:pointer; border:none; transition:all .2s; text-decoration:none; display:inline-block; }
+		.btn-approve { background:#22c55e; color:#fff; }
+		.btn-approve:hover { background:#16a34a; }
+		.btn-reject { background:#ef4444; color:#fff; }
+		.btn-reject:hover { background:#dc2626; }
+		.btn-view { background:rgba(99,102,241,.15); color:#6366f1; }
+		.btn-view:hover { background:rgba(99,102,241,.25); }
+		.actions { display:flex; gap:.5rem; }
+		.modal { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.7); z-index:1000; align-items:center; justify-content:center; }
+		.modal.active { display:flex; }
+		.modal-content { background:#1e293b; border-radius:16px; padding:2rem; max-width:600px; width:90%; max-height:90vh; overflow-y:auto; border:1px solid rgba(255,255,255,.08); }
+		body.light .modal-content { background:#ffffff; border-color:#e2e8f0; }
+		.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+		.modal-title { font-size:1.5rem; font-weight:700; }
+		.close-btn { background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer; }
+		.detail-row { display:grid; grid-template-columns:140px 1fr; gap:1rem; padding:.75rem 0; border-bottom:1px solid rgba(255,255,255,.08); }
+		body.light .detail-row { border-bottom-color:#e2e8f0; }
+		.detail-label { font-weight:600; color:#94a3b8; }
+		.nav-tabs { display:flex; gap:1rem; margin-bottom:2rem; border-bottom:2px solid rgba(255,255,255,.08); }
+		body.light .nav-tabs { border-bottom-color:#e2e8f0; }
+		.nav-tab { padding:1rem 1.5rem; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .2s; }
+		.nav-tab.active { color:#6366f1; border-bottom-color:#6366f1; }
+		.empty-state { text-align:center; padding:4rem 2rem; color:#94a3b8; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<div>
+				<h1 style="margin:0; font-size:1.75rem">Admin Dashboard</h1>
+				<p style="color:#94a3b8; margin:.5rem 0 0; font-size:.9rem">จัดการคำขอสมัครใช้งาน</p>
+			</div>
+			<div style="display:flex; gap:1rem; align-items:center;">
+				<button id="themeToggle" style="background:rgba(99,102,241,.15); color:#6366f1; border:none; padding:.75rem 1rem; border-radius:8px; cursor:pointer; font-weight:600;">
+					<i class="fas fa-sun"></i> โหมดสว่าง
+				</button>
+				<a href="admin-dashboard.html" class="btn" style="background:#6366f1; color:#fff">
+					<i class="fas fa-home"></i> Dashboard
+				</a>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stat-card">
+				<div class="stat-value" id="totalPending">0</div>
+				<div class="stat-label">รอการอนุมัติ</div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-value" id="totalApproved">0</div>
+				<div class="stat-label">อนุมัติแล้ว</div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-value" id="totalRejected">0</div>
+				<div class="stat-label">ปฏิเสธ</div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-value" id="totalToday">0</div>
+				<div class="stat-label">สมัครวันนี้</div>
+			</div>
+		</div>
+
+		<div class="nav-tabs">
+			<div class="nav-tab active" onclick="switchTab('pending')">
+				<i class="fas fa-clock"></i> รออนุมัติ <span id="pendingCount" style="background:rgba(251,191,36,.15); color:#fbbf24; padding:.25rem .5rem; border-radius:4px; margin-left:.5rem">0</span>
+			</div>
+			<div class="nav-tab" onclick="switchTab('approved')">
+				<i class="fas fa-check-circle"></i> อนุมัติแล้ว <span id="approvedCount" style="background:rgba(34,197,94,.15); color:#22c55e; padding:.25rem .5rem; border-radius:4px; margin-left:.5rem">0</span>
+			</div>
+			<div class="nav-tab" onclick="switchTab('rejected')">
+				<i class="fas fa-times-circle"></i> ปฏิเสธ <span id="rejectedCount" style="background:rgba(239,68,68,.15); color:#ef4444; padding:.25rem .5rem; border-radius:4px; margin-left:.5rem">0</span>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				<h2 style="margin:0; font-size:1.25rem">คำขอสมัครใช้งาน</h2>
+				<button class="btn" style="background:rgba(99,102,241,.15); color:#6366f1" onclick="loadApplications()">
+					<i class="fas fa-sync"></i> รีเฟรช
+				</button>
+			</div>
+			<div style="overflow-x:auto;">
+				<table id="applicationsTable">
+					<thead>
+						<tr>
+							<th>วันที่สมัคร</th>
+							<th>ชื่อ-สกุล</th>
+							<th>ชื่อธุรกิจ</th>
+							<th>อีเมล</th>
+							<th>ประเทศ</th>
+							<th>สกุลเงิน</th>
+							<th>สถานะ</th>
+							<th style="text-align:center">จัดการ</th>
+						</tr>
+					</thead>
+					<tbody id="applicationsBody">
+						<tr>
+							<td colspan="8" class="empty-state">
+								<i class="fas fa-inbox" style="font-size:3rem; opacity:.3; margin-bottom:1rem; display:block"></i>
+								กำลังโหลดข้อมูล...
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal for viewing details -->
+	<div class="modal" id="detailModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">รายละเอียดคำขอ</h3>
+				<button class="close-btn" onclick="closeModal()">&times;</button>
+			</div>
+			<div id="modalBody"></div>
+			<div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
+				<button class="btn btn-reject" onclick="updateStatus('rejected')">
+					<i class="fas fa-times"></i> ปฏิเสธ
+				</button>
+				<button class="btn btn-approve" onclick="updateStatus('approved')">
+					<i class="fas fa-check"></i> อนุมัติ
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		let currentFilter = 'pending';
+		let applications = [];
+		let currentAppId = null;
+
+		// Theme toggle
+		const themeToggle = document.getElementById('themeToggle');
+		themeToggle.addEventListener('click', () => {
+			document.body.classList.toggle('light');
+			const isLight = document.body.classList.contains('light');
+			themeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i> โหมดมืด' : '<i class="fas fa-sun"></i> โหมดสว่าง';
+			localStorage.setItem('elixopay-theme', isLight ? 'light' : 'dark');
+		});
+		if (localStorage.getItem('elixopay-theme') === 'light') {
+			document.body.classList.add('light');
+			themeToggle.innerHTML = '<i class="fas fa-moon"></i> โหมดมืด';
+		}
+
+		// Load applications from localStorage (demo data)
+		function loadApplications() {
+			const stored = localStorage.getItem('elixopay-applications');
+			applications = stored ? JSON.parse(stored) : generateDemoData();
+			localStorage.setItem('elixopay-applications', JSON.stringify(applications));
+			updateStats();
+			renderTable();
+		}
+
+		// Generate demo data
+		function generateDemoData() {
+			const names = [
+				{ name: 'สมชาย ใจดี', business: 'ร้านอาหารทะเล', email: 'somchai@example.com', country: 'th', currency: 'THB' },
+				{ name: 'John Smith', business: 'Tech Solutions Inc', email: 'john@techsol.com', country: 'us', currency: 'USD' },
+				{ name: '王小明', business: '电商平台', email: 'wang@shop.cn', country: 'cn', currency: 'CNY' },
+				{ name: 'Sarah Johnson', business: 'Fashion Boutique', email: 'sarah@fashion.sg', country: 'sg', currency: 'USD' },
+				{ name: 'นภัสสร ศรีสุข', business: 'คาเฟ่และเบเกอรี่', email: 'napatsorn@cafe.th', country: 'th', currency: 'THB' }
+			];
+			return names.map((item, i) => ({
+				id: `APP${Date.now()}-${i}`,
+				...item,
+				status: i === 0 || i === 1 ? 'pending' : i === 2 ? 'approved' : 'rejected',
+				registeredAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+				notes: ''
+			}));
+		}
+
+		function updateStats() {
+			const pending = applications.filter(a => a.status === 'pending').length;
+			const approved = applications.filter(a => a.status === 'approved').length;
+			const rejected = applications.filter(a => a.status === 'rejected').length;
+			const today = applications.filter(a => {
+				const date = new Date(a.registeredAt);
+				const now = new Date();
+				return date.toDateString() === now.toDateString();
+			}).length;
+
+			document.getElementById('totalPending').textContent = pending;
+			document.getElementById('totalApproved').textContent = approved;
+			document.getElementById('totalRejected').textContent = rejected;
+			document.getElementById('totalToday').textContent = today;
+			document.getElementById('pendingCount').textContent = pending;
+			document.getElementById('approvedCount').textContent = approved;
+			document.getElementById('rejectedCount').textContent = rejected;
+		}
+
+		function switchTab(tab) {
+			currentFilter = tab;
+			document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+			event.target.closest('.nav-tab').classList.add('active');
+			renderTable();
+		}
+
+		function renderTable() {
+			const filtered = applications.filter(a => a.status === currentFilter);
+			const tbody = document.getElementById('applicationsBody');
+			
+			if (filtered.length === 0) {
+				tbody.innerHTML = `<tr><td colspan="8" class="empty-state">
+					<i class="fas fa-inbox" style="font-size:3rem; opacity:.3; margin-bottom:1rem; display:block"></i>
+					ไม่มีข้อมูลในหมวดนี้
+				</td></tr>`;
+				return;
+			}
+
+			tbody.innerHTML = filtered.map(app => {
+				const date = new Date(app.registeredAt).toLocaleDateString('th-TH', { 
+					year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+				});
+				const statusClass = app.status === 'pending' ? 'badge-pending' : app.status === 'approved' ? 'badge-approved' : 'badge-rejected';
+				const statusText = app.status === 'pending' ? 'รออนุมัติ' : app.status === 'approved' ? 'อนุมัติแล้ว' : 'ปฏิเสธ';
+				
+				return `<tr>
+					<td>${date}</td>
+					<td><strong>${app.name}</strong></td>
+					<td>${app.business}</td>
+					<td>${app.email}</td>
+					<td>${app.country.toUpperCase()}</td>
+					<td>${app.currency}</td>
+					<td><span class="badge ${statusClass}">${statusText}</span></td>
+					<td style="text-align:center">
+						<div class="actions">
+							<button class="btn btn-view" onclick="viewDetails('${app.id}')">
+								<i class="fas fa-eye"></i> ดูรายละเอียด
+							</button>
+						</div>
+					</td>
+				</tr>`;
+			}).join('');
+		}
+
+		function viewDetails(id) {
+			const app = applications.find(a => a.id === id);
+			if (!app) return;
+			currentAppId = id;
+			
+			const date = new Date(app.registeredAt).toLocaleDateString('th-TH', { 
+				year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+			});
+			const statusClass = app.status === 'pending' ? 'badge-pending' : app.status === 'approved' ? 'badge-approved' : 'badge-rejected';
+			const statusText = app.status === 'pending' ? 'รออนุมัติ' : app.status === 'approved' ? 'อนุมัติแล้ว' : 'ปฏิเสธ';
+			
+			document.getElementById('modalBody').innerHTML = `
+				<div class="detail-row">
+					<div class="detail-label">Application ID</div>
+					<div>${app.id}</div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">วันที่สมัคร</div>
+					<div>${date}</div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">ชื่อ-สกุล</div>
+					<div><strong>${app.name}</strong></div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">ชื่อธุรกิจ</div>
+					<div><strong>${app.business}</strong></div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">อีเมล</div>
+					<div>${app.email}</div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">ประเทศ</div>
+					<div>${app.country.toUpperCase()}</div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">สกุลเงินหลัก</div>
+					<div>${app.currency}</div>
+				</div>
+				<div class="detail-row">
+					<div class="detail-label">สถานะ</div>
+					<div><span class="badge ${statusClass}">${statusText}</span></div>
+				</div>
+			`;
+			
+			document.getElementById('detailModal').classList.add('active');
+		}
+
+		function closeModal() {
+			document.getElementById('detailModal').classList.remove('active');
+			currentAppId = null;
+		}
+
+		function updateStatus(newStatus) {
+			if (!currentAppId) return;
+			
+			const app = applications.find(a => a.id === currentAppId);
+			if (!app) return;
+			
+			app.status = newStatus;
+			app.updatedAt = new Date().toISOString();
+			
+			localStorage.setItem('elixopay-applications', JSON.stringify(applications));
+			
+			closeModal();
+			loadApplications();
+			
+			// Show notification
+			const msg = newStatus === 'approved' ? 'อนุมัติคำขอสำเร็จ' : 'ปฏิเสธคำขอแล้ว';
+			alert(msg);
+		}
+
+		// Auto-add new signups from signup page
+		function syncNewSignups() {
+			const newUser = localStorage.getItem('elixopay-demo-user');
+			if (newUser) {
+				try {
+					const user = JSON.parse(newUser);
+					const exists = applications.some(a => a.email === user.email);
+					if (!exists) {
+						applications.push({
+							id: `APP${Date.now()}`,
+							name: user.name,
+							business: user.business,
+							email: user.email,
+							country: user.country,
+							currency: user.currency,
+							status: 'pending',
+							registeredAt: user.registeredAt || new Date().toISOString(),
+							notes: ''
+						});
+						localStorage.setItem('elixopay-applications', JSON.stringify(applications));
+						localStorage.removeItem('elixopay-demo-user');
+					}
+				} catch(e) {
+					console.warn('Could not sync new signup:', e);
+				}
+			}
+		}
+
+		// Initialize
+		document.addEventListener('DOMContentLoaded', () => {
+			syncNewSignups();
+			loadApplications();
+			setInterval(syncNewSignups, 3000); // Check every 3 seconds
+		});
+	</script>
+</body>
+</html>
