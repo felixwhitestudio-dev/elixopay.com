@@ -661,11 +661,13 @@
                 console.error('Login error details:', error);
                 console.error('Error name:', error.name);
                 console.error('Error message:', error.message);
+                console.error('API Base URL:', window.API_CONFIG?.BASE_URL);
                 
                 let errorMsg = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง';
                 
                 if (error.message.includes('Failed to fetch')) {
-                    errorMsg = '❌ ไม่สามารถเชื่อมต่อ Backend (http://localhost:3000)\n\nสาเหตุที่เป็นไปได้:\n1. Backend Server ไม่ได้ทำงาน\n2. CORS ถูกบล็อก\n3. Browser บล็อก mixed content';
+                    const apiBase = window.API_CONFIG?.BASE_URL || 'Unknown';
+                    errorMsg = `❌ ไม่สามารถเชื่อมต่อ Backend (${apiBase})\n\nสาเหตุที่เป็นไปได้:\n1. Backend Server ไม่ได้ทำงาน\n2. CORS ถูกบล็อก\n3. Network connection issue`;
                 }
                 
                 showFormError(errorMsg);
