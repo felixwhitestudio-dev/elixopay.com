@@ -108,7 +108,8 @@ const corsOptions = {
   maxAge: 86400 // 24 hours
 };
 
-app.use(cors(corsOptions));
+// Temporary permissive CORS while fixing deployment crash
+app.use(cors({ origin: true, credentials: true }));
 
 // Body parsing middleware
 app.use(express.json());
