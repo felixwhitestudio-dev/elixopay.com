@@ -222,8 +222,8 @@
 		</div>
 	</footer>
 
-	<script src="js/i18n.js?v=2"></script>
-	<script src="js/ui.js?v=2"></script>
+	<script src="js/i18n.js?v=3"></script>
+	<script src="js/ui.js?v=3"></script>
 	<script>
 		const errorTexts = {
 			th:{ email:'กรุณากรอกอีเมลที่ถูกต้อง', password:'รหัสผ่านอย่างน้อย 8 ตัว', confirm:'รหัสผ่านไม่ตรงกัน', name:'กรุณากรอกชื่อ', business:'กรุณากรอกชื่อธุรกิจ', country:'เลือกประเทศ', currency:'เลือกสกุลเงิน' },
@@ -237,6 +237,10 @@
 		});
 		function handleSignup(e){
 			e.preventDefault();
+			
+			// Clear all errors first
+			['name','business','email','password','confirm','country','currency'].forEach(clearErr);
+			
 			const lang = localStorage.getItem('elixopay-lang') || 'th';
 			const name = document.getElementById('name').value.trim();
 			const business = document.getElementById('business').value.trim();
@@ -247,6 +251,8 @@
 			const currency = document.getElementById('currency').value;
 			let ok = true;
 			const errs = errorTexts[lang];
+			
+			// Validate all fields
 			if(!name){ showErr('name',errs.name); ok=false; }
 			if(!business){ showErr('business',errs.business); ok=false; }
 			if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showErr('email',errs.email); ok=false; }
@@ -254,9 +260,36 @@
 			if(password2 !== password){ showErr('confirm',errs.confirm); ok=false; }
 			if(!country){ showErr('country',errs.country); ok=false; }
 			if(!currency){ showErr('currency',errs.currency); ok=false; }
-			if(!ok) return;
-			document.getElementById('signupForm').classList.add('hidden');
-			document.getElementById('signupSuccess').classList.remove('hidden');
+			
+			if(!ok) return false;
+			
+			// Show loading state
+			const btn = document.getElementById('signupBtn');
+			const originalText = btn.textContent;
+			btn.disabled = true;
+			btn.style.opacity = '0.6';
+			btn.style.cursor = 'not-allowed';
+			btn.textContent = lang === 'th' ? 'กำลังสมัคร...' : lang === 'en' ? 'Signing up...' : '注册中...';
+			
+			// Simulate processing (demo mode - no actual backend call)
+			setTimeout(() => {
+				// Store user data in localStorage for demo purposes
+				try {
+					localStorage.setItem('elixopay-demo-user', JSON.stringify({
+						name, business, email, country, currency, 
+						registeredAt: new Date().toISOString()
+					}));
+				} catch(err) {
+					console.warn('Could not save demo data:', err);
+				}
+				
+				// Show success screen
+				document.getElementById('signupForm').classList.add('hidden');
+				document.getElementById('signupSuccess').classList.remove('hidden');
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}, 800);
+			
+			return false;
 		}
 	</script>
 </body>
