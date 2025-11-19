@@ -1,15 +1,33 @@
+console.log('🚀 [Bootstrap] Starting Elixopay Backend...');
+console.log('📦 Node version:', process.version);
+console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 
+// Catch all uncaught errors
+process.on('uncaughtException', (err) => {
+  console.error('💥 [FATAL] Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('💥 [FATAL] Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 // Import middleware
+console.log('📥 [Bootstrap] Loading middleware...');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./middleware/logger');
 const { generalLimiter } = require('./middleware/rateLimiter');
+console.log('✅ [Bootstrap] Middleware loaded');
 
 // Import routes
+console.log('📥 [Bootstrap] Loading routes...');
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payments');
 const userRoutes = require('./routes/users');
