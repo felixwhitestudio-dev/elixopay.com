@@ -13,4 +13,3 @@ build/
 coverage/
 .env.local
 .env.*.local
-backend/
