@@ -1,33 +1,15 @@
-console.log('🚀 [Bootstrap] Starting Elixopay Backend...');
-console.log('📦 Node version:', process.version);
-console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 
-// Catch all uncaught errors
-process.on('uncaughtException', (err) => {
-  console.error('💥 [FATAL] Uncaught Exception:', err);
-  process.exit(1);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 [FATAL] Unhandled Rejection at:', promise, 'reason:', reason);
-  process.exit(1);
-});
-
 // Import middleware
-console.log('📥 [Bootstrap] Loading middleware...');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./middleware/logger');
 const { generalLimiter } = require('./middleware/rateLimiter');
-console.log('✅ [Bootstrap] Middleware loaded');
 
 // Import routes
-console.log('📥 [Bootstrap] Loading routes...');
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payments');
 const userRoutes = require('./routes/users');
@@ -44,6 +26,10 @@ const ledgerRoutes = require('./routes/ledger');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_VERSION = process.env.API_VERSION || 'v1';
+
+// Stripe webhooks require raw body for signature verification
+// Apply ONLY to the Stripe webhook endpoint BEFORE JSON parsing
+app.use(`/api/${API_VERSION}/webhooks/stripe`, express.raw({ type: 'application/json' }));
 
 // Security middleware
 app.use(helmet({
@@ -68,7 +54,7 @@ app.use(helmet({
   xssFilter: true
 }));
 
-// CORS configuration - รองรับทั้ง localhost และ Railway.app
+// CORS configuration - รองรับทั้ง localhost และจำกัด production ให้ชัดเจน
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, Postman, etc)
@@ -87,22 +73,21 @@ const corsOptions = {
       'https://elixopay.vercel.app',
       'https://www.elixopay.com',
       'https://elixopay.com',
-      // Netlify domain
-      'https://symphonious-praline-e4cb99.netlify.app',
-      // Railway.app domains
+      // Explicit Railway backend domains (avoid wildcard)
       'https://elixopay-production.up.railway.app',
-      'https://elixopay.up.railway.app'
+      'https://elixopay-production-de65.up.railway.app'
     ].filter(Boolean);
     
     const isDevelopment = process.env.NODE_ENV === 'development';
+    const allowRailwayWildcard = (process.env.ALLOW_RAILWAY_WILDCARD || 'false').toLowerCase() === 'true';
     
     // In development, allow localhost with any port
     if (isDevelopment && (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'))) {
       return callback(null, true);
     }
     
-    // Allow Railway.app subdomains in production
-    if (origin.includes('.railway.app') || origin.includes('.up.railway.app')) {
+    // Optionally allow all Railway subdomains via env toggle
+    if (!isDevelopment && allowRailwayWildcard && (origin.includes('.railway.app') || origin.includes('.up.railway.app'))) {
       return callback(null, true);
     }
     
@@ -126,8 +111,7 @@ const corsOptions = {
   maxAge: 86400 // 24 hours
 };
 
-// Temporary permissive CORS while fixing deployment crash
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors(corsOptions));
 
 // Body parsing middleware
 app.use(express.json());

@@ -1,16 +1,25 @@
 const { Pool } = require('pg');
 
 // Database configuration
+const isProduction = process.env.NODE_ENV === 'production';
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT) || 5432,
   database: process.env.DB_NAME || 'elixopay',
   user: process.env.DB_USER || process.env.USER,
   password: process.env.DB_PASSWORD || '',
+  // Enable SSL in production by default (override with DB_SSL=false)
+  ssl: (() => {
+    const flag = (process.env.DB_SSL || (isProduction ? 'true' : 'false')).toLowerCase();
+    if (flag === 'true' || flag === '1') {
+      return { rejectUnauthorized: false };
+    }
+    return false;
+  })(),
   // Connection pool settings
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection can't be established
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 // Test database connection
@@ -29,7 +38,11 @@ const query = async (text, params) => {
   try {
     const res = await pool.query(text, params);
     const duration = Date.now() - start;
-    console.log('Executed query', { text, duration, rows: res.rowCount });
+    if (process.env.LOG_LEVEL !== 'silent') {
+      // Avoid logging full SQL text in production
+      const summary = isProduction ? (text.split('\n')[0].slice(0, 80) + '...') : text;
+      console.log('Executed query', { text: summary, duration, rows: res.rowCount });
+    }
     return res;
   } catch (error) {
     console.error('Database query error:', error);

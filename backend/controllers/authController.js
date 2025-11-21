@@ -12,9 +12,12 @@ const LOCKOUT_DURATION = parseInt(process.env.LOCKOUT_DURATION_MS) || 30 * 60 * 
  * Generate JWT token
  */
 const generateToken = (userId) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
   return jwt.sign(
     { userId },
-    process.env.JWT_SECRET || 'your_jwt_secret_here_change_in_production',
+    process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 };
@@ -216,106 +219,6 @@ exports.login = async (req, res, next) => {
 };
 
 /**
- * @route   POST /api/v1/auth/google
- * @desc    Google OAuth login
- * @access  Public
- */
-exports.googleLogin = async (req, res, next) => {
-  try {
-    const { credential } = req.body;
-
-    if (!credential) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          message: 'Google credential is required'
-        }
-      });
-    }
-
-    // Verify Google token
-    const { OAuth2Client } = require('google-auth-library');
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    
-    let ticket;
-    try {
-      ticket = await client.verifyIdToken({
-        idToken: credential,
-        audience: process.env.GOOGLE_CLIENT_ID
-      });
-    } catch (verifyError) {
-      console.error('Google token verification failed:', verifyError);
-      return res.status(401).json({
-        success: false,
-        error: {
-          message: 'Invalid Google credential'
-        }
-      });
-    }
-
-    const payload = ticket.getPayload();
-    const { email, given_name, family_name, picture, sub: googleId } = payload;
-
-    // Check if user exists
-    let result = await db.query(
-      'SELECT id, email, first_name, last_name, status, account_type FROM users WHERE email = $1',
-      [email]
-    );
-
-    let user;
-    if (result.rows.length === 0) {
-      // Create new user
-      const insertResult = await db.query(
-        `INSERT INTO users (email, first_name, last_name, status, email_verified, google_id, profile_picture)
-         VALUES ($1, $2, $3, 'active', true, $4, $5)
-         RETURNING id, email, first_name, last_name, status, account_type`,
-        [email, given_name || 'User', family_name || '', googleId, picture]
-      );
-      user = insertResult.rows[0];
-    } else {
-      user = result.rows[0];
-      
-      // Update Google ID and picture if not set
-      await db.query(
-        'UPDATE users SET google_id = $1, profile_picture = $2, email_verified = true WHERE id = $3',
-        [googleId, picture, user.id]
-      );
-    }
-
-    // Check if user is active
-    if (user.status !== 'active') {
-      return res.status(403).json({
-        success: false,
-        error: {
-          message: 'Your account has been suspended. Please contact support.'
-        }
-      });
-    }
-
-    // Generate token
-    const token = generateToken(user.id);
-
-    // Return success
-    res.json({
-      success: true,
-      data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name,
-          accountType: user.account_type || 'customer'
-        },
-        token
-      }
-    });
-  } catch (error) {
-    console.error('Google login error:', error);
-    next(error);
-  }
-};
-
-/**
  * @route   POST /api/v1/auth/refresh
  * @desc    Refresh access token
  * @access  Public
@@ -334,9 +237,12 @@ exports.refreshToken = async (req, res, next) => {
     }
 
     // Verify refresh token
+    if (!process.env.JWT_REFRESH_SECRET) {
+      throw new Error('JWT_REFRESH_SECRET is not configured');
+    }
     const decoded = jwt.verify(
       refreshToken,
-      process.env.JWT_REFRESH_SECRET || 'your_refresh_token_secret_here'
+      process.env.JWT_REFRESH_SECRET
     );
 
     // Generate new access token
