@@ -21,9 +21,12 @@ exports.authenticate = async (req, res, next) => {
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     // Verify token
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || 'your_jwt_secret_here_change_in_production'
+      process.env.JWT_SECRET
     );
 
     // Mock user data (replace with database query later)

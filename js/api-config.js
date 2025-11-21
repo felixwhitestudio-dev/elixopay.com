@@ -3,7 +3,7 @@
 
 (function() {
   // Preferred production API URL
-  const PROD_BASE = 'https://web-production-67989.up.railway.app'; // 👈 Railway Backend URL
+  const PROD_BASE = 'https://elixopay-production-de65.up.railway.app'; // 👈 ค่าเริ่มต้นชี้ไปยัง Railway ของคุณ
   const DEV_BASE = 'http://localhost:3000';
   
   // Allow overriding the API base via localStorage for flexibility

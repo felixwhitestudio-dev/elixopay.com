@@ -1,7 +1,19 @@
 const Stripe = require('stripe');
 
 // Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock_key', {
+const ensureStripeKey = () => {
+  const key = process.env.STRIPE_SECRET_KEY || '';
+  if (!key) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    } else {
+      console.warn('⚠️ STRIPE_SECRET_KEY missing; Stripe calls will fail in development');
+    }
+  }
+  return key;
+};
+
+const stripe = new Stripe(ensureStripeKey(), {
   apiVersion: '2023-10-16',
 });
 
@@ -191,11 +203,12 @@ exports.verifyWebhookSignature = (payload, signature) => {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
     
     if (!webhookSecret) {
-      console.warn('Warning: STRIPE_WEBHOOK_SECRET not set');
-      return {
-        success: false,
-        error: 'Webhook secret not configured'
-      };
+      const msg = 'STRIPE_WEBHOOK_SECRET not set';
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error(msg);
+      }
+      console.warn('Warning:', msg);
+      return { success: false, error: 'Webhook secret not configured' };
     }
 
     const event = stripe.webhooks.constructEvent(

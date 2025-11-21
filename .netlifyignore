@@ -1,6 +1,0 @@
-# Ignore backend folder
-backend/
-node_modules/
-.git/
-.env
-*.log

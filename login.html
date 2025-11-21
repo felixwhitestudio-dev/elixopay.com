@@ -15,12 +15,10 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:3000 https://*.railway.app https://*.yourdomain.com https://accounts.google.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://accounts.google.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:3000 https://*.railway.app https://*.yourdomain.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;">
     
     <!-- API Configuration -->
     <script src="/js/api-config.js"></script>
-    <!-- Google OAuth -->
-    <script src="/js/google-auth.js"></script>
         <!-- Force local API during local development -->
             <script>
                 (function(){
@@ -272,22 +270,19 @@
                             </div>
                         </div>
 
-                        <!-- OR Divider -->
+                        <!-- Divider -->
                         <div class="relative my-6">
                             <div class="absolute inset-0 flex items-center">
                                 <div class="w-full border-t border-gray-300"></div>
                             </div>
                             <div class="relative flex justify-center text-sm">
-                                <span class="px-4 bg-white text-gray-500" data-i18n="login.or">หรือ</span>
+                                <span class="px-2 bg-white text-gray-500" data-i18n="login.or">หรือ</span>
                             </div>
                         </div>
 
-                        <!-- Google Sign-In (New API) -->
-                        <div id="google-signin-button" class="w-full flex items-center justify-center"></div>
-                        
-                        <!-- Fallback Google Button (if API fails) -->
-                        <div id="google-signin-fallback" class="hidden">
-                            <button type="button" onclick="window.GoogleAuth?.init()" class="w-full border-2 border-gray-300 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition flex items-center justify-center">
+                        <!-- Social Login (Optional) -->
+                        <div class="space-y-3">
+                            <button type="button" class="w-full border-2 border-gray-300 py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition flex items-center justify-center">
                                 <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -297,7 +292,6 @@
                                 <span data-i18n="login.google">เข้าสู่ระบบด้วย Google</span>
                             </button>
                         </div>
-                        <!-- End Fallback -->
 
                     </form>
 
@@ -519,12 +513,6 @@
             return re.test(email);
         }
 
-        // Check if admin mode
-        function isAdminMode() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('admin') === 'true';
-        }
-
         // Handle Login Form Submit
         function handleLogin(event) {
             event.preventDefault();
@@ -536,26 +524,6 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const rememberMe = document.getElementById('remember-me').checked;
-            
-            // Check if admin mode
-            const adminMode = isAdminMode();
-            
-            // Admin login shortcut (demo mode)
-            if (adminMode) {
-                if (email === 'admin@elixopay.com' && password === 'Ng@12345') {
-                    localStorage.setItem('elixopay-admin-logged-in', 'true');
-                    localStorage.setItem('admin-user', JSON.stringify({
-                        email: email,
-                        role: 'admin',
-                        name: 'Admin User'
-                    }));
-                    window.location.href = 'admin-dashboard.html';
-                    return;
-                } else {
-                    showFormError('🔒 Admin credentials invalid. Use: admin@elixopay.com / Ng@12345');
-                    return;
-                }
-            }
             
             // Validate
             let isValid = true;
@@ -667,13 +635,11 @@
                 console.error('Login error details:', error);
                 console.error('Error name:', error.name);
                 console.error('Error message:', error.message);
-                console.error('API Base URL:', window.API_CONFIG?.BASE_URL);
                 
                 let errorMsg = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง';
                 
                 if (error.message.includes('Failed to fetch')) {
-                    const apiBase = window.API_CONFIG?.BASE_URL || 'Unknown';
-                    errorMsg = `❌ ไม่สามารถเชื่อมต่อ Backend (${apiBase})\n\nสาเหตุที่เป็นไปได้:\n1. Backend Server ไม่ได้ทำงาน\n2. CORS ถูกบล็อก\n3. Network connection issue`;
+                    errorMsg = '❌ ไม่สามารถเชื่อมต่อ Backend (http://localhost:3000)\n\nสาเหตุที่เป็นไปได้:\n1. Backend Server ไม่ได้ทำงาน\n2. CORS ถูกบล็อก\n3. Browser บล็อก mixed content';
                 }
                 
                 showFormError(errorMsg);
@@ -717,46 +683,6 @@
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if admin mode
-            if (isAdminMode()) {
-                // Show admin login hint
-                const title = document.querySelector('h1');
-                if (title) {
-                    title.innerHTML = '🔐 Admin Login';
-                    title.style.color = '#ef4444';
-                }
-                
-                // Add admin info banner
-                const form = document.querySelector('form');
-                if (form) {
-                    const banner = document.createElement('div');
-                    banner.style.cssText = 'background:#fef3c7; border:1px solid #f59e0b; padding:1rem; border-radius:8px; margin-bottom:1rem; font-size:0.9rem;';
-                    banner.innerHTML = `
-                        <div style="display:flex; align-items:start; gap:0.5rem;">
-                            <span style="font-size:1.25rem;">🔑</span>
-                            <div>
-                                <strong>Admin Demo Login:</strong><br>
-                                Email: <code style="background:#fff; padding:2px 6px; border-radius:4px;">admin@elixopay.com</code><br>
-                                Password: <code style="background:#fff; padding:2px 6px; border-radius:4px;">Ng@12345</code>
-                            </div>
-                        </div>
-                    `;
-                    form.insertBefore(banner, form.firstChild);
-                }
-            } else {
-                // Auto-fill demo credentials if present
-                const demoUser = localStorage.getItem('elixopay-demo-user');
-                if (demoUser) {
-                    try {
-                        const user = JSON.parse(demoUser);
-                        document.getElementById('email').value = user.email;
-                    } catch(e) {}
-                }
-            }
-        });
     </script>
 </body>
 </html>
