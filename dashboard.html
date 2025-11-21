@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="user"></script>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -258,49 +259,6 @@
     </footer>
 
     <script>
-        // Check authentication
-        const token = localStorage.getItem('authToken') || localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-        if (!token) {
-            // Try auto-login for demo
-            autoLogin();
-        } else {
-            // Display user name
-            if (user.name) {
-                document.getElementById('user-name').textContent = `👋 ${user.name}`;
-            } else {
-                document.getElementById('user-name').textContent = '👋 Demo User';
-            }
-        }
-
-        // Auto-login function
-        async function autoLogin() {
-            try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: 'demo@elixopay.com',
-                        password: 'demo1234'
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    localStorage.setItem('authToken', result.data.token);
-                    localStorage.setItem('token', result.data.token);
-                    localStorage.setItem('user', JSON.stringify(result.data.user));
-                    document.getElementById('user-name').textContent = `👋 ${result.data.user.first_name || 'Demo User'}`;
-                } else {
-                    window.location.href = '/login.html';
-                }
-            } catch (error) {
-                console.error('Auto-login failed:', error);
-                window.location.href = '/login.html';
-            }
-        }
-
         // Logout function
         function logout() {
             if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
