@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Elixopay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="/js/api-config.js"></script>
+  <script src="/js/auth-guard.js" data-require-role="admin"></script>
+</head>
+<body class="bg-gray-50">
+  <nav class="bg-white shadow border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <h1 class="text-2xl font-bold text-red-600"><i class="fas fa-shield-alt"></i> Admin</h1>
+        <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-700">Restricted</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span id="user-name" class="text-gray-700">Loading...</span>
+        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800"><i class="fas fa-sign-out-alt mr-1"></i>ออกจากระบบ</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-semibold mb-4">🛡️ Admin Operations</h2>
+    <p class="text-gray-600 mb-6">หน้านี้จำกัดเฉพาะผู้ใช้ที่มี role = admin เท่านั้น หากไม่ใช่จะถูก redirect.</p>
+
+    <div id="admin-panels" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded shadow">
+        <h3 class="font-semibold mb-2"><i class="fas fa-users-cog text-blue-600 mr-2"></i>ผู้ใช้ทั้งหมด</h3>
+        <p class="text-sm text-gray-600 mb-4">ดึงข้อมูลผู้ใช้ (placeholder)</p>
+        <button onclick="loadUsers()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">Load</button>
+        <pre id="users-output" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+      </div>
+
+      <div class="bg-white p-6 rounded shadow">
+        <h3 class="font-semibold mb-2"><i class="fas fa-key text-purple-600 mr-2"></i>API Keys (ตรวจสอบ)</h3>
+        <p class="text-sm text-gray-600 mb-4">ดึงรายการ API keys ทั้งหมด (placeholder)</p>
+        <button onclick="loadApiKeys()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm">Load</button>
+        <pre id="keys-output" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+      </div>
+
+      <div class="bg-white p-6 rounded shadow">
+        <h3 class="font-semibold mb-2"><i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>ระบบเตือนภัย</h3>
+        <p class="text-sm text-gray-600 mb-4">(placeholder) แสดงสรุป security events</p>
+        <button onclick="loadSecurityEvents()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm">Load</button>
+        <pre id="security-output" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function logout(){ localStorage.clear(); window.location.href='/login.html'; }
+
+    function loadUsers(){
+      apiFetch('/api/v1/users') // endpoint placeholder (not implemented)
+        .then(r=>r.json())
+        .then(d=>{ document.getElementById('users-output').textContent = JSON.stringify(d,null,2); })
+        .catch(e=>{ document.getElementById('users-output').textContent = 'Error: '+e.message; });
+    }
+    function loadApiKeys(){
+      apiFetch('/api/v1/api-keys')
+        .then(r=>r.json())
+        .then(d=>{ document.getElementById('keys-output').textContent = JSON.stringify(d,null,2); })
+        .catch(e=>{ document.getElementById('keys-output').textContent = 'Error: '+e.message; });
+    }
+    function loadSecurityEvents(){
+      // Placeholder: replace with real endpoint later
+      document.getElementById('security-output').textContent = JSON.stringify({events: []}, null, 2);
+    }
+  </script>
+</body>
+</html>
