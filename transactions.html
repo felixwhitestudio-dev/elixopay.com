@@ -173,6 +173,7 @@
     </div>
 
     <script src="js/api-config.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="user"></script>
     <script>
         let authToken = null;
         let currentPage = 0;
@@ -187,41 +188,12 @@
             'refunded': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800"><i class="fas fa-undo mr-1"></i>คืนเงิน</span>'
         };
 
-        // Auto-login
-        async function autoLogin() {
-            // Check if already logged in (support legacy 'token' key as well)
-            const savedToken = localStorage.getItem('authToken') || localStorage.getItem('token');
-            if (savedToken) {
-                authToken = savedToken;
-                await loadStats();
-                await loadTransactions();
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: 'demo@elixopay.com',
-                        password: 'demo1234'
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    authToken = result.data.token;
-                    // Persist under both keys for consistency
-                    localStorage.setItem('authToken', authToken);
-                    localStorage.setItem('token', authToken);
-                    await loadStats();
-                    await loadTransactions();
-                } else {
-                    console.warn('Auto-login failed, staying on page');
-                }
-            } catch (error) {
-                console.error('Login error (auto-login demo skipped):', error);
-            }
+        // Initialize after auth guard passes
+        function initAfterAuth() {
+            authToken = localStorage.getItem('token');
+            if (!authToken) return; // guard will redirect if invalid
+            loadStats();
+            loadTransactions();
         }
 
         // Load statistics
@@ -366,8 +338,8 @@
             window.location.href = '/login.html';
         }
 
-        // Initialize
-        autoLogin();
+        // Initialize after DOM ready (auth-guard runs immediately)
+        document.addEventListener('DOMContentLoaded', initAfterAuth);
     </script>
 </body>
 </html>
