@@ -285,7 +285,14 @@
     </div>
 
     <script>
-        // Auth-guard will populate user-name if available.
+        // Initialize UI after auth verified (avoids flicker)
+        window.addEventListener('auth:ready', function(){
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const el = document.getElementById('user-name');
+            if (el && user && (user.name || user.email)) {
+                el.textContent = `👋 ${user.name || user.email}`;
+            }
+        }, { once: true });
 
         // Set API base URL
         document.getElementById('api-base-url').textContent = window.API_CONFIG.BASE_URL;

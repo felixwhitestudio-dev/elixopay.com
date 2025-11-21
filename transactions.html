@@ -338,8 +338,8 @@
             window.location.href = '/login.html';
         }
 
-        // Initialize after DOM ready (auth-guard runs immediately)
-        document.addEventListener('DOMContentLoaded', initAfterAuth);
+        // Initialize after auth is verified to avoid flicker
+        window.addEventListener('auth:ready', initAfterAuth, { once: true });
     </script>
 </body>
 </html>
