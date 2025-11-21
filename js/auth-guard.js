@@ -1,16 +1,21 @@
 (function() {
-  // Simple front-end auth guard
+  // Hide page until auth completes to prevent content flash
+  const root = document.documentElement;
+  const prevVisibility = root.style.visibility;
+  root.style.visibility = 'hidden';
+
   const requiredRole = document.currentScript && document.currentScript.getAttribute('data-require-role');
   const token = localStorage.getItem('token');
 
-  // Redirect immediately if no token
-  if (!token) {
+  const redirectLogin = () => {
     localStorage.clear();
     window.location.replace('/login.html');
-    return;
+  };
+
+  if (!token) {
+    return redirectLogin();
   }
 
-  // Verify token with backend and hydrate user info
   apiFetch(API_CONFIG.ENDPOINTS.auth.me)
     .then(resp => {
       if (!resp || !resp.ok) throw new Error('Auth check failed');
@@ -21,23 +26,24 @@
       if (!user) throw new Error('User missing in response');
       localStorage.setItem('user', JSON.stringify(user));
 
-      // Role check (optional)
       if (requiredRole && user.role !== requiredRole) {
         console.warn('Role mismatch. Required:', requiredRole, 'Got:', user.role);
-        localStorage.clear();
-        window.location.replace('/login.html');
-        return;
+        return redirectLogin();
       }
 
-      // Populate UI element if present
       const nameEl = document.getElementById('user-name');
-      if (nameEl) {
-        nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
-      }
+      if (nameEl) nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
+
+      // Notify page scripts that auth is ready
+      try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch(_) {}
     })
     .catch(err => {
       console.warn('Auth guard redirecting:', err.message);
-      localStorage.clear();
-      window.location.replace('/login.html');
+      return redirectLogin();
+    })
+    .finally(() => {
+      // Reveal page content if we didn't redirect
+      // If redirecting, the navigation will replace document soon
+      root.style.visibility = prevVisibility || 'visible';
     });
 })();
