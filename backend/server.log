@@ -1,0 +1,343 @@
+
+╔═══════════════════════════════════════════╗
+║         🚀 Elixopay Backend Server       ║
+╠═══════════════════════════════════════════╣
+║  Environment: development                 ║
+║  Port: 3000                               ║
+║  API Version: v1                          ║
+║  Server URL: http://localhost:3000      ║
+║  Status: ✅ Running                      ║
+╠═══════════════════════════════════════════╣
+║  Endpoints:                              ║
+║  • Health: http://localhost:3000/health║
+║  • API: http://localhost:3000/api/v1║
+╚═══════════════════════════════════════════╝
+  
+💻 Running locally - Development mode
+[2025-11-18T01:25:05.431Z] POST /api/v1/auth/login
+✅ Database connected successfully
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 16,
+  rows: 1
+}
+Executed query {
+  text: 'UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE email = $1',
+  duration: 6,
+  rows: 1
+}
+[2025-11-18T01:25:05.843Z] POST /login - 200 (412ms)
+[2025-11-18T01:25:46.283Z] POST /api/v1/auth/login
+✅ Database connected successfully
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 7,
+  rows: 1
+}
+[2025-11-18T01:25:46.649Z] POST /login - 401 (366ms)
+[2025-11-18T01:26:01.398Z] POST /api/v1/auth/login
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 4,
+  rows: 1
+}
+[2025-11-18T01:26:01.771Z] POST /login - 401 (373ms)
+[2025-11-18T01:26:22.712Z] POST /api/v1/auth/login
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 1,
+  rows: 1
+}
+Executed query {
+  text: 'UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE email = $1',
+  duration: 5,
+  rows: 1
+}
+[2025-11-18T01:26:23.076Z] POST /login - 200 (364ms)
+[2025-11-18T01:34:16.926Z] GET /api/v1/auth/me
+[2025-11-18T01:34:16.927Z] GET /me - 304 (1ms)
+[2025-11-18T01:34:23.119Z] GET /payments/stats
+[2025-11-18T01:34:23.121Z] GET /payments/stats - 404 (2ms)
+[2025-11-18T01:34:23.124Z] GET /payments?limit=20&offset=0&sort=created_at&order=DESC
+[2025-11-18T01:34:23.124Z] GET /payments?limit=20&offset=0&sort=created_at&order=DESC - 404 (0ms)
+[2025-11-18T01:34:24.554Z] GET /payments?limit=20&offset=0&sort=created_at&order=DESC
+[2025-11-18T01:34:24.556Z] GET /payments?limit=20&offset=0&sort=created_at&order=DESC - 404 (2ms)
+[2025-11-18T01:34:28.230Z] GET /api/v1/auth/me
+[2025-11-18T01:34:28.233Z] GET /me - 304 (3ms)
+[2025-11-18T01:36:20.520Z] GET /payments/stats
+[2025-11-18T01:36:20.523Z] GET /payments/stats - 404 (3ms)
+[2025-11-18T01:36:20.525Z] GET /payments?limit=20&offset=0&sort=created_at&order=DESC
+[2025-11-18T01:36:20.526Z] GET /payments?limit=20&offset=0&sort=created_at&order=DESC - 404 (1ms)
+[2025-11-18T01:36:22.739Z] GET /api/v1/auth/me
+[2025-11-18T01:36:22.740Z] GET /me - 304 (1ms)
+[2025-11-18T01:36:48.900Z] POST /api/v1/payments
+✅ Database connected successfully
+Executed query {
+  text: 'INSERT INTO payments (\n' +
+    '        user_id, \n' +
+    '        amount, \n' +
+    '        currency, \n' +
+    '        status, \n' +
+    '        description,\n' +
+    '        customer_email,\n' +
+    '        customer_name,\n' +
+    '        payment_intent_id,\n' +
+    '        metadata,\n' +
+    '        created_at\n' +
+    '      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)\n' +
+    '      RETURNING id, amount, currency, status, description, customer_email, customer_name, payment_intent_id, created_at',
+  duration: 33,
+  rows: 1
+}
+[2025-11-18T01:36:49.621Z] POST / - 201 (721ms)
+[2025-11-18T01:37:04.025Z] GET /api/v1/auth/me
+[2025-11-18T01:37:04.028Z] GET /me - 304 (3ms)
+[2025-11-18T01:37:05.955Z] POST /api/v1/auth/login
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 4,
+  rows: 1
+}
+[2025-11-18T01:37:06.327Z] POST /login - 401 (372ms)
+[2025-11-18T01:37:07.741Z] GET /api/v1/auth/me
+[2025-11-18T01:37:07.744Z] GET /me - 304 (3ms)
+[2025-11-18T01:37:09.100Z] POST /api/v1/payments
+Executed query {
+  text: 'INSERT INTO payments (\n' +
+    '        user_id, \n' +
+    '        amount, \n' +
+    '        currency, \n' +
+    '        status, \n' +
+    '        description,\n' +
+    '        customer_email,\n' +
+    '        customer_name,\n' +
+    '        payment_intent_id,\n' +
+    '        metadata,\n' +
+    '        created_at\n' +
+    '      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)\n' +
+    '      RETURNING id, amount, currency, status, description, customer_email, customer_name, payment_intent_id, created_at',
+  duration: 5,
+  rows: 1
+}
+[2025-11-18T01:37:09.557Z] POST / - 201 (457ms)
+[2025-11-18T01:41:37.132Z] GET /health
+[2025-11-18T01:41:37.133Z] GET /health - 200 (1ms)
+[2025-11-18T01:41:53.233Z] POST /api/v1/auth/login
+✅ Database connected successfully
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 7,
+  rows: 1
+}
+Executed query {
+  text: 'UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE email = $1',
+  duration: 4,
+  rows: 1
+}
+[2025-11-18T01:41:53.601Z] POST /login - 200 (368ms)
+[2025-11-18T01:42:55.349Z] POST /api/v1/auth/login
+✅ Database connected successfully
+Executed query {
+  text: 'SELECT id, email, password_hash, first_name, last_name, status FROM users WHERE email = $1',
+  duration: 7,
+  rows: 1
+}
+Executed query {
+  text: 'UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE email = $1',
+  duration: 4,
+  rows: 1
+}
+[2025-11-18T01:42:55.716Z] POST /login - 200 (367ms)
+[2025-11-18T01:43:52.542Z] POST /api/v1/payments
+✅ Database connected successfully
+Executed query {
+  text: 'INSERT INTO payments (\n' +
+    '        user_id, \n' +
+    '        amount, \n' +
+    '        currency, \n' +
+    '        status, \n' +
+    '        description,\n' +
+    '        customer_email,\n' +
+    '        customer_name,\n' +
+    '        payment_intent_id,\n' +
+    '        metadata,\n' +
+    '        created_at\n' +
+    '      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)\n' +
+    '      RETURNING id, amount, currency, status, description, customer_email, customer_name, payment_intent_id, created_at',
+  duration: 14,
+  rows: 1
+}
+[2025-11-18T01:43:53.219Z] POST / - 201 (677ms)
+[2025-11-18T01:44:37.828Z] POST /api/v1/payments/7211d933-ebe4-433b-8fb8-283eca150c9d/confirm
+✅ Database connected successfully
+Executed query {
+  text: 'SELECT * FROM payments WHERE id = $1 AND user_id = $2',
+  duration: 8,
+  rows: 1
+}
+Stripe Confirm Error: StripeInvalidRequestError: This PaymentIntent is configured to accept payment methods enabled in your Dashboard. Because some of these payment methods might redirect your customer off of your page, you must provide a `return_url`. If you don't want to accept redirect-based payment methods, set `automatic_payment_methods[enabled]` to `true` and `automatic_payment_methods[allow_redirects]` to `never` when creating Setup Intents and Payment Intents.
+    at generateV1Error (/Users/felixonthecloud/Elixopay/backend/node_modules/stripe/cjs/Error.js:11:20)
+    at res.toJSON.then.Error_js_1.StripeAPIError.message (/Users/felixonthecloud/Elixopay/backend/node_modules/stripe/cjs/RequestSender.js:114:62)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  type: 'StripeInvalidRequestError',
+  raw: {
+    message: "This PaymentIntent is configured to accept payment methods enabled in your Dashboard. Because some of these payment methods might redirect your customer off of your page, you must provide a `return_url`. If you don't want to accept redirect-based payment methods, set `automatic_payment_methods[enabled]` to `true` and `automatic_payment_methods[allow_redirects]` to `never` when creating Setup Intents and Payment Intents.",
+    payment_intent: {
+      id: 'pi_3SUdxVDzFy8OdkHY0lZofDq6',
+      object: 'payment_intent',
+      amount: 1000000,
+      amount_capturable: 0,
+      amount_details: [Object],
+      amount_received: 0,
+      application: null,
+      application_fee_amount: null,
+      automatic_payment_methods: [Object],
+      canceled_at: null,
+      cancellation_reason: null,
+      capture_method: 'automatic',
+      client_secret: 'pi_3SUdxVDzFy8OdkHY0lZofDq6_secret_I4UyxjXiyXnAUwP4BAFsu8Vpx',
+      confirmation_method: 'automatic',
+      created: 1763430233,
+      currency: 'thb',
+      customer: null,
+      description: null,
+      excluded_payment_method_types: null,
+      invoice: null,
+      last_payment_error: null,
+      latest_charge: null,
+      livemode: false,
+      metadata: [Object],
+      next_action: null,
+      on_behalf_of: null,
+      payment_method: null,
+      payment_method_configuration_details: [Object],
+      payment_method_options: [Object],
+      payment_method_types: [Array],
+      processing: null,
+      receipt_email: null,
+      review: null,
+      setup_future_usage: null,
+      shipping: null,
+      source: null,
+      statement_descriptor: null,
+      statement_descriptor_suffix: null,
+      status: 'requires_payment_method',
+      transfer_data: null,
+      transfer_group: null
+    },
+    request_log_url: 'https://dashboard.stripe.com/test/logs/req_vftpe4PoC3Hff9?t=1763430278',
+    type: 'invalid_request_error',
+    headers: {
+      server: 'nginx',
+      date: 'Tue, 18 Nov 2025 01:44:38 GMT',
+      'content-type': 'application/json',
+      'content-length': '2557',
+      connection: 'keep-alive',
+      'access-control-allow-credentials': 'true',
+      'access-control-allow-methods': 'GET, HEAD, PUT, PATCH, POST, DELETE',
+      'access-control-allow-origin': '*',
+      'access-control-expose-headers': 'Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required',
+      'access-control-max-age': '300',
+      'cache-control': 'no-cache, no-store',
+      'content-security-policy': "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=VUD8ubF3R7tahr4XnWgqrWwJqU6WNGw5TqTKUStQA8-hk08RXKLc3DeeTAwEroUCODrwi0HWpHysW2hE",
+      'idempotency-key': 'stripe-node-retry-fad708d5-b4a4-4980-9063-6cd300cfdbba',
+      'original-request': 'req_vftpe4PoC3Hff9',
+      'request-id': 'req_vftpe4PoC3Hff9',
+      'stripe-should-retry': 'false',
+      'stripe-version': '2023-10-16',
+      vary: 'Origin',
+      'x-stripe-priority-routing-enabled': 'true',
+      'x-stripe-routing-context-priority-tier': 'api-testmode',
+      'x-wc': 'ABGHIJ',
+      'strict-transport-security': 'max-age=63072000; includeSubDomains; preload'
+    },
+    statusCode: 400,
+    requestId: 'req_vftpe4PoC3Hff9'
+  },
+  rawType: 'invalid_request_error',
+  code: undefined,
+  doc_url: undefined,
+  param: undefined,
+  detail: undefined,
+  headers: {
+    server: 'nginx',
+    date: 'Tue, 18 Nov 2025 01:44:38 GMT',
+    'content-type': 'application/json',
+    'content-length': '2557',
+    connection: 'keep-alive',
+    'access-control-allow-credentials': 'true',
+    'access-control-allow-methods': 'GET, HEAD, PUT, PATCH, POST, DELETE',
+    'access-control-allow-origin': '*',
+    'access-control-expose-headers': 'Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required',
+    'access-control-max-age': '300',
+    'cache-control': 'no-cache, no-store',
+    'content-security-policy': "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=VUD8ubF3R7tahr4XnWgqrWwJqU6WNGw5TqTKUStQA8-hk08RXKLc3DeeTAwEroUCODrwi0HWpHysW2hE",
+    'idempotency-key': 'stripe-node-retry-fad708d5-b4a4-4980-9063-6cd300cfdbba',
+    'original-request': 'req_vftpe4PoC3Hff9',
+    'request-id': 'req_vftpe4PoC3Hff9',
+    'stripe-should-retry': 'false',
+    'stripe-version': '2023-10-16',
+    vary: 'Origin',
+    'x-stripe-priority-routing-enabled': 'true',
+    'x-stripe-routing-context-priority-tier': 'api-testmode',
+    'x-wc': 'ABGHIJ',
+    'strict-transport-security': 'max-age=63072000; includeSubDomains; preload'
+  },
+  requestId: 'req_vftpe4PoC3Hff9',
+  statusCode: 400,
+  userMessage: undefined,
+  charge: undefined,
+  decline_code: undefined,
+  payment_intent: {
+    id: 'pi_3SUdxVDzFy8OdkHY0lZofDq6',
+    object: 'payment_intent',
+    amount: 1000000,
+    amount_capturable: 0,
+    amount_details: { tip: {} },
+    amount_received: 0,
+    application: null,
+    application_fee_amount: null,
+    automatic_payment_methods: { allow_redirects: 'always', enabled: true },
+    canceled_at: null,
+    cancellation_reason: null,
+    capture_method: 'automatic',
+    client_secret: 'pi_3SUdxVDzFy8OdkHY0lZofDq6_secret_I4UyxjXiyXnAUwP4BAFsu8Vpx',
+    confirmation_method: 'automatic',
+    created: 1763430233,
+    currency: 'thb',
+    customer: null,
+    description: null,
+    excluded_payment_method_types: null,
+    invoice: null,
+    last_payment_error: null,
+    latest_charge: null,
+    livemode: false,
+    metadata: {
+      description: 'Test via curl',
+      user_id: '6cd77331-b6b5-41cc-af56-e44d8ddb8dd8',
+      platform: 'elixopay'
+    },
+    next_action: null,
+    on_behalf_of: null,
+    payment_method: null,
+    payment_method_configuration_details: { id: 'pmc_1SJ4IVDzFy8OdkHYbsB1KC5e', parent: null },
+    payment_method_options: { card: [Object], link: [Object] },
+    payment_method_types: [ 'card', 'link' ],
+    processing: null,
+    receipt_email: null,
+    review: null,
+    setup_future_usage: null,
+    shipping: null,
+    source: null,
+    statement_descriptor: null,
+    statement_descriptor_suffix: null,
+    status: 'requires_payment_method',
+    transfer_data: null,
+    transfer_group: null
+  },
+  payment_method: undefined,
+  payment_method_type: undefined,
+  setup_intent: undefined,
+  source: undefined
+}
+[2025-11-18T01:44:38.364Z] POST /7211d933-ebe4-433b-8fb8-283eca150c9d/confirm - 500 (536ms)
