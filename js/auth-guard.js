@@ -5,16 +5,10 @@
   root.style.visibility = 'hidden';
 
   const requiredRole = document.currentScript && document.currentScript.getAttribute('data-require-role');
-  const token = localStorage.getItem('token');
-
   const redirectLogin = () => {
-    localStorage.clear();
+    ['token','user'].forEach(k=>localStorage.removeItem(k));
     window.location.replace('/login.html');
   };
-
-  if (!token) {
-    return redirectLogin();
-  }
 
   apiFetch(API_CONFIG.ENDPOINTS.auth.me)
     .then(resp => {

@@ -62,6 +62,20 @@ router.post('/verify-email', authController.verifyEmail);
 router.get('/me', authenticate, authController.getCurrentUser);
 
 /**
+ * @route   GET /api/v1/auth/sessions
+ * @desc    List active sessions
+ * @access  Private
+ */
+router.get('/sessions', authenticate, authController.listSessions);
+
+/**
+ * @route   POST /api/v1/auth/sessions/:id/revoke
+ * @desc    Revoke a session
+ * @access  Private
+ */
+router.post('/sessions/:id/revoke', authenticate, authController.revokeSession);
+
+/**
  * @route   POST /api/v1/auth/2fa/enable
  * @desc    Enable 2FA
  * @access  Private

@@ -1,8 +1,11 @@
 require('dotenv').config();
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
+const csrfProtection = require('./middleware/csrf');
+const { checkEnv } = require('./utils/envCheck');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -22,10 +25,14 @@ const merchantSiteRoutes = require('./routes/merchantSites');
 const commissionRuleRoutes = require('./routes/commissionRules');
 const balanceRoutes = require('./routes/balances');
 const ledgerRoutes = require('./routes/ledger');
+const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_VERSION = process.env.API_VERSION || 'v1';
+
+// Validate environment configuration early
+checkEnv();
 
 // Stripe webhooks require raw body for signature verification
 // Apply ONLY to the Stripe webhook endpoint BEFORE JSON parsing
@@ -55,67 +62,77 @@ app.use(helmet({
 }));
 
 // CORS configuration - รองรับทั้ง localhost และจำกัด production ให้ชัดเจน
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      // Local development
-      'http://localhost:8000',
-      'http://localhost:8080',
-      'http://127.0.0.1:8000',
-      'http://127.0.0.1:8080',
-      'http://localhost:5500',
-      'http://127.0.0.1:5500',
-      // Production domains
-      process.env.FRONTEND_URL,
-      'https://elixopay.vercel.app',
-      'https://www.elixopay.com',
-      'https://elixopay.com',
-      // Explicit Railway backend domains (avoid wildcard)
-      'https://elixopay-production.up.railway.app',
-      'https://elixopay-production-de65.up.railway.app'
-    ].filter(Boolean);
-    
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const allowRailwayWildcard = (process.env.ALLOW_RAILWAY_WILDCARD || 'false').toLowerCase() === 'true';
-    
-    // In development, allow localhost with any port
-    if (isDevelopment && (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'))) {
-      return callback(null, true);
-    }
-    
-    // Optionally allow all Railway subdomains via env toggle
-    if (!isDevelopment && allowRailwayWildcard && (origin.includes('.railway.app') || origin.includes('.up.railway.app'))) {
-      return callback(null, true);
-    }
-    
-    // Check against allowed origins list
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      // In development, be more permissive but log warning
-      if (isDevelopment) {
-        console.warn(`⚠️ CORS Warning: Allowing unverified origin in development: ${origin}`);
-        callback(null, true);
-      } else {
-        console.error(`❌ CORS Error: Blocked origin: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
+// FRONTEND_ALLOWED_ORIGINS="https://elixopay.com,https://www.elixopay.com" overrides defaults in production
+const buildCorsOptions = () => {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const overrideList = (process.env.FRONTEND_ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  const baseAllowed = [
+    // Local development set
+    'http://localhost:8000',
+    'http://localhost:8080',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8080',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500',
+    // Explicit values / env
+    process.env.FRONTEND_URL,
+    'https://elixopay.vercel.app',
+    'https://www.elixopay.com',
+    'https://elixopay.com'
+  ].filter(Boolean);
+
+  const allowedOrigins = overrideList.length ? overrideList : baseAllowed;
+  const allowRailwayWildcard = (process.env.ALLOW_RAILWAY_WILDCARD || 'false').toLowerCase() === 'true';
+
+  // Expose list for diagnostics (health endpoint)
+  global.__ALLOWED_ORIGINS = allowedOrigins;
+  global.__ALLOW_RAILWAY_WILDCARD = allowRailwayWildcard;
+
+  return {
+    origin: function (origin, callback) {
+      // Allow requests with no origin (Postman/mobile)
+      if (!origin) return callback(null, true);
+
+      if (isDevelopment && (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'))) {
+        return callback(null, true);
       }
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-API-Key'],
-  maxAge: 86400 // 24 hours
+
+      if (!isDevelopment && allowRailwayWildcard && (origin.includes('.railway.app') || origin.includes('.up.railway.app'))) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      if (isDevelopment) {
+        console.warn(`⚠️ CORS (dev permissive) origin not in list: ${origin}`);
+        return callback(null, true);
+      }
+
+      console.error(`❌ CORS blocked: ${origin} not in allowedOrigins. Set FRONTEND_ALLOWED_ORIGINS env to include it.`);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-API-Key', 'X-CSRF-Token'],
+    maxAge: 86400
+  };
 };
+
+const corsOptions = buildCorsOptions();
 
 app.use(cors(corsOptions));
 
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(csrfProtection);
 
 // Request logging
 app.use(logger);
@@ -133,7 +150,13 @@ app.get('/health', (req, res) => {
     uptimeFormatted: formatUptime(process.uptime()),
     environment: process.env.NODE_ENV || 'development',
     version: API_VERSION,
-    server: process.env.NODE_ENV === 'production' ? 'Railway.app' : 'localhost'
+    server: process.env.NODE_ENV === 'production' ? 'Railway.app' : 'localhost',
+    diagnostics: {
+      cookieSameSite: (process.env.COOKIE_SAMESITE || 'Strict').trim(),
+      allowedOrigins: global.__ALLOWED_ORIGINS || [],
+      allowRailwayWildcard: !!global.__ALLOW_RAILWAY_WILDCARD,
+      frontendUrl: process.env.FRONTEND_URL || null
+    }
   });
 });
 
@@ -163,6 +186,7 @@ app.use(`/api/${API_VERSION}/balances`, balanceRoutes);
 app.use(`/api/${API_VERSION}/ledger`, ledgerRoutes);
 app.use(`/api/${API_VERSION}/partners`, partnerRoutes);
 app.use(`/api/${API_VERSION}/admin`, adminRoutes);
+app.use(`/api/${API_VERSION}/dashboard`, dashboardRoutes);
 
 // Root endpoint - แสดงข้อมูล API และ environment
 app.get('/', (req, res) => {
@@ -215,7 +239,8 @@ app.use((req, res) => {
       merchantSites: `/api/${API_VERSION}/merchant-sites`,
       commissionRules: `/api/${API_VERSION}/commission-rules`,
       balances: `/api/${API_VERSION}/balances`,
-      ledger: `/api/${API_VERSION}/ledger`
+      ledger: `/api/${API_VERSION}/ledger`,
+      dashboard: `/api/${API_VERSION}/dashboard`
     }
   });
 });

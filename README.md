@@ -85,7 +85,12 @@ elixopay/
 This project implements comprehensive security measures:
 
 ### ✅ Authentication & Authorization
-- JWT-based stateless authentication
+- HttpOnly SameSite=Strict cookies for `access_token` & `refresh_token` (replaces reliance on localStorage)
+- Double-submit cookie CSRF protection (`csrf_token` + `X-CSRF-Token` header)
+- Short‑lived access token (default 1h) + long‑lived refresh token (default 7d)
+- Backward compatibility: legacy Authorization header still accepted temporarily
+- Refresh tokens persisted in `sessions` table (IP + UA + expiry) and rotated on each `/auth/refresh`
+- Silent access token refresh on 401 (frontend auto-calls `/auth/refresh` once)
 - Strong password policy (12+ chars, special chars required)
 - Account lockout after 5 failed attempts
 - Bcrypt password hashing (12 rounds)
@@ -145,7 +150,80 @@ Content-Type: application/json
 
 # Get current user
 GET /auth/me
-Authorization: Bearer <token>
+Authorization: Bearer <token>   # Legacy (still supported)
+
+# Cookie-based (preferred): tokens are sent automatically
+Cookie: access_token=...; csrf_token=...
+```
+
+### Refresh Flow (Cookie-Based)
+```bash
+# Obtain new access + csrf tokens (refresh token sent via HttpOnly cookie)
+POST /auth/refresh
+Cookie: refresh_token=...
+
+Response Set-Cookie: access_token=..., csrf_token=...
+
+# Rotation: refresh_token is rotated and updated in sessions table
+```
+
+### Session Revocation
+```bash
+# On logout server deletes session row matching refresh_token
+POST /auth/logout
+X-CSRF-Token: <csrf_token>
+```
+To revoke all sessions (force global logout) an admin can:
+```sql
+DELETE FROM sessions WHERE user_id = '<USER_UUID>';
+```
+Or revoke a single device session:
+```sql
+DELETE FROM sessions WHERE id = '<SESSION_UUID>';
+```
+### Session Management Endpoints
+```bash
+# List current user's sessions
+GET /auth/sessions
+Cookie: access_token=...;
+
+# Revoke a specific session (device logout)
+POST /auth/sessions/:id/revoke
+X-CSRF-Token: <csrf_token>
+Cookie: access_token=...;
+```
+Response (list):
+```json
+{
+  "success": true,
+  "data": { "sessions": [ { "id": "...", "createdAt": "...", "expiresAt": "...", "expired": false, "ip": "::1", "userAgent": "Mozilla/5.0..." } ] }
+### Session Cap
+Set environment variable `MAX_SESSIONS_PER_USER` (default 10). When a new session is created via login/register and the count exceeds this cap, the oldest sessions are automatically deleted. Recommended values:
+
+| Scenario | Suggested Cap |
+|----------|---------------|
+| Standard users | 5–10 |
+| Admin accounts | 3–5 |
+
+To disable the cap, set `MAX_SESSIONS_PER_USER=0`.
+}
+```
+```
+
+### CSRF Protection
+For mutating requests (POST/PUT/PATCH/DELETE) include `X-CSRF-Token` header whose value matches the `csrf_token` cookie:
+```bash
+X-CSRF-Token: <csrf_token>
+```
+Missing/mismatch → 403 Forbidden.
+
+### Logout
+```bash
+POST /auth/logout
+X-CSRF-Token: <csrf_token>
+Cookie: access_token=...; refresh_token=...; csrf_token=...
+```
+Clears all auth cookies.
 ```
 
 ### Payments
@@ -287,6 +365,15 @@ See [.env.example](./backend/.env.example) for full list.
 ```bash
 # Run tests (when implemented)
 npm test
+
+# CSRF failure example (expect 403)
+curl -X POST http://localhost:3000/api/v1/payments -H 'Content-Type: application/json' -d '{}'
+
+# Proper CSRF (replace <csrf> & cookie jar usage with actual values)
+curl -X POST http://localhost:3000/api/v1/payments \
+  -H 'Content-Type: application/json' \
+  -H 'X-CSRF-Token: <csrf>' \
+  -b 'access_token=...; csrf_token=<csrf>' -d '{}'
 
 # Security audit
 npm audit
