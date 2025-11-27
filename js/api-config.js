@@ -73,33 +73,67 @@
   };
   
   // Helper for authenticated fetch
+  // Helper to read cookie (for CSRF double-submit)
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
   window.apiFetch = async function(endpoint, options = {}) {
-    const token = localStorage.getItem('token');
     const url = typeof endpoint === 'string' ? apiUrl(endpoint) : endpoint;
-    
-    const defaultOptions = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-      },
+    const isMutating = options.method && ['POST','PUT','PATCH','DELETE'].includes(options.method.toUpperCase());
+    const csrf = isMutating ? getCookie('csrf_token') : null;
+
+    const defaultHeaders = {
+      'Content-Type': 'application/json',
+      // Backward compatibility: still send Authorization if legacy token exists
+      ...(localStorage.getItem('token') && { 'Authorization': `Bearer ${localStorage.getItem('token')}` }),
+      ...(csrf && { 'X-CSRF-Token': csrf })
     };
-    
-    const response = await fetch(url, {
-      ...defaultOptions,
+
+    let response = await fetch(url, {
+      credentials: 'include', // include cookies
       ...options,
       headers: {
-        ...defaultOptions.headers,
-        ...options.headers,
-      },
+        ...defaultHeaders,
+        ...(options.headers || {})
+      }
     });
-    
-    // Auto logout on 401
+
     if (response.status === 401 && window.location.pathname !== '/login.html') {
-      localStorage.clear();
-      window.location.href = '/login.html';
-      return null;
+      // Attempt silent refresh once (only for non-login endpoints)
+      const triedRefresh = options._triedRefresh;
+      if (!triedRefresh) {
+        const refreshResp = await fetch(apiUrl('/api/v1/auth/refresh'), {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (refreshResp.ok) {
+          const newCsrf = getCookie('csrf_token');
+          if (isMutating && newCsrf) {
+            defaultHeaders['X-CSRF-Token'] = newCsrf;
+          }
+          // Retry original request with flag to avoid loop
+          response = await fetch(url, {
+            credentials: 'include',
+            ...options,
+            _triedRefresh: true,
+            headers: {
+              ...defaultHeaders,
+              ...(options.headers || {})
+            }
+          });
+        }
+      }
+      if (response.status === 401) {
+        ['token','user'].forEach(k=>localStorage.removeItem(k));
+        window.location.href = '/login.html';
+        return null;
+      }
     }
-    
     return response;
   };
   

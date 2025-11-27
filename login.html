@@ -571,16 +571,10 @@
             btnText.textContent = submittingText[currentLang];
             spinner.classList.remove('hidden');
             
-            // Call Backend API
-            fetch(apiUrl('/api/v1/auth/login'), {
+            // Call Backend API (use apiFetch so cookies (HttpOnly) are set properly)
+            apiFetch('/api/v1/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
+                body: JSON.stringify({ email, password })
             })
             .then(async response => {
                 const result = await response.json();
@@ -597,24 +591,28 @@
                 spinner.classList.add('hidden');
                 
                 // Check if login successful - API returns { success: true, data: { user, token } }
-                if (response.ok && result.success && result.data && result.data.token) {
-                    // Save token
-                    localStorage.setItem('token', result.data.token);
-                    // Maintain backward compatibility: also store under 'authToken'
-                    localStorage.setItem('authToken', result.data.token);
-                    if (result.data.refreshToken) {
-                        localStorage.setItem('refreshToken', result.data.refreshToken);
-                        // Mirror refresh token if future code expects authRefreshToken
-                        localStorage.setItem('authRefreshToken', result.data.refreshToken);
-                    }
-                    localStorage.setItem('user', JSON.stringify(result.data.user));
-                    
-                    if (rememberMe) {
-                        localStorage.setItem('rememberMe', 'true');
-                    }
-                    
-                    // Redirect to dashboard
-                    window.location.href = '/dashboard.html';
+                                if (response.ok && result.success && result.data) {
+                                        // Access token cookie + refresh token cookie are HttpOnly now.
+                                        // Optional: keep legacy localStorage token for parts still expecting it.
+                                        if (result.data.token) {
+                                            localStorage.setItem('token', result.data.token);
+                                            localStorage.setItem('authToken', result.data.token);
+                                        }
+                                        if (result.data.refreshToken) {
+                                            localStorage.setItem('refreshToken', result.data.refreshToken);
+                                            localStorage.setItem('authRefreshToken', result.data.refreshToken);
+                                        }
+                                        if (result.data.user) {
+                                            localStorage.setItem('user', JSON.stringify(result.data.user));
+                                        }
+                                        if (rememberMe) localStorage.setItem('rememberMe','true');
+                                        // Role-aware redirect
+                                        const role = result.data.user && result.data.user.role;
+                                        if (role === 'admin') {
+                                            window.location.href = '/admin-dashboard.html';
+                                        } else {
+                                            window.location.href = '/dashboard.html';
+                                        }
                 } else {
                     // Handle error from API response
                     const errorMsg = result.error?.message || result.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';

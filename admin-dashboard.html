@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Elixopay Admin Dashboard สำหรับจัดการผู้ใช้ API Keys และตรวจสอบความปลอดภัย" />
   <title>Admin Dashboard - Elixopay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -10,7 +11,7 @@
   <script src="/js/auth-guard.js" data-require-role="admin"></script>
 </head>
 <body class="bg-gray-50">
-  <nav class="bg-white shadow border-b border-gray-200">
+  <nav class="bg-white shadow border-b border-gray-200" role="navigation" aria-label="Admin navigation">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <h1 class="text-2xl font-bold text-red-600"><i class="fas fa-shield-alt"></i> Admin</h1>
@@ -18,58 +19,182 @@
       </div>
       <div class="flex items-center space-x-4">
         <span id="user-name" class="text-gray-700">Loading...</span>
-        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800"><i class="fas fa-sign-out-alt mr-1"></i>ออกจากระบบ</button>
+        <button onclick="logout()" aria-label="ออกจากระบบ" class="text-sm text-red-600 hover:text-red-800"><i class="fas fa-sign-out-alt mr-1" aria-hidden="true"></i>ออกจากระบบ</button>
       </div>
     </div>
   </nav>
 
-  <main class="max-w-7xl mx-auto px-4 py-8">
+  <main class="max-w-7xl mx-auto px-4 py-8" role="main">
     <h2 class="text-2xl font-semibold mb-4">🛡️ Admin Operations</h2>
     <p class="text-gray-600 mb-6">หน้านี้จำกัดเฉพาะผู้ใช้ที่มี role = admin เท่านั้น หากไม่ใช่จะถูก redirect.</p>
 
     <div id="admin-panels" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded shadow">
-        <h3 class="font-semibold mb-2"><i class="fas fa-users-cog text-blue-600 mr-2"></i>ผู้ใช้ทั้งหมด</h3>
+      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-users">
+        <h3 id="panel-users" class="font-semibold mb-2"><i class="fas fa-users-cog text-blue-600 mr-2" aria-hidden="true"></i>ผู้ใช้ทั้งหมด</h3>
         <p class="text-sm text-gray-600 mb-4">ดึงข้อมูลผู้ใช้ (placeholder)</p>
-        <button onclick="loadUsers()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">Load</button>
-        <pre id="users-output" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+        <button id="btn-users" onclick="loadUsers()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
+        <pre id="users-output" aria-live="polite" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
       </div>
 
-      <div class="bg-white p-6 rounded shadow">
-        <h3 class="font-semibold mb-2"><i class="fas fa-key text-purple-600 mr-2"></i>API Keys (ตรวจสอบ)</h3>
+      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-keys">
+        <h3 id="panel-keys" class="font-semibold mb-2"><i class="fas fa-key text-purple-600 mr-2" aria-hidden="true"></i>API Keys (ตรวจสอบ)</h3>
         <p class="text-sm text-gray-600 mb-4">ดึงรายการ API keys ทั้งหมด (placeholder)</p>
-        <button onclick="loadApiKeys()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm">Load</button>
-        <pre id="keys-output" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+        <button id="btn-keys" onclick="loadApiKeys()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
+        <pre id="keys-output" aria-live="polite" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
       </div>
 
-      <div class="bg-white p-6 rounded shadow">
-        <h3 class="font-semibold mb-2"><i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>ระบบเตือนภัย</h3>
+      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-security">
+        <h3 id="panel-security" class="font-semibold mb-2"><i class="fas fa-exclamation-triangle text-yellow-600 mr-2" aria-hidden="true"></i>ระบบเตือนภัย</h3>
         <p class="text-sm text-gray-600 mb-4">(placeholder) แสดงสรุป security events</p>
-        <button onclick="loadSecurityEvents()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm">Load</button>
-        <pre id="security-output" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+        <button id="btn-security" onclick="loadSecurityEvents()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
+        <pre id="security-output" aria-live="polite" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
+      </div>
+      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-sessions">
+        <h3 id="panel-sessions" class="font-semibold mb-2"><i class="fas fa-network-wired text-indigo-600 mr-2" aria-hidden="true"></i>Sessions</h3>
+        <p class="text-sm text-gray-600 mb-4">ตรวจสอบ active sessions ของบัญชีนี้ และ revoke รายอุปกรณ์</p>
+        <button id="btn-sessions" onclick="loadSessions()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
+        <div id="sessions-container" class="mt-3 space-y-2 text-xs max-h-48 overflow-auto" aria-live="polite">ยังไม่ได้โหลด</div>
       </div>
     </div>
   </main>
 
   <script>
-    function logout(){ localStorage.clear(); window.location.href='/login.html'; }
+    // Logout ลบเฉพาะ key สำคัญ ไม่ clear ทั้งหมดเพื่อไม่กระทบค่าอื่น
+    function logout(){
+      ['token','user'].forEach(k=>localStorage.removeItem(k));
+      window.location.href='/login.html';
+    }
+
+    // Utility: ปรับสถานะปุ่มเป็น loading / restore
+    function setLoading(button, isLoading) {
+      if (!button) return;
+      const labelSpan = button.querySelector('.label');
+      if (isLoading) {
+        button.disabled = true;
+        button.classList.add('opacity-70','cursor-not-allowed');
+        if (labelSpan) labelSpan.textContent = 'Loading';
+        if (!button.querySelector('.fa-spinner')) {
+          const icon = document.createElement('i');
+          icon.className = 'fas fa-spinner fa-spin';
+          icon.setAttribute('aria-hidden','true');
+          button.appendChild(icon);
+        }
+      } else {
+        button.disabled = false;
+        button.classList.remove('opacity-70','cursor-not-allowed');
+        if (labelSpan) labelSpan.textContent = 'Load';
+        const spin = button.querySelector('.fa-spinner');
+        if (spin) spin.remove();
+      }
+    }
+
+    function safeApiFetch(endpoint) {
+      if (typeof apiFetch !== 'function') {
+        return Promise.reject(new Error('apiFetch not ready'));
+      }
+      return apiFetch(endpoint);
+    }
+
+    function renderJSON(targetId, data) {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      try {
+        el.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        el.textContent = 'Serialize error: ' + e.message;
+      }
+    }
+
+    function handleLoad({buttonId, outputId, endpoint, emptyFallback = {}}) {
+      const btn = document.getElementById(buttonId);
+      const out = document.getElementById(outputId);
+      if (!btn || !out) return;
+      out.textContent = 'Loading...';
+      setLoading(btn, true);
+      safeApiFetch(endpoint)
+        .then(r => {
+          if (!r) throw new Error('No response');
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(data => renderJSON(outputId, data))
+        .catch(err => {
+          out.textContent = 'Error: ' + err.message;
+        })
+        .finally(() => setLoading(btn, false));
+    }
 
     function loadUsers(){
-      apiFetch('/api/v1/users') // endpoint placeholder (not implemented)
-        .then(r=>r.json())
-        .then(d=>{ document.getElementById('users-output').textContent = JSON.stringify(d,null,2); })
-        .catch(e=>{ document.getElementById('users-output').textContent = 'Error: '+e.message; });
+      handleLoad({
+        buttonId: 'btn-users',
+        outputId: 'users-output',
+        endpoint: '/api/v1/users',
+        emptyFallback: { users: [] }
+      });
     }
     function loadApiKeys(){
-      apiFetch('/api/v1/api-keys')
-        .then(r=>r.json())
-        .then(d=>{ document.getElementById('keys-output').textContent = JSON.stringify(d,null,2); })
-        .catch(e=>{ document.getElementById('keys-output').textContent = 'Error: '+e.message; });
+      handleLoad({
+        buttonId: 'btn-keys',
+        outputId: 'keys-output',
+        endpoint: '/api/v1/api-keys',
+        emptyFallback: { keys: [] }
+      });
     }
     function loadSecurityEvents(){
-      // Placeholder: replace with real endpoint later
-      document.getElementById('security-output').textContent = JSON.stringify({events: []}, null, 2);
+      // Placeholder local mock
+      const btn = document.getElementById('btn-security');
+      setLoading(btn, true);
+      const out = document.getElementById('security-output');
+      out.textContent = 'Loading...';
+      setTimeout(()=>{
+        renderJSON('security-output', { events: [], generatedAt: new Date().toISOString() });
+        setLoading(btn,false);
+      }, 400);
     }
+
+    function loadSessions(){
+      const btn = document.getElementById('btn-sessions');
+      const container = document.getElementById('sessions-container');
+      if (!btn || !container) return;
+      container.textContent = 'Loading...';
+      setLoading(btn,true);
+      safeApiFetch('/api/v1/auth/sessions')
+        .then(r=>{ if(!r||!r.ok) throw new Error('HTTP '+(r&&r.status)); return r.json(); })
+        .then(data=>{
+          const sessions = (data && data.data && data.data.sessions) || [];
+          if (!sessions.length){ container.textContent = 'ไม่มี session ที่ใช้งาน'; return; }
+          container.innerHTML='';
+          sessions.forEach(s=>{
+            const div=document.createElement('div');
+            div.className='border border-gray-300 rounded p-2 flex justify-between items-center bg-gray-50';
+            const info=document.createElement('div');
+            info.className='pr-2';
+            info.innerHTML=`<div class='font-mono break-all'>${s.id}</div>
+              <div class='text-gray-600'>IP: ${s.ip||'-'} UA: ${(s.userAgent||'').slice(0,40)}${(s.userAgent||'').length>40?'…':''}</div>
+              <div class='text-gray-500'>Created: ${new Date(s.createdAt).toLocaleString()} | Expires: ${new Date(s.expiresAt).toLocaleString()}${s.expired? ' <span class=\"text-red-600\">(expired)</span>':''}</div>`;
+            const actions=document.createElement('div');
+            const revokeBtn=document.createElement('button');
+            revokeBtn.className='px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded';
+            revokeBtn.textContent='Revoke';
+            revokeBtn.onclick=()=>revokeSession(s.id, revokeBtn, div);
+            actions.appendChild(revokeBtn);
+            div.appendChild(info); div.appendChild(actions); container.appendChild(div);
+          });
+        })
+        .catch(err=>{ container.textContent='Error: '+err.message; })
+        .finally(()=>setLoading(btn,false));
+    }
+
+    function revokeSession(id, btn, row){
+      if(!confirm('Revoke session นี้หรือไม่?')) return;
+      btn.disabled=true; btn.textContent='...';
+      safeApiFetch(`/api/v1/auth/sessions/${id}/revoke`, { method:'POST' })
+        .then(r=>{ if(!r||!r.ok) throw new Error('HTTP '+(r&&r.status)); return r.json(); })
+        .then(()=>{ row.remove(); })
+        .catch(e=>{ alert('Revoke ล้มเหลว: '+e.message); btn.disabled=false; btn.textContent='Revoke'; });
+    }
+
+    // Keyboard accessibility: Enter/Space trigger on focus for buttons if needed (already native) - left as placeholder.
   </script>
 </body>
 </html>
