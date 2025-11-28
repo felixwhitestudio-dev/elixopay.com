@@ -4,40 +4,36 @@ const Stripe = require('stripe');
 const ensureStripeKey = () => {
   const key = process.env.STRIPE_SECRET_KEY || '';
   if (!key) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('STRIPE_SECRET_KEY is not configured');
-    } else {
-      console.warn('⚠️ STRIPE_SECRET_KEY missing; Stripe calls will fail in development');
-    }
+    console.warn('⚠️ STRIPE_SECRET_KEY missing; Stripe calls will fail. Stripe features will be disabled.');
+    // Return dummy key to prevent Stripe from throwing error
+    return 'sk_test_dummy';
   }
   return key;
 };
 
-const stripe = new Stripe(ensureStripeKey(), {
-  apiVersion: '2023-10-16',
-});
+let stripe = null;
+const hasStripeKey = !!process.env.STRIPE_SECRET_KEY;
+if (hasStripeKey) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-10-16',
+  });
+}
 
 /**
  * Create a Payment Intent in Stripe
  */
 exports.createPaymentIntent = async ({ amount, currency, metadata = {} }) => {
-  try {
     const allowRedirects = (process.env.STRIPE_ALLOW_REDIRECTS || 'never').toLowerCase();
     const allowValue = allowRedirects === 'always' ? 'always' : 'never';
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency.toLowerCase(),
-      metadata: {
-        ...metadata,
-        platform: 'elixopay'
-      },
-      // Prevent redirect-based payment methods for server-side confirmations
+      metadata: Object.assign({ platform: 'elixopay' }, metadata),
       automatic_payment_methods: {
         enabled: true,
         allow_redirects: allowValue,
       },
     });
-
     return {
       success: true,
       data: paymentIntent
@@ -166,7 +162,7 @@ exports.createCustomer = async ({ email, name, metadata = {} }) => {
     return {
       success: true,
       data: customer
-    };
+            metadata: { platform: 'elixopay', ...metadata },
   } catch (error) {
     console.error('Stripe Create Customer Error:', error);
     return {
@@ -213,33 +209,31 @@ exports.verifyWebhookSignature = (payload, signature) => {
 
     const event = stripe.webhooks.constructEvent(
       payload,
-      signature,
-      webhookSecret
-    );
-
-    return {
-      success: true,
-      data: event
-    };
-  } catch (error) {
-    console.error('Stripe Webhook Verification Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
-  }
-};
-
-/**
- * List Payment Methods for Customer
- */
-exports.listPaymentMethods = async (customerId) => {
-  try {
-    const paymentMethods = await stripe.paymentMethods.list({
-      customer: customerId,
-      type: 'card',
-    });
-
+      try {
+        const allowRedirects = (process.env.STRIPE_ALLOW_REDIRECTS || 'never').toLowerCase();
+        const allowValue = allowRedirects === 'always' ? 'always' : 'never';
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: Math.round(amount * 100), // Convert to cents
+          currency: currency.toLowerCase(),
+          metadata: {
+            ...metadata,
+            platform: 'elixopay'
+          },
+          automatic_payment_methods: {
+            enabled: true,
+            allow_redirects: allowValue,
+          },
+        });
+        return {
+          success: true,
+          data: paymentIntent
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message || error
+        };
+      }
     return {
       success: true,
       data: paymentMethods.data

@@ -1,289 +1,73 @@
-require('dotenv').config();
-const express = require('express');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const helmet = require('helmet');
-const path = require('path');
-const csrfProtection = require('./middleware/csrf');
-const { checkEnv } = require('./utils/envCheck');
+const pool = require('./db');
+const bcrypt = require('bcrypt');
 
-// Import middleware
-const errorHandler = require('./middleware/errorHandler');
-const logger = require('./middleware/logger');
-const { generalLimiter } = require('./middleware/rateLimiter');
-
-// Import routes
-const authRoutes = require('./routes/auth');
-const paymentRoutes = require('./routes/payments');
-const userRoutes = require('./routes/users');
-const apiKeyRoutes = require('./routes/apiKeys');
-const webhookRoutes = require('./routes/webhooks');
-const partnerRoutes = require('./routes/partners');
-const adminRoutes = require('./routes/admin');
-const agencyRoutes = require('./routes/agencies');
-const merchantSiteRoutes = require('./routes/merchantSites');
-const commissionRuleRoutes = require('./routes/commissionRules');
-const balanceRoutes = require('./routes/balances');
-const ledgerRoutes = require('./routes/ledger');
-const dashboardRoutes = require('./routes/dashboard');
-
+const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_VERSION = process.env.API_VERSION || 'v1';
 
-// Validate environment configuration early
-checkEnv();
-
-// Stripe webhooks require raw body for signature verification
-// Apply ONLY to the Stripe webhook endpoint BEFORE JSON parsing
-app.use(`/api/${API_VERSION}/webhooks/stripe`, express.raw({ type: 'application/json' }));
-
-// Security middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-    },
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  },
-  frameguard: {
-    action: 'deny'
-  },
-  noSniff: true,
-  xssFilter: true
+app.use(cors({
+  origin: [
+    'https://elixopay.com',
+    'https://elixopay-production-de65.up.railway.app'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
-// CORS configuration - รองรับทั้ง localhost และจำกัด production ให้ชัดเจน
-// FRONTEND_ALLOWED_ORIGINS="https://elixopay.com,https://www.elixopay.com" overrides defaults in production
-const buildCorsOptions = () => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const overrideList = (process.env.FRONTEND_ALLOWED_ORIGINS || '')
-    .split(',')
-    .map(s => s.trim())
-    .filter(Boolean);
-
-  const baseAllowed = [
-    // Local development set
-    'http://localhost:8000',
-    'http://localhost:8080',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:8080',
-    'http://localhost:5500',
-    'http://127.0.0.1:5500',
-    // Explicit values / env
-    process.env.FRONTEND_URL,
-    'https://elixopay.vercel.app',
-    'https://www.elixopay.com',
-    'https://elixopay.com'
-  ].filter(Boolean);
-
-  const allowedOrigins = overrideList.length ? overrideList : baseAllowed;
-  const allowRailwayWildcard = (process.env.ALLOW_RAILWAY_WILDCARD || 'false').toLowerCase() === 'true';
-
-  // Expose list for diagnostics (health endpoint)
-  global.__ALLOWED_ORIGINS = allowedOrigins;
-  global.__ALLOW_RAILWAY_WILDCARD = allowRailwayWildcard;
-
-  return {
-    origin: function (origin, callback) {
-      // Allow requests with no origin (Postman/mobile)
-      if (!origin) return callback(null, true);
-
-      if (isDevelopment && (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'))) {
-        return callback(null, true);
-      }
-
-      if (!isDevelopment && allowRailwayWildcard && (origin.includes('.railway.app') || origin.includes('.up.railway.app'))) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      if (isDevelopment) {
-        console.warn(`⚠️ CORS (dev permissive) origin not in list: ${origin}`);
-        return callback(null, true);
-      }
-
-      console.error(`❌ CORS blocked: ${origin} not in allowedOrigins. Set FRONTEND_ALLOWED_ORIGINS env to include it.`);
-      return callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-API-Key', 'X-CSRF-Token'],
-    maxAge: 86400
-  };
-};
-
-const corsOptions = buildCorsOptions();
-
-app.use(cors(corsOptions));
-
-// Body parsing middleware
+app.options('*', cors()); // Enable preflight for all routes
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(csrfProtection);
 
-// Request logging
-app.use(logger);
-
-// Apply rate limiting to all routes
-app.use(generalLimiter);
-
-// Health check endpoint - สำหรับตรวจสอบสถานะ server
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: '✅ Server is running smoothly',
-    timestamp: new Date().toISOString(),
-    uptime: Math.floor(process.uptime()),
-    uptimeFormatted: formatUptime(process.uptime()),
-    environment: process.env.NODE_ENV || 'development',
-    version: API_VERSION,
-    server: process.env.NODE_ENV === 'production' ? 'Railway.app' : 'localhost',
-    diagnostics: {
-      cookieSameSite: (process.env.COOKIE_SAMESITE || 'Strict').trim(),
-      allowedOrigins: global.__ALLOWED_ORIGINS || [],
-      allowRailwayWildcard: !!global.__ALLOW_RAILWAY_WILDCARD,
-      frontendUrl: process.env.FRONTEND_URL || null
+// Login API
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: 'Email and password required' });
+  }
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-  });
-});
-
-// Helper function to format uptime
-function formatUptime(seconds) {
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor((seconds % 86400) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  
-  if (days > 0) return `${days}d ${hours}h ${minutes}m`;
-  if (hours > 0) return `${hours}h ${minutes}m ${secs}s`;
-  if (minutes > 0) return `${minutes}m ${secs}s`;
-  return `${secs}s`;
-}
-
-// API Routes
-app.use(`/api/${API_VERSION}/auth`, authRoutes);
-app.use(`/api/${API_VERSION}/payments`, paymentRoutes);
-app.use(`/api/${API_VERSION}/users`, userRoutes);
-app.use(`/api/${API_VERSION}/api-keys`, apiKeyRoutes);
-app.use(`/api/${API_VERSION}/webhooks`, webhookRoutes);
-app.use(`/api/${API_VERSION}/agencies`, agencyRoutes);
-app.use(`/api/${API_VERSION}/merchant-sites`, merchantSiteRoutes);
-app.use(`/api/${API_VERSION}/commission-rules`, commissionRuleRoutes);
-app.use(`/api/${API_VERSION}/balances`, balanceRoutes);
-app.use(`/api/${API_VERSION}/ledger`, ledgerRoutes);
-app.use(`/api/${API_VERSION}/partners`, partnerRoutes);
-app.use(`/api/${API_VERSION}/admin`, adminRoutes);
-app.use(`/api/${API_VERSION}/dashboard`, dashboardRoutes);
-
-// Root endpoint - แสดงข้อมูล API และ environment
-app.get('/', (req, res) => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const serverUrl = isProduction 
-    ? (process.env.SERVER_URL || 'https://elixopay-production.up.railway.app')
-    : `http://localhost:${PORT}`;
-    
-  res.json({
-    message: '🚀 Elixopay Payment Gateway API',
-    version: API_VERSION,
-    status: 'running',
-    environment: process.env.NODE_ENV || 'development',
-    serverUrl: serverUrl,
-    endpoints: {
-      health: '/health',
-      auth: `/api/${API_VERSION}/auth`,
-      payments: `/api/${API_VERSION}/payments`,
-      users: `/api/${API_VERSION}/users`,
-      apiKeys: `/api/${API_VERSION}/api-keys`,
-      webhooks: `/api/${API_VERSION}/webhooks`,
-      partners: `/api/${API_VERSION}/partners`,
-      admin: `/api/${API_VERSION}/admin`,
-      agencies: `/api/${API_VERSION}/agencies`,
-      merchantSites: `/api/${API_VERSION}/merchant-sites`,
-      commissionRules: `/api/${API_VERSION}/commission-rules`,
-      balances: `/api/${API_VERSION}/balances`,
-      ledger: `/api/${API_VERSION}/ledger`
-    },
-    documentation: 'https://docs.elixopay.com',
-    support: 'support@elixopay.com'
-  });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ 
-    error: 'Not Found',
-    message: `Cannot ${req.method} ${req.url}`,
-    availableEndpoints: {
-      health: '/health',
-      auth: `/api/${API_VERSION}/auth`,
-      payments: `/api/${API_VERSION}/payments`,
-      users: `/api/${API_VERSION}/users`,
-      apiKeys: `/api/${API_VERSION}/api-keys`,
-      webhooks: `/api/${API_VERSION}/webhooks`,
-      partners: `/api/${API_VERSION}/partners`,
-      admin: `/api/${API_VERSION}/admin`,
-      agencies: `/api/${API_VERSION}/agencies`,
-      merchantSites: `/api/${API_VERSION}/merchant-sites`,
-      commissionRules: `/api/${API_VERSION}/commission-rules`,
-      balances: `/api/${API_VERSION}/balances`,
-      ledger: `/api/${API_VERSION}/ledger`,
-      dashboard: `/api/${API_VERSION}/dashboard`
+    const user = result.rows[0];
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-  });
-});
-
-// Error handling middleware (must be last)
-app.use(errorHandler);
-
-// Start server
-const server = app.listen(PORT, '0.0.0.0', () => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const serverUrl = isProduction 
-    ? (process.env.SERVER_URL || 'https://elixopay-production.up.railway.app')
-    : `http://localhost:${PORT}`;
-    
-  console.log(`
-╔═══════════════════════════════════════════╗
-║         🚀 Elixopay Backend Server       ║
-╠═══════════════════════════════════════════╣
-║  Environment: ${(process.env.NODE_ENV || 'development').padEnd(28)}║
-║  Port: ${PORT.toString().padEnd(35)}║
-║  API Version: ${API_VERSION.padEnd(28)}║
-║  Server URL: ${serverUrl.padEnd(27)}║
-║  Status: ✅ Running                      ║
-╠═══════════════════════════════════════════╣
-║  Endpoints:                              ║
-║  • Health: ${serverUrl}/health${' '.repeat(Math.max(0, 15 - serverUrl.length))}║
-║  • API: ${serverUrl}/api/${API_VERSION}${' '.repeat(Math.max(0, 20 - serverUrl.length))}║
-╚═══════════════════════════════════════════╝
-  `);
-  
-  if (isProduction) {
-    console.log('🌐 Running on Railway.app');
-  } else {
-    console.log('💻 Running locally - Development mode');
+    // สามารถเพิ่ม JWT หรือ session ได้ที่นี่
+    res.json({ success: true, message: 'Login successful', user: { id: user.id, email: user.email, username: user.username } });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error', error: err.message });
   }
 });
+    
+    // รองรับ frontend ที่เรียก /api/v1/auth/login
+    app.post('/api/v1/auth/login', async (req, res) => {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ success: false, message: 'Email and password required' });
+      }
+      try {
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+          return res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+        const user = result.rows[0];
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+          return res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+        // สามารถเพิ่ม JWT หรือ session ได้ที่นี่
+        res.json({ success: true, message: 'Login successful', user: { id: user.id, email: user.email, username: user.username } });
+      } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error', error: err.message });
+      }
+    });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-  });
+app.get('/', (req, res) => {
+  res.send('Elixopay Backend API is running!');
 });
 
-module.exports = app;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
