@@ -483,12 +483,15 @@
     <script src="js/i18n.js?v=2"></script>
     <script src="js/ui.js?v=2"></script>
         <script>
-        // Hamburger menu toggle (robust event delegation)
+        // Hamburger menu toggle (with debug log)
         document.addEventListener('DOMContentLoaded', function() {
             var btn = document.getElementById('mobileMenuBtn');
             var menu = document.getElementById('mobileMenu');
+            if (!btn) { console.log('ไม่พบปุ่ม hamburger'); }
+            if (!menu) { console.log('ไม่พบเมนู mobileMenu'); }
             if (btn && menu) {
                 btn.addEventListener('click', function(e) {
+                    console.log('คลิก hamburger');
                     e.stopPropagation();
                     menu.classList.toggle('hidden');
                 });
