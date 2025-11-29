@@ -405,4 +405,141 @@
                         <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center">
                             <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                       
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold" data-i18n="login.hero.f3Title">Real-time Reports</h3>
+                            <p class="text-sm text-gray-400" data-i18n="login.hero.f3Desc">เข้าถึงรายงานการเงินแบบเรียลไทม์</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image -->
+            <div class="absolute inset-0 overflow-hidden">
+                <img src="/images/hero-bg.png" alt="Hero Image" class="w-full h-full object-cover"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Clear error message
+        function clearError(field) {
+            const errorElement = document.getElementById(`${field}-error`);
+            if (errorElement) {
+                errorElement.classList.add('hidden');
+            }
+        }
+
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            const eyeOffIcon = document.getElementById('eye-off-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            }
+        }
+
+        // Handle login form submission
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('loginForm');
+            const formData = new FormData(form);
+            const csrfToken = formData.get('csrf_token');
+
+            // Validate form fields
+            const email = formData.get('email');
+            const password = formData.get('password');
+            let hasError = false;
+
+            // Simple client-side validation
+            if (!email || !password) {
+                hasError = true;
+                document.getElementById('form-error-message').innerText = 'กรุณากรอกอีเมลและรหัสผ่าน';
+                document.getElementById('form-error').classList.remove('hidden');
+            }
+
+            if (hasError) return;
+
+            // Show loading spinner
+            document.getElementById('login-btn-text').classList.add('hidden');
+            document.getElementById('login-spinner').classList.remove('hidden');
+
+            try {
+                // Send login request
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Successful login
+                    // Redirect to dashboard or show success message
+                    window.location.href = '/dashboard.html';
+                } else {
+                    // Handle errors (e.g., invalid credentials)
+                    document.getElementById('form-error-message').innerText = result.message || 'เข้าสู่ระบบล้มเหลว';
+                    document.getElementById('form-error').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('form-error-message').innerText = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
+                document.getElementById('form-error').classList.remove('hidden');
+            } finally {
+                // Hide loading spinner
+                document.getElementById('login-btn-text').classList.remove('hidden');
+                document.getElementById('login-spinner').classList.add('hidden');
+            }
+        }
+
+        // Handle Google Sign-In
+        function handleGoogleSignIn() {
+            // Google Sign-In logic here
+        }
+
+        // Show forgot password section
+        function showForgotPassword(event) {
+            event.preventDefault();
+            // Logic to show forgot password form/section
+        }
+
+        // Theme toggle
+        const themeToggleBtn = document.getElementById('themeToggle');
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light');
+        });
+
+        // Language selection
+        const langSelect = document.getElementById('langSelect');
+        langSelect.addEventListener('change', (event) => {
+            const selectedLang = event.target.value;
+            // Logic to change language
+        });
+    </script>
+</body>
+</html>
