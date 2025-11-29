@@ -26,7 +26,7 @@
                         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                         const currentOverride = localStorage.getItem('api_base_url');
                         if (isLocal && window.setApiBase && currentOverride !== 'http://localhost:3000') {
-                            // Persist override so all pages use localhost API, but do it only once
+                                        systemctl reload nginx                // Persist override so all pages use localhost API, but do it only once
                             window.setApiBase('http://localhost:3000');
                             console.log('🔧 Forcing API Base to localhost for development');
                         }
@@ -614,7 +614,8 @@
             spinner.classList.remove('hidden');
             
             // Call Backend API (use apiFetch so cookies (HttpOnly) are set properly)
-            apiFetch('/api/v1/auth/login', {
+            // เรียก API login ที่ backend server โดยตรง
+            apiFetch('https://45.76.161.48/api/v1/auth/login', {
                 method: 'POST',
                 body: JSON.stringify({ email, password })
             })
