@@ -381,7 +381,6 @@
                         <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center">
                             <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold" data-i18n="login.hero.f1Title">Dashboard แบบเรียลไทม์</h3>
@@ -393,7 +392,6 @@
                         <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center">
                             <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold" data-i18n="login.hero.f2Title">API Keys Management</h3>
@@ -405,7 +403,6 @@
                         <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center">
                             <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold" data-i18n="login.hero.f3Title">Real-time Reports</h3>
@@ -466,6 +463,7 @@
             // Validate form fields
             const email = formData.get('email');
             const password = formData.get('password');
+            const remember = formData.get('remember-me') === 'on';
             let hasError = false;
 
             // Simple client-side validation
@@ -482,30 +480,32 @@
             document.getElementById('login-spinner').classList.remove('hidden');
 
             try {
-                // Send login request
-                const response = await fetch('/api/login', {
+                // Call Backend API (use apiFetch so cookies (HttpOnly) are set properly)
+                apiFetch('https://45.76.161.48/api/v1/auth/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-Token': csrfToken
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                });
+                    body: JSON.stringify({ email, password, remember })
+                })
+                .then(async (response) => {
+                    const result = await response.json();
 
-                const result = await response.json();
-
-                if (response.ok) {
-                    // Successful login
-                    // Redirect to dashboard or show success message
-                    window.location.href = '/dashboard.html';
-                } else {
-                    // Handle errors (e.g., invalid credentials)
-                    document.getElementById('form-error-message').innerText = result.message || 'เข้าสู่ระบบล้มเหลว';
+                    if (response.ok) {
+                        // Successful login
+                        // Redirect to dashboard or show success message
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        // Handle errors (e.g., invalid credentials)
+                        document.getElementById('form-error-message').innerText = result.message || 'เข้าสู่ระบบล้มเหลว';
+                        document.getElementById('form-error').classList.remove('hidden');
+                    }
+                })
+                .catch((err) => {
+                    console.error('Login error:', err);
+                    document.getElementById('form-error-message').innerText = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
                     document.getElementById('form-error').classList.remove('hidden');
-                }
+                });
             } catch (error) {
                 console.error('Login error:', error);
                 document.getElementById('form-error-message').innerText = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
