@@ -10,7 +10,10 @@ app.use(cors({
   origin: [
     'https://elixopay.com',
     'https://elixopay-production-de65.up.railway.app',
-    'https://45.76.161.48'
+    'https://45.76.161.48',
+    'https://elixopaycom.vercel.app',
+    'https://elixopaycom-phi.vercel.app',
+    'https://elixopay.netlify.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
