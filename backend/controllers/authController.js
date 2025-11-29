@@ -1,3 +1,48 @@
+/**
+ * Google OAuth: Register or login
+ * @route POST /api/v1/auth/google
+ */
+const {OAuth2Client} = require('google-auth-library');
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+exports.googleOAuth = async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) return res.status(400).json({ success: false, message: 'Missing Google credential' });
+    // Verify Google token
+    const ticket = await googleClient.verifyIdToken({ idToken: credential, audience: GOOGLE_CLIENT_ID });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    if (!email) return res.status(400).json({ success: false, message: 'No email from Google' });
+    // Check if user exists
+    let userRes = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    let user = userRes.rows[0];
+    if (!user) {
+      // Register new user
+      const name = payload.name || email.split('@')[0];
+      const picture = payload.picture || null;
+      const newUserRes = await db.query(
+        'INSERT INTO users (email, name, picture, provider) VALUES ($1, $2, $3, $4) RETURNING *',
+        [email, name, picture, 'google']
+      );
+      user = newUserRes.rows[0];
+      await logAudit(req, user.id, 'register_google', { email });
+    } else {
+      await logAudit(req, user.id, 'login_google', { email });
+    }
+    // Generate tokens
+    const token = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+    // Save session (optional)
+    await enforceSessionLimit(user.id);
+    // Respond
+    res.json({ success: true, data: { user, token, refreshToken } });
+  } catch (err) {
+    console.error('Google OAuth error:', err);
+    res.status(500).json({ success: false, message: 'Google login failed', error: { message: err.message } });
+  }
+};
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // legacy hashes support
 const argon2 = require('argon2'); // primary password hashing

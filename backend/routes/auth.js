@@ -55,6 +55,12 @@ router.post('/reset-password', passwordResetLimiter, authController.resetPasswor
 router.post('/verify-email', authController.verifyEmail);
 
 /**
+ * @route   POST /api/v1/auth/google
+ * @desc    Register or login with Google OAuth
+ * @access  Public
+ */
+router.post('/google', authController.googleOAuth);
+/**
  * @route   GET /api/v1/auth/me
  * @desc    Get current user
  * @access  Private

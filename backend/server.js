@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({
   origin: [
     'https://elixopay.com',
-    'https://elixopay-production-de65.up.railway.app'
+    'https://elixopay-production-de65.up.railway.app',
+    'https://45.76.161.48'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
