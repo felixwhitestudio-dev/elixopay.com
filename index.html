@@ -495,7 +495,7 @@
                 <i class="fas fa-shield-alt"></i>
                 <span>Elixopay</span>
             </a>
-            <ul class="nav-links">
+            <ul class="nav-links hidden">
                 <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
                 <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
                 <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
@@ -757,9 +757,22 @@
                 nav.style.background = 'rgba(15, 23, 42, 0.8)';
             }
         });
-        // Mobile menu show (in case CSS hides)
-        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
-            document.querySelector('.nav-links')?.classList.toggle('show');
+        // Hamburger menu toggle (robust)
+        document.addEventListener('DOMContentLoaded', function() {
+            var btn = document.querySelector('.mobile-menu-btn');
+            var menu = document.querySelector('.nav-links');
+            if (btn && menu) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                });
+            }
+            // Close menu when clicking outside
+            document.body.addEventListener('click', function(e) {
+                if (!menu || menu.classList.contains('hidden')) return;
+                if (btn && (btn.contains(e.target) || menu.contains(e.target))) return;
+                menu.classList.add('hidden');
+            });
         });
     </script>
 </body>
