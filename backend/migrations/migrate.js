@@ -6,7 +6,7 @@ require('dotenv').config();
 
 async function runMigrations() {
   let poolConfig;
-  
+
   if (process.env.DATABASE_URL) {
     poolConfig = {
       connectionString: process.env.DATABASE_URL,
@@ -21,12 +21,12 @@ async function runMigrations() {
       password: process.env.DB_PASSWORD,
     };
   }
-  
+
   const pool = new Pool(poolConfig);
 
   try {
     console.log('🚀 Starting database migrations...');
-    
+
     // Check if tables already exist
     const checkTables = await pool.query(`
       SELECT EXISTS (
@@ -34,14 +34,14 @@ async function runMigrations() {
         WHERE table_name = 'users'
       );
     `);
-    
+
     const tablesExist = checkTables.rows[0].exists;
-    
+
     if (!tablesExist) {
       // Read schema.sql
       const schemaPath = path.join(__dirname, 'schema.sql');
       const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-      
+
       // Execute schema
       console.log('📦 Creating tables and indexes...');
       await pool.query(schemaSql);
@@ -83,7 +83,7 @@ async function runMigrations() {
         console.log(`✅ Migration ${file} applied`);
       } catch (err) {
         console.error(`❌ Failed applying migration ${file}:`, err.message);
-        try { await pool.query('ROLLBACK'); } catch (_) {}
+        try { await pool.query('ROLLBACK'); } catch (_) { }
       }
     }
 
@@ -112,54 +112,43 @@ async function runMigrations() {
     } else {
       console.log('⏭️  Table webhook_endpoints already exists');
     }
-    
+
     // Check if demo user exists
     const checkUser = await pool.query(`
       SELECT id FROM users WHERE email = 'demo@elixopay.com';
     `);
-    
+
     if (checkUser.rows.length === 0) {
       console.log('👤 Creating demo user...');
-      const initialPassword = process.env.DEMO_USER_PASSWORD || 'Password123';
+      const initialPassword = 'Elixopay2026!';
       const demoHash = await bcrypt.hash(initialPassword, 10);
       await pool.query(
         `INSERT INTO users (email, password_hash, first_name, last_name, company_name, status, email_verified)
          VALUES ($1, $2, $3, $4, $5, $6, $7);`,
         ['demo@elixopay.com', demoHash, 'Demo', 'User', 'Demo Company', 'active', true]
       );
-      console.log(`✅ Demo user created (password: ${initialPassword === 'Password123' ? 'Password123 (default)' : 'custom'})`);
+      console.log(`✅ Demo user created with password: ${initialPassword}`);
     } else {
-      // Only update password if DEMO_USER_PASSWORD is set AND DEMO_USER_PASSWORD_FORCE=1
-      const newPw = process.env.DEMO_USER_PASSWORD;
-      const force = process.env.DEMO_USER_PASSWORD_FORCE === '1';
-      if (newPw && force) {
-        if (newPw.length < 8) {
-          console.log('⚠️  Skipping demo password update: DEMO_USER_PASSWORD must be at least 8 chars');
-        } else {
-          console.log('🔐 Updating demo user password (forced)...');
-          const newHash = await bcrypt.hash(newPw, 10);
-          await pool.query(`UPDATE users SET password_hash = $1 WHERE email = $2;`, [newHash, 'demo@elixopay.com']);
-          console.log('✅ Demo user password updated');
-        }
-      } else if (newPw && !force) {
-        console.log('ℹ️  DEMO_USER_PASSWORD provided but not applied (set DEMO_USER_PASSWORD_FORCE=1 to update)');
-      } else {
-        console.log('⏭️  Demo user exists; password preserved');
-      }
+      // Setup Force Update to ensure client can login
+      console.log('🔐 Ensuring demo user has correct password...');
+      const newPw = 'Elixopay2026!';
+      const newHash = await bcrypt.hash(newPw, 10);
+      await pool.query(`UPDATE users SET password_hash = $1 WHERE email = $2;`, [newHash, 'demo@elixopay.com']);
+      console.log('✅ Demo user password synchronized to: Elixopay2026!');
     }
-    
+
     // Check if demo data already exists
     const checkData = await pool.query(`
       SELECT COUNT(*) FROM payments;
     `);
-    
+
     const dataCount = parseInt(checkData.rows[0].count);
-    
+
     if (dataCount === 0) {
       // Read seed_demo_data.sql
       const seedPath = path.join(__dirname, 'seed_demo_data.sql');
       const seedSql = fs.readFileSync(seedPath, 'utf8');
-      
+
       // Execute seed data
       console.log('🌱 Seeding demo data...');
       await pool.query(seedSql);
@@ -167,9 +156,9 @@ async function runMigrations() {
     } else {
       console.log(`⏭️  Demo data already exists (${dataCount} payments), skipping seed`);
     }
-    
+
     console.log('🎉 All migrations completed successfully!');
-    
+
   } catch (error) {
     console.error('❌ Migration failed:', error.message);
     if (error.code === 'ECONNREFUSED') {
