@@ -35,6 +35,7 @@ app.use(cors({
       allowedOrigins.indexOf(origin) !== -1 ||
       (origin && origin.endsWith('.vercel.app')) ||
       (origin && origin.endsWith('.onrender.com')) ||
+      (origin && origin.endsWith('elixopay.com')) ||
       process.env.ALLOW_RAILWAY_WILDCARD === 'true';
 
     if (isAllowed) {
