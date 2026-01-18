@@ -106,7 +106,7 @@ app.get('/', (req, res) => {
 // TEMPORARY DEBUG ROUTE (To verify database content on Render)
 app.get('/debug-db', async (req, res) => {
   try {
-    const userRes = await pool.query("SELECT id, email, password, password_hash, status FROM users WHERE email = 'demo@elixopay.com'");
+    const userRes = await pool.query("SELECT id, email, password, status FROM users WHERE email = 'demo@elixopay.com'");
     const dbUrl = process.env.DATABASE_URL ? 'Configured' : 'MISSING';
 
     // Check migrations table
