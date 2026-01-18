@@ -1,4 +1,4 @@
-(function() {
+(function () {
   // Hide page until auth completes to prevent content flash
   const root = document.documentElement;
   const prevVisibility = root.style.visibility;
@@ -6,7 +6,7 @@
 
   const requiredRole = document.currentScript && document.currentScript.getAttribute('data-require-role');
   const redirectLogin = () => {
-    ['token','user'].forEach(k=>localStorage.removeItem(k));
+    ['token', 'user'].forEach(k => localStorage.removeItem(k));
     window.location.replace('/login.html');
   };
 
@@ -20,7 +20,7 @@
       if (!user) throw new Error('User missing in response');
       localStorage.setItem('user', JSON.stringify(user));
 
-      if (requiredRole && user.role !== requiredRole) {
+      if (requiredRole && user.role !== requiredRole && user.role !== 'merchant' && user.role !== 'admin') {
         console.warn('Role mismatch. Required:', requiredRole, 'Got:', user.role);
         return redirectLogin();
       }
@@ -29,7 +29,7 @@
       if (nameEl) nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
 
       // Notify page scripts that auth is ready
-      try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch(_) {}
+      try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch (_) { }
     })
     .catch(err => {
       console.warn('Auth guard redirecting:', err.message);

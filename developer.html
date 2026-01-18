@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Settings - Elixopay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="user"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-100 fixed w-full z-40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="/dashboard.html" class="flex items-center group">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl mr-2 shadow-lg group-hover:scale-110 transition-transform">
+                            E</div>
+                        <span
+                            class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-blue-600">Elixopay</span>
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='/dashboard.html'"
+                        class="text-gray-500 hover:text-purple-600 font-medium">Dashboard</button>
+                    <div
+                        class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 flex items-center justify-center text-purple-600 font-bold">
+                        <span id="user-initial">U</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Developer Settings</h1>
+                <p class="text-gray-600 mt-1">Manage your API keys and integration settings.</p>
+            </div>
+            <button onclick="openCreateKeyModal()"
+                class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition shadow-lg flex items-center">
+                <i class="fas fa-plus mr-2"></i> Create New Key
+            </button>
+        </div>
+
+        <!-- API Keys List -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-lg font-bold text-gray-800">API Keys</h2>
+                <p class="text-sm text-gray-500">Use these keys to authenticate your API requests.</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3 font-semibold">Name</th>
+                            <th class="px-6 py-3 font-semibold">Public Key</th>
+                            <th class="px-6 py-3 font-semibold">Created</th>
+                            <th class="px-6 py-3 font-semibold">Status</th>
+                            <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="api-keys-list" class="divide-y divide-gray-100">
+                        <!-- Items will be injected here -->
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Key Modal -->
+    <div id="create-key-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeCreateKeyModal()"></div>
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 relative z-10 p-6 transform scale-95 transition-transform duration-300"
+            id="create-key-modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Create New API Key</h3>
+
+            <form id="create-key-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Key Name</label>
+                    <input type="text" name="key_name" placeholder="e.g. Production Server" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeCreateKeyModal()"
+                        class="px-4 py-2 text-gray-500 hover:text-gray-700 font-medium">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal (Show Secret Key) -->
+    <div id="secret-key-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 relative z-10 p-6 transform scale-95 transition-transform duration-300"
+            id="secret-key-modal-content">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900">API Key Created</h3>
+                <p class="text-sm text-gray-500 mt-1">Please copy your secret key now. You won't be able to see it
+                    again.</p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 relative group">
+                <label class="text-xs text-gray-500 uppercase tracking-wide font-semibold block mb-1">Secret Key</label>
+                <div class="flex items-center">
+                    <code class="text-sm font-mono text-gray-800 break-all" id="new-secret-key">sk_live_...</code>
+                    <button onclick="copySecretKey()" class="ml-2 p-2 text-purple-600 hover:text-purple-800 transition">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="closeSecretKeyModal()"
+                class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium">Done</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Functions ---
+        async function loadApiKeys() {
+            const list = document.getElementById('api-keys-list');
+            try {
+                const response = await apiFetch('/api/v1/api-keys');
+                const data = await response.json();
+
+                if (data.success && data.data.apiKeys.length > 0) {
+                    list.innerHTML = data.data.apiKeys.map(key => `
+                        <tr class="hover:bg-gray-50 transition ${key.status === 'revoked' ? 'opacity-50' : ''}">
+                            <td class="px-6 py-4 font-medium text-gray-900">${key.name}</td>
+                            <td class="px-6 py-4 font-mono text-xs text-gray-600">${key.public_key}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${new Date(key.created_at).toLocaleDateString()}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold ${key.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                                    ${key.status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                ${key.status === 'active' ? `
+                                <button onclick="revokeApiKey('${key.id}')" class="text-red-500 hover:text-red-700 text-sm font-medium transition">
+                                    Revoke
+                                </button>` : ''}
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No API keys found. Create one to get started.</td></tr>';
+                }
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Failed to load API keys.</td></tr>';
+            }
+        }
+
+        async function createApiKey(name) {
+            try {
+                const response = await apiFetch('/api/v1/api-keys', {
+                    method: 'POST',
+                    body: JSON.stringify({ name })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    closeCreateKeyModal();
+                    showSecretKey(data.data.apiKey.secret_key);
+                    loadApiKeys();
+                } else {
+                    alert(data.error?.message || 'Failed to create key');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error creating key');
+            }
+        }
+
+        async function revokeApiKey(id) {
+            if (!confirm('Are you sure you want to revoke this key? This action cannot be undone.')) return;
+            try {
+                const response = await apiFetch(`/api/v1/api-keys/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    loadApiKeys();
+                } else {
+                    alert('Failed to revoke key');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // --- UI Logic ---
+        function openCreateKeyModal() {
+            const modal = document.getElementById('create-key-modal');
+            const content = document.getElementById('create-key-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeCreateKeyModal() {
+            const modal = document.getElementById('create-key-modal');
+            const content = document.getElementById('create-key-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+            document.getElementById('create-key-form').reset();
+        }
+
+        function showSecretKey(secret) {
+            const modal = document.getElementById('secret-key-modal');
+            const content = document.getElementById('secret-key-modal-content');
+            document.getElementById('new-secret-key').textContent = secret;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSecretKeyModal() {
+            document.getElementById('secret-key-modal').classList.add('hidden');
+        }
+
+        function copySecretKey() {
+            const key = document.getElementById('new-secret-key').textContent;
+            navigator.clipboard.writeText(key).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        document.getElementById('create-key-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = e.target.key_name.value;
+            createApiKey(name);
+        });
+
+        // Initialize
+        loadApiKeys();
+    </script>
+</body>
+
+</html>

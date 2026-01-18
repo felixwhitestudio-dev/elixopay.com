@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Portal - Elixopay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="user"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        /* Premium Gradients */
+        .bg-premium {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-premium {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Table Styles */
+        .premium-table th {
+            font-weight: 500;
+            color: #94a3b8;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-table td {
+            padding: 1rem;
+            color: #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="/dashboard.html" class="flex items-center group mr-8">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-2 shadow-lg">
+                            E</div>
+                        <span class="text-xl font-bold text-white tracking-tight">Elixopay <span
+                                class="text-indigo-400 font-normal">Partner</span></span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard.html" class="text-sm font-medium text-gray-400 hover:text-white transition">Back
+                        to Dashboard</a>
+                    <div class="h-6 w-px bg-gray-700"></div>
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                            <i class="fas fa-user-tie text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+        <div class="mb-10 text-center animate-in" style="animation-delay: 0.1s;">
+            <h1 class="text-4xl font-bold mb-3"><span class="text-gradient">Partner Network</span></h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">Manage your referrals, track commissions, and grow your
+                agency network from one powerful interface.</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 animate-in" style="animation-delay: 0.2s;">
+            <!-- Total Earnings -->
+            <div class="card-premium rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-coins text-6xl text-indigo-400"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Total Earnings</p>
+                <h3 class="text-3xl font-bold text-white mb-2" id="total-earnings">฿0.00</h3>
+                <div
+                    class="flex items-center text-green-400 text-xs font-medium bg-green-400/10 inline-block px-2 py-1 rounded-lg">
+                    <i class="fas fa-arrow-up mr-1"></i> +0% this month
+                </div>
+            </div>
+
+            <!-- Active Referrals -->
+            <div class="card-premium rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-users text-6xl text-purple-400"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Active Merchants</p>
+                <h3 class="text-3xl font-bold text-white mb-2" id="total-merchants">0</h3>
+                <p class="text-xs text-gray-500">Businesses in your network</p>
+            </div>
+
+            <!-- Pending Commission -->
+            <div class="card-premium rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-hourglass-half text-6xl text-orange-400"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Pending Payout</p>
+                <h3 class="text-3xl font-bold text-white mb-2" id="pending-balance">฿0.00</h3>
+                <p class="text-xs text-gray-500">Available for withdrawal soon</p>
+            </div>
+
+            <!-- Clicks (Mock) -->
+            <div class="card-premium rounded-2xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-mouse-pointer text-6xl text-blue-400"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Link Clicks</p>
+                <h3 class="text-3xl font-bold text-white mb-2" id="total-clicks">0</h3>
+                <p class="text-xs text-gray-500">Traffic from your link</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in" style="animation-delay: 0.3s;">
+            <!-- Left: Network List -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="card-premium rounded-2xl overflow-hidden">
+                    <div class="p-6 border-b border-gray-700/50 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-white flex items-center">
+                            <i class="fas fa-network-wired mr-3 text-indigo-400"></i> My Network
+                        </h3>
+                        <button onclick="loadNetworkData()"
+                            class="text-sm text-indigo-400 hover:text-indigo-300 transition">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full premium-table">
+                            <thead>
+                                <tr>
+                                    <th>Business Name</th>
+                                    <th>Domain</th>
+                                    <th>Status</th>
+                                    <th>Joined Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="network-table-body">
+                                <tr>
+                                    <td colspan="4" class="text-center py-8 text-gray-500">Loading network data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Tools -->
+            <div class="space-y-6">
+                <!-- Referral Link Card -->
+                <div class="card-premium rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-4">Your Referral Link</h3>
+                    <div class="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50 mb-4">
+                        <div class="flex items-center justify-between">
+                            <code class="text-sm text-indigo-300 truncate mr-2"
+                                id="referral-link">https://elixopay.com/signup?ref=...</code>
+                            <button onclick="copyRefLink()" class="text-gray-400 hover:text-white transition">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4">Share this link with potential merchants. You'll earn <span
+                            class="text-white font-bold">20% commission</span> on their transaction fees forever.</p>
+                    <button onclick="copyRefLink()"
+                        class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-indigo-900/20">
+                        Copy Link
+                    </button>
+                </div>
+
+                <!-- Support Card -->
+                <div class="card-premium rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-2">Partner Support</h3>
+                    <p class="text-sm text-gray-400 mb-4">Need help with your earnings or network?</p>
+                    <a href="mailto:partners@elixopay.com"
+                        class="w-full flex items-center justify-center py-2.5 border border-indigo-500/30 hover:bg-indigo-500/10 text-indigo-300 text-sm font-semibold rounded-xl transition">
+                        <i class="far fa-envelope mr-2"></i> Contact Manager
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        async function loadPartnerData() {
+            try {
+                // 1. Get Stats (Earnings, Balance, Counts)
+                const statsResponse = await apiFetch('/api/v1/partners/stats');
+                const statsData = await statsResponse.json();
+
+                if (statsData.success && statsData.data) {
+                    const stats = statsData.data.stats || {};
+                    // If not partner, redirect or show message? 
+                    // Assume user has access for now.
+
+                    document.getElementById('total-earnings').textContent = `฿${(stats.totalEarnings || 0).toLocaleString()}`;
+                    document.getElementById('total-merchants').textContent = stats.referrals || 0;
+                    document.getElementById('pending-balance').textContent = `฿${(stats.pendingBalance || 0).toLocaleString()}`;
+                    document.getElementById('total-clicks').textContent = stats.clicks || 0;
+
+                    // Generate Ref Link
+                    const agencyId = statsData.data.agencyId || 'unknown';
+                    const refLink = `${window.location.origin}/signup.html?ref=${agencyId}`;
+                    document.getElementById('referral-link').textContent = refLink;
+                    window.refLink = refLink;
+                }
+
+                // 2. Get Network List
+                const netResponse = await apiFetch('/api/v1/partners/network');
+                const netData = await netResponse.json();
+
+                const tableBody = document.getElementById('network-table-body');
+
+                if (netData.success && netData.data && netData.data.length > 0) {
+                    tableBody.innerHTML = netData.data.map(site => `
+                        <tr>
+                            <td>
+                                <div class="font-medium text-white">${site.name}</div>
+                                <div class="text-xs text-gray-500">${site.contact_email || 'No email'}</div>
+                            </td>
+                            <td class="font-mono text-sm text-indigo-300">${site.domain || '-'}</td>
+                            <td>
+                                <span class="status-badge ${site.status === 'active' ? 'status-active' : 'status-pending'}">
+                                    ${site.status.toUpperCase()}
+                                </span>
+                            </td>
+                            <td class="text-sm text-gray-400">
+                                ${new Date(site.created_at).toLocaleDateString()}
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center py-8">
+                                <div class="flex flex-col items-center justify-center text-gray-500">
+                                    <i class="far fa-folder-open text-4xl mb-3 opacity-50"></i>
+                                    <p>No merchants in your network yet.</p>
+                                    <p class="text-xs mt-1">Share your referral link to get started!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Failed to load partner data:', error);
+            }
+        }
+
+        function copyRefLink() {
+            if (window.refLink) {
+                navigator.clipboard.writeText(window.refLink);
+                alert('Referral link copied to clipboard!');
+                // Could use a toast here for better UX
+            }
+        }
+
+        // Init
+        loadPartnerData();
+    </script>
+</body>
+
+</html>

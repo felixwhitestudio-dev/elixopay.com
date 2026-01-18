@@ -1,47 +1,80 @@
-// Google OAuth Sign-In (Google Identity Services)
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // TODO: Replace with your actual client ID
+// Google OAuth Sign-In (Popup Flow)
+const GOOGLE_CLIENT_ID = '177412712756-es0cdrhb0cpk3462f69o4qjgnveag4jn.apps.googleusercontent.com'; // Actual Client ID
+let tokenClient;
 
-function handleGoogleSignIn() {
-	google.accounts.id.initialize({
+// Initialize Token Client on load
+function initGoogleAuth() {
+	if (typeof google === 'undefined') return;
+	tokenClient = google.accounts.oauth2.initTokenClient({
 		client_id: GOOGLE_CLIENT_ID,
-		callback: handleGoogleCredentialResponse
+		scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+		callback: (tokenResponse) => {
+			if (tokenResponse && tokenResponse.access_token) {
+				handleGoogleCallback(tokenResponse.access_token);
+			}
+		},
 	});
-	google.accounts.id.prompt();
 }
 
-function handleGoogleCredentialResponse(response) {
-	// Send credential to backend for verification
-	apiFetch('/api/v1/auth/google', {
+// Triggered by button click
+function handleGoogleSignIn() {
+	if (!tokenClient) {
+		initGoogleAuth();
+	}
+	if (tokenClient) {
+		tokenClient.requestAccessToken();
+	} else {
+		alert('Google Auth library not loaded yet. Please try again.');
+	}
+}
+
+// Handle success callback
+function handleGoogleCallback(accessToken) {
+	const baseUrl = window.apiBaseUrl || '';
+	fetch(baseUrl + '/api/v1/auth/google', {
 		method: 'POST',
-		body: JSON.stringify({ credential: response.credential })
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ accessToken: accessToken })
 	})
-	.then(async res => {
-		const result = await res.json();
-		if (res.ok && result.success && result.data) {
-			// Save token/user info as needed
-			if (result.data.token) {
-				localStorage.setItem('token', result.data.token);
-				localStorage.setItem('authToken', result.data.token);
-			}
-			if (result.data.refreshToken) {
-				localStorage.setItem('refreshToken', result.data.refreshToken);
-				localStorage.setItem('authRefreshToken', result.data.refreshToken);
-			}
-			if (result.data.user) {
-				localStorage.setItem('user', JSON.stringify(result.data.user));
-			}
-			// Redirect by role
-			const role = result.data.user && result.data.user.role;
-			if (role === 'admin') {
-				window.location.href = '/admin-dashboard.html';
+		.then(async res => {
+			const result = await res.json();
+			if (res.ok && result.success && result.data) {
+				// Save token/user info
+				if (result.data.token) {
+					localStorage.setItem('token', result.data.token);
+					localStorage.setItem('authToken', result.data.token);
+				}
+				if (result.data.refreshToken) {
+					localStorage.setItem('refreshToken', result.data.refreshToken);
+				}
+				if (result.data.user) {
+					localStorage.setItem('user', JSON.stringify(result.data.user));
+				}
+
+				// Redirect based on role
+				const role = result.data.user.role;
+				if (role === 'admin') {
+					window.location.href = '/admin-dashboard.html';
+				} else {
+					window.location.href = '/dashboard.html';
+				}
 			} else {
-				window.location.href = '/dashboard.html';
+				alert(result.error?.message || result.message || 'Google login failed');
 			}
-		} else {
-			alert(result.error?.message || result.message || 'Google login failed');
+		})
+		.catch(err => {
+			console.error(err);
+			alert('Google login error: ' + err.message);
+		});
+}
+
+// Auto-init when script loads (if GIS is ready)
+window.onload = () => {
+	// Wait for GIS script
+	const checkGoogle = setInterval(() => {
+		if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+			initGoogleAuth();
+			clearInterval(checkGoogle);
 		}
-	})
-	.catch(err => {
-		alert('Google login error: ' + err.message);
-	});
+	}, 500);
 }

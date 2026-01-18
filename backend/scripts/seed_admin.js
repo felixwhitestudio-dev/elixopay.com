@@ -52,16 +52,15 @@ async function main() {
     const existing = await db.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length) {
       // Update existing admin
-      const fields = [name, 'admin', verifyFlag, true, existing.rows[0].id];
       if (process.env.ADMIN_PASSWORD) {
-        await db.query('UPDATE users SET name=$1, role=$2, is_verified=$3, is_active=$4, password=$5, updated_at=CURRENT_TIMESTAMP WHERE id=$6', [name, 'admin', verifyFlag, true, hash, existing.rows[0].id]);
+        await db.query('UPDATE users SET name=$1, account_type=$2, is_verified=$3, status=$4, password_hash=$5, updated_at=CURRENT_TIMESTAMP WHERE id=$6', [name, 'admin', verifyFlag, 'active', hash, existing.rows[0].id]);
       } else {
-        await db.query('UPDATE users SET name=$1, role=$2, is_verified=$3, is_active=$4, updated_at=CURRENT_TIMESTAMP WHERE id=$5', fields);
+        await db.query('UPDATE users SET name=$1, account_type=$2, is_verified=$3, status=$4, updated_at=CURRENT_TIMESTAMP WHERE id=$5', [name, 'admin', verifyFlag, 'active', existing.rows[0].id]);
       }
       console.log(JSON.stringify({ action: 'updated', email, generatedPassword: generated ? password : undefined }, null, 2));
     } else {
       // Insert new admin
-      await db.query('INSERT INTO users (email, password, name, role, is_verified, is_active, created_at) VALUES ($1,$2,$3,$4,$5,$6,CURRENT_TIMESTAMP)', [email, hash, name, 'admin', verifyFlag, true]);
+      await db.query('INSERT INTO users (email, password_hash, name, account_type, is_verified, status, created_at) VALUES ($1,$2,$3,$4,$5,$6,CURRENT_TIMESTAMP)', [email, hash, name, 'admin', verifyFlag, 'active']);
       console.log(JSON.stringify({ action: 'inserted', email, generatedPassword: generated ? password : undefined }, null, 2));
     }
   } catch (e) {

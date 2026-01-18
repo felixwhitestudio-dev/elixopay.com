@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ติดต่อ Elixopay - ติดต่อเราได้ทุกช่องทาง">
     <title>ติดต่อเรา - Elixopay</title>
-    
+
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --primary-color: #6366f1;
@@ -395,7 +397,7 @@
             .hero-small h1 {
                 font-size: 2rem;
             }
-            
+
             .contact-grid {
                 grid-template-columns: 1fr;
             }
@@ -407,6 +409,7 @@
     </style>
     <link rel="stylesheet" href="styles/theme.css">
 </head>
+
 <body>
     <div id="page-skeleton" aria-hidden="true"></div>
     <nav>
@@ -463,9 +466,12 @@
                     </div>
                     <div class="info-content">
                         <h3 data-i18n="contact.info.hours">เวลาให้บริการ</h3>
-                        <p><strong style="color: var(--secondary-color);" data-i18n="contact.info.hours.badge">Support 24/7 Online</strong><br>
-                        <span data-i18n="contact.info.hours.line1">ทีมซัพพอร์ตพร้อมให้บริการคุณตลอด 24 ชั่วโมง</span><br>
-                        <span data-i18n="contact.info.hours.line2">ตอบกลับภายใน 1 ชั่วโมง</span></p>
+                        <p><strong style="color: var(--secondary-color);" data-i18n="contact.info.hours.badge">Support
+                                24/7 Online</strong><br>
+                            <span data-i18n="contact.info.hours.line1">ทีมซัพพอร์ตพร้อมให้บริการคุณตลอด 24
+                                ชั่วโมง</span><br>
+                            <span data-i18n="contact.info.hours.line2">ตอบกลับภายใน 1 ชั่วโมง</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -475,30 +481,37 @@
                 <form id="contactForm">
                     <div class="form-group">
                         <label for="name" data-i18n="contact.form.name">ชื่อ - นามสกุล *</label>
-                        <input type="text" id="name" name="name" required data-i18n="[placeholder]contact.form.name.ph" placeholder="กรอกชื่อของคุณ">
+                        <input type="text" id="name" name="name" required data-i18n="[placeholder]contact.form.name.ph"
+                            placeholder="กรอกชื่อของคุณ">
                     </div>
                     <div class="form-group">
                         <label for="email" data-i18n="contact.form.email">อีเมล *</label>
-                        <input type="email" id="email" name="email" required data-i18n="[placeholder]contact.form.email.ph" placeholder="your@email.com">
+                        <input type="email" id="email" name="email" required
+                            data-i18n="[placeholder]contact.form.email.ph" placeholder="your@email.com">
                     </div>
                     <div class="form-group">
                         <label for="phone" data-i18n="contact.form.phone">เบอร์โทรศัพท์</label>
-                        <input type="tel" id="phone" name="phone" data-i18n="[placeholder]contact.form.phone.ph" placeholder="08X-XXX-XXXX">
+                        <input type="tel" id="phone" name="phone" data-i18n="[placeholder]contact.form.phone.ph"
+                            placeholder="08X-XXX-XXXX">
                     </div>
                     <div class="form-group">
                         <label for="subject" data-i18n="contact.form.subject">หัวข้อ *</label>
                         <select id="subject" name="subject" required>
                             <option value="" data-i18n="contact.form.subject.placeholder">เลือกหัวข้อ</option>
                             <option value="sales" data-i18n="contact.form.subject.sales">สอบถามข้อมูลการขาย</option>
-                            <option value="support" data-i18n="contact.form.subject.support">ขอความช่วยเหลือทางเทคนิค</option>
-                            <option value="partnership" data-i18n="contact.form.subject.partnership">ความร่วมมือทางธุรกิจ</option>
-                            <option value="billing" data-i18n="contact.form.subject.billing">เรื่องเกี่ยวกับการเรียกเก็บเงิน</option>
+                            <option value="support" data-i18n="contact.form.subject.support">ขอความช่วยเหลือทางเทคนิค
+                            </option>
+                            <option value="partnership" data-i18n="contact.form.subject.partnership">
+                                ความร่วมมือทางธุรกิจ</option>
+                            <option value="billing" data-i18n="contact.form.subject.billing">
+                                เรื่องเกี่ยวกับการเรียกเก็บเงิน</option>
                             <option value="other" data-i18n="contact.form.subject.other">อื่นๆ</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="message" data-i18n="contact.form.message">ข้อความ *</label>
-                        <textarea id="message" name="message" required data-i18n="[placeholder]contact.form.message.ph" placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
+                        <textarea id="message" name="message" required data-i18n="[placeholder]contact.form.message.ph"
+                            placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
                     </div>
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="contact.form.submit">ส่งข้อความ</span>
@@ -534,7 +547,8 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
-                <p style="color: var(--text-secondary);" data-i18n="footer.tagline">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
+                <p style="color: var(--text-secondary);" data-i18n="footer.tagline">
+                    ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
             <div class="footer-section">
                 <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
@@ -568,14 +582,16 @@
     <script src="js/i18n.js?v=2"></script>
     <script src="js/ui.js?v=2"></script>
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            alert('ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด');
+            const msg = window.ElixopayI18n ? window.ElixopayI18n.t('contact.alert.success') : 'ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด';
+            alert(msg);
             this.reset();
         });
-        document.querySelector('.mobile-menu-btn')?.addEventListener('click', ()=>{
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', () => {
             document.querySelector('.nav-links')?.classList.toggle('show');
         });
     </script>
 </body>
+
 </html>

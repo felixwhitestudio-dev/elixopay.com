@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Liquidity Management - Elixopay Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/api-config.js"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+                        Elixopay Admin
+                    </span>
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/admin-dashboard.html"
+                            class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Dashboard</a>
+                        <a href="#"
+                            class="px-3 py-2 rounded-md text-sm font-medium bg-gray-800 text-white">Liquidity</a>
+                        <a href="/admin-users.html"
+                            class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Users</a>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="logout()"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Platform Liquidity Management (USDT)
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Manage the platform's central wallet balance for user withdrawals.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Balance Card -->
+            <div class="bg-white overflow-hidden shadow rounded-lg md:col-span-1">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                            <i class="fas fa-wallet text-green-600 text-2xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Current Liquidity
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div id="liquidityBalance" class="text-3xl font-semibold text-gray-900">
+                                        Loading...
+                                    </div>
+                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-gray-600">
+                                        USDT
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i> Funds available for payouts
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Liquidity Form -->
+            <div class="bg-white shadow sm:rounded-lg md:col-span-2">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Add Liquidity
+                    </h3>
+                    <div class="mt-2 max-w-xl text-sm text-gray-500">
+                        <p>Top up the platform wallet. In a live environment, this would be an on-chain deposit.</p>
+                    </div>
+                    <form id="addLiquidityForm" class="mt-5 sm:flex sm:items-center"
+                        onsubmit="handleAddLiquidity(event)">
+                        <div class="w-full sm:max-w-xs">
+                            <label for="amount" class="sr-only">Amount (USDT)</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                <input type="number" name="amount" id="amount"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-3 border"
+                                    placeholder="0.00" step="0.01" min="1" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">USDT</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" id="submitBtn"
+                            class="mt-3 w-full inline-flex items-center justify-center px-4 py-3 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            <i class="fas fa-plus-circle mr-2"></i> Add Funds
+                        </button>
+                    </form>
+                    <div id="message" class="mt-3 hidden p-2 rounded text-sm"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction History Placeholder -->
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mt-10 mb-4">
+            Recent Liquidity Transactions
+        </h3>
+        <div class="flex flex-col">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Date</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Type</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Amount</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody" class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" colspan="4">
+                                        Loading history...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Check Admin Auth
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        async function fetchLiquidity() {
+            try {
+                const res = await apiFetch('/api/v1/admin/liquidity');
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('liquidityBalance').textContent = parseFloat(data.data.balance).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                }
+            } catch (e) {
+                console.error('Failed to fetch liquidity', e);
+            }
+        }
+
+        async function handleAddLiquidity(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('message');
+            const amount = document.getElementById('amount').value;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+            msg.classList.add('hidden');
+
+            try {
+                const res = await apiFetch('/api/v1/admin/liquidity/add', {
+                    method: 'POST',
+                    body: JSON.stringify({ amount, currency: 'USDT' })
+                });
+                const data = await res.json();
+
+                msg.classList.remove('hidden');
+                if (data.success) {
+                    msg.className = 'mt-3 p-2 rounded text-sm bg-green-100 text-green-700';
+                    msg.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Successfully added ${amount} USDT`;
+                    fetchLiquidity(); // Refresh balance
+                    fetchLiquidityHistory(); // Refresh history
+                    document.getElementById('addLiquidityForm').reset();
+                } else {
+                    throw new Error(data.error?.message || 'Failed to add liquidity');
+                }
+            } catch (err) {
+                msg.className = 'mt-3 p-2 rounded text-sm bg-red-100 text-red-700';
+                msg.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i> ${err.message}`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i> Add Funds';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+
+        // History Fetcher
+        async function fetchLiquidityHistory() {
+            try {
+                const res = await apiFetch('/api/v1/admin/liquidity/history');
+                const data = await res.json();
+                const tbody = document.getElementById('historyTableBody');
+
+                if (data.success && data.data.transactions.length > 0) {
+                    tbody.innerHTML = data.data.transactions.map(tx => {
+                        const date = new Date(tx.created_at).toLocaleString();
+                        const isDeposit = tx.type === 'deposit' || tx.type === 'transfer_in';
+                        const colorClass = isDeposit ? 'text-green-600' : 'text-red-600';
+                        const icon = isDeposit ? 'fa-arrow-down' : 'fa-arrow-up';
+
+                        return `
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">
+                                    <i class="fas ${icon} mr-1 ${colorClass}"></i> ${tx.type}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${colorClass}">
+                                    ${isDeposit ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()} ${tx.currency}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Completed
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center" colspan="4">
+                                No transactions found.
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (e) {
+                console.error('Failed to fetch history', e);
+                document.getElementById('historyTableBody').innerHTML = `
+                    <tr>
+                         <td class="px-6 py-4 text-sm text-red-500 text-center" colspan="4">
+                            Error loading history.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLiquidity();
+            fetchLiquidityHistory();
+        });
+    </script>
+</body>
+
+</html>

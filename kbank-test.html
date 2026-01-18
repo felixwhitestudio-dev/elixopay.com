@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBank QR Test - Elixopay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #139a49;
+            /* KBank Green */
+            --bg: #f3f4f6;
+            --surface: #ffffff;
+            --text-main: #111827;
+            --text-sec: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .container {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            /* Fix padding issue */
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #qr-container {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            min-height: 200px;
+            /* Reserve space */
+            align-items: center;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 2px dashed var(--border);
+        }
+
+        .status {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-sec);
+        }
+
+        .loading {
+            color: var(--text-sec);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1><i class="fa-solid fa-qrcode"></i> KBank Scan</h1>
+
+        <div class="input-group">
+            <label for="amount">Amount (THB)</label>
+            <input type="number" id="amount" value="100.00" step="0.01">
+        </div>
+
+        <button onclick="generateQR()">Generate QR Code</button>
+
+        <div id="qr-container">
+            <span class="loading">QR Code will appear here</span>
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script src="js/api-config.js"></script>
+    <script>
+        async function generateQR() {
+            const amount = document.getElementById('amount').value;
+            const qrContainer = document.getElementById('qr-container');
+            const statusEl = document.getElementById('status');
+
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            // Reset UI
+            qrContainer.innerHTML = '<span class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Generating...</span>';
+            statusEl.innerText = '';
+
+            try {
+                // Using the new API config
+                const endpoint = window.API_CONFIG?.kbank?.qr || '/api/v1/kbank/qr';
+
+                const response = await window.apiFetch(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        amount: amount,
+                        orderId: 'ORD-' + Date.now(),
+                        description: 'Test Payment'
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.message || 'Failed to generate');
+                }
+
+                const res = await response.json();
+                const { data } = res; // Assuming structure { success: true, data: { qrCode: "..." } }
+
+                // Clear loading
+                qrContainer.innerHTML = '';
+
+                // Render QR
+                // KBank sandbox might return a raw string (TLV) or URL. 
+                // In our service we return the raw string from KBank (or mock).
+                // qrcode.js expects text.
+
+                new QRCode(qrContainer, {
+                    text: data.qrCode,
+                    width: 200,
+                    height: 200
+                });
+
+                statusEl.innerText = `Txn ID: ${data.txnId}`;
+
+            } catch (error) {
+                console.error(error);
+                qrContainer.innerHTML = '<span style="color: red">Error generating QR</span>';
+                statusEl.innerText = error.message;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

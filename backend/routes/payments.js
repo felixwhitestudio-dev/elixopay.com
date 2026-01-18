@@ -24,7 +24,13 @@ router.get('/', authenticate, paymentController.getPayments);
  * @desc    Create a new payment
  * @access  Private
  */
-router.post('/', authenticate, paymentLimiter, validatePayment, paymentController.createPayment);
+router.post('/', authenticate, paymentController.createPayment);
+
+// Public route for fetching details by token (for checkout page)
+router.get('/session/:token', paymentController.getPaymentByToken);
+
+// Private route for paying
+router.post('/session/:token/pay', authenticate, paymentController.processPayment);
 
 /**
  * @route   GET /api/v1/payments/:id

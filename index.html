@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Elixopay - ระบบชำระเงินออนไลน์ที่ปลอดภัย รวดเร็ว และน่าเชื่อถือ">
     <meta name="keywords" content="payment gateway, ชำระเงินออนไลน์, Elixopay">
     <title>Elixopay - Secure Payment Gateway | ระบบชำระเงินออนไลน์ที่ปลอดภัย</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --primary-color: #6366f1;
@@ -47,16 +49,19 @@
             overflow-x: hidden;
         }
 
-        /* Navigation */
+        /* Navigation - Premium Glass Effect */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             z-index: 1000;
             padding: 1rem 0;
-            border-bottom: 1px solid rgba(100, 102, 241, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
         }
 
         nav .container {
@@ -68,20 +73,38 @@
             align-items: center;
         }
 
+        /* Logo - Gradient & Modern */
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--text-primary);
+            color: #1e293b;
             text-decoration: none;
+            letter-spacing: -0.5px;
         }
 
         .logo i {
-            color: var(--primary-color);
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 6px rgba(79, 70, 229, 0.2));
+            transition: transform 0.3s ease;
         }
 
+        .logo:hover i {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Nav Links - Clean & Interactive */
         .nav-links {
             display: flex;
             list-style: none;
@@ -90,47 +113,115 @@
         }
 
         .nav-links a {
-            color: var(--text-secondary);
+            color: #64748b;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            position: relative;
         }
 
         .nav-links a:hover {
-            color: var(--primary-color);
+            color: #4f46e5;
         }
 
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(90deg, #4f46e5, #9333ea);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Buttons - Modern FinTech */
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 0.6rem 1.25rem;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             cursor: pointer;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            gap: 0.5rem;
         }
 
         .btn-primary {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
         }
 
         .btn-outline {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            background: transparent;
+            border: 1.5px solid #e2e8f0;
+            color: #475569;
+            background: white;
         }
 
         .btn-outline:hover {
-            background: var(--primary-color);
-            color: white;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            background: #f8fafc;
+        }
+
+        /* Language & Theme Toggle */
+        .lang-select {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: #475569;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .lang-select:hover,
+        .lang-select:focus {
+            border-color: #4f46e5;
+            color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+
+        .theme-toggle {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+            background: #f8fafc;
+            transform: rotate(15deg);
         }
 
         /* Hero Section */
@@ -153,8 +244,17 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
         }
 
         .hero-content {
@@ -257,23 +357,33 @@
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
+            width: 72px;
+            height: 72px;
             background: var(--gradient-1);
-            border-radius: 12px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(78, 37, 118, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .feature-card:nth-child(2) .feature-icon {
             background: var(--gradient-2);
+            box-shadow: 0 10px 25px rgba(246, 139, 31, 0.4);
         }
 
         .feature-card:nth-child(3) .feature-icon {
             background: var(--gradient-3);
+            box-shadow: 0 10px 25px rgba(0, 146, 214, 0.4);
         }
 
         .feature-card h3 {
@@ -305,16 +415,31 @@
         }
 
         .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-color);
+            width: 72px;
+            height: 72px;
+            background: var(--gradient-1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(78, 37, 118, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .step:nth-child(2) .step-number {
+            background: var(--gradient-2);
+            box-shadow: 0 10px 25px rgba(246, 139, 31, 0.4);
+        }
+
+        .step:nth-child(3) .step-number {
+            background: var(--gradient-3);
+            box-shadow: 0 10px 25px rgba(0, 146, 214, 0.4);
         }
 
         .step h3 {
@@ -348,28 +473,124 @@
 
         .security-item {
             display: flex;
-            gap: 1rem;
-            align-items: start;
+            gap: 1.5rem;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: white;
+            color: #1e293b;
+            /* Fix for Dark Mode: Force dark text on white card */
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
 
-        .security-item i {
-            color: var(--secondary-color);
-            font-size: 1.5rem;
-            margin-top: 0.25rem;
+        .security-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            border-color: rgba(78, 37, 118, 0.2);
+        }
+
+        .check-icon {
+            min-width: 48px;
+            height: 48px;
+            background: var(--gradient-2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(246, 139, 31, 0.3);
         }
 
         .security-visual {
-            background: var(--dark-bg);
-            padding: 3rem;
-            border-radius: 16px;
+            background: radial-gradient(circle at center, #ffffff 0%, #f8faff 100%);
+            padding: 5rem 3rem;
+            border-radius: 32px;
             text-align: center;
-            border: 1px solid rgba(100, 102, 241, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow:
+                0 30px 60px -10px rgba(78, 37, 118, 0.1),
+                0 10px 20px -5px rgba(78, 37, 118, 0.05),
+                inset 0 0 40px rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ambient Glow Background */
+        .security-visual::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: var(--gradient-2);
+            opacity: 0.1;
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: 0;
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        /* Top Accent Line */
+        .security-visual::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+            opacity: 0.5;
         }
 
         .security-badge {
-            font-size: 5rem;
-            color: var(--secondary-color);
+            font-size: 8rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 20px 30px rgba(246, 139, 31, 0.25));
+            position: relative;
+            z-index: 1;
+            transform: perspective(1000px) rotateY(0deg);
+            transition: transform 0.5s ease;
+        }
+
+        .security-visual:hover .security-badge {
+            transform: perspective(1000px) rotateY(10deg) scale(1.05);
+        }
+
+        .security-visual h3 {
+            position: relative;
+            z-index: 1;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
+        }
+
+        .security-visual p {
+            position: relative;
+            z-index: 1;
+            color: var(--text-secondary);
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                opacity: 0.08;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0.15;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
         }
 
         /* CTA Section */
@@ -382,8 +603,26 @@
             max-width: 800px;
             margin: 0 auto;
             background: var(--gradient-1);
-            padding: 4rem 3rem;
-            border-radius: 24px;
+            padding: 5rem 3rem;
+            border-radius: 32px;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(78, 37, 118, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Premium Accent */
+        .cta-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=');
+            opacity: 0.3;
+            pointer-events: none;
         }
 
         .cta h2 {
@@ -485,6 +724,7 @@
     <!-- Shared theme/animation styles -->
     <link rel="stylesheet" href="styles/theme.css">
 </head>
+
 <body>
     <!-- Skeleton overlay -->
     <div id="page-skeleton" aria-hidden="true"></div>
@@ -520,35 +760,507 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Wise-like Hero Section -->
     <section class="hero reveal">
-        <div class="hero-content">
-            <h1 data-i18n="index.hero.title">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้</h1>
-            <p data-i18n="index.hero.desc">Elixopay คือ Payment Gateway ที่ออกแบบมาเพื่อธุรกิจยุคใหม่ รองรับการชำระเงินที่รวดเร็ว ปลอดภัย และง่ายต่อการผลิตภัณฑ์</p>
-            <div class="hero-buttons">
-                <a href="signup.html" class="btn btn-primary" data-i18n="index.hero.ctaPrimary">เริ่มต้นใช้งานฟรี</a>
-                <a href="docs.html" class="btn btn-outline" data-i18n="index.hero.ctaSecondary">ดูเอกสาร API</a>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label" data-i18n="index.hero.stat.uptime">Uptime</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">< 200ms</div>
-                    <div class="stat-label" data-i18n="index.hero.stat.response">Response Time</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">10K+</div>
-                    <div class="stat-label" data-i18n="index.hero.stat.txnPerDay">Transactions/Day</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label" data-i18n="index.hero.stat.support">Support</div>
+        <div class="hero-content"
+            style="max-width: 1200px; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; text-align: left; align-items: center;">
+            <!-- Left: Text -->
+            <div class="hero-text">
+                <h1 data-i18n="index.hero.title"
+                    style="color: var(--primary-color); background: none; -webkit-text-fill-color: initial;">Money for
+                    here, there and everywhere.</h1>
+                <p data-i18n="index.hero.desc" style="font-size: 1.5rem; color: var(--text-secondary);">The fast, cheap
+                    way to send money around the world.</p>
+                <div class="hero-buttons" style="justify-content: flex-start; margin-top: 2rem;">
+                    <a href="signup.html" class="btn btn-primary"
+                        style="background: var(--secondary-color); color: #fff; padding: 1rem 2rem; border-radius: 30px; font-weight: bold;">
+                        <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Send Money Now
+                    </a>
                 </div>
             </div>
-        </div>
+
+            <!-- Right: Real-time Calculator Card -->
+            <div class="hero-card"
+                style="background: white; padding: 2rem; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
+                <style>
+                    /* Custom Currency Selector Styles */
+                    .custom-select-container {
+                        position: relative;
+                        min-width: 160px;
+                        height: 100%;
+                    }
+
+                    .custom-select-trigger {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        width: 100%;
+                        height: 100%;
+                        gap: 8px;
+                        width: 100%;
+                        height: 100%;
+                        padding: 0.5rem 1rem;
+                        background: var(--dark-card);
+                        color: var(--text-primary);
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        user-select: none;
+                        transition: all 0.2s;
+                    }
+
+                    .custom-select-trigger:hover {
+                        border-color: var(--primary-color);
+                    }
+
+                    .flag-icon {
+                        width: 24px;
+                        height: 16px;
+                        object-fit: cover;
+                        border-radius: 2px;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .currency-code {
+                        font-weight: bold;
+                        color: var(--primary-color);
+                    }
+
+                    .custom-dropdown {
+                        position: absolute;
+                        top: 110%;
+                        right: 0;
+                        width: 300px;
+                        background: white;
+                        border: 1px solid #eee;
+                        border-radius: 12px;
+                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+                        z-index: 100;
+                        display: none;
+                        overflow: hidden;
+                        animation: fadeIn 0.1s ease-out;
+                    }
+
+                    .custom-dropdown.show {
+                        display: block;
+                    }
+
+                    .dropdown-search {
+                        padding: 1rem;
+                        border-bottom: 1px solid #eee;
+                        background: #fcfcfc;
+                    }
+
+                    .dropdown-search input {
+                        width: 100%;
+                        padding: 0.8rem;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        outline: none;
+                        font-size: 0.9rem;
+                    }
+
+                    .dropdown-search input:focus {
+                        border-color: var(--secondary-color);
+                        box-shadow: 0 0 0 3px rgba(46, 208, 110, 0.1);
+                    }
+
+                    .dropdown-list {
+                        max-height: 280px;
+                        overflow-y: auto;
+                        padding: 0.5rem 0;
+                    }
+
+                    .currency-option {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 0.8rem 1.5rem;
+                        cursor: pointer;
+                        transition: background 0.1s;
+                    }
+
+                    .currency-option:hover {
+                        background: #f0f9ff;
+                    }
+
+                    .currency-option.selected {
+                        background: #f0f9ff;
+                        color: var(--primary-color);
+                    }
+
+                    .currency-name {
+                        font-size: 0.85rem;
+                        color: var(--text-secondary);
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    @keyframes fadeIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-5px);
+                        }
+
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                </style>
+
+                <div class="calc-row" style="margin-bottom: 1.5rem;">
+                    <label
+                        style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;"
+                        data-i18n="calc.send">You send</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="number" id="calc-send" value="1000"
+                            style="flex: 1; padding: 1rem; font-size: 1.5rem; font-weight: bold; border: 1px solid #ddd; border-radius: 8px; color: var(--primary-color); outline: none;">
+
+                        <!-- Custom Select From -->
+                        <div class="custom-select-container" id="select-from">
+                            <div class="custom-select-trigger" onclick="toggleCurrency('from')">
+                                <img src="https://flagcdn.com/w40/th.png" class="flag-icon" id="flag-from-img">
+                                <span class="currency-code" id="code-from-display">THB</span>
+                                <i class="fas fa-chevron-down"
+                                    style="font-size: 0.8rem; color: var(--text-secondary); margin-left: auto;"></i>
+                            </div>
+                            <div class="custom-dropdown" id="dropdown-from">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Type currency or country..."
+                                        oninput="filterCurrencies('from', this.value)">
+                                </div>
+                                <div class="dropdown-list" id="list-from">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calc-fees" style="padding-left: 2rem; border-left: 2px solid #ddd; margin: 1rem 0;">
+                    <div
+                        style="margin-bottom: 0.5rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                        <span><i class="fas fa-minus-circle" style="color: #ddd;"></i> <span id="calc-fee">...</span>
+                            <span class="currency-label-from">THB</span></span>
+                        <span data-i18n="calc.fee">Low cost transfer fee</span>
+                    </div>
+                    <div
+                        style="margin-bottom: 0.5rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                        <span><i class="fas fa-divide" style="color: #ddd;"></i> <span id="calc-convert">...</span>
+                            <span class="currency-label-from">THB</span></span>
+                        <span data-i18n="calc.convert">Total amount we'll convert</span>
+                    </div>
+                    <div
+                        style="color: var(--secondary-color); font-weight: bold; display: flex; justify-content: space-between;">
+                        <span><i class="fas fa-exchange-alt"></i> <span id="calc-rate">...</span></span>
+                        <span data-i18n="calc.rate">Guaranteed rate (24h)</span>
+                    </div>
+                </div>
+
+                <div class="calc-row">
+                    <label
+                        style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;"
+                        data-i18n="calc.recipient">Recipient gets</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" id="calc-get" value="..." disabled
+                            style="flex: 1; padding: 1rem; font-size: 1.5rem; font-weight: bold; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
+
+                        <!-- Custom Select To -->
+                        <div class="custom-select-container" id="select-to">
+                            <div class="custom-select-trigger" onclick="toggleCurrency('to')">
+                                <img src="https://flagcdn.com/w40/us.png" class="flag-icon" id="flag-to-img">
+                                <span class="currency-code" id="code-to-display">USD</span>
+                                <i class="fas fa-chevron-down"
+                                    style="font-size: 0.8rem; color: var(--text-secondary); margin-left: auto;"></i>
+                            </div>
+                            <div class="custom-dropdown" id="dropdown-to">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Type currency or country..."
+                                        oninput="filterCurrencies('to', this.value)">
+                                </div>
+                                <div class="dropdown-list" id="list-to">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; justify-content: space-between; font-size: 0.9rem;">
+                    <span style="color: var(--text-secondary);"><span data-i18n="calc.save">You could save up to</span>
+                        <strong style="color: var(--secondary-color);">300 THB</strong></span>
+                    <a href="#" style="color: var(--primary-color); text-decoration: underline;"
+                        data-i18n="calc.compare">Compare price</a>
+                </div>
+
+
+                <script>
+                    // Multi-Currency Real-time Calculator Logic with Rich UI
+                    const state = {
+                        rate: 0,
+                        from: 'THB',
+                        to: 'USD',
+                        amount: 1000,
+                        currencies: [],     // Simple list of codes [USD, THB...]
+                        currencyData: {}    // Map: Code -> { name, countryCode, countryName }
+                    };
+
+                    const el = {
+                        input: document.getElementById('calc-send'),
+                        output: document.getElementById('calc-get'),
+                        fee: document.getElementById('calc-fee'),
+                        convert: document.getElementById('calc-convert'),
+                        rate: document.getElementById('calc-rate'),
+                        labels: document.querySelectorAll('.currency-label-from'),
+                        // Dropdown elements
+                        listFrom: document.getElementById('list-from'),
+                        listTo: document.getElementById('list-to'),
+                        flagFrom: document.getElementById('flag-from-img'),
+                        codeFrom: document.getElementById('code-from-display'),
+                        flagTo: document.getElementById('flag-to-img'),
+                        codeTo: document.getElementById('code-to-display')
+                    };
+
+                    // Fee Logic
+                    const getFee = (currency) => currency === 'THB' ? 7.54 : 1.5;
+
+                    // 1. Fetch Data
+                    async function init() {
+                        try {
+                            // Parallel Fetch: Rates (for list of supported currencies) & Country Metadata
+                            const [rateRes, countryRes] = await Promise.all([
+                                fetch('https://api.exchangerate-api.com/v4/latest/USD'),
+                                fetch('https://restcountries.com/v3.1/all?fields=name,cca2,currencies,flags')
+                            ]);
+
+                            const rateData = await rateRes.json();
+                            const countryDataRaw = await countryRes.json();
+
+                            if (rateData && rateData.rates) {
+                                state.currencies = Object.keys(rateData.rates).sort();
+
+                                // Process Country Data to build a Lookup Map
+                                state.currencyData = {};
+
+                                // 1. Initialize with heuristic defaults (Currency Code -> 2 char -> Flag)
+                                state.currencies.forEach(code => {
+                                    state.currencyData[code] = {
+                                        code: code,
+                                        name: code,
+                                        countryCode: code.substr(0, 2).toLowerCase(),
+                                        countryName: '',
+                                        flag: `https://flagcdn.com/w40/${code.substr(0, 2).toLowerCase()}.png`
+                                    };
+                                });
+
+                                // 2. Map real country data from RestCountries
+                                // Note: USD is used in many countries. We want to prioritize the "primary" country if possible,
+                                // or just overwrite with "Standard" mappings later.
+                                countryDataRaw.forEach(c => {
+                                    if (c.currencies) {
+                                        Object.keys(c.currencies).forEach(currCode => {
+                                            if (state.currencyData[currCode]) {
+                                                // Only update if it's the first time OR if we haven't locked it (we'll lock it later)
+                                                // Actually, simplest fix is to allow overwrite here, then force-fix major ones below.
+                                                state.currencyData[currCode].name = c.currencies[currCode].name;
+                                                // We accumulate country names potentially? No, just pick one.
+                                                // The issue is random overwrite. We will accept "any" for now and fix specific ones.
+                                                state.currencyData[currCode].countryName = c.name.common;
+                                                state.currencyData[currCode].countryCode = c.cca2.toLowerCase();
+                                                state.currencyData[currCode].flag = c.flags.png || c.flags.svg;
+                                            }
+                                        });
+                                    }
+                                });
+
+                                // 3. FORCE FIX Major Currencies using a curated list
+                                // This prevents "USD" showing as "Cambodia" just because Cambodia uses USD and was processed last.
+                                const majorFlags = {
+                                    'USD': { country: 'us', name: 'United States' },
+                                    'EUR': { country: 'eu', name: 'European Union' },
+                                    'GBP': { country: 'gb', name: 'United Kingdom' },
+                                    'JPY': { country: 'jp', name: 'Japan' },
+                                    'CNY': { country: 'cn', name: 'China' },
+                                    'THB': { country: 'th', name: 'Thailand' },
+                                    'AUD': { country: 'au', name: 'Australia' },
+                                    'CAD': { country: 'ca', name: 'Canada' },
+                                    'CHF': { country: 'ch', name: 'Switzerland' },
+                                    'HKD': { country: 'hk', name: 'Hong Kong' },
+                                    'NZD': { country: 'nz', name: 'New Zealand' },
+                                    'SGD': { country: 'sg', name: 'Singapore' },
+                                    'INR': { country: 'in', name: 'India' },
+                                    'KRW': { country: 'kr', name: 'South Korea' },
+                                    'MYR': { country: 'my', name: 'Malaysia' },
+                                    'VND': { country: 'vn', name: 'Vietnam' },
+                                    'IDR': { country: 'id', name: 'Indonesia' },
+                                    'PHP': { country: 'ph', name: 'Philippines' },
+                                    'TWD': { country: 'tw', name: 'Taiwan' },
+                                    'RUB': { country: 'ru', name: 'Russia' },
+                                    'BRL': { country: 'br', name: 'Brazil' },
+                                    'MXN': { country: 'mx', name: 'Mexico' },
+                                    'ZAR': { country: 'za', name: 'South Africa' }
+                                };
+
+                                Object.keys(majorFlags).forEach(code => {
+                                    if (state.currencyData[code]) {
+                                        const fixed = majorFlags[code];
+                                        state.currencyData[code].flag = `https://flagcdn.com/w40/${fixed.country}.png`;
+                                        state.currencyData[code].countryName = fixed.name;
+                                        // Keep the currency name from API if valid, otherwise fallback
+                                        if (!state.currencyData[code].name || state.currencyData[code].name === code) {
+                                            // manual fallback if needed, but API usually has "United States Dollar"
+                                        }
+                                    }
+                                });
+
+                                // Populate UI Lists
+                                populateList('from');
+                                populateList('to');
+
+                                // Set Initial State
+                                // Ensure initial values are valid
+                                if (!state.currencies.includes('THB')) state.from = 'USD';
+                                if (!state.currencies.includes('USD')) state.to = 'EUR';
+
+                                selectCurrency('from', state.from);
+                                selectCurrency('to', state.to);
+
+                                // Fetch Rate
+                                fetchRate();
+                            }
+                        } catch (e) {
+                            console.error('Init Error', e);
+                        }
+                    }
+
+                    // 2. UI Logic
+                    function populateList(type, search = '') {
+                        const listEl = el[`list${type.charAt(0).toUpperCase() + type.slice(1)}`];
+                        if (!listEl) return;
+                        listEl.innerHTML = '';
+
+                        const term = search.toLowerCase();
+                        const filtered = state.currencies.filter(code => {
+                            const d = state.currencyData[code];
+                            return code.toLowerCase().includes(term) ||
+                                (d.name && d.name.toLowerCase().includes(term)) ||
+                                (d.countryName && d.countryName.toLowerCase().includes(term));
+                        });
+
+                        filtered.forEach(code => {
+                            const d = state.currencyData[code];
+                            const div = document.createElement('div');
+                            div.className = 'currency-option';
+                            if ((type === 'from' && state.from === code) || (type === 'to' && state.to === code)) {
+                                div.classList.add('selected');
+                            }
+                            div.onclick = () => {
+                                selectCurrency(type, code);
+                                toggleCurrency(type); // close
+                            };
+                            div.innerHTML = `
+                            <img src="${d.flag}" class="flag-icon" loading="lazy">
+                            <div>
+                                <div class="currency-code">${code}</div>
+                                <div class="currency-name">${d.name} (${d.countryName || ''})</div>
+                            </div>
+                        `;
+                            listEl.appendChild(div);
+                        });
+                    }
+
+                    function filterCurrencies(type, val) {
+                        populateList(type, val);
+                    }
+
+                    function toggleCurrency(type) {
+                        const dropdown = document.getElementById(`dropdown-${type}`);
+                        const isHidden = dropdown.style.display === 'none' || !dropdown.classList.contains('show');
+
+                        // Close others
+                        document.querySelectorAll('.custom-dropdown').forEach(d => {
+                            d.classList.remove('show');
+                            setTimeout(() => { if (!d.classList.contains('show')) d.style.display = 'none'; }, 100); // minimal delay for anim
+                        });
+
+                        if (isHidden) {
+                            dropdown.style.display = 'block';
+                            // Force reflow
+                            void dropdown.offsetWidth;
+                            dropdown.classList.add('show');
+                            // Focus input
+                            dropdown.querySelector('input').focus();
+                        }
+                    }
+
+                    // Close dropdown on click outside
+                    document.addEventListener('click', (e) => {
+                        if (!e.target.closest('.custom-select-container')) {
+                            document.querySelectorAll('.custom-dropdown').forEach(d => {
+                                d.classList.remove('show');
+                                d.style.display = 'none';
+                            });
+                        }
+                    });
+
+                    function selectCurrency(type, code) {
+                        state[type] = code;
+                        const d = state.currencyData[code];
+
+                        // Update Trigger UI
+                        const flagImg = document.getElementById(`flag-${type}-img`);
+                        const codeDisplay = document.getElementById(`code-${type}-display`);
+
+                        if (d && flagImg && codeDisplay) {
+                            flagImg.src = d.flag;
+                            codeDisplay.innerText = code;
+                        }
+
+                        // Re-fetch calculations
+                        if (type === 'from' || type === 'to') {
+                            fetchRate();
+                        }
+
+                        // Re-populate list to update 'selected' class
+                        populateList(type);
+                    }
+
+                    async function fetchRate() {
+                        try {
+                            el.rate.innerText = 'Loading...';
+                            // Use base from 'state.from'
+                            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${state.from}`);
+                            const data = await res.json();
+                            if (data && data.rates) {
+                                state.rate = data.rates[state.to];
+                                calculate();
+                            }
+                        } catch (e) {
+                            console.error('Rate Error', e);
+                        }
+                    }
+
+                    function calculate() {
+                        state.amount = parseFloat(el.input.value) || 0;
+                        const fee = getFee(state.from);
+
+                        const amountToConvert = Math.max(0, state.amount - fee);
+                        const result = amountToConvert * state.rate;
+
+                        el.fee.innerText = fee.toFixed(2);
+                        el.convert.innerText = amountToConvert.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        el.rate.innerText = state.rate ? state.rate.toFixed(5) : '...';
+                        el.output.value = result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        el.labels.forEach(l => l.innerText = state.from);
+                    }
+
+                    el.input.addEventListener('input', calculate);
+
+                    init();
+                </script>
+            </div>
     </section>
 
     <!-- Features Section -->
@@ -563,42 +1275,48 @@
                     <i class="fas fa-lock"></i>
                 </div>
                 <h3 data-i18n="index.features.c1.title">ความปลอดภัยระดับสูง</h3>
-                <p data-i18n="index.features.c1.desc">เข้ารหัสข้อมูลแบบ End-to-End พร้อม JWT Authentication, Rate Limiting, และ Security Headers ตามมาตรฐาน OWASP</p>
+                <p data-i18n="index.features.c1.desc">เข้ารหัสข้อมูลแบบ End-to-End พร้อม JWT Authentication, Rate
+                    Limiting, และ Security Headers ตามมาตรฐาน OWASP</p>
             </div>
             <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-bolt"></i>
                 </div>
                 <h3 data-i18n="index.features.c2.title">เร็วและเสถียร</h3>
-                <p data-i18n="index.features.c2.desc">Response time ต่ำกว่า 200ms พร้อม Uptime 99.9% รองรับ Load สูงด้วย Architecture ที่ออกแบบมาอย่างดี</p>
+                <p data-i18n="index.features.c2.desc">Response time ต่ำกว่า 200ms พร้อม Uptime 99.9% รองรับ Load สูงด้วย
+                    Architecture ที่ออกแบบมาอย่างดี</p>
             </div>
             <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-code"></i>
                 </div>
                 <h3 data-i18n="index.features.c3.title">API ที่ใช้งานง่าย</h3>
-                <p data-i18n="index.features.c3.desc">RESTful API ที่ออกแบบมาให้ Developer-Friendly พร้อมเอกสารครบถ้วนและ SDK สำหรับทุกภาษา</p>
+                <p data-i18n="index.features.c3.desc">RESTful API ที่ออกแบบมาให้ Developer-Friendly
+                    พร้อมเอกสารครบถ้วนและ SDK สำหรับทุกภาษา</p>
             </div>
             <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h3 data-i18n="index.features.c4.title">Dashboard ที่ทรงพลัง</h3>
-                <p data-i18n="index.features.c4.desc">ติดตามธุรกรรมแบบ Real-time พร้อมรายงานและกราฟวิเคราะห์ที่ช่วยให้คุณเข้าใจธุรกิจได้ดีขึ้น</p>
+                <p data-i18n="index.features.c4.desc">ติดตามธุรกรรมแบบ Real-time
+                    พร้อมรายงานและกราฟวิเคราะห์ที่ช่วยให้คุณเข้าใจธุรกิจได้ดีขึ้น</p>
             </div>
             <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <h3 data-i18n="index.features.c5.title">ระบบ Multi-Level Agency</h3>
-                <p data-i18n="index.features.c5.desc">รองรับระบบตัวแทนหลายระดับ จัดการ Commission และ Sub-agencies ได้อย่างมีประสิทธิภาพ</p>
+                <p data-i18n="index.features.c5.desc">รองรับระบบตัวแทนหลายระดับ จัดการ Commission และ Sub-agencies
+                    ได้อย่างมีประสิทธิภาพ</p>
             </div>
             <div class="feature-card reveal lift">
                 <div class="feature-icon">
                     <i class="fas fa-headset"></i>
                 </div>
                 <h3 data-i18n="index.features.c6.title">Support 24/7</h3>
-                <p data-i18n="index.features.c6.desc">ทีมซัพพอร์ตพร้อมช่วยเหลือคุณตลอด 24 ชั่วโมง ตอบคำถามและแก้ไขปัญหาได้อย่างรวดเร็ว</p>
+                <p data-i18n="index.features.c6.desc">ทีมซัพพอร์ตพร้อมช่วยเหลือคุณตลอด 24 ชั่วโมง
+                    ตอบคำถามและแก้ไขปัญหาได้อย่างรวดเร็ว</p>
             </div>
         </div>
     </section>
@@ -618,7 +1336,8 @@
             <div class="step">
                 <div class="step-number">2</div>
                 <h3 data-i18n="index.how.s2.title">ผลิตภัณฑ์ API</h3>
-                <p data-i18n="index.how.s2.desc">ใช้เอกสารและตัวอย่าง Code ของเราในการผลิตภัณฑ์ API เข้ากับระบบของคุณ</p>
+                <p data-i18n="index.how.s2.desc">ใช้เอกสารและตัวอย่าง Code ของเราในการผลิตภัณฑ์ API เข้ากับระบบของคุณ
+                </p>
             </div>
             <div class="step">
                 <div class="step-number">3</div>
@@ -633,38 +1352,39 @@
         <div class="security-content">
             <div>
                 <h2 class="section-title" data-i18n="index.sec.title">ความปลอดภัยคือสิ่งสำคัญ</h2>
-                <p class="section-subtitle" style="margin-bottom: 2rem;" data-i18n="index.sec.subtitle">เราใช้เทคโนโลยีความปลอดภัยระดับสูงสุดเพื่อปกป้องข้อมูลของคุณ</p>
+                <p class="section-subtitle" style="margin-bottom: 2rem;" data-i18n="index.sec.subtitle">
+                    เราใช้เทคโนโลยีความปลอดภัยระดับสูงสุดเพื่อปกป้องข้อมูลของคุณ</p>
                 <div class="security-features">
                     <div class="security-item">
-                        <i class="fas fa-check-circle"></i>
+                        <div class="check-icon"><i class="fas fa-check"></i></div>
                         <div>
                             <h4 data-i18n="index.sec.jwt.title">JWT Authentication</h4>
                             <p data-i18n="index.sec.jwt.desc">ระบบยืนยันตัวตนแบบ Stateless ที่ปลอดภัยและรวดเร็ว</p>
                         </div>
                     </div>
                     <div class="security-item">
-                        <i class="fas fa-check-circle"></i>
+                        <div class="check-icon"><i class="fas fa-check"></i></div>
                         <div>
                             <h4 data-i18n="index.sec.rate.title">Rate Limiting</h4>
                             <p data-i18n="index.sec.rate.desc">ป้องกัน Brute Force และ DDoS Attacks อัตโนมัติ</p>
                         </div>
                     </div>
                     <div class="security-item">
-                        <i class="fas fa-check-circle"></i>
+                        <div class="check-icon"><i class="fas fa-check"></i></div>
                         <div>
                             <h4 data-i18n="index.sec.encryption.title">Encryption</h4>
                             <p data-i18n="index.sec.encryption.desc">เข้ารหัสข้อมูลทั้งหมดด้วย AES-256 และ TLS 1.3</p>
                         </div>
                     </div>
                     <div class="security-item">
-                        <i class="fas fa-check-circle"></i>
+                        <div class="check-icon"><i class="fas fa-check"></i></div>
                         <div>
                             <h4 data-i18n="index.sec.headers.title">Security Headers</h4>
                             <p data-i18n="index.sec.headers.desc">Helmet.js, HSTS, CSP, และ XSS Protection</p>
                         </div>
                     </div>
                     <div class="security-item">
-                        <i class="fas fa-check-circle"></i>
+                        <div class="check-icon"><i class="fas fa-check"></i></div>
                         <div>
                             <h4 data-i18n="index.sec.validation.title">Input Validation</h4>
                             <p data-i18n="index.sec.validation.desc">ตรวจสอบและ Sanitize ข้อมูลทุก Request</p>
@@ -677,7 +1397,8 @@
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <h3 data-i18n="index.sec.badge.title">PCI DSS Compliant</h3>
-                <p style="color: var(--text-secondary); margin-top: 1rem;" data-i18n="index.sec.badge.desc">เรามีมาตรฐานความปลอดภัยสูงสุดในอุตสาหกรรม</p>
+                <p style="color: var(--text-secondary); margin-top: 1rem;" data-i18n="index.sec.badge.desc">
+                    เรามีมาตรฐานความปลอดภัยสูงสุดในอุตสาหกรรม</p>
             </div>
         </div>
     </section>
@@ -686,10 +1407,14 @@
     <section class="cta reveal">
         <div class="cta-content">
             <h2 data-i18n="index.cta.title">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
-            <p data-i18n="index.cta.desc">เปิดบัญชีฟรีวันนี้และเริ่มรับชำระเงินออนไลน์ได้ทันที ไม่มีค่าธรรมเนียมแรกเข้า</p>
+            <p data-i18n="index.cta.desc">เปิดบัญชีฟรีวันนี้และเริ่มรับชำระเงินออนไลน์ได้ทันที ไม่มีค่าธรรมเนียมแรกเข้า
+            </p>
             <div class="hero-buttons">
-                <a href="signup.html" class="btn btn-primary" style="background: white; color: var(--primary-color);" data-i18n="pricing.cta.startFree">เริ่มใช้งานฟรี</a>
-                <a href="contact.html" class="btn btn-outline" style="border-color: white; color: white;" data-i18n="pricing.cta.contactSales">ติดต่อฝ่ายขาย</a>
+                <a href="signup.html" class="btn btn-primary" style="background: white; color: var(--primary-color);"
+                    data-i18n="pricing.cta.startFree">เริ่มใช้งานฟรี</a>
+                <a href="contact.html" class="btn btn-outline"
+                    style="border-color: white; color: white; background: transparent;"
+                    data-i18n="pricing.cta.contactSales">ติดต่อฝ่ายขาย</a>
             </div>
         </div>
     </section>
@@ -699,7 +1424,8 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-shield-alt"></i> Elixopay</h4>
-                <p style="color: var(--text-secondary);" data-i18n="footer.tagline">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
+                <p style="color: var(--text-secondary);" data-i18n="footer.tagline">
+                    ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
             </div>
             <div class="footer-section">
                 <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
@@ -707,22 +1433,23 @@
                     <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
                     <li><a href="docs.html" data-i18n="nav.docs">เอกสาร API</a></li>
                     <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
-                    <li><a href="status.html" data-i18n="footer.links.status">สถานะระบบ</a></li>
+                    <li><a href="partners.html" data-i18n="nav.partners">Partners</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4 data-i18n="footer.company">บริษัท</h4>
                 <ul>
                     <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
-                    <li><a href="blog.html" data-i18n="footer.links.blog">บล็อก</a></li>
-                    <li><a href="partners.html" data-i18n="footer.links.partners">พาร์ทเนอร์</a></li>
                     <li><a href="contact.html" data-i18n="nav.contact">ติดต่อเรา</a></li>
+                    <li><a href="partners.html" data-i18n="footer.jobs">ร่วมงานกับเรา</a></li>
+                    <li><a href="blog.html" data-i18n="nav.blog">บทความ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4 data-i18n="footer.help">ช่วยเหลือ</h4>
                 <ul>
-                    <li><a href="help.html" data-i18n="footer.links.helpCenter">ศูนย์ช่วยเหลือ</a></li>
+                    <li><a href="status.html" data-i18n="footer.links.status">สถานะระบบ</a></li>
+                    <li><a href="quickstart.html" data-i18n="footer.links.helpCenter">ศูนย์ช่วยเหลือ</a></li>
                     <li><a href="security.html" data-i18n="footer.links.security">ความปลอดภัย</a></li>
                     <li><a href="privacy.html" data-i18n="footer.links.privacy">นโยบายความเป็นส่วนตัว</a></li>
                     <li><a href="terms.html" data-i18n="footer.links.terms">ข้อกำหนดการใช้งาน</a></li>
@@ -758,17 +1485,17 @@
             }
         });
         // Hamburger menu toggle (robust)
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var btn = document.querySelector('.mobile-menu-btn');
             var menu = document.querySelector('.nav-links');
             if (btn && menu) {
-                btn.addEventListener('click', function(e) {
+                btn.addEventListener('click', function (e) {
                     e.stopPropagation();
                     menu.classList.toggle('hidden');
                 });
             }
             // Close menu when clicking outside
-            document.body.addEventListener('click', function(e) {
+            document.body.addEventListener('click', function (e) {
                 if (!menu || menu.classList.contains('hidden')) return;
                 if (btn && (btn.contains(e.target) || menu.contains(e.target))) return;
                 menu.classList.add('hidden');
@@ -776,4 +1503,5 @@
         });
     </script>
 </body>
+
 </html>

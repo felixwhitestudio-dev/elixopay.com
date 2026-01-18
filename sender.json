@@ -1,0 +1,1 @@
+{"success":true,"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzY3MTcxNTI0LCJleHAiOjE3NjcyNTc5MjR9.he0byTTAOifclLrDB9bwE9InFJJ-_dL011fiBj9SNug","data":{"user":{"id":2,"email":"sender@test.com","firstName":"Sender","lastName":"One","role":"user","wallet":{"id":2,"userId":2,"balance":"0","currency":"THB","updatedAt":"2025-12-31T08:58:44.120Z"}}}}

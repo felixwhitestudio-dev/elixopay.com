@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ร่วมเป็นพาร์ทเนอร์ - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Reuse core theme */
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --light-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-outline {
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: var(--text-primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 10rem 0 6rem;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+
+        /* Benefits Grid */
+        .benefits {
+            padding: 5rem 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: #eef2ff;
+            color: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .benefit-card p {
+            color: var(--text-secondary);
+        }
+
+        /* CTA */
+        .cta-section {
+            background: var(--dark-bg);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-radius: 30px;
+            margin: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-handshake"></i>
+                <span>พาร์ทเนอร์ Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                <li><a href="login.html" class="btn btn-outline">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html?type=partner" class="btn btn-primary">สมัครเข้าร่วม</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 data-i18n="partners.hero.title">เติบโตไปพร้อมกับ Elixopay</h1>
+            <p data-i18n="partners.hero.subtitle">
+                เข้าร่วมโปรแกรมพาร์ทเนอร์ของเราและรับค่าคอมมิชชั่นสูงจากการแนะนำธุรกิจให้มาใช้แพลตฟอร์มการชำระเงินที่ปลอดภัยที่สุดในโลก
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="signup.html?type=partner" class="btn btn-primary"
+                    data-i18n="partners.hero.cta">เป็นพาร์ทเนอร์</a>
+                <a href="#benefits" class="btn btn-outline" data-i18n="partners.hero.learnMore">เรียนรู้เพิ่มเติม</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="benefits" class="container benefits">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;" data-i18n="partners.benefits.title">
+            ทำไมต้องเป็นพาร์ทเนอร์กับเรา?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="icon-box"><i class="fas fa-money-bill-wave"></i></div>
+                <h3 data-i18n="partners.benefits.benefit1.title">20% คอมมิชชั่นตลอดชีพ</h3>
+                <p data-i18n="partners.benefits.benefit1.desc">รับค่าคอมมิชชั่น 20%
+                    จากค่าธรรมเนียมธุรกรรมทุกรายการของร้านค้าที่คุณแนะนำ ตลอดไป</p>
+            </div>
+            <div class="benefit-card">
+                <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+                <h3 data-i18n="partners.benefits.benefit2.title">แดชบอร์ดแบบเรียลไทม์</h3>
+                <p data-i18n="partners.benefits.benefit2.desc">ติดตามการแนะนำ การคลิก
+                    และรายได้ของคุณแบบเรียลไทม์ด้วยแดชบอร์ดพาร์ทเนอร์เฉพาะ</p>
+            </div>
+            <div class="benefit-card">
+                <div class="icon-box"><i class="fas fa-globe"></i></div>
+                <h3 data-i18n="partners.benefits.benefit3.title">การชำระเงินทั่วโลก</h3>
+                <p data-i18n="partners.benefits.benefit3.desc">เรารองรับกว่า 135 สกุลเงิน
+                    ทำให้ง่ายสำหรับคุณในการแนะนำธุรกิจจากที่ใดก็ได้ในโลก</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="cta-section">
+        <div class="cta-content">
+            <h2 data-i18n="partners.cta.title">พร้อมที่จะเริ่มสร้างรายได้แล้วหรือยัง?</h2>
+            <p style="color: #cbd5e1; margin-bottom: 2rem;" data-i18n="partners.cta.desc">
+                เข้าร่วมกับพาร์ทเนอร์นับพันที่ช่วยให้ธุรกิจเติบโตไปกับ
+                Elixopay</p>
+            <a href="signup.html?type=partner" class="btn btn-primary" style="background: white; color: var(--dark-bg);"
+                data-i18n="partners.cta.btn">เริ่มต้นทันที</a>
+        </div>
+    </div>
+
+    <!-- Simple Footer -->
+    <footer style="text-align: center; padding: 2rem; color: var(--text-secondary); border-top: 1px solid #e2e8f0;">
+        <p data-i18n="partners.footer.rights">&copy; 2026 Elixopay Partners. สงวนลิขสิทธิ์</p>
+    </footer>
+    <script src="js/i18n.js?v=2"></script>
+    <script>
+        // Initialize i18n when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Language switching logic is handled by i18n.js automatically if configured,
+            // but we need to ensure the language selector exists or force a default update.
+            if (window.updateContent) window.updateContent();
+        });
+    </script>
+</body>
+
+</html>

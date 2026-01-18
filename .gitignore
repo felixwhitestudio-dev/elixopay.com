@@ -13,3 +13,6 @@ build/
 coverage/
 .env.local
 .env.*.local
+
+# Local Netlify folder
+.netlify

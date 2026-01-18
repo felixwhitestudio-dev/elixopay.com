@@ -1,200 +1,360 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Elixopay Admin Dashboard สำหรับจัดการผู้ใช้ API Keys และตรวจสอบความปลอดภัย" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - Elixopay</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="/js/api-config.js"></script>
-  <script src="/js/auth-guard.js" data-require-role="admin"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --sidebar-width: 280px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      display: flex;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: white;
+      height: 100vh;
+      border-right: 1px solid #e2e8f0;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+
+    .sidebar-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      color: #64748b;
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background-color: #eff6ff;
+      color: var(--primary-color);
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+      width: calc(100% - var(--sidebar-width));
+    }
+
+    /* Verification Table */
+    .verification-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .verification-table th,
+    .verification-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .status-verified {
+      background: #f0fdf4;
+      color: #15803d;
+    }
+
+    .status-rejected {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    /* Document Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 600px;
+      max-width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .doc-preview {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #e2e8f0;
+      margin: 1rem 0;
+      object-fit: contain;
+      background: #f8fafc;
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
-  <nav class="bg-white shadow border-b border-gray-200" role="navigation" aria-label="Admin navigation">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <h1 class="text-2xl font-bold text-red-600"><i class="fas fa-shield-alt"></i> Admin</h1>
-        <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-700">Restricted</span>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span id="user-name" class="text-gray-700">Loading...</span>
-        <button onclick="logout()" aria-label="ออกจากระบบ" class="text-sm text-red-600 hover:text-red-800"><i class="fas fa-sign-out-alt mr-1" aria-hidden="true"></i>ออกจากระบบ</button>
-      </div>
+
+<body>
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fas fa-shield-alt"></i> ELIXO ADMIN
+    </div>
+    <div class="nav-item active" onclick="switchTab('dashboard')">
+      <i class="fas fa-home"></i> Dashboard
+    </div>
+    <div class="nav-item" onclick="switchTab('verifications')">
+      <i class="fas fa-user-check"></i> Verifications
+      <span id="pending-count"
+        style="margin-left:auto; background:red; color:white; padding:2px 8px; border-radius:99px; font-size:0.75rem;">0</span>
+    </div>
+    <div class="nav-item" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
     </div>
   </nav>
 
-  <main class="max-w-7xl mx-auto px-4 py-8" role="main">
-    <h2 class="text-2xl font-semibold mb-4">🛡️ Admin Operations</h2>
-    <p class="text-gray-600 mb-6">หน้านี้จำกัดเฉพาะผู้ใช้ที่มี role = admin เท่านั้น หากไม่ใช่จะถูก redirect.</p>
+  <main class="main-content">
+    <!-- Dashboard Overview -->
+    <div id="view-dashboard" class="tab-view">
+      <h1>Admin Overview</h1>
+      <p>Welcome, Super Admin.</p>
+    </div>
 
-    <div id="admin-panels" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-users">
-        <h3 id="panel-users" class="font-semibold mb-2"><i class="fas fa-users-cog text-blue-600 mr-2" aria-hidden="true"></i>ผู้ใช้ทั้งหมด</h3>
-        <p class="text-sm text-gray-600 mb-4">ดึงข้อมูลผู้ใช้ (placeholder)</p>
-        <button id="btn-users" onclick="loadUsers()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
-        <pre id="users-output" aria-live="polite" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
-      </div>
-
-      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-keys">
-        <h3 id="panel-keys" class="font-semibold mb-2"><i class="fas fa-key text-purple-600 mr-2" aria-hidden="true"></i>API Keys (ตรวจสอบ)</h3>
-        <p class="text-sm text-gray-600 mb-4">ดึงรายการ API keys ทั้งหมด (placeholder)</p>
-        <button id="btn-keys" onclick="loadApiKeys()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
-        <pre id="keys-output" aria-live="polite" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
-      </div>
-
-      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-security">
-        <h3 id="panel-security" class="font-semibold mb-2"><i class="fas fa-exclamation-triangle text-yellow-600 mr-2" aria-hidden="true"></i>ระบบเตือนภัย</h3>
-        <p class="text-sm text-gray-600 mb-4">(placeholder) แสดงสรุป security events</p>
-        <button id="btn-security" onclick="loadSecurityEvents()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
-        <pre id="security-output" aria-live="polite" class="mt-3 text-xs bg-gray-900 text-gray-100 p-3 rounded max-h-48 overflow-auto">ไม่พบข้อมูล</pre>
-      </div>
-      <div class="bg-white p-6 rounded shadow" aria-labelledby="panel-sessions">
-        <h3 id="panel-sessions" class="font-semibold mb-2"><i class="fas fa-network-wired text-indigo-600 mr-2" aria-hidden="true"></i>Sessions</h3>
-        <p class="text-sm text-gray-600 mb-4">ตรวจสอบ active sessions ของบัญชีนี้ และ revoke รายอุปกรณ์</p>
-        <button id="btn-sessions" onclick="loadSessions()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-sm flex items-center gap-2"><span class="label">Load</span><i class="fas fa-download" aria-hidden="true"></i></button>
-        <div id="sessions-container" class="mt-3 space-y-2 text-xs max-h-48 overflow-auto" aria-live="polite">ยังไม่ได้โหลด</div>
-      </div>
+    <!-- Verification Queue -->
+    <div id="view-verifications" class="tab-view" style="display:none;">
+      <h1>Pending Verifications</h1>
+      <table class="verification-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="verification-list">
+          <!-- Loaded via JS -->
+        </tbody>
+      </table>
     </div>
   </main>
 
+  <!-- Review Modal -->
+  <div id="reviewModal" class="modal">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between;">
+        <h2>Review Application</h2>
+        <button onclick="closeReviewModal()" style="border:none; background:none; font-size:1.5rem;">&times;</button>
+      </div>
+      <div id="review-content">Loading...</div>
+      <div style="margin-top:2rem; display:flex; gap:1rem;">
+        <button onclick="submitReview('approve')" class="btn btn-primary"
+          style="flex:1; background:#16a34a;">Approve</button>
+        <button onclick="submitReview('reject')" class="btn btn-primary"
+          style="flex:1; background:#dc2626;">Reject</button>
+      </div>
+      <textarea id="reject-reason" placeholder="Reason for rejection (required if rejecting)"
+        style="width:100%; margin-top:1rem; padding:0.5rem; border:1px solid #ddd;"></textarea>
+    </div>
+  </div>
+
+  <script src="js/api-config.js"></script>
   <script>
-    // Logout ลบเฉพาะ key สำคัญ ไม่ clear ทั้งหมดเพื่อไม่กระทบค่าอื่น
-    function logout(){
-      ['token','user'].forEach(k=>localStorage.removeItem(k));
-      window.location.href='/login.html';
+    let currentUserId = null;
+
+    // On Load
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchVerifications();
+    });
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-view').forEach(el => el.style.display = 'none');
+      document.getElementById(`view-${tab}`).style.display = 'block';
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      if (tab === 'verifications') fetchVerifications();
     }
 
-    // Utility: ปรับสถานะปุ่มเป็น loading / restore
-    function setLoading(button, isLoading) {
-      if (!button) return;
-      const labelSpan = button.querySelector('.label');
-      if (isLoading) {
-        button.disabled = true;
-        button.classList.add('opacity-70','cursor-not-allowed');
-        if (labelSpan) labelSpan.textContent = 'Loading';
-        if (!button.querySelector('.fa-spinner')) {
-          const icon = document.createElement('i');
-          icon.className = 'fas fa-spinner fa-spin';
-          icon.setAttribute('aria-hidden','true');
-          button.appendChild(icon);
-        }
-      } else {
-        button.disabled = false;
-        button.classList.remove('opacity-70','cursor-not-allowed');
-        if (labelSpan) labelSpan.textContent = 'Load';
-        const spin = button.querySelector('.fa-spinner');
-        if (spin) spin.remove();
-      }
-    }
-
-    function safeApiFetch(endpoint) {
-      if (typeof apiFetch !== 'function') {
-        return Promise.reject(new Error('apiFetch not ready'));
-      }
-      return apiFetch(endpoint);
-    }
-
-    function renderJSON(targetId, data) {
-      const el = document.getElementById(targetId);
-      if (!el) return;
+    async function fetchVerifications() {
       try {
-        el.textContent = JSON.stringify(data, null, 2);
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/v1/admin/verifications', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+
+        const tbody = document.getElementById('verification-list');
+        tbody.innerHTML = '';
+
+        if (data.data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:2rem;">No pending verifications</td></tr>';
+          document.getElementById('pending-count').textContent = '0';
+          return;
+        }
+
+        document.getElementById('pending-count').textContent = data.data.length;
+
+        data.data.forEach(user => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                        <td>${user.first_name} ${user.last_name}</td>
+                        <td>${user.email}</td>
+                        <td><span class="status-badge status-pending">${user.verification_status}</span></td>
+                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;">Review</button></td>
+                    `;
+          tbody.appendChild(tr);
+        });
+
       } catch (e) {
-        el.textContent = 'Serialize error: ' + e.message;
+        console.error(e);
       }
     }
 
-    function handleLoad({buttonId, outputId, endpoint, emptyFallback = {}}) {
-      const btn = document.getElementById(buttonId);
-      const out = document.getElementById(outputId);
-      if (!btn || !out) return;
-      out.textContent = 'Loading...';
-      setLoading(btn, true);
-      safeApiFetch(endpoint)
-        .then(r => {
-          if (!r) throw new Error('No response');
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .then(data => renderJSON(outputId, data))
-        .catch(err => {
-          out.textContent = 'Error: ' + err.message;
-        })
-        .finally(() => setLoading(btn, false));
-    }
+    async function openReview(userId) {
+      currentUserId = userId;
+      const modal = document.getElementById('reviewModal');
+      modal.style.display = 'flex';
+      const content = document.getElementById('review-content');
+      content.innerHTML = 'Loading details...';
 
-    function loadUsers(){
-      handleLoad({
-        buttonId: 'btn-users',
-        outputId: 'users-output',
-        endpoint: '/api/v1/users',
-        emptyFallback: { users: [] }
-      });
-    }
-    function loadApiKeys(){
-      handleLoad({
-        buttonId: 'btn-keys',
-        outputId: 'keys-output',
-        endpoint: '/api/v1/api-keys',
-        emptyFallback: { keys: [] }
-      });
-    }
-    function loadSecurityEvents(){
-      // Placeholder local mock
-      const btn = document.getElementById('btn-security');
-      setLoading(btn, true);
-      const out = document.getElementById('security-output');
-      out.textContent = 'Loading...';
-      setTimeout(()=>{
-        renderJSON('security-output', { events: [], generatedAt: new Date().toISOString() });
-        setLoading(btn,false);
-      }, 400);
-    }
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`/api/v1/admin/verifications/${userId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
 
-    function loadSessions(){
-      const btn = document.getElementById('btn-sessions');
-      const container = document.getElementById('sessions-container');
-      if (!btn || !container) return;
-      container.textContent = 'Loading...';
-      setLoading(btn,true);
-      safeApiFetch('/api/v1/auth/sessions')
-        .then(r=>{ if(!r||!r.ok) throw new Error('HTTP '+(r&&r.status)); return r.json(); })
-        .then(data=>{
-          const sessions = (data && data.data && data.data.sessions) || [];
-          if (!sessions.length){ container.textContent = 'ไม่มี session ที่ใช้งาน'; return; }
-          container.innerHTML='';
-          sessions.forEach(s=>{
-            const div=document.createElement('div');
-            div.className='border border-gray-300 rounded p-2 flex justify-between items-center bg-gray-50';
-            const info=document.createElement('div');
-            info.className='pr-2';
-            info.innerHTML=`<div class='font-mono break-all'>${s.id}</div>
-              <div class='text-gray-600'>IP: ${s.ip||'-'} UA: ${(s.userAgent||'').slice(0,40)}${(s.userAgent||'').length>40?'…':''}</div>
-              <div class='text-gray-500'>Created: ${new Date(s.createdAt).toLocaleString()} | Expires: ${new Date(s.expiresAt).toLocaleString()}${s.expired? ' <span class=\"text-red-600\">(expired)</span>':''}</div>`;
-            const actions=document.createElement('div');
-            const revokeBtn=document.createElement('button');
-            revokeBtn.className='px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded';
-            revokeBtn.textContent='Revoke';
-            revokeBtn.onclick=()=>revokeSession(s.id, revokeBtn, div);
-            actions.appendChild(revokeBtn);
-            div.appendChild(info); div.appendChild(actions); container.appendChild(div);
+        const user = data.data.user;
+        const docs = data.data.documents;
+
+        let html = `
+                    <p><strong>User:</strong> ${user.first_name} ${user.last_name} (${user.email})</p>
+                    <h3>Documents</h3>
+                `;
+
+        if (docs.length === 0) {
+          html += '<p>No documents uploaded.</p>';
+        } else {
+          docs.forEach(doc => {
+            // Assuming images for now. If PDF, need link.
+            const isImg = doc.file_path.match(/\.(jpeg|jpg|png)$/i);
+            const cleanPath = doc.file_path.replace('uploads/', ''); // Adjust based on how we serve static files
+            // We need to serve uploads folder statically!
+            const url = `/uploads/${cleanPath}`;
+
+            // Fix: backend saves absolute path or relative?
+            // Controller: req.file.path -> "uploads/filename"
+            // So URL should be /filename if we mount uploads to root/uploads?
+            // Let's assume we mount app.use('/uploads', express.static('uploads'))
+
+            html += `
+                            <div style="margin-bottom:1rem;">
+                                <strong>${doc.type}</strong>
+                                ${isImg ? `<img src="/${doc.file_path}" class="doc-preview">` : `<a href="/${doc.file_path}" target="_blank">View Document</a>`}
+                            </div>
+                        `;
           });
-        })
-        .catch(err=>{ container.textContent='Error: '+err.message; })
-        .finally(()=>setLoading(btn,false));
+        }
+        content.innerHTML = html;
+
+      } catch (e) {
+        content.innerHTML = 'Error loading details';
+      }
     }
 
-    function revokeSession(id, btn, row){
-      if(!confirm('Revoke session นี้หรือไม่?')) return;
-      btn.disabled=true; btn.textContent='...';
-      safeApiFetch(`/api/v1/auth/sessions/${id}/revoke`, { method:'POST' })
-        .then(r=>{ if(!r||!r.ok) throw new Error('HTTP '+(r&&r.status)); return r.json(); })
-        .then(()=>{ row.remove(); })
-        .catch(e=>{ alert('Revoke ล้มเหลว: '+e.message); btn.disabled=false; btn.textContent='Revoke'; });
+    function closeReviewModal() {
+      document.getElementById('reviewModal').style.display = 'none';
     }
 
-    // Keyboard accessibility: Enter/Space trigger on focus for buttons if needed (already native) - left as placeholder.
+    async function submitReview(action) {
+      const reason = document.getElementById('reject-reason').value;
+      if (action === 'reject' && !reason) {
+        alert('Please provide a reason for rejection');
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`/api/v1/admin/verifications/${currentUserId}/review`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ action, reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Success');
+          closeReviewModal();
+          fetchVerifications();
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (e) {
+        alert('Connection error');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
   </script>
 </body>
+
 </html>

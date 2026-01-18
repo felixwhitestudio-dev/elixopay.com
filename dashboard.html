@@ -1,31 +1,93 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Elixopay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/theme.css">
     <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
     <script src="/js/auth-guard.js" data-require-role="user"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg border-b border-gray-200">
+
+<body class="bg-gray-50 text-gray-800">
+    <!-- Modern Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-100 fixed w-full z-40 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
+                <!-- Logo -->
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-                        Elixopay
-                    </h1>
-                    <span class="ml-4 px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
-                        Dashboard
-                    </span>
+                    <a href="/" class="flex items-center group">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl mr-2 shadow-lg group-hover:scale-110 transition-transform">
+                            E</div>
+                        <span
+                            class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-blue-600">Elixopay</span>
+                    </a>
+                    <div class="hidden md:flex ml-8 space-x-1">
+                        <span
+                            class="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-full border border-purple-100 flex items-center">
+                            <i class="fas fa-layer-group mr-1.5"></i> <span data-i18n="nav.dashboard">Dashboard</span>
+                        </span>
+                        <a href="/partner-portal.html"
+                            class="ml-2 px-3 py-1 bg-white text-gray-500 hover:text-purple-600 text-xs font-semibold rounded-full border border-transparent hover:border-purple-100 flex items-center transition">
+                            <i class="fas fa-handshake mr-1.5"></i> Partner Portal
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Right Side Actions -->
                 <div class="flex items-center space-x-4">
-                    <span class="text-gray-700" id="user-name">Loading...</span>
-                    <button onclick="logout()" class="px-4 py-2 text-sm text-red-600 hover:text-red-800 font-medium">
-                        <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
+                    <!-- Language Switcher -->
+                    <button onclick="changeLanguage('th')"
+                        class="text-sm font-medium text-gray-500 hover:text-purple-600 transition">TH</button>
+                    <span class="text-gray-300">|</span>
+                    <button onclick="changeLanguage('en')"
+                        class="text-sm font-medium text-gray-500 hover:text-purple-600 transition">EN</button>
+
+                    <div class="hidden md:flex items-center mr-4 ml-4">
+                        <div class="text-right mr-3">
+                            <p class="text-sm font-semibold text-gray-800" id="user-name">Loading...</p>
+                            <p class="text-xs text-gray-500" id="user-email">...</p>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 border border-white shadow-sm flex items-center justify-center text-purple-600 font-bold text-lg">
+                            <span id="user-initial">U</span>
+                        </div>
+                    </div>
+
+                    <button onclick="logout()"
+                        class="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-50"
+                        title="Sign Out">
+                        <i class="fas fa-sign-out-alt text-lg"></i>
                     </button>
                 </div>
             </div>
@@ -33,277 +95,1622 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg shadow-lg p-8 mb-8 text-white">
-            <h2 class="text-3xl font-bold mb-2">ยินดีต้อนรับสู่ Elixopay Dashboard! 🎉</h2>
-            <p class="text-lg opacity-90">จัดการการชำระเงิน ดูรายงาน และเข้าถึง API Documentation ที่ครบครัน</p>
-        </div>
+    <div class="pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- Uptime -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-600 text-sm font-medium">Uptime</h3>
-                    <div class="p-2 bg-green-100 rounded-lg">
-                        <i class="fas fa-clock text-green-600"></i>
-                    </div>
-                </div>
-                <div class="text-3xl font-bold text-gray-800">99.99%</div>
-                <p class="text-sm text-gray-500 mt-2">ระบบทำงานปกติ</p>
+        <!-- Welcome Section -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between reveal">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="dashboard.welcome">Welcome back! 👋</h1>
+                <p class="text-gray-600" data-i18n="dashboard.subtitle">Here's what's happening with your account today.
+                </p>
             </div>
-
-            <!-- Transactions -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-600 text-sm font-medium">ธุรกรรมทั้งหมด</h3>
-                    <div class="p-2 bg-blue-100 rounded-lg">
-                        <i class="fas fa-credit-card text-blue-600"></i>
-                    </div>
-                </div>
-                <div class="text-3xl font-bold text-gray-800" id="transaction-count">10k+</div>
-                <p class="text-sm text-gray-500 mt-2">ธุรกรรมสำเร็จ</p>
-            </div>
-
-            <!-- Customers -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-600 text-sm font-medium">ลูกค้า</h3>
-                    <div class="p-2 bg-purple-100 rounded-lg">
-                        <i class="fas fa-users text-purple-600"></i>
-                    </div>
-                </div>
-                <div class="text-3xl font-bold text-gray-800">135+</div>
-                <p class="text-sm text-gray-500 mt-2">ลูกค้าที่ใช้งาน</p>
-            </div>
-        </div>
-
-        <!-- Features Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <!-- Dashboard Features -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="p-3 bg-purple-100 rounded-lg">
-                        <i class="fas fa-tachometer-alt text-purple-600 text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Dashboard แบบเรียลไทม์</h3>
-                        <p class="text-sm text-gray-500">ติดตามการทำงานและข้อมูลสถิติได้ทันที</p>
-                    </div>
-                </div>
-                <div class="mt-4 space-y-2">
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                        <span>ระบบทำงานปกติ</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                        <span>API Response Time: &lt;100ms</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                        <span>Security: ✅ Hardened</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Transactions -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="p-3 bg-blue-100 rounded-lg">
-                        <i class="fas fa-receipt text-blue-600 text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-gray-800">รายการธุรกรรม</h3>
-                        <p class="text-sm text-gray-500">ดูธุรกรรมทั้งหมดและสถิติ</p>
-                    </div>
-                </div>
-                <button onclick="window.location.href='/transactions.html'" class="mt-4 w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
-                    <i class="fas fa-list mr-2"></i>ดูธุรกรรมทั้งหมด
+            <div class="mt-4 md:mt-0 flex space-x-3">
+                <button onclick="window.location.href='/help.html'"
+                    class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition shadow-sm">
+                    <i class="far fa-circle-question mr-2"></i><span data-i18n="footer.help">Help Center</span>
+                </button>
+                <button onclick="loadDashboardData()"
+                    class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition shadow-sm">
+                    <i class="fas fa-sync-alt mr-2"></i><span data-i18n="dashboard.actions.refresh">Refresh</span>
                 </button>
             </div>
+        </div>
 
-            <!-- API Keys -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="p-3 bg-green-100 rounded-lg">
-                        <i class="fas fa-key text-green-600 text-xl"></i>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Left Column: Wallet Card (Modern) -->
+            <div class="lg:col-span-2 space-y-8 reveal">
+                <!-- Wallet Balance (Glass Card) -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden mb-8 reveal hover-scale">
+                    <div class="absolute top-0 right-0 p-6 opacity-10">
+                        <i class="fas fa-wallet text-9xl text-white"></i>
                     </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-gray-800">API Keys Management</h3>
-                        <p class="text-sm text-gray-500">จัดการและสร้าง API Keys ได้ง่าย</p>
+                    <div class="relative z-10">
+                        <p class="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2"
+                            data-i18n="dashboard.total_balance">Total Balance</p>
+                        <div class="flex items-baseline mb-2">
+                            <h2 class="text-5xl font-black text-gray-800 tracking-tight" id="wallet-balance">฿0.00</h2>
+                            <span class="text-xl font-bold text-gray-500 ml-2">THB</span>
+                        </div>
+                        <div class="flex items-center text-gray-500 font-medium">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="w-5 h-5 mr-2 opacity-70"
+                                alt="USDT">
+                            <span id="wallet-balance-usdt">$0.00</span>
+                            <span class="ml-1 text-sm">USDT</span>
+                        </div>
                     </div>
                 </div>
-                <button onclick="window.location.href='/test-api.html'" class="mt-4 w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition">
-                    <i class="fas fa-plus mr-2"></i>สร้าง API Key ใหม่
+
+                <!-- Wallet Address & Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <!-- Address Card -->
+                    <div class="glass-panel p-6 bg-white reveal">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider"
+                                data-i18n="dashboard.wallet_address">Wallet Address</h3>
+                            <button onclick="copyAddress()"
+                                class="text-purple-600 hover:text-purple-800 transition p-2 rounded-lg hover:bg-purple-50">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-between border border-gray-100">
+                            <p class="font-mono text-sm text-gray-600 truncate mr-2 select-all flex-1"
+                                id="wallet-address">
+                                Loading...
+                            </p>
+                            <div class="flex space-x-2">
+                                <button onclick="copyAddress()"
+                                    class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-gray-400 hover:text-purple-600 transition"
+                                    title="Copy Address">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-gray-400 cursor-default">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBankModal()"
+                            class="w-full mt-4 py-2 px-4 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition flex items-center justify-center">
+                            <i class="fas fa-university mr-2"></i> <span data-i18n="modal.manage_bank">Manage Bank
+                                Accounts</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <button onclick="openExchangeModal()"
+                    class="group flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/20 hover:backdrop-blur-lg rounded-xl transition border border-white/10 hover:border-white/30">
+                    <div
+                        class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                        <i class="fas fa-exchange-alt text-teal-300"></i>
+                    </div>
+                    <span class="text-sm font-medium">Exchange</span>
                 </button>
-            </div>
-
-            <!-- Analytics -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="p-3 bg-green-100 rounded-lg">
-                        <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                <button onclick="openWalletModal('deposit')"
+                    class="group flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/20 hover:backdrop-blur-lg rounded-xl transition border border-white/10 hover:border-white/30">
+                    <div
+                        class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                        <i class="fas fa-arrow-down text-green-300"></i>
                     </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Advanced Analytics</h3>
-                        <p class="text-sm text-gray-500">วิเคราะห์ข้อมูลและ Export ได้</p>
+                    <span class="text-sm font-medium" data-i18n="dashboard.actions.deposit">Deposit</span>
+                </button>
+                <button onclick="openWalletModal('withdraw')"
+                    class="group flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/20 hover:backdrop-blur-lg rounded-xl transition border border-white/10 hover:border-white/30">
+                    <div
+                        class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                        <i class="fas fa-arrow-up text-orange-300"></i>
                     </div>
-                </div>
-                <div class="mt-4 grid grid-cols-2 gap-4">
-                    <button onclick="exportData('csv')" class="px-4 py-2 border border-gray-300 hover:bg-gray-50 rounded-lg text-sm font-medium transition">
-                        <i class="fas fa-download mr-2"></i>Export CSV
-                    </button>
-                    <button onclick="exportData('pdf')" class="px-4 py-2 border border-gray-300 hover:bg-gray-50 rounded-lg text-sm font-medium transition">
-                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="p-3 bg-yellow-100 rounded-lg">
-                        <i class="fas fa-book text-yellow-600 text-xl"></i>
+                    <span class="text-sm font-medium" data-i18n="dashboard.actions.withdraw">Withdraw</span>
+                </button>
+                <button onclick="window.location.href='transfer.html'"
+                    class="group flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/20 hover:backdrop-blur-lg rounded-xl transition border border-white/10 hover:border-white/30">
+                    <div
+                        class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                        <i class="fas fa-paper-plane text-blue-300"></i>
                     </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-gray-800">เอกสารและแหล่งข้อมูล</h3>
-                        <p class="text-sm text-gray-500">API Documentation ครบครัน</p>
-                    </div>
-                </div>
-                <div class="mt-4 space-y-2">
-                    <a href="/docs.html" class="block px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                        <i class="fas fa-file-code mr-2"></i>API Documentation
-                    </a>
-                    <a href="/security.html" class="block px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                        <i class="fas fa-shield-alt mr-2"></i>Security Guide
-                    </a>
-                    <a href="/help.html" class="block px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                        <i class="fas fa-question-circle mr-2"></i>Help Center
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-800">
-                    <i class="fas fa-history mr-2 text-gray-600"></i>กิจกรรมล่าสุด
-                </h3>
-                <a href="/transactions.html" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                    ดูทั้งหมด <i class="fas fa-arrow-right ml-1"></i>
-                </a>
-            </div>
-            <div class="space-y-4">
-                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
-                    <div class="p-2 bg-green-100 rounded-lg">
-                        <i class="fas fa-check text-green-600"></i>
-                    </div>
-                    <div class="ml-4 flex-1">
-                        <p class="text-sm font-medium text-gray-800">เข้าสู่ระบบสำเร็จ</p>
-                        <p class="text-xs text-gray-500">เมื่อสักครู่</p>
-                    </div>
-                    <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Success</span>
-                </div>
-                
-                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
-                    <div class="p-2 bg-blue-100 rounded-lg">
-                        <i class="fas fa-shield-alt text-blue-600"></i>
-                    </div>
-                    <div class="ml-4 flex-1">
-                        <p class="text-sm font-medium text-gray-800">ระบบความปลอดภัยอัพเดท</p>
-                        <p class="text-xs text-gray-500">วันนี้</p>
-                    </div>
-                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Security</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Security Info -->
-        <div class="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border-2 border-green-200 p-6">
-            <div class="flex items-start">
-                <div class="p-3 bg-green-500 rounded-lg">
-                    <i class="fas fa-shield-alt text-white text-2xl"></i>
-                </div>
-                <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">🔒 ระบบปลอดภัยระดับสูง</h3>
-                    <ul class="space-y-2 text-sm text-gray-700">
-                        <li><i class="fas fa-check-circle text-green-600 mr-2"></i>JWT Authentication (128-char secret)</li>
-                        <li><i class="fas fa-check-circle text-green-600 mr-2"></i>Rate Limiting (DDoS Protection)</li>
-                        <li><i class="fas fa-check-circle text-green-600 mr-2"></i>Account Lockout (Brute Force Protection)</li>
-                        <li><i class="fas fa-check-circle text-green-600 mr-2"></i>HTTPS/TLS Encryption</li>
-                        <li><i class="fas fa-check-circle text-green-600 mr-2"></i>Security Headers (Helmet.js)</li>
-                    </ul>
-                    <a href="/SECURITY_README.md" class="inline-block mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition">
-                        <i class="fas fa-book mr-2"></i>อ่านเอกสารความปลอดภัย
-                    </a>
-                </div>
+                    <span class="text-sm font-medium" data-i18n="dashboard.actions.transfer">Transfer</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-600 text-sm">© 2024 Elixopay. Made with ❤️ by Elixopay Team</p>
-                <div class="flex space-x-4 mt-4 md:mt-0">
-                    <a href="mailto:support@elixopay.com" class="text-gray-600 hover:text-gray-800 text-sm">
-                        <i class="fas fa-envelope mr-1"></i>support@elixopay.com
-                    </a>
+    <!-- Recent Activity (Glass Panel) -->
+    <div class="glass-panel p-6 bg-white reveal">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-gray-800" data-i18n="dashboard.recent_activity">Recent
+                Activity</h3>
+            <a href="/transactions.html"
+                class="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center transition group">
+                <span data-i18n="dashboard.view_all">View All</span> <i
+                    class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition"></i>
+            </a>
+        </div>
+        <!-- Dynamic Activity List -->
+        <div id="recent-activity-list" class="space-y-4">
+            <div class="text-center py-4 text-gray-500 text-sm">Loading activity...</div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Right Column: Stats & Features -->
+    <div class="space-y-8 reveal" style="animation-delay: 0.1s;">
+        <!-- Analytics Preview -->
+        <div class="glass-panel p-6 bg-white">
+            <h3 class="text-lg font-bold text-gray-800 mb-4" data-i18n="dashboard.stats.title">Quick Stats</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-purple-50 border border-purple-100">
+                    <p class="text-xs text-purple-600 font-medium uppercase tracking-wide mb-1"
+                        data-i18n="dashboard.stats.success_rate">Success Rate</p>
+                    <p class="text-2xl font-bold text-gray-900" id="stats-success-rate">-</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                    <p class="text-xs text-orange-600 font-medium uppercase tracking-wide mb-1"
+                        data-i18n="dashboard.stats.customers">Customers</p>
+                    <p class="text-2xl font-bold text-gray-900" id="stats-customers">-</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+                    <p class="text-xs text-blue-600 font-medium uppercase tracking-wide mb-1"
+                        data-i18n="dashboard.stats.txns">Txns</p>
+                    <p class="text-2xl font-bold text-gray-900" id="stats-txns">-</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-green-50 border border-green-100">
+                    <p class="text-xs text-green-600 font-medium uppercase tracking-wide mb-1"
+                        data-i18n="dashboard.stats.uptime">Uptime</p>
+                    <p class="text-2xl font-bold text-gray-900">100%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions / Features -->
+        <div class="glass-panel p-6 bg-white">
+            <h3 class="text-lg font-bold text-gray-800 mb-4" data-i18n="dashboard.merchant.title">Merchant Tools
+            </h3>
+            <div class="space-y-3">
+                <a href="developer.html"
+                    class="flex items-center p-3 rounded-xl hover:bg-gray-50 transition group border border-transparent hover:border-gray-200">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-900" data-i18n="dashboard.merchant.api">
+                            Developer API</p>
+                        <p class="text-xs text-gray-500" data-i18n="dashboard.merchant.api_desc">Manage API keys
+                            & Webhooks</p>
+                    </div>
+                    <i class="fas fa-chevron-right ml-auto text-gray-300 group-hover:text-indigo-500 transition"></i>
+                </a>
+
+                <a href="docs.html"
+                    class="flex items-center p-3 rounded-xl hover:bg-gray-50 transition group border border-transparent hover:border-gray-200">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-900" data-i18n="dashboard.merchant.docs">
+                            Documentation</p>
+                        <p class="text-xs text-gray-500" data-i18n="dashboard.merchant.docs_desc">Integration
+                            guides</p>
+                    </div>
+                    <i class="fas fa-chevron-right ml-auto text-gray-300 group-hover:text-yellow-500 transition"></i>
+                </a>
+
+                <a href="security.html"
+                    class="flex items-center p-3 rounded-xl hover:bg-gray-50 transition group border border-transparent hover:border-gray-200">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-semibold text-gray-900" data-i18n="dashboard.merchant.security">
+                            Security Settings</p>
+                        <p class="text-xs text-gray-500" data-i18n="dashboard.merchant.security_desc">2FA &
+                            Audit logs</p>
+                    </div>
+                    <i class="fas fa-chevron-right ml-auto text-gray-300 group-hover:text-teal-500 transition"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Security Banner -->
+    <div
+        class="mt-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 to-gray-800 p-8 shadow-xl reveal">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-purple-500 opacity-10 rounded-full blur-2xl">
+        </div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-start mb-6 md:mb-0">
+                <div class="p-3 bg-green-500/10 rounded-xl border border-green-500/20">
+                    <i class="fas fa-lock text-green-400 text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-xl font-bold text-white mb-2" data-i18n="dashboard.security.shield_title">
+                        Protected by Elixopay Shield</h3>
+                    <p class="text-gray-400 text-sm max-w-lg" data-i18n="dashboard.security.shield_desc">Your
+                        account is secured with military-grade
+                        encryption, real-time fraud monitoring, and automated threat detection.</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-700 text-gray-200 border border-gray-600">
+                            <i class="fas fa-check-circle text-green-400 mr-1.5"></i> TLS Encryption
+                        </span>
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-700 text-gray-200 border border-gray-600">
+                            <i class="fas fa-check-circle text-green-400 mr-1.5"></i> DDoS Protection
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <a href="security.html"
+                class="px-6 py-2.5 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition shadow-lg text-sm">
+                <span data-i18n="dashboard.security.view_audit">View Security Audit</span>
+            </a>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Modern Footer -->
+    <footer class="bg-[#1a0b2e] text-white border-t border-[#2d1b4e] mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-lg mr-2">
+                            E</div>
+                        <span class="text-xl font-bold">Elixopay</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs" data-i18n="footer.desc">
+                        Next-generation payment infrastructure for the modern web. Secure, fast, and developer-friendly.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-4"
+                        data-i18n="footer.resources">Resources</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="docs.html" class="hover:text-white transition"
+                                data-i18n="footer.docs">Documentation</a></li>
+                        <li><a href="api-keys.html" class="hover:text-white transition" data-i18n="footer.api_ref">API
+                                Reference</a></li>
+                        <li><a href="#" class="hover:text-white transition" data-i18n="footer.status">System Status</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-4"
+                        data-i18n="footer.legal">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="privacy.html" class="hover:text-white transition"
+                                data-i18n="footer.privacy">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition" data-i18n="footer.terms">Terms of
+                                Service</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition"
+                                data-i18n="footer.contact">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-[#2d1b4e] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-500">© 2026 Elixopay Inc. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-500 hover:text-white transition"><i
+                            class="fab fa-github text-xl"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition"><i
+                            class="fab fa-twitter text-xl"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition"><i
+                            class="fab fa-linkedin text-xl"></i></a>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Wallet Modal (Deposit/Withdraw/Transfer) -->
+    <div id="wallet-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative scale-95 transition-transform duration-300"
+            id="wallet-modal-content">
+            <button onclick="closeWalletModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition rounded-full p-1 hover:bg-gray-100"><i
+                    class="fas fa-times text-lg"></i></button>
+
+            <div class="mb-6">
+                <div
+                    class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4 text-purple-600 text-xl">
+                    <i class="fas fa-wallet" id="modal-icon"></i>
+                </div>
+                <h3 id="wallet-modal-title" class="text-2xl font-bold text-gray-900" data-i18n="modal.title">Wallet
+                    Action</h3>
+                <p class="text-sm text-gray-500 mt-1" data-i18n="modal.subtitle">Process your transaction securely.</p>
+            </div>
+
+            <form id="wallet-modal-form" class="space-y-0">
+                <div class="bg-gray-50 rounded-xl border border-gray-200 p-5 space-y-5">
+                    <div id="deposit-channel-group" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                            data-i18n="modal.payment_method">Payment Method</label>
+                        <div class="relative">
+                            <select name="deposit_channel" id="deposit-channel"
+                                class="block w-full pl-3 pr-10 py-2.5 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-xl border bg-white shadow-sm">
+                                <option value="bank" data-i18n="modal.method.bank">Bank Transfer</option>
+                                <option value="promptpay" data-i18n="modal.method.promptpay">PromptPay (QR)</option>
+                                <option value="card" data-i18n="modal.method.card">Credit/Debit Card</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Deposit Instructions -->
+                    <div id="deposit-instructions-container" class="hidden space-y-4">
+                        <!-- Bank Transfer Details -->
+                        <div id="deposit-bank-instruction" class="hidden">
+                            <div class="flex items-center mb-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-900" data-i18n="bank.kbank">Kasikornbank
+                                        (KBANK)</h4>
+                                    <p class="text-xs text-gray-500" data-i18n="bank.account_type.saving">Saving Account
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-white p-3 rounded-lg border border-gray-200 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-400">Account Number</p>
+                                    <p class="text-lg font-mono font-bold text-gray-800 selected-all">012-3-45678-9</p>
+                                </div>
+                                <button type="button" onclick="copyToClipboard('012-3-45678-9')"
+                                    class="text-gray-400 hover:text-teal-600 transition">
+                                    <i class="far fa-copy"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">Transfer amount must match exactly.</p>
+                        </div>
+
+                        <!-- PromptPay QR -->
+                        <div id="deposit-promptpay-instruction" class="hidden flex flex-col items-center">
+                            <div
+                                class="w-full max-w-[280px] bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                                <!-- Header -->
+                                <div class="bg-white border-b border-gray-100 p-4 flex items-center justify-center">
+                                    <img src="/images/promptpay_logo.png" alt="PromptPay" class="h-8 object-contain">
+                                </div>
+                                <!-- QR Body -->
+                                <div class="p-6 flex flex-col items-center justify-center min-h-[240px]">
+                                    <div id="promptpay-qr-placeholder"
+                                        class="flex flex-col items-center justify-center text-gray-400 space-y-2 animate-pulse">
+                                        <i class="fas fa-coins text-4xl mb-2"></i>
+                                        <p class="text-sm font-medium" data-i18n="promptpay.enter_amount">Enter amount
+                                        </p>
+                                        <p class="text-xs" data-i18n="promptpay.to_generate">to generate QR code</p>
+                                    </div>
+                                    <img id="promptpay-qr-image" src="" alt="PromptPay QR"
+                                        class="w-48 h-48 object-contain hidden transition-opacity duration-300">
+
+                                    <div class="mt-4 text-center">
+                                        <p class="text-sm font-bold text-gray-900">Elixopay Co., Ltd.</p>
+                                        <p class="text-xs text-gray-500">Biller ID: 010555123456</p>
+                                    </div>
+                                </div>
+                                <!-- Footer -->
+                                <div class="bg-[#113566] p-3 text-center border-t border-gray-100">
+                                    <p class="text-[10px] text-white" data-i18n="promptpay.scan_via_app">Scan via any
+                                        Banking App</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Credit Card Inputs -->
+                        <div id="deposit-card-instruction" class="hidden space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Card Number</label>
+                                <div class="relative">
+                                    <input type="text"
+                                        class="block w-full rounded-lg border-gray-300 pl-10 py-2 text-sm focus:border-purple-500 focus:ring-purple-500 shadow-sm"
+                                        placeholder="0000 0000 0000 0000">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="far fa-credit-card text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Expiry Date</label>
+                                    <input type="text"
+                                        class="block w-full rounded-lg border-gray-300 py-2 text-sm focus:border-purple-500 focus:ring-purple-500 shadow-sm"
+                                        placeholder="MM/YY">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">CVV</label>
+                                    <input type="text"
+                                        class="block w-full rounded-lg border-gray-300 py-2 text-sm focus:border-purple-500 focus:ring-purple-500 shadow-sm"
+                                        placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wallet-modal-bank-group" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                                data-i18n="modal.bank_name">Bank Name</label>
+                            <select name="bank_name"
+                                class="block w-full rounded-xl border-gray-300 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white shadow-sm">
+                                <option value="" data-i18n="modal.select_bank">Select Bank</option>
+                                <option value="KBANK" data-i18n="bank.kbank">Kasikornbank</option>
+                                <option value="SCB" data-i18n="bank.scb">Siam Commercial Bank</option>
+                                <option value="BBL" data-i18n="bank.bbl">Bangkok Bank</option>
+                                <option value="KTB" data-i18n="bank.ktb">Krungthai Bank</option>
+                                <option value="BAY" data-i18n="bank.bay">Krungsri</option>
+                                <option value="TTB" data-i18n="bank.ttb">TMBThanachart</option>
+                                <option value="GSB" data-i18n="bank.gsb">Government Savings Bank</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                                data-i18n="modal.account_name">Account Name</label>
+                            <input type="text" name="account_name"
+                                class="block w-full rounded-xl border-gray-300 py-2.5 bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm border"
+                                readonly placeholder="Name on account" data-i18n="[placeholder]modal.account_name_ph">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                                data-i18n="modal.account_number">Account Number</label>
+                            <input type="text" name="account_number"
+                                class="block w-full rounded-xl border-gray-300 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white shadow-sm"
+                                placeholder="012-3-45678-9" data-i18n="[placeholder]modal.account_number_ph">
+                        </div>
+                    </div>
+
+                    <div id="wallet-modal-to" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                            data-i18n="modal.recipient_address">Recipient Wallet Address or Email</label>
+                        <input type="text" name="to_wallet_address"
+                            class="block w-full rounded-xl border-gray-300 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white shadow-sm"
+                            placeholder="0x... or email@example.com" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                            data-i18n="modal.amount">Amount</label>
+                        <div class="flex rounded-xl shadow-sm">
+                            <div class="relative grow focus-within:z-10">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm" id="currency-symbol">฿</span>
+                                </div>
+                                <input type="number" min="1" step="0.01" name="amount" id="amount-input"
+                                    class="block w-full rounded-l-xl border-gray-300 pl-7 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white"
+                                    placeholder="0.00" required>
+                            </div>
+                            <select name="currency" id="currency-select"
+                                class="relative -ml-px block w-24 rounded-r-xl border border-gray-300 bg-gray-100 py-2.5 pl-3 pr-7 text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 sm:text-sm">
+                                <option value="THB">THB</option>
+                                <option value="USDT">USDT</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all hover:scale-[1.02]">
+                        <span data-i18n="modal.confirm_transaction">Confirm Transaction</span>
+                    </button>
+                </div> <!-- End of styled container -->
+            </form>
+
+            <div id="wallet-modal-message" class="mt-4 text-center text-sm font-medium min-h-[20px]"></div>
+        </div>
+    </div>
+
+    <!-- Exchange Modal (Buy USDT) -->
+    <div id="exchange-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative scale-95 transition-transform duration-300"
+            id="exchange-modal-content">
+            <button onclick="closeExchangeModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition rounded-full p-1 hover:bg-gray-100">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+
+            <div class="mb-6">
+                <div
+                    class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mb-4 text-teal-600 text-xl">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900" data-i18n="modal.exchange.title">Buy USDT</h3>
+                <p class="text-sm text-gray-500 mt-1" data-i18n="modal.exchange.subtitle">Exchange THB to USDT
+                    instantly.</p>
+            </div>
+
+            <form id="exchange-modal-form" class="space-y-5">
+                <!-- Swap Button & Status -->
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg mb-4">
+                    <span id="exchange-mode-label" class="text-sm font-bold text-teal-700 px-3">Buy USDT</span>
+                    <button type="button" onclick="toggleExchangeMode()"
+                        class="bg-white border border-gray-200 text-gray-600 hover:text-teal-600 rounded-full w-8 h-8 flex items-center justify-center shadow-sm transition-transform hover:rotate-180">
+                        <i class="fas fa-retweet"></i>
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5" id="exchange-input-label">Amount to
+                        Spend (THB)</label>
+                    <div class="relative">
+                        <input type="number" id="exchange-amount-input"
+                            class="w-full pl-4 pr-32 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-right text-lg font-mono font-medium"
+                            placeholder="0.00" step="0.000001" oninput="calculateExchange()">
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+                            <button type="button" onclick="setMaxExchangeAmount()"
+                                class="text-xs font-bold text-teal-600 hover:text-teal-800 mr-2 uppercase transition-colors">Max</button>
+                            <span class="text-gray-500 font-medium" id="exchange-input-currency">THB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-center -my-2 text-gray-400">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm text-gray-500">You Receive (Estimate)</span>
+                        <span id="exchange-rate-display"
+                            class="text-xs font-medium text-teal-600 bg-teal-50 px-2 py-0.5 rounded-lg">Rate:
+                            Loading...</span>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-2xl font-bold text-gray-900" id="exchange-output-amount">0.00</span>
+                        <span class="ml-2 text-sm font-medium text-gray-500" id="exchange-output-currency">USDT</span>
+                    </div>
+                </div>
+
+                <button type="submit" id="exchange-submit-btn"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all hover:scale-[1.02]">
+                    <span>Confirm Exchange</span>
+                </button>
+            </form>
+            <div id="exchange-modal-message" class="mt-4 text-center text-sm font-medium min-h-[20px]"></div>
+        </div>
+    </div>
+
     <script>
         // Logout function
         function logout() {
-            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+            if (confirm('Are you sure you want to sign out?')) {
                 localStorage.clear();
                 window.location.href = '/login.html';
             }
         }
 
-        // Load real-time data (optional)
+        function copyAddress() {
+            const addressEl = document.getElementById('wallet-address');
+            if (addressEl) {
+                const text = addressEl.textContent.trim();
+                navigator.clipboard.writeText(text).then(() => {
+                    // Visual feedback
+                    const originalText = text;
+                    addressEl.textContent = 'Copied!';
+                    addressEl.classList.add('text-green-600', 'font-bold');
+                    setTimeout(() => {
+                        addressEl.textContent = originalText;
+                        addressEl.classList.remove('text-green-600', 'font-bold');
+                    }, 1500);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.fa-copy');
+                btn.classList.remove('fa-copy');
+                btn.classList.add('fa-check');
+                setTimeout(() => {
+                    btn.classList.remove('fa-check');
+                    btn.classList.add('fa-copy');
+                }, 2000);
+            });
+        }
+
+        // Load real-time data
         async function loadDashboardData() {
+            // Animate refresh button
+            const refreshBtn = document.querySelector('.fa-sync-alt');
+            if (refreshBtn) refreshBtn.classList.add('fa-spin');
+
             try {
                 const response = await apiFetch('/api/v1/auth/me');
                 if (response && response.ok) {
                     const data = await response.json();
-                    console.log('User data:', data);
+
+                    // Update User Info
+                    const userName = document.getElementById('user-name');
+                    const userEmail = document.getElementById('user-email');
+                    const userInitial = document.getElementById('user-initial');
+                    const user = data.data.user;
+
+                    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email.split('@')[0];
+
+                    if (userName) userName.textContent = fullName;
+                    if (userEmail) userEmail.textContent = user.email;
+                    if (userInitial) userInitial.textContent = (user.firstName || user.email).charAt(0).toUpperCase();
+
+                    // Update Wallet Balance from /me response
+                    const walletAddress = document.getElementById('wallet-address');
+                    if (walletAddress) walletAddress.textContent = user.wallet?.id ? `WALLET-${user.wallet.id}` : 'Not generated';
+
+                    let thbBalance = 0;
+                    if (user.wallet) {
+                        thbBalance = parseFloat(user.wallet.balance);
+                        const balanceEl = document.getElementById('wallet-balance');
+                        if (balanceEl) balanceEl.textContent = `฿${thbBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        window.currentBalanceTHB = thbBalance;
+                    }
+
+                    // Admin Button Logic
+                    if (user.role === 'admin') {
+                        const navActions = document.querySelector('nav .flex.items-center.space-x-4');
+                        if (navActions && !document.getElementById('admin-btn')) {
+                            const adminBtn = document.createElement('a');
+                            adminBtn.id = 'admin-btn';
+                            adminBtn.href = '/admin-payouts.html';
+                            adminBtn.className = 'px-4 py-2 bg-purple-600 text-white text-sm font-bold rounded-lg hover:bg-purple-700 transition shadow-md mr-4 flex items-center';
+                            adminBtn.innerHTML = '<i class="fas fa-shield-alt mr-2"></i> Admin Panel';
+
+                            // Insert before the language switcher or at the start
+                            navActions.insertBefore(adminBtn, navActions.firstChild);
+                        }
+                    }
+
+                    // Load USDT Balance from existing wallet data (fetched above)
+                    // Note: The main /wallet endpoint now returns usdtBalance.
+                    // We just need to ensure `data` (main wallet response) is accessible here.
+                    // Wait, `data` was local to the try block above (not shown).
+                    // But we can fetch it again or better, trust the main call if we can see it.
+                    // Since I can't see the main call, I will perform a clean fetch here to be safe, 
+                    // but using the correct structure.
+                    try {
+                        // We already have `data` from line 897 (loadStats?) No, that's loadStats.
+                        // loadWallet probably fetched it.
+                        // Let's just re-fetch to be robust for now.
+                        const respWallet = await apiFetch('/api/v1/users/wallet');
+                        if (respWallet.ok) {
+                            const dataWallet = await respWallet.json();
+                            const w = dataWallet.data.wallet;
+                            const thbBalance = parseFloat(w.balance);
+                            const usdtBalance = parseFloat(w.usdtBalance || 0);
+
+                            window.currentBalanceTHB = thbBalance;
+                            window.currentBalanceUSDT = usdtBalance;
+
+                            // Calculate Total Estimated (using real rate if possible, or mock)
+                            const usdtRate = 34.5;
+                            const totalEst = thbBalance + (usdtBalance * usdtRate);
+
+                            // Update Total Big Display
+                            const balanceEl = document.getElementById('wallet-balance');
+                            if (balanceEl) {
+                                balanceEl.innerHTML = `฿${totalEst.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-lg text-gray-400 font-normal">Est.</span>`;
+                            }
+
+                            // Update Breakdown section
+                            const balanceUsdtEl = document.getElementById('wallet-balance-usdt');
+                            // Also check if we just have the container if the ID was lost previously (fallback)
+                            const breakdownContainer = document.getElementById('asset-breakdown');
+
+                            if (balanceUsdtEl || breakdownContainer) {
+                                const containerToRemove = breakdownContainer;
+                                if (containerToRemove) containerToRemove.remove();
+
+                                // We append to the card content (parent of balanceEl usually)
+                                // But if balanceEl is found, use its parent's parent or specific container.
+                                // balanceEl is h1 inside a div.
+                                // Let's try to target the layout accurately.
+                                // The closest relative z-10 seems to be the card container.
+                                const cardContent = balanceEl ? balanceEl.closest('.relative.z-10') : document.querySelector('.card-gradient .relative.z-10');
+
+                                const breakdownHtml = `
+                                    <div id="asset-breakdown" class="mt-6 space-y-2">
+                                        <div class="flex items-center justify-between p-3 bg-white/50 backdrop-blur rounded-xl border border-white/50">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3 text-purple-600"><i class="fas fa-coins"></i></div>
+                                                <span class="text-sm font-medium text-gray-600">THB Balance</span>
+                                            </div>
+                                            <span id="wallet-balance-thb" class="font-bold text-gray-800">฿${thbBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between p-3 bg-white/50 backdrop-blur rounded-xl border border-white/50">
+                                            <div class="flex items-center">
+                                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="w-8 h-8 mr-3 rounded-full bg-green-50 p-1">
+                                                <span class="text-sm font-medium text-gray-600">USDT Balance</span>
+                                            </div>
+                                            <span id="wallet-balance-usdt" class="font-bold text-gray-800">$${usdtBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                    </div>
+                                `;
+
+                                if (cardContent) cardContent.insertAdjacentHTML('beforeend', breakdownHtml);
+                            }
+                        }
+                    } catch (e) { console.warn("Balance Load Error", e); }
+
                 }
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
+            } finally {
+                if (refreshBtn) setTimeout(() => refreshBtn.classList.remove('fa-spin'), 1000);
             }
         }
 
-        // Load data on page load
-        loadDashboardData();
-
-        // Export data function
-        function exportData(format) {
-            alert(`🚧 ฟีเจอร์ Export ${format.toUpperCase()} กำลังพัฒนา\n\nจะพร้อมใช้งานในเร็วๆ นี้!`);
+        // Load Wallet Data
+        async function loadWallet() {
+            await loadDashboardData();
         }
 
-        // Add animation on load
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.bg-white');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    card.style.transition = 'all 0.5s ease';
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 50);
-                }, index * 100);
-            });
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardData();
+            loadRecentActivity();
+            loadStats();
         });
+
+        // Load Recent Activity
+        async function loadRecentActivity() {
+            try {
+                const list = document.getElementById('recent-activity-list');
+                const response = await apiFetch('/api/v1/users/wallet/transactions');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const transactions = data.data.transactions.slice(0, 5);
+
+                    if (transactions.length === 0) {
+                        list.innerHTML = `
+                            <div class="text-center py-6 text-gray-400">
+                                <i class="fas fa-receipt text-3xl mb-2 opacity-50"></i>
+                                <p class="text-sm">No recent transactions</p>
+                            </div>`;
+                        return;
+                    }
+
+                    list.innerHTML = transactions.map(t => {
+                        let iconClass = 'fa-exchange-alt text-blue-600';
+                        let bgClass = 'bg-blue-100';
+                        let statusColor = 'text-green-700 bg-green-100';
+                        let statusText = 'Success';
+
+                        if (t.type === 'deposit') {
+                            iconClass = 'fa-arrow-down text-green-600';
+                            bgClass = 'bg-green-100';
+                        } else if (t.type === 'withdraw') {
+                            iconClass = 'fa-arrow-up text-orange-600';
+                            bgClass = 'bg-orange-100';
+                        } else if (t.type === 'transfer_out') {
+                            iconClass = 'fa-paper-plane text-purple-600';
+                            bgClass = 'bg-purple-100';
+                        } else if (t.type === 'transfer_in') {
+                            iconClass = 'fa-hand-holding-usd text-teal-600';
+                            bgClass = 'bg-teal-100';
+                        } else if (t.type === 'EXCHANGE') {
+                            iconClass = 'fa-sync-alt text-indigo-600';
+                            bgClass = 'bg-indigo-100';
+                        }
+
+                        const date = new Date(t.created_at).toLocaleDateString();
+
+                        return `
+                        <div class="flex items-center p-4 hover:bg-gray-50 rounded-xl transition-colors border border-transparent hover:border-gray-100">
+                            <div class="w-10 h-10 rounded-full ${bgClass} flex items-center justify-center shrink-0">
+                                <i class="fas ${iconClass} text-sm"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-semibold text-gray-800">${t.description || (window.ElixopayI18n ? window.ElixopayI18n.t('activity.transaction') : 'Transaction')}</p>
+                                <p class="text-xs text-gray-500 mt-0.5 capitalize">${t.type.replace('_', ' ')}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-sm font-bold text-gray-900">${parseFloat(t.amount).toFixed(2)} ${t.currency}</span>
+                                <span class="inline-block mt-1 px-2 py-0.5 ${statusColor} text-[10px] font-bold rounded-full uppercase tracking-wider">${statusText}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Failed to load activity', error);
+                document.getElementById('recent-activity-list').innerHTML = '<p class="text-center text-red-500 text-sm">Failed to load activity</p>';
+            }
+        }
+
+        // Load Quick Stats
+        async function loadStats() {
+            try {
+                const response = await apiFetch('/api/v1/payments/stats');
+                if (response.ok) {
+                    const data = await response.json();
+                    const stats = data?.data?.stats || {};
+
+                    const total = stats.totalPayments || 0;
+                    const success = stats.completedPayments || 0;
+                    const rate = total > 0 ? ((success / total) * 100).toFixed(1) : '0.0';
+
+                    document.getElementById('stats-success-rate').textContent = `${rate}%`;
+                    document.getElementById('stats-txns').textContent = total.toLocaleString();
+                    // For customers, we might not have a direct count in payment stats, defaulting or using total for now if no user stats endpoint
+                    document.getElementById('stats-customers').textContent = '—'; // Placeholder as we don't have this in payment stats yet
+                }
+            } catch (error) {
+                console.error('Failed to load stats', error);
+            }
+        }
+
+        window.addEventListener('auth:ready', loadWallet);
+
+        // Reveal animation on scroll
+        const observeElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observeElements.forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+
+
+        // --- Wallet Modal Logic ---
+        const modal = document.getElementById('wallet-modal');
+        const modalContent = document.getElementById('wallet-modal-content');
+        let walletAction = '';
+
+        window.openWalletModal = function (action) {
+            walletAction = action;
+            modal.classList.remove('hidden');
+            // Slight delay for animation
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            });
+
+            document.getElementById('wallet-modal-message').textContent = '';
+            document.getElementById('wallet-modal-form').reset();
+
+            // Toggle Fields
+            document.getElementById('deposit-channel-group').classList.toggle('hidden', action !== 'deposit');
+            const bankGroup = document.getElementById('wallet-modal-bank-group');
+            if (bankGroup) bankGroup.classList.toggle('hidden', action !== 'withdraw');
+
+            // Title & Icon
+            const titleEl = document.getElementById('wallet-modal-title');
+            const iconEl = document.getElementById('modal-icon');
+
+            if (action === 'deposit') {
+                titleEl.setAttribute('data-i18n', 'modal.title.deposit');
+                iconEl.className = 'fas fa-arrow-down';
+
+                // Restriction: Deposit only allows THB
+                const currencySelect = document.getElementById('currency-select');
+                if (currencySelect) {
+                    currencySelect.value = 'THB';
+                    currencySelect.classList.add('hidden');
+                    // Fix border radius for input since select is hidden
+                    const amountInput = document.getElementById('amount-input');
+                    if (amountInput) amountInput.classList.add('rounded-r-xl');
+                }
+            } else if (action === 'withdraw') {
+                titleEl.setAttribute('data-i18n', 'modal.title.withdraw');
+                iconEl.className = 'fas fa-arrow-up';
+
+                // Re-enable currency select for withdraw
+                const currencySelect = document.getElementById('currency-select');
+                if (currencySelect) {
+                    currencySelect.classList.remove('hidden');
+                    const amountInput = document.getElementById('amount-input');
+                    if (amountInput) amountInput.classList.remove('rounded-r-xl');
+                }
+
+                // Security: Auto-fill account name from logged-in user and lock it
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    try {
+                        const user = JSON.parse(userStr);
+                        const accNameInput = document.querySelector('input[name="account_name"]');
+                        if (accNameInput && user.name) {
+                            accNameInput.value = user.name;
+                        }
+                    } catch (e) { console.error('Error parsing user data', e); }
+                }
+            } else if (action === 'transfer') {
+                titleEl.setAttribute('data-i18n', 'modal.title.transfer');
+                iconEl.className = 'fas fa-paper-plane';
+                // Re-enable currency select for transfer
+                const currencySelect = document.getElementById('currency-select');
+                if (currencySelect) {
+                    currencySelect.classList.remove('hidden');
+                    const amountInput = document.getElementById('amount-input');
+                    if (amountInput) amountInput.classList.remove('rounded-r-xl');
+                }
+            }
+            // Trigger translation update for the new attribute
+            if (window.ElixopayI18n) {
+                const lang = localStorage.getItem('elixopay-lang') || 'th';
+                window.ElixopayI18n.setLang(lang);
+            }
+
+            updateWalletToField();
+            // updateWalletToField(); // Duplicate call removed
+            // updateDepositFields(); // Removed
+            if (document.getElementById('deposit-channel')) {
+                document.getElementById('deposit-channel').dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Initialize Payment Channel Toggle
+        const depositChannelSelect = document.getElementById('deposit-channel');
+        const depositCurrencySymbol = document.getElementById('currency-symbol');
+        const bankInstruction = document.getElementById('deposit-bank-instruction');
+        const promptpayInstruction = document.getElementById('deposit-promptpay-instruction');
+        const cardInstruction = document.getElementById('deposit-card-instruction');
+        const instructionsContainer = document.getElementById('deposit-instructions-container');
+        const amountInput = document.getElementById('amount-input');
+
+        // Two-Step PromptPay State
+        let promptPayStep = 0; // 0=Not Active, 1=Enter Amount (Continue), 2=Confirm (Ready)
+
+        // Dynamic QR Logic
+        function updatePromptPayQR() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const qrImage = document.getElementById('promptpay-qr-image');
+            const placeholder = document.getElementById('promptpay-qr-placeholder');
+            const billerId = '0105551234567'; // Valid 13-digit Tax ID (Mock)
+
+            if (amount > 0) {
+                qrImage.onload = () => { placeholder.classList.add('hidden'); qrImage.classList.remove('hidden'); };
+                qrImage.onerror = () => {
+                    console.warn('QR Generation Failed (PromptPay.io)');
+                    // Fallback to a static generic QR if dynamic fails
+                    qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MockPromptPayPayload';
+                };
+                qrImage.src = `https://promptpay.io/${billerId}/${amount}`;
+            } else {
+                qrImage.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+        }
+
+        if (depositChannelSelect) {
+            depositChannelSelect.addEventListener('change', (e) => {
+                const value = e.target.value;
+                const formBtnText = document.querySelector('#wallet-modal-form button[type="submit"] span');
+
+                // Reset visibility
+                bankInstruction.classList.add('hidden');
+                promptpayInstruction.classList.add('hidden');
+                cardInstruction.classList.add('hidden');
+                instructionsContainer.classList.add('hidden');
+
+                // Reset PromptPay State defaults
+                promptPayStep = 0;
+                if (formBtnText) formBtnText.setAttribute('data-i18n', 'modal.confirm_transaction');
+                if (formBtnText) formBtnText.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('modal.confirm_transaction') : 'Confirm Transaction';
+
+                if (value === 'bank') {
+                    instructionsContainer.classList.remove('hidden');
+                    bankInstruction.classList.remove('hidden');
+                    depositCurrencySymbol.innerText = '฿';
+                } else if (value === 'promptpay') {
+                    // Step 1: Keep instructions hidden initially
+                    instructionsContainer.classList.add('hidden');
+                    promptpayInstruction.classList.add('hidden');
+                    promptpayInstruction.style.display = ''; // Remove inline flex
+                    depositCurrencySymbol.innerText = '฿';
+
+                    // Activate Step 1
+                    promptPayStep = 1;
+                    if (formBtnText) formBtnText.setAttribute('data-i18n', 'common.continue');
+                    if (formBtnText) formBtnText.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('common.continue') : 'Continue';
+
+                    // Reset QR display to hidden
+                    const qrImage = document.getElementById('promptpay-qr-image');
+                    const placeholder = document.getElementById('promptpay-qr-placeholder');
+                    if (qrImage) qrImage.classList.add('hidden');
+                    if (placeholder) placeholder.classList.add('hidden'); // Ensure placeholder is also legally hidden
+
+                    // Ensure amount is unlocked
+                    const amountInput = document.getElementById('amount-input');
+                    if (amountInput) {
+                        amountInput.disabled = false;
+                        amountInput.readOnly = false;
+                        amountInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                    }
+
+                } else if (value === 'card') {
+                    instructionsContainer.classList.remove('hidden');
+                    cardInstruction.classList.remove('hidden');
+                    depositCurrencySymbol.innerText = '$';
+                }
+            });
+
+            // Trigger default
+            // depositChannelSelect.dispatchEvent(new Event('change')); 
+        }
+
+        // Removed listeners for amount changes (Blur/Enter) to update QR (Two-step flow now)
+
+        // updateDepositFields removed - logic consolidated into depositChannelSelect change listener
+
+
+        window.closeWalletModal = function () {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Reset PromptPay state
+                promptPayStep = 0;
+                const btn = document.querySelector('#wallet-modal-form button[type="submit"] span');
+                if (btn) {
+                    btn.setAttribute('data-i18n', 'modal.confirm_transaction');
+                    btn.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('modal.confirm_transaction') : 'Confirm Transaction';
+                }
+            }, 300);
+        }
+
+
+
+        // Close on backdrop click
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeWalletModal();
+            });
+        }
+
+        // Dynamic Currency Logic
+        const currencySelect = document.getElementById('currency-select');
+        const walletTo = document.getElementById('wallet-modal-to');
+        const walletBank = document.getElementById('wallet-modal-bank-group');
+        const symbolSpan = document.getElementById('currency-symbol');
+
+        function updateWalletToField() {
+            const selectedCurrency = currencySelect ? currencySelect.value : 'THB';
+
+            // Update Symbol
+            if (symbolSpan) symbolSpan.textContent = selectedCurrency === 'THB' ? '฿' : '$';
+
+            // Reset visibility
+            if (walletTo) walletTo.classList.add('hidden');
+            if (walletBank) walletBank.classList.add('hidden');
+            const toAddrInput = document.querySelector('input[name="to_wallet_address"]');
+            if (toAddrInput) toAddrInput.required = false;
+
+            // Logic
+            if (walletAction === 'withdraw') {
+                if (walletBank) walletBank.classList.remove('hidden');
+                const accountName = document.querySelector('input[name="account_name"]');
+                const accountNumber = document.querySelector('input[name="account_number"]');
+                const bankName = document.querySelector('select[name="bank_name"]');
+                if (accountName) accountName.required = true;
+                if (accountNumber) accountNumber.required = true;
+                if (bankName) bankName.required = true;
+            } else {
+                const accountName = document.querySelector('input[name="account_name"]');
+                const accountNumber = document.querySelector('input[name="account_number"]');
+                const bankName = document.querySelector('select[name="bank_name"]');
+                if (accountName) accountName.required = false;
+                if (accountNumber) accountNumber.required = false;
+                if (bankName) bankName.required = false;
+            }
+
+            if (walletAction === 'transfer') {
+                walletTo.classList.remove('hidden');
+                if (toAddrInput) toAddrInput.required = true;
+            } else if (walletAction === 'withdraw') {
+                if (selectedCurrency === 'USDT') {
+                    // USDT Withdraw -> On-chain address
+                    walletTo.classList.remove('hidden');
+                    if (toAddrInput) toAddrInput.required = true;
+                } else {
+                    // THB Withdraw -> Bank Account
+                    if (walletBank) walletBank.classList.remove('hidden');
+                }
+            }
+        }
+
+        if (currencySelect) {
+            currencySelect.addEventListener('change', updateWalletToField);
+        }
+
+        // Form Submit
+        const walletFormEl = document.getElementById('wallet-modal-form');
+        if (walletFormEl) {
+            walletFormEl.onsubmit = async function (e) {
+                e.preventDefault();
+                const form = e.target;
+                const btn = form.querySelector('button[type="submit"]');
+                const btnSpan = btn.querySelector('span');
+                const originalBtnText = btnSpan ? btnSpan.textContent : (window.ElixopayI18n ? window.ElixopayI18n.t('modal.confirm_transaction') : 'Confirm Transaction');
+
+                // Handle PromptPay Two-Step Flow
+                if (walletAction === 'deposit' && form.deposit_channel.value === 'promptpay') {
+                    const amount = parseFloat(form.amount.value);
+
+                    if (promptPayStep === 1) {
+                        if (!amount || amount <= 0) {
+                            alert('Please enter a valid amount first.');
+                            return;
+                        }
+
+                        // Step 1 -> Step 2
+                        updatePromptPayQR();
+
+                        // Show QR Container (Explicitly unhide)
+                        const instructionsContainer = document.getElementById('deposit-instructions-container');
+                        const promptpayInstruction = document.getElementById('deposit-promptpay-instruction');
+                        if (instructionsContainer) instructionsContainer.classList.remove('hidden');
+                        if (promptpayInstruction) promptpayInstruction.classList.remove('hidden');
+
+                        // Disable Amount Input
+                        const amountInput = document.getElementById('amount-input');
+                        if (amountInput) {
+                            amountInput.disabled = true;
+                            amountInput.readOnly = true;
+                            amountInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+                        }
+
+                        promptPayStep = 2;
+
+                        if (btnSpan) {
+                            btnSpan.textContent = 'Confirm Transaction';
+                            btnSpan.setAttribute('data-i18n', 'modal.confirm_transaction');
+                        }
+                        return; // Stop submission
+                    }
+                }
+
+                // Loading State
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i><span data-i18n="common.processing">Processing...</span>';
+                if (window.ElixopayI18n) window.ElixopayI18n.setLang(localStorage.getItem('elixopay-lang') || 'th');
+
+                const amount = parseFloat(form.amount.value);
+                const to_wallet_address = form.to_wallet_address ? form.to_wallet_address.value : '';
+                const currency = form.currency ? form.currency.value : 'THB';
+
+                let body = {};
+                let url = '';
+
+                try {
+                    if (walletAction === 'deposit') {
+                        // Call Instant Deposit API
+                        url = '/api/v1/wallet/deposit';
+                        body = {
+                            amount: amount,
+                            channel: form.deposit_channel ? form.deposit_channel.value : 'bank'
+                        };
+                    } else if (walletAction === 'withdraw') {
+                        url = '/api/v1/wallet/withdraw';
+                        body = {
+                            amount: amount,
+                            bankName: form.bank_name.value,
+                            accountName: form.account_name.value,
+                            accountNumber: form.account_number.value
+                        };
+                    } else if (walletAction === 'transfer') {
+                        // Transfer logic
+                        url = '/api/v1/users/wallet/transfer'; // Standard route for user transfer
+                        // Ensure we grab the input correctly
+                        const recipientVal = form.to_wallet_address ? form.to_wallet_address.value : '';
+
+                        if (!recipientVal) throw new Error('Please enter a recipient Wallet ID or Email');
+
+                        body = {
+                            recipient: recipientVal
+                        };
+                    }
+
+                    if (!url) throw new Error('Invalid action');
+
+                    const response = await apiFetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(body)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const msgEl = document.getElementById('wallet-modal-message');
+                        msgEl.setAttribute('data-i18n', 'modal.success_msg');
+                        msgEl.textContent = 'Success!'; // Fallback
+                        if (window.ElixopayI18n) window.ElixopayI18n.setLang(localStorage.getItem('elixopay-lang') || 'th');
+                        // document.getElementById('wallet-modal-message').textContent = 'Success!';
+                        document.getElementById('wallet-modal-message').className = 'mt-4 text-center text-sm font-medium text-green-600';
+                        setTimeout(() => {
+                            closeWalletModal();
+                            loadWallet(); // Refresh balance
+                            loadRecentActivity(); // Refresh activity
+                        }, 1500);
+                    } else {
+                        throw new Error(result.error?.message || 'Transaction failed');
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('wallet-modal-message').textContent = error.message;
+                    document.getElementById('wallet-modal-message').className = 'mt-4 text-center text-sm font-medium text-red-600';
+                } finally {
+                    btn.disabled = false;
+                    // Restore button text based on state
+                    if (promptPayStep === 1) {
+                        if (btnSpan) {
+                            btnSpan.setAttribute('data-i18n', 'common.continue');
+                            btnSpan.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('common.continue') : 'Continue';
+                        }
+                    } else {
+                        if (btnSpan) {
+                            btnSpan.setAttribute('data-i18n', 'modal.confirm_transaction');
+                            btnSpan.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('modal.confirm_transaction') : 'Confirm Transaction';
+                        }
+                    }
+                    if (btn.innerHTML.includes('fa-circle-notch')) {
+                        // Remove spinner if it exists
+                        const spinner = btn.querySelector('i');
+                        if (spinner) spinner.remove();
+                    }
+                }
+            };
+        }
+
+
+
+        // --- Bank Account Management ---
+        const bankModal = document.getElementById('bank-modal');
+        const bankModalContent = document.getElementById('bank-modal-content');
+
+        window.openBankModal = function () {
+            bankModal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                bankModal.classList.remove('opacity-0');
+                bankModalContent.classList.remove('scale-95');
+                bankModalContent.classList.add('scale-100');
+            });
+            loadBankAccounts();
+            toggleAddBank(false);
+        }
+
+        window.closeBankModal = function () {
+            bankModal.classList.add('opacity-0');
+            bankModalContent.classList.remove('scale-100');
+            bankModalContent.classList.add('scale-95');
+            setTimeout(() => {
+                bankModal.classList.add('hidden');
+            }, 300);
+        }
+
+        if (bankModal) {
+            bankModal.addEventListener('click', (e) => {
+                if (e.target === bankModal) closeBankModal();
+            });
+        }
+
+        window.toggleAddBank = function (show) {
+            const formContainer = document.getElementById('add-bank-form-container');
+            const btn = document.getElementById('show-add-bank-btn');
+            if (show) {
+                formContainer.classList.remove('hidden');
+                btn.classList.add('hidden');
+            } else {
+                formContainer.classList.add('hidden');
+                btn.classList.remove('hidden');
+                document.getElementById('add-bank-form').reset();
+            }
+        }
+
+        async function loadBankAccounts() {
+            const list = document.getElementById('bank-list');
+            try {
+                const response = await apiFetch('/api/v1/users/bank-accounts');
+                if (response.ok) {
+                    const data = await response.json();
+                    const accounts = data.data.bank_accounts;
+
+                    if (accounts.length === 0) {
+                        list.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">No bank accounts saved.</p>';
+                        return;
+                    }
+
+                    list.innerHTML = accounts.map(acc => `
+                        <div class="p-3 border border-gray-100 rounded-xl bg-gray-50 flex items-center justify-between group">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">${acc.bank_name}</p>
+                                <p class="text-xs text-gray-500">${acc.account_name} • ${acc.account_number}</p>
+                            </div>
+                            <button onclick="deleteBankAccount('${acc.id}')" class="text-gray-300 hover:text-red-500 transition p-2">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Failed to load bank accounts', error);
+                list.innerHTML = '<p class="text-red-500 text-sm">Failed to load accounts</p>';
+            }
+        }
+
+        const exchangeFormEl = document.getElementById('add-bank-form');
+        if (exchangeFormEl) {
+            exchangeFormEl.onsubmit = async function (e) {
+                e.preventDefault();
+                const form = e.target;
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.textContent;
+
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+
+                try {
+                    const response = await apiFetch('/api/v1/users/bank-accounts', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            bank_name: form.bank_name.value,
+                            account_name: form.account_name.value,
+                            account_number: form.account_number.value
+                        })
+                    });
+
+                    if (response.ok) {
+                        toggleAddBank(false);
+                        loadBankAccounts();
+                        loadBankAccountsForWithdraw(); // Refresh withdraw dropdown too
+                    } else {
+                        alert('Failed to save account');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Error saving account');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            }
+        }
+        // --- Exchange Modal Logic ---
+        const exchangeModal = document.getElementById('exchange-modal');
+        const exchangeForm = document.getElementById('exchange-modal-form');
+        let currentExchangeRateData = null;
+        let isBuyMode = true; // true = THB->USDT, false = USDT->THB
+
+        function openExchangeModal() {
+            exchangeModal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                exchangeModal.classList.remove('opacity-0');
+                document.getElementById('exchange-modal-content').classList.remove('scale-95');
+                document.getElementById('exchange-modal-content').classList.add('scale-100');
+            });
+            document.getElementById('exchange-modal-message').textContent = '';
+            exchangeForm.reset();
+            document.getElementById('exchange-output-amount').textContent = '0.00';
+
+            // Reset to Buy Mode default
+            isBuyMode = true;
+            updateExchangeUI();
+            fetchExchangeRate();
+        }
+
+        function closeExchangeModal() {
+            exchangeModal.classList.add('opacity-0');
+            document.getElementById('exchange-modal-content').classList.add('scale-95');
+            document.getElementById('exchange-modal-content').classList.remove('scale-100');
+            setTimeout(() => exchangeModal.classList.add('hidden'), 300);
+        }
+
+        function toggleExchangeMode() {
+            isBuyMode = !isBuyMode;
+            updateExchangeUI();
+            // recalculate logic
+            calculateExchange();
+        }
+
+        function updateExchangeUI() {
+            const modeLabel = document.getElementById('exchange-mode-label');
+            const inputLabel = document.getElementById('exchange-input-label');
+            const inputCurrency = document.getElementById('exchange-input-currency');
+            const outputCurrency = document.getElementById('exchange-output-currency');
+
+            if (isBuyMode) {
+                // THB -> USDT
+                modeLabel.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('exchange.buy_usdt') : 'Buy USDT';
+                modeLabel.className = 'text-sm font-bold text-teal-700 px-3';
+                inputLabel.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('exchange.spend_thb') : 'Amount to Spend (THB)';
+                inputCurrency.textContent = 'THB';
+                outputCurrency.textContent = 'USDT';
+            } else {
+                // USDT -> THB
+                modeLabel.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('exchange.sell_usdt') : 'Sell USDT';
+                modeLabel.className = 'text-sm font-bold text-orange-600 px-3';
+                inputLabel.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('exchange.sell_usdt_amount') : 'Amount to Sell (USDT)';
+                inputCurrency.textContent = 'USDT';
+                outputCurrency.textContent = 'THB';
+            }
+            // Update rate display text if data exists
+            if (currentExchangeRateData) {
+                const rate = isBuyMode ? currentExchangeRateData.buyRate : currentExchangeRateData.sellRate;
+                const prefix = window.ElixopayI18n ? window.ElixopayI18n.t(isBuyMode ? 'exchange.rate_buy' : 'exchange.rate_sell') : 'Rate: 1 USDT ≈ ';
+                const rateText = `${prefix}${rate.toFixed(2)} THB`;
+                document.getElementById('exchange-rate-display').textContent = rateText;
+            }
+        }
+
+        async function fetchExchangeRate() {
+            try {
+                // CORRECTED ENDPOINT
+                const res = await apiFetch('/api/v1/wallet/exchange-rate');
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        // Backend returns { buyRate, sellRate, ... } directly in data.data
+                        currentExchangeRateData = {
+                            buyRate: data.data.buyRate,
+                            sellRate: data.data.sellRate
+                        };
+                        updateExchangeUI(); // Update display with new rate
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch rate', error);
+                document.getElementById('exchange-rate-display').textContent = 'Rate: Unavailable';
+            }
+        }
+
+        // ... (middleware lines) ...
+
+        function setMaxExchangeAmount() {
+            const input = document.getElementById('exchange-amount-input');
+            if (isBuyMode) {
+                // Max THB
+                input.value = (window.currentBalanceTHB || 0).toFixed(2);
+            } else {
+                // Max USDT
+                input.value = (window.currentBalanceUSDT || 0).toFixed(6);
+            }
+            calculateExchange();
+        }
+
+        function calculateExchange() {
+            const inputVal = parseFloat(document.getElementById('exchange-amount-input').value);
+            if (!inputVal || isNaN(inputVal) || !currentExchangeRateData) {
+                document.getElementById('exchange-output-amount').textContent = '0.00';
+                return;
+            }
+
+            let output = 0;
+            if (isBuyMode) {
+                // THB -> USDT (Divide by Buy Price)
+                output = inputVal / currentExchangeRateData.buyRate;
+                document.getElementById('exchange-output-amount').textContent = output.toFixed(6);
+            } else {
+                // USDT -> THB (Multiply by Sell Price)
+                output = inputVal * currentExchangeRateData.sellRate;
+                document.getElementById('exchange-output-amount').textContent = output.toFixed(2);
+            }
+        }
+
+        exchangeForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = document.getElementById('exchange-amount-input').value;
+            const msg = document.getElementById('exchange-modal-message');
+            const submitBtn = document.getElementById('exchange-submit-btn');
+
+            if (!amount || parseFloat(amount) <= 0) {
+                msg.textContent = 'Please enter a valid amount';
+                msg.className = 'mt-4 text-center text-red-500 text-sm font-medium';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            msg.textContent = '';
+
+            try {
+                // CORRECTED PAYLOAD structure for exchangeController.js
+                const payload = {
+                    amount: parseFloat(amount),
+                    from_currency: isBuyMode ? 'THB' : 'USDT',
+                    to_currency: isBuyMode ? 'USDT' : 'THB'
+                };
+
+                // CORRECTED ENDPOINT
+                const response = await apiFetch('/api/v1/wallet/exchange', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    msg.textContent = 'Exchange Successful!';
+                    msg.className = 'mt-4 text-center text-green-500 text-sm font-bold';
+
+                    // Refresh all data
+                    loadWallet();
+                    loadRecentActivity();
+                    closeExchangeModal();
+
+                    // Reset
+                    exchangeForm.reset();
+                    isBuyMode = true; // reset
+                } else {
+                    throw new Error(result.error?.message || 'Exchange failed');
+                }
+            } catch (error) {
+                msg.textContent = error.message;
+                msg.className = 'mt-4 text-center text-red-500 text-sm font-medium';
+            } finally {
+                submitBtn.disabled = false;
+                const confirmKey = isBuyMode ? 'exchange.confirm_buy' : 'exchange.confirm_sell';
+                submitBtn.textContent = window.ElixopayI18n ? window.ElixopayI18n.t(confirmKey) : 'Confirm Exchange';
+            }
+        });
+        window.deleteBankAccount = async function (id) {
+            if (!confirm('Are you sure you want to delete this account?')) return;
+            try {
+                const response = await apiFetch(`/api/v1/users/bank-accounts/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    loadBankAccounts();
+                    loadBankAccountsForWithdraw();
+                } else {
+                    alert('Failed to delete');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+
+        // --- Update Withdraw Modal Logic ---
+        async function loadBankAccountsForWithdraw() {
+            const select = document.getElementById('withdraw-bank-select');
+            if (!select) return; // Only if element exists (need to add html first)
+
+            try {
+                const response = await apiFetch('/api/v1/users/bank-accounts');
+                if (response.ok) {
+                    const data = await response.json();
+                    const accounts = data.data.bank_accounts;
+
+                    if (accounts.length === 0) {
+                        select.innerHTML = `<option value="">${window.ElixopayI18n ? window.ElixopayI18n.t('modal.no_accounts') : 'No saved accounts'}</option>`;
+                        select.disabled = true;
+                    } else {
+                        select.disabled = false;
+                        select.innerHTML = `<option value="">${window.ElixopayI18n ? window.ElixopayI18n.t('modal.select_bank_account') : 'Select Bank Account'}</option>` +
+                            accounts.map(acc => `<option value="${acc.id}">${acc.bank_name} - ${acc.account_number}</option>`).join('');
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+
     </script>
 </body>
+
 </html>

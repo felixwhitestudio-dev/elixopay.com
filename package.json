@@ -2,7 +2,9 @@
   "name": "elixopay-frontend",
   "version": "1.0.0",
   "description": "Elixopay Payment Gateway Frontend",
-  "scripts": {},
+  "scripts": {
+    "dev": "npx serve -l 8080 ."
+  },
   "keywords": [
     "payment",
     "gateway",

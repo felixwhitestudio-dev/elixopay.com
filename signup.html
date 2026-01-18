@@ -1,61 +1,301 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title data-i18n="signup.pageTitle">สมัครใช้งาน Elixopay</title>
 	<link rel="stylesheet" href="styles/theme.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" defer></script>
+	<script src="/js/api-config.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<style>
-		body { font-family: 'Inter', system-ui, sans-serif; background: #0d1117; color: #e2e8f0; }
-		body.light { background:#ffffff; color:#0f172a; }
-		nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:rgba(13,17,23,.85); backdrop-filter:blur(8px); position:sticky; top:0; z-index:100; }
-		body.light nav { background:rgba(255,255,255,.85); border-bottom:1px solid #e2e8f0; }
-		.logo { font-weight:700; font-size:1.25rem; color:#6366f1; text-decoration:none; }
-		.nav-links { display:flex; list-style:none; gap:1.25rem; align-items:center; }
-		.nav-links a { color:#e2e8f0; text-decoration:none; font-size:.95rem; }
-		body.light .nav-links a { color:#334155; }
-		.btn-primary { background:#6366f1; color:#fff; padding:.75rem 1.5rem; border-radius:8px; display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; font-weight:600; border:none; cursor:pointer; font-size:.95rem; transition:all .2s; }
-		.btn-primary:hover { background:#4f46e5; transform:translateY(-1px); box-shadow:0 4px 12px rgba(99,102,241,.3); }
-		.container { max-width:900px; margin:0 auto; padding:3rem 1.5rem; }
-		.card { background:#1e293b; padding:3rem 2.5rem; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.08); }
-		body.light .card { background:#ffffff; border-color:#e2e8f0; box-shadow:0 8px 24px rgba(0,0,0,.08); }
-		h1 { font-size:2.25rem; font-weight:700; margin:0 0 .75rem; line-height:1.2; }
-		.grid { display:grid; gap:1.5rem; }
-		.two { grid-template-columns:1fr 1fr; }
-		@media (max-width:640px){ .two { grid-template-columns:1fr; } }
-		.form-field { display:flex; flex-direction:column; gap:.5rem; }
-		label { font-size:.8rem; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:#94a3b8; margin-bottom:.25rem; }
-		body.light label { color:#64748b; }
-		input, select { width:100%; padding:.85rem 1rem; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:1rem; transition:all .2s; }
-		body.light input, body.light select { background:#f8fafc; color:#0f172a; border-color:#cbd5e1; }
-		input:focus, select:focus { outline:none; border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.15); background:#151e2d; }
-		body.light input:focus, body.light select:focus { background:#ffffff; }
-		.muted { font-size:.9rem; color:#94a3b8; line-height:1.5; }
-		body.light .muted { color:#64748b; }
-		.inline { display:flex; align-items:center; gap:.65rem; margin-top:1.5rem; }
-		.inline input[type="checkbox"] { width:1.1rem; height:1.1rem; cursor:pointer; }
-		.inline label { text-transform:none; font-size:.9rem; margin:0; cursor:pointer; }
-		.error-msg { color:#ef4444; font-size:.8rem; margin-top:.4rem; display:none; }
-		.success-box { text-align:center; padding:3rem 2rem; }
-		.success-box h2 { color:#10b981; margin-bottom:1rem; font-size:1.75rem; }
-		.hidden { display:none !important; }
-		.divider { border:0; height:1px; background:rgba(148,163,184,.2); margin:2rem 0; }
-		body.light .divider { background:rgba(100,116,139,.15); }
-		footer { margin-top:5rem; padding:3rem 1.5rem; background:#1e293b; border-top:1px solid rgba(255,255,255,.08); }
-		body.light footer { background:#f8fafc; border-top:1px solid #e2e8f0; }
-		footer .cols { display:grid; gap:2.5rem; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
-		footer h3 { font-size:.95rem; font-weight:600; margin-bottom:1rem; }
-		footer a { color:#94a3b8; text-decoration:none; font-size:.85rem; display:block; margin-bottom:.5rem; transition:color .2s; }
-		footer a:hover { color:#e2e8f0; }
-		body.light footer a { color:#64748b; }
-		body.light footer a:hover { color:#0f172a; }
-		.theme-toggle { font-size:.8rem; }
+		body {
+			font-family: 'Inter', system-ui, sans-serif;
+			background: #0d1117;
+			color: #e2e8f0;
+		}
+
+		body.light {
+			background: #ffffff;
+			color: #0f172a;
+		}
+
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1rem 2rem;
+			background: rgba(13, 17, 23, .85);
+			backdrop-filter: blur(8px);
+			position: sticky;
+			top: 0;
+			z-index: 100;
+		}
+
+		body.light nav {
+			background: rgba(255, 255, 255, .85);
+			border-bottom: 1px solid #e2e8f0;
+		}
+
+		.logo {
+			font-weight: 700;
+			font-size: 1.25rem;
+			color: #6366f1;
+			text-decoration: none;
+		}
+
+		.nav-links {
+			display: flex;
+			list-style: none;
+			gap: 1.25rem;
+			align-items: center;
+		}
+
+		.nav-links a {
+			color: #e2e8f0;
+			text-decoration: none;
+			font-size: .95rem;
+		}
+
+		body.light .nav-links a {
+			color: #334155;
+		}
+
+		.btn-primary {
+			background: #6366f1;
+			color: #fff;
+			padding: .75rem 1.5rem;
+			border-radius: 8px;
+			display: inline-flex;
+			align-items: center;
+			gap: .5rem;
+			text-decoration: none;
+			font-weight: 600;
+			border: none;
+			cursor: pointer;
+			font-size: .95rem;
+			transition: all .2s;
+		}
+
+		.btn-primary:hover {
+			background: #4f46e5;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(99, 102, 241, .3);
+		}
+
+		.container {
+			max-width: 900px;
+			margin: 0 auto;
+			padding: 3rem 1.5rem;
+		}
+
+		.card {
+			background: #1e293b;
+			padding: 3rem 2.5rem;
+			border-radius: 16px;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+			border: 1px solid rgba(255, 255, 255, .08);
+		}
+
+		body.light .card {
+			background: #ffffff;
+			border-color: #e2e8f0;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+		}
+
+		h1 {
+			font-size: 2.25rem;
+			font-weight: 700;
+			margin: 0 0 .75rem;
+			line-height: 1.2;
+		}
+
+		.grid {
+			display: grid;
+			gap: 1.5rem;
+		}
+
+		.two {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		@media (max-width:640px) {
+			.two {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.form-field {
+			display: flex;
+			flex-direction: column;
+			gap: .5rem;
+		}
+
+		label {
+			font-size: .8rem;
+			font-weight: 600;
+			letter-spacing: .5px;
+			text-transform: uppercase;
+			color: #94a3b8;
+			margin-bottom: .25rem;
+		}
+
+		body.light label {
+			color: #64748b;
+		}
+
+		input,
+		select {
+			width: 100%;
+			padding: .85rem 1rem;
+			border-radius: 8px;
+			border: 1px solid #334155;
+			background: #0f172a;
+			color: #e2e8f0;
+			font-size: 1rem;
+			transition: all .2s;
+		}
+
+		body.light input,
+		body.light select {
+			background: #f8fafc;
+			color: #0f172a;
+			border-color: #cbd5e1;
+		}
+
+		input:focus,
+		select:focus {
+			outline: none;
+			border-color: #6366f1;
+			box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+			background: #151e2d;
+		}
+
+		body.light input:focus,
+		body.light select:focus {
+			background: #ffffff;
+		}
+
+		.muted {
+			font-size: .9rem;
+			color: #94a3b8;
+			line-height: 1.5;
+		}
+
+		body.light .muted {
+			color: #64748b;
+		}
+
+		.inline {
+			display: flex;
+			align-items: center;
+			gap: .65rem;
+			margin-top: 1.5rem;
+		}
+
+		.inline input[type="checkbox"] {
+			width: 1.1rem;
+			height: 1.1rem;
+			cursor: pointer;
+		}
+
+		.inline label {
+			text-transform: none;
+			font-size: .9rem;
+			margin: 0;
+			cursor: pointer;
+		}
+
+		.error-msg {
+			color: #ef4444;
+			font-size: .8rem;
+			margin-top: .4rem;
+			display: none;
+		}
+
+		.success-box {
+			text-align: center;
+			padding: 3rem 2rem;
+		}
+
+		.success-box h2 {
+			color: #10b981;
+			margin-bottom: 1rem;
+			font-size: 1.75rem;
+		}
+
+		.hidden {
+			display: none !important;
+		}
+
+		.divider {
+			border: 0;
+			height: 1px;
+			background: rgba(148, 163, 184, .2);
+			margin: 2rem 0;
+		}
+
+		body.light .divider {
+			background: rgba(100, 116, 139, .15);
+		}
+
+		footer {
+			margin-top: 5rem;
+			padding: 3rem 1.5rem;
+			background: #1e293b;
+			border-top: 1px solid rgba(255, 255, 255, .08);
+		}
+
+		body.light footer {
+			background: #f8fafc;
+			border-top: 1px solid #e2e8f0;
+		}
+
+		footer .cols {
+			display: grid;
+			gap: 2.5rem;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		}
+
+		footer h3 {
+			font-size: .95rem;
+			font-weight: 600;
+			margin-bottom: 1rem;
+		}
+
+		footer a {
+			color: #94a3b8;
+			text-decoration: none;
+			font-size: .85rem;
+			display: block;
+			margin-bottom: .5rem;
+			transition: color .2s;
+		}
+
+		footer a:hover {
+			color: #e2e8f0;
+		}
+
+		body.light footer a {
+			color: #64748b;
+		}
+
+		body.light footer a:hover {
+			color: #0f172a;
+		}
+
+		.theme-toggle {
+			font-size: .8rem;
+		}
 	</style>
+	<script src="/js/api-config.js"></script>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+
 <body>
 	<nav>
 		<a href="index.html" class="logo">Elixopay</a>
@@ -65,7 +305,8 @@
 			<li><a href="usecases.html" data-i18n="nav.usecases">กรณีใช้งาน</a></li>
 			<li><a href="docs.html" data-i18n="nav.docs">เอกสาร</a></li>
 			<li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
-			<li><a href="login.html" class="btn-primary" style="background:transparent;border:1px solid #6366f1" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+			<li><a href="login.html" class="btn-primary" style="background:transparent;border:1px solid #6366f1"
+					data-i18n="nav.login">เข้าสู่ระบบ</a></li>
 			<li><button id="themeToggle" class="theme-toggle" aria-label="Toggle theme"></button></li>
 			<li>
 				<select id="langSelect" class="lang-select">
@@ -81,37 +322,42 @@
 		<div class="card" id="signupCard">
 			<h1 data-i18n="signup.title">สร้างบัญชีของคุณ</h1>
 			<p class="muted" data-i18n="signup.subtitle">สมัครใช้งานเพื่อเข้าถึงแดชบอร์ด จัดการธุรกรรม และ API</p>
-			<hr class="divider"/>
+			<hr class="divider" />
 			<form id="signupForm" onsubmit="handleSignup(event)">
 				<div class="grid two">
 					<div class="form-field">
 						<label for="name" data-i18n="signup.nameLabel">ชื่อเต็ม</label>
-						<input id="name" name="name" type="text" required data-i18n="[placeholder]signup.namePh" placeholder="ชื่อ-นามสกุล" />
+						<input id="name" name="name" type="text" required data-i18n="[placeholder]signup.namePh"
+							placeholder="ชื่อ-นามสกุล" />
 						<div class="error-msg" id="name-error"></div>
 					</div>
 					<div class="form-field">
 						<label for="business" data-i18n="signup.businessLabel">ชื่อธุรกิจ</label>
-						<input id="business" name="business" type="text" required data-i18n="[placeholder]signup.businessPh" placeholder="ชื่อบริษัท" />
+						<input id="business" name="business" type="text" required
+							data-i18n="[placeholder]signup.businessPh" placeholder="ชื่อบริษัท" />
 						<div class="error-msg" id="business-error"></div>
 					</div>
 				</div>
-				
+
 				<div class="grid two" style="margin-top:1.5rem">
 					<div class="form-field">
 						<label for="email" data-i18n="signup.emailLabel">อีเมล</label>
-						<input id="email" name="email" type="email" required data-i18n="[placeholder]signup.emailPh" placeholder="you@example.com" />
+						<input id="email" name="email" type="email" required data-i18n="[placeholder]signup.emailPh"
+							placeholder="you@example.com" />
 						<div class="error-msg" id="email-error"></div>
 					</div>
 					<div class="form-field">
 						<label for="password" data-i18n="signup.passwordLabel">รหัสผ่าน</label>
-						<input id="password" name="password" type="password" minlength="8" required data-i18n="[placeholder]signup.passwordPh" placeholder="อย่างน้อย 8 ตัวอักษร" />
+						<input id="password" name="password" type="password" minlength="8" required
+							data-i18n="[placeholder]signup.passwordPh" placeholder="อย่างน้อย 8 ตัวอักษร" />
 						<div class="error-msg" id="password-error"></div>
 					</div>
 				</div>
 
 				<div class="form-field" style="margin-top:1.5rem">
 					<label for="password2" data-i18n="signup.confirmLabel">ยืนยันรหัสผ่าน</label>
-					<input id="password2" name="password2" type="password" minlength="8" required data-i18n="[placeholder]signup.confirmPh" placeholder="พิมพ์อีกครั้ง" />
+					<input id="password2" name="password2" type="password" minlength="8" required
+						data-i18n="[placeholder]signup.confirmPh" placeholder="พิมพ์อีกครั้ง" />
 					<div class="error-msg" id="confirm-error"></div>
 				</div>
 
@@ -145,46 +391,76 @@
 					<input type="checkbox" id="terms" required />
 					<label for="terms" data-i18n="signup.termsLabel">ฉันยอมรับข้อตกลงและนโยบาย</label>
 				</div>
-				<button type="submit" class="btn-primary" style="margin-top:2rem; width:100%" id="signupBtn" data-i18n="signup.cta">สร้างบัญชี</button>
+
+				<!-- Google Sign In -->
+				<button type="button" onclick="handleGoogleSignIn()" class="btn-google"
+					style="margin-top:1.5rem; width:100%; display:flex; align-items:center; justify-content:center; gap:0.75rem; background:white; color:#333; border:1px solid #ddd; padding:0.75rem; border-radius:8px; cursor:pointer; font-weight:500; transition:all 0.2s;">
+					<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"
+						style="width:18px; height:18px;">
+					<span data-i18n="signup.google">สมัครด้วย Google</span>
+				</button>
+
+				<button type="submit" class="btn-primary" style="margin-top:1rem; width:100%" id="signupBtn"
+					data-i18n="signup.cta">สร้างบัญชี</button>
 				<p style="margin-top:1.5rem; text-align:center" class="muted">
 					<span data-i18n="signup.loginPrompt">มีบัญชีแล้ว?</span>
-					<a href="login.html" data-i18n="signup.loginLink" style="color:#6366f1; font-weight:600; margin-left:.35rem">เข้าสู่ระบบ</a>
+					<a href="login.html" data-i18n="signup.loginLink"
+						style="color:#6366f1; font-weight:600; margin-left:.35rem">เข้าสู่ระบบ</a>
 				</p>
 			</form>
 			<div id="signupSuccess" class="success-box hidden">
 				<div style="font-size:4rem; margin-bottom:1rem">✓</div>
 				<h2 data-i18n="signup.successTitle">สมัครสำเร็จ!</h2>
-				<p class="muted" style="max-width:600px; margin:1rem auto 2rem" data-i18n="signup.successDesc">ขอบคุณที่สมัครใช้งาน Elixopay เราจะส่งอีเมลยืนยันไปให้คุณ</p>
-				
-				<div style="background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.3); border-radius:12px; padding:2rem; margin:2rem auto; max-width:600px; text-align:left;">
-					<h3 style="font-size:1.25rem; margin:0 0 1rem; color:#6366f1" data-i18n="signup.nextSteps">ขั้นตอนต่อไป</h3>
+				<p class="muted" style="max-width:600px; margin:1rem auto 2rem" data-i18n="signup.successDesc">
+					ขอบคุณที่สมัครใช้งาน Elixopay เราจะส่งอีเมลยืนยันไปให้คุณ</p>
+
+				<div
+					style="background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.3); border-radius:12px; padding:2rem; margin:2rem auto; max-width:600px; text-align:left;">
+					<h3 style="font-size:1.25rem; margin:0 0 1rem; color:#6366f1" data-i18n="signup.nextSteps">
+						ขั้นตอนต่อไป</h3>
 					<div style="display:flex; flex-direction:column; gap:1rem;">
 						<div style="display:flex; gap:1rem; align-items:start;">
-							<div style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">1</div>
+							<div
+								style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">
+								1</div>
 							<div>
-								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step1Title">ยืนยันอีเมล</div>
-								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step1Desc">คลิกลิงก์ในอีเมลที่เราส่งให้คุณเพื่อยืนยันบัญชี</div>
+								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step1Title">
+									ยืนยันอีเมล</div>
+								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step1Desc">
+									คลิกลิงก์ในอีเมลที่เราส่งให้คุณเพื่อยืนยันบัญชี</div>
 							</div>
 						</div>
 						<div style="display:flex; gap:1rem; align-items:start;">
-							<div style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">2</div>
+							<div
+								style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">
+								2</div>
 							<div>
-								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step2Title">ยื่นเอกสารยืนยันตัวตน (KYC)</div>
-								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step2Desc">อัปโหลดบัตรประชาชน/หนังสือเดินทาง และหนังสือรับรองบริษัท (ถ้ามี)</div>
+								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step2Title">
+									ยื่นเอกสารยืนยันตัวตน (KYC)</div>
+								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step2Desc">
+									อัปโหลดบัตรประชาชน/หนังสือเดินทาง และหนังสือรับรองบริษัท (ถ้ามี)</div>
 							</div>
 						</div>
 						<div style="display:flex; gap:1rem; align-items:start;">
-							<div style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">3</div>
+							<div
+								style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">
+								3</div>
 							<div>
-								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step3Title">รอการตรวจสอบ</div>
-								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step3Desc">ทีมของเราจะตรวจสอบเอกสารภายใน 1-2 วันทำการ</div>
+								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step3Title">
+									รอการตรวจสอบ</div>
+								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step3Desc">
+									ทีมของเราจะตรวจสอบเอกสารภายใน 1-2 วันทำการ</div>
 							</div>
 						</div>
 						<div style="display:flex; gap:1rem; align-items:start;">
-							<div style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">4</div>
+							<div
+								style="background:#6366f1; color:#fff; width:1.75rem; height:1.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; flex-shrink:0;">
+								4</div>
 							<div>
-								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step4Title">เริ่มใช้งาน</div>
-								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step4Desc">เมื่ออนุมัติแล้ว คุณจะได้รับ API Keys และเริ่มรับชำระเงินได้ทันที</div>
+								<div style="font-weight:600; margin-bottom:.25rem" data-i18n="signup.step4Title">
+									เริ่มใช้งาน</div>
+								<div style="font-size:.85rem; opacity:.8" data-i18n="signup.step4Desc">เมื่ออนุมัติแล้ว
+									คุณจะได้รับ API Keys และเริ่มรับชำระเงินได้ทันที</div>
 							</div>
 						</div>
 					</div>
@@ -192,7 +468,9 @@
 
 				<div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
 					<a href="login.html" class="btn-primary" data-i18n="signup.goLogin">เข้าสู่ระบบ</a>
-					<a href="help.html" style="padding:.75rem 1.5rem; border:1px solid #6366f1; color:#6366f1; border-radius:8px; text-decoration:none; font-weight:600" data-i18n="signup.helpLink">ศูนย์ช่วยเหลือ</a>
+					<a href="help.html"
+						style="padding:.75rem 1.5rem; border:1px solid #6366f1; color:#6366f1; border-radius:8px; text-decoration:none; font-weight:600"
+						data-i18n="signup.helpLink">ศูนย์ช่วยเหลือ</a>
 				</div>
 			</div>
 		</div>
@@ -203,18 +481,18 @@
 			<div class="cols">
 				<div>
 					<h3 style="margin-top:0" data-i18n="footer.links.product">ผลิตภัณฑ์</h3>
-					<a href="pricing.html" data-i18n="footer.links.pricing">ราคา</a><br/>
-					<a href="usecases.html" data-i18n="footer.links.usecases">กรณีใช้งาน</a><br/>
+					<a href="pricing.html" data-i18n="footer.links.pricing">ราคา</a><br />
+					<a href="usecases.html" data-i18n="footer.links.usecases">กรณีใช้งาน</a><br />
 					<a href="docs.html" data-i18n="footer.links.docs">เอกสาร</a>
 				</div>
 				<div>
 					<h3 style="margin-top:0" data-i18n="footer.links.company">บริษัท</h3>
-					<a href="about.html" data-i18n="footer.links.about">เกี่ยวกับ</a><br/>
+					<a href="about.html" data-i18n="footer.links.about">เกี่ยวกับ</a><br />
 					<a href="contact.html" data-i18n="footer.links.contact">ติดต่อ</a>
 				</div>
 				<div>
 					<h3 style="margin-top:0" data-i18n="footer.links.resources">แหล่งข้อมูล</h3>
-					<a href="help.html" data-i18n="footer.links.help">ศูนย์ช่วยเหลือ</a><br/>
+					<a href="help.html" data-i18n="footer.links.help">ศูนย์ช่วยเหลือ</a><br />
 					<a href="security.html" data-i18n="footer.links.security">ความปลอดภัย</a>
 				</div>
 			</div>
@@ -226,21 +504,21 @@
 	<script src="js/ui.js?v=3"></script>
 	<script>
 		const errorTexts = {
-			th:{ email:'กรุณากรอกอีเมลที่ถูกต้อง', password:'รหัสผ่านอย่างน้อย 8 ตัว', confirm:'รหัสผ่านไม่ตรงกัน', name:'กรุณากรอกชื่อ', business:'กรุณากรอกชื่อธุรกิจ', country:'เลือกประเทศ', currency:'เลือกสกุลเงิน' },
-			en:{ email:'Please enter a valid email', password:'Password must be at least 8 characters', confirm:'Passwords do not match', name:'Please enter your name', business:'Please enter business name', country:'Select a country', currency:'Select a currency' },
-			zh:{ email:'请输入有效的邮箱地址', password:'密码至少 8 个字符', confirm:'两次密码不一致', name:'请输入姓名', business:'请输入公司名称', country:'请选择国家', currency:'请选择货币' }
+			th: { email: 'กรุณากรอกอีเมลที่ถูกต้อง', password: 'รหัสผ่านอย่างน้อย 8 ตัว', confirm: 'รหัสผ่านไม่ตรงกัน', name: 'กรุณากรอกชื่อ', business: 'กรุณากรอกชื่อธุรกิจ', country: 'เลือกประเทศ', currency: 'เลือกสกุลเงิน' },
+			en: { email: 'Please enter a valid email', password: 'Password must be at least 8 characters', confirm: 'Passwords do not match', name: 'Please enter your name', business: 'Please enter business name', country: 'Select a country', currency: 'Select a currency' },
+			zh: { email: '请输入有效的邮箱地址', password: '密码至少 8 个字符', confirm: '两次密码不一致', name: '请输入姓名', business: '请输入公司名称', country: '请选择国家', currency: '请选择货币' }
 		};
-		function showErr(id,msg){ const el=document.getElementById(id+'-error'); if(el){ el.textContent=msg; el.style.display='block'; } }
-		function clearErr(id){ const el=document.getElementById(id+'-error'); if(el){ el.textContent=''; el.style.display='none'; } }
-		['name','business','email','password','password2','country','currency'].forEach(f=>{
-			const el=document.getElementById(f); if(el){ el.addEventListener('input',()=> clearErr(f==='password2'?'confirm':f)); }
+		function showErr(id, msg) { const el = document.getElementById(id + '-error'); if (el) { el.textContent = msg; el.style.display = 'block'; } }
+		function clearErr(id) { const el = document.getElementById(id + '-error'); if (el) { el.textContent = ''; el.style.display = 'none'; } }
+		['name', 'business', 'email', 'password', 'password2', 'country', 'currency'].forEach(f => {
+			const el = document.getElementById(f); if (el) { el.addEventListener('input', () => clearErr(f === 'password2' ? 'confirm' : f)); }
 		});
-		function handleSignup(e){
+		function handleSignup(e) {
 			e.preventDefault();
-			
+
 			// Clear all errors first
-			['name','business','email','password','confirm','country','currency'].forEach(clearErr);
-			
+			['name', 'business', 'email', 'password', 'confirm', 'country', 'currency'].forEach(clearErr);
+
 			const lang = localStorage.getItem('elixopay-lang') || 'th';
 			const name = document.getElementById('name').value.trim();
 			const business = document.getElementById('business').value.trim();
@@ -249,20 +527,25 @@
 			const password2 = document.getElementById('password2').value;
 			const country = document.getElementById('country').value;
 			const currency = document.getElementById('currency').value;
+
+			// Get invite code from URL
+			const urlParams = new URLSearchParams(window.location.search);
+			const inviteCode = urlParams.get('ref') || null;
+
 			let ok = true;
 			const errs = errorTexts[lang];
-			
+
 			// Validate all fields
-			if(!name){ showErr('name',errs.name); ok=false; }
-			if(!business){ showErr('business',errs.business); ok=false; }
-			if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showErr('email',errs.email); ok=false; }
-			if(password.length < 8){ showErr('password',errs.password); ok=false; }
-			if(password2 !== password){ showErr('confirm',errs.confirm); ok=false; }
-			if(!country){ showErr('country',errs.country); ok=false; }
-			if(!currency){ showErr('currency',errs.currency); ok=false; }
-			
-			if(!ok) return false;
-			
+			if (!name) { showErr('name', errs.name); ok = false; }
+			if (!business) { showErr('business', errs.business); ok = false; }
+			if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showErr('email', errs.email); ok = false; }
+			if (password.length < 8) { showErr('password', errs.password); ok = false; }
+			if (password2 !== password) { showErr('confirm', errs.confirm); ok = false; }
+			if (!country) { showErr('country', errs.country); ok = false; }
+			if (!currency) { showErr('currency', errs.currency); ok = false; }
+
+			if (!ok) return false;
+
 			// Show loading state
 			const btn = document.getElementById('signupBtn');
 			const originalText = btn.textContent;
@@ -270,27 +553,78 @@
 			btn.style.opacity = '0.6';
 			btn.style.cursor = 'not-allowed';
 			btn.textContent = lang === 'th' ? 'กำลังสมัคร...' : lang === 'en' ? 'Signing up...' : '注册中...';
-			
-			// Simulate processing (demo mode - no actual backend call)
-			setTimeout(() => {
-				// Store user data in localStorage for demo purposes
+
+			// Real Backend Call
+			(async () => {
 				try {
-					localStorage.setItem('elixopay-demo-user', JSON.stringify({
-						name, business, email, country, currency, 
-						registeredAt: new Date().toISOString()
-					}));
-				} catch(err) {
-					console.warn('Could not save demo data:', err);
+					const [firstName, ...lastNameParts] = name.split(' ');
+					const lastName = lastNameParts.join(' ') || '';
+
+					const body = {
+						email,
+						password,
+						firstName,
+						lastName,
+						name: name, // Sending full name as fallback
+						inviteCode // Send invite code if present
+					};
+
+					const response = await window.apiFetch(window.API_CONFIG.ENDPOINTS.auth.register, {
+						method: 'POST',
+						body: JSON.stringify(body)
+					});
+
+					const result = await response.json();
+
+					if (result.success) {
+						// Store token and user data
+						localStorage.setItem('token', result.data.token);
+						localStorage.setItem('user', JSON.stringify(result.data.user));
+
+						// Show success screen
+						document.getElementById('signupForm').classList.add('hidden');
+						document.getElementById('signupSuccess').classList.remove('hidden');
+						window.scrollTo({ top: 0, behavior: 'smooth' });
+					} else {
+						// Show API Error
+						alert(result.error.message || result.message || 'Registration failed');
+						btn.disabled = false;
+						btn.style.opacity = '1';
+						btn.style.cursor = 'pointer';
+						btn.textContent = originalText;
+					}
+				} catch (err) {
+					console.error('Signup error:', err);
+					alert('Something went wrong. Please try again.');
+					btn.disabled = false;
+					btn.style.opacity = '1';
+					btn.style.cursor = 'pointer';
+					btn.textContent = originalText;
 				}
-				
-				// Show success screen
-				document.getElementById('signupForm').classList.add('hidden');
-				document.getElementById('signupSuccess').classList.remove('hidden');
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			}, 800);
-			
+			})();
+
 			return false;
 		}
+
+
+		// Google Sign-In Simulation
+
+	</script>
+	<script src="js/google-auth.js"></script>
+	<script>
+		// Check for referral code on load
+		document.addEventListener('DOMContentLoaded', () => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const ref = urlParams.get('ref');
+			if (ref) {
+				const container = document.querySelector('.card');
+				const alert = document.createElement('div');
+				alert.style.cssText = "background: rgba(99, 102, 241, 0.1); border: 1px solid #6366f1; color: #6366f1; padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; font-size: 0.9rem;";
+				alert.innerHTML = `<i class="fas fa-handshake"></i> คุณกำลังสมัครผ่านลิงก์แนะนำ (Referral Code: <b>${ref}</b>)`;
+				container.insertBefore(alert, container.querySelector('h1').nextSibling);
+			}
+		});
 	</script>
 </body>
+
 </html>
