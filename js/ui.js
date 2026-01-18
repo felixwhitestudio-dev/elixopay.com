@@ -3,8 +3,16 @@
 (function(){
   const STORAGE_KEY = 'elixopay-theme';
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+
   const saved = localStorage.getItem(STORAGE_KEY);
-  const isLight = saved ? saved === 'light' : false; // default dark
+  let isLight;
+  if (saved) {
+    isLight = saved === 'light';
+  } else {
+    // Auto select by local time: 6:00-18:00 = light, otherwise dark
+    const hour = new Date().getHours();
+    isLight = hour >= 6 && hour < 18;
+  }
   if (isLight) document.body.classList.add('light');
 
   // Apply ready state to remove skeleton

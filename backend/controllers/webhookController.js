@@ -1,6 +1,24 @@
 const db = require('../config/database');
 const stripeService = require('../utils/stripe');
 const { accrueCommissionForPayment } = require('../utils/ledger');
+const { sendEmail } = require('../utils/email');
+const { sendWebhook } = require('../utils/webhook');
+
+/**
+ * Helper to log audit events safely
+ */
+async function logAudit({ userId, action, entityId, entityType, details, ip }) {
+  try {
+    await db.query(
+      `INSERT INTO audit_logs (user_id, action, entity_id, entity_type, details, ip_address)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [userId, action, entityId, entityType, details, ip || 'system']
+    );
+  } catch (err) {
+    // Audit logging should not break the flow, just log error
+    console.error('⚠️ Failed to write audit log:', err.message);
+  }
+}
 
 /**
  * @route   POST /api/v1/webhooks/stripe
@@ -82,7 +100,7 @@ exports.handleStripeWebhook = async (req, res) => {
     res.json({ received: true });
   } catch (error) {
     console.error('Webhook Error:', error);
-    
+
     // Log error to database
     try {
       await db.query(
@@ -137,9 +155,51 @@ async function handlePaymentIntentSucceeded(paymentIntent) {
       const payment = result.rows[0];
       console.log(`✅ Updated payment ${payment.id} to succeeded`);
 
-      // TODO: Send email notification
-      // TODO: Add audit log
-      // TODO: Trigger any post-payment webhooks to merchant
+      // 1. Fetch User & Webhook Config
+      const userRes = await db.query('SELECT email FROM users WHERE id = $1', [payment.user_id]);
+      const user = userRes.rows[0];
+
+      // 2. Send email notification
+      if (user && user.email) {
+        await sendEmail(
+          user.email,
+          'Payment Received - Elixopay',
+          `<h3>Payment Succeeded</h3>
+           <p>You received <strong>${payment.amount} ${payment.currency}</strong></p>
+           <p>ID: ${payment.id}</p>
+           <p>Status: Succeeded</p>`
+        );
+      }
+
+      // 3. Trigger Post-Payment Webhook (if configured)
+      const whRes = await db.query(
+        `SELECT url, id, enabled_events FROM webhook_endpoints 
+         WHERE user_id = $1 AND is_active = true`,
+        [payment.user_id]
+      );
+
+      // Check if user has a webhook that subscribes to payment.succeeded (or all)
+      for (const endpoint of whRes.rows) {
+        // Simple check: if enabled_events implies it (assuming array of strings)
+        if (!endpoint.enabled_events || endpoint.enabled_events.includes('payment.succeeded') || endpoint.enabled_events.includes('*')) {
+          sendWebhook(endpoint.url, 'payment.succeeded', {
+            id: payment.id,
+            amount: payment.amount,
+            currency: payment.currency,
+            status: 'succeeded',
+            timestamp: new Date().toISOString()
+          });
+        }
+      }
+
+      // 4. Add audit log
+      await logAudit({
+        userId: payment.user_id,
+        action: 'payment_received',
+        entityId: payment.id,
+        entityType: 'payment',
+        details: { amount: payment.amount, currency: payment.currency, paymentIntent: paymentIntent.id }
+      });
 
       // Accrue commission for the user's primary agency (best-effort, non-blocking)
       try {
@@ -188,8 +248,31 @@ async function handlePaymentIntentFailed(paymentIntent) {
       const payment = result.rows[0];
       console.log(`✅ Updated payment ${payment.id} to failed`);
 
-      // TODO: Send failure notification email
-      // TODO: Add audit log
+      // 1. Fetch User
+      const userRes = await db.query('SELECT email FROM users WHERE id = $1', [payment.user_id]);
+      const user = userRes.rows[0];
+
+      // 2. Send failure notification email
+      if (user && user.email) {
+        await sendEmail(
+          user.email,
+          'Payment Failed - Elixopay',
+          `<h3>Payment Failed</h3>
+           <p>A payment of <strong>${payment.amount} ${payment.currency}</strong> failed.</p>
+           <p>ID: ${payment.id}</p>
+           <p>Reason: ${paymentIntent.last_payment_error ? paymentIntent.last_payment_error.message : 'Unknown'}</p>`
+        );
+      }
+
+      // 3. Add audit log
+      await logAudit({
+        userId: payment.user_id,
+        action: 'payment_failed',
+        entityId: payment.id,
+        entityType: 'payment',
+        details: { reason: paymentIntent.last_payment_error }
+      });
+
     } else {
       console.warn(`⚠️  Payment not found for payment_intent: ${paymentIntent.id}`);
     }
@@ -220,7 +303,14 @@ async function handlePaymentIntentCanceled(paymentIntent) {
       const payment = result.rows[0];
       console.log(`✅ Updated payment ${payment.id} to cancelled`);
 
-      // TODO: Add audit log
+      // Add audit log
+      await logAudit({
+        userId: payment.user_id,
+        action: 'payment_cancelled',
+        entityId: payment.id,
+        entityType: 'payment',
+        details: { paymentIntent: paymentIntent.id }
+      });
     } else {
       console.warn(`⚠️  Payment not found for payment_intent: ${paymentIntent.id}`);
     }
@@ -263,8 +353,30 @@ async function handleChargeRefunded(charge) {
       const payment = result.rows[0];
       console.log(`✅ Updated payment ${payment.id} to refunded`);
 
-      // TODO: Send refund notification email
-      // TODO: Add audit log
+      // 1. Fetch User
+      const userRes = await db.query('SELECT email FROM users WHERE id = $1', [payment.user_id]);
+      const user = userRes.rows[0];
+
+      // 2. Send refund notification email
+      if (user && user.email) {
+        await sendEmail(
+          user.email,
+          'Payment Refunded - Elixopay',
+          `<h3>Payment Refunded</h3>
+           <p>A refund of <strong>${refundAmount} ${payment.currency}</strong> has been processed.</p>
+           <p>Payment ID: ${payment.id}</p>`
+        );
+      }
+
+      // 3. Add audit log
+      await logAudit({
+        userId: payment.user_id,
+        action: 'payment_refunded',
+        entityId: payment.id,
+        entityType: 'payment',
+        details: { refundAmount, chargeId: charge.id }
+      });
+
     } else {
       console.warn(`⚠️  Payment not found for payment_intent: ${paymentIntentId}`);
     }
@@ -312,7 +424,7 @@ exports.getWebhookLogs = async (req, res, next) => {
     const result = await db.query(query, params);
 
     // Get total count
-    const countQuery = status 
+    const countQuery = status
       ? 'SELECT COUNT(*) FROM webhook_logs WHERE provider = $1 AND status = $2'
       : 'SELECT COUNT(*) FROM webhook_logs WHERE provider = $1';
     const countParams = status ? [provider, status] : [provider];

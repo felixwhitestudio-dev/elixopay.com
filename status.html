@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สถานะระบบ - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #0f172a;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --light-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .status-header {
+            background-color: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .big-status {
+            background-color: var(--success-color);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
+        }
+
+        .status-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .status-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .item-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: currentColor;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .past-incidents {
+            margin-top: 4rem;
+        }
+
+        .past-incidents h3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .incident {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .incident-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .incident-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            margin-top: auto;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        /* Animation for live dot */
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="status-header">
+        <div class="container header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>สถานะระบบ Elixopay</span>
+            </a>
+            <a href="/" class="back-link">&larr; กลับหน้าหลัก</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="big-status">
+            ระบบทั้งหมดทำงานปกติ
+        </div>
+
+        <div class="status-grid">
+            <div class="status-item">
+                <span class="item-name">API</span>
+                <span class="item-status success"><span class="status-dot pulse"></span> ใช้งานได้ปกติ</span>
+            </div>
+            <div class="status-item">
+                <span class="item-name">Dashboard</span>
+                <span class="item-status success"><span class="status-dot pulse"></span> ใช้งานได้ปกติ</span>
+            </div>
+            <div class="status-item">
+                <span class="item-name">การชำระเงิน (Stripe)</span>
+                <span class="item-status success"><span class="status-dot pulse"></span> ใช้งานได้ปกติ</span>
+            </div>
+            <div class="status-item">
+                <span class="item-name">การชำระเงิน (Wallet)</span>
+                <span class="item-status success"><span class="status-dot pulse"></span> ใช้งานได้ปกติ</span>
+            </div>
+            <div class="status-item">
+                <span class="item-name">Webhooks</span>
+                <span class="item-status success"><span class="status-dot pulse"></span> ใช้งานได้ปกติ</span>
+            </div>
+        </div>
+
+        <div class="past-incidents">
+            <h3>เหตุการณ์ที่ผ่านมา</h3>
+            <div class="incident">
+                <div class="incident-date">28 ธันวาคม 2568</div>
+                <div class="incident-title">ไม่มีรายงานเหตุการณ์วันนี้</div>
+            </div>
+            <div class="incident">
+                <div class="incident-date">27 ธันวาคม 2568</div>
+                <div class="incident-title">ไม่มีรายงานเหตุการณ์</div>
+            </div>
+            <div class="incident">
+                <div class="incident-date">26 ธันวาคม 2568</div>
+                <div class="incident-title">ปิดปรับปรุงชั่วคราว - อัปเกรดฐานข้อมูล</div>
+                <p>ดำเนินการเสร็จสิ้นเรียบร้อย</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; 2026 Elixopay. สงวนลิขสิทธิ์
+        </div>
+    </footer>
+
+</body>
+
+</html>

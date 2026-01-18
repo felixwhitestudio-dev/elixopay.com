@@ -1,331 +1,140 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Documentation - Elixopay</title>
-  <meta name="description" content="Elixopay API Documentation – Authentication, Payments, Webhooks, Errors" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เอกสาร API - Elixopay</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/theme.css">
   <style>
-    .code-block{position:relative;background:#0f172a;color:#e2e8f0;border-radius:.75rem;padding:1rem;font-family:ui-monospace,monospace;font-size:.75rem;line-height:1.2;}
-    .code-block button{position:absolute;top:.5rem;right:.5rem;background:#1e293b;color:#94a3b8;font-size:.65rem;padding:.35rem .55rem;border-radius:.375rem;border:1px solid #334155;cursor:pointer;}
-    .code-block button:hover{color:#38bdf8;border-color:#38bdf8;}
-    .section-card{transition:box-shadow .25s,transform .25s;}
-    .section-card:hover{box-shadow:0 8px 20px -4px rgba(0,0,0,.08);transform:translateY(-2px);}
-    .anchor-link{opacity:0;transition:opacity .2s;margin-left:.25rem;}
-    h2:hover .anchor-link{opacity:1;}
-    /* Sidebar active indicator */
-    .nav-active{background:linear-gradient(90deg,#6366f1,#3b82f6);color:#fff;font-weight:600;}
-    /* Dark mode overrides */
-    html.dark body{background:#0d1117;color:#cbd5e1;}
-    html.dark .section-card{background:#1e293b;border-color:#334155;}
-    html.dark .code-block{background:#0d1117;color:#e2e8f0;border:1px solid #1e293b;}
-    html.dark .code-block button{background:#1e293b;border-color:#334155;}
-    html.dark nav, html.dark footer{background:#0f172a;border-color:#1e293b;}
-    html.dark table thead{background:#1e293b;}
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+
+    .code-block {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 1.5rem;
+      rounded-lg: 0.5rem;
+      overflow-x: auto;
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-	<nav class="bg-white shadow border-b border-gray-200">
-		<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <a href="/" class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">Elixopay API Docs</a>
-        <span class="px-2 py-1 text-[10px] uppercase rounded bg-indigo-100 text-indigo-700 font-semibold">v1</span>
+
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white/90 backdrop-blur-md border-b border-gray-100 fixed w-full z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <a href="/dashboard.html" class="flex items-center group">
+            <div
+              class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl mr-2 shadow-lg">
+              E</div>
+            <span
+              class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-blue-600">Elixopay
+              Devs</span>
+          </a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="/" class="text-gray-500 hover:text-purple-600 font-medium">หน้าหลัก</a>
+          <a href="/dashboard.html" class="text-gray-500 hover:text-purple-600 font-medium">แดชบอร์ด</a>
+          <a href="/developer.html" class="text-gray-500 hover:text-purple-600 font-medium">API Keys</a>
+        </div>
       </div>
-      <div class="flex items-center gap-3 text-xs">
-        <select id="langSelect" class="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-indigo-500 focus:border-indigo-500">
-          <option value="th">TH</option>
-          <option value="en">EN</option>
-          <option value="zh">中文</option>
-        </select>
-        <button id="themeToggle" class="px-3 py-1 rounded border border-gray-300 hover:border-indigo-500 text-gray-700 text-xs flex items-center gap-1" aria-label="Toggle dark mode">
-          <i class="fas fa-moon"></i><span class="hidden sm:inline">Dark</span>
-        </button>
+    </div>
+  </nav>
+
+  <div class="pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Sidebar -->
+      <div class="md:col-span-1">
+        <div class="sticky top-24 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <h3 class="font-bold text-gray-900 mb-4 px-2">สารบัญ</h3>
+          <ul class="space-y-1">
+            <li><a href="#intro" class="block px-2 py-1.5 rounded-lg bg-purple-50 text-purple-700 font-medium">บทนำ</a>
+            </li>
+            <li><a href="#auth" class="block px-2 py-1.5 rounded-lg hover:bg-gray-50 text-gray-600">การยืนยันตัวตน</a>
+            </li>
+            <li><a href="#payments" class="block px-2 py-1.5 rounded-lg hover:bg-gray-50 text-gray-600">การชำระเงิน</a>
+            </li>
+          </ul>
+        </div>
       </div>
-		</div>
-	</nav>
 
-  <!-- Main Container with Sidebar -->
-  <div class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
-    <!-- Sidebar -->
-    <aside class="hidden lg:block sticky top-20 self-start">
-      <nav class="space-y-1 text-sm" id="sectionNav">
-        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Sections</h3>
-        <a href="#authentication" class="block px-3 py-2 rounded hover:bg-gray-100">Authentication</a>
-        <a href="#payments" class="block px-3 py-2 rounded hover:bg-gray-100">Payments</a>
-        <a href="#webhooks" class="block px-3 py-2 rounded hover:bg-gray-100">Webhooks</a>
-        <a href="#errors" class="block px-3 py-2 rounded hover:bg-gray-100">Errors</a>
-        <div class="mt-6 pt-6 border-t border-gray-200">
-          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Meta</h3>
-          <a href="/SECURITY_README.md" class="block px-3 py-2 rounded hover:bg-gray-100">Security</a>
-          <a href="/help.html" class="block px-3 py-2 rounded hover:bg-gray-100">Help Center</a>
-        </div>
-      </nav>
-    </aside>
+      <!-- Content -->
+      <div class="md:col-span-3 space-y-12">
+        <!-- Intro -->
+        <section id="intro">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">เอกสาร API</h1>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            ยินดีต้อนรับสู่ Elixopay API คุณสามารถใช้ API ของเราเพื่อเข้าถึง endpoint ต่างๆ ของ Elixopay
+            ซึ่งจะช่วยให้คุณดึงข้อมูลธุรกรรม จัดการกระเป๋าเงิน และประมวลผลการชำระเงินได้
+          </p>
+        </section>
 
-    <main class="space-y-12">
-      <header class="mb-4 space-y-6">
-        <div>
-          <h1 class="text-4xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent" data-i18n="docs.title">API Documentation</h1>
-          <p class="text-gray-600 text-sm leading-relaxed max-w-2xl" data-i18n="docs.subtitle">เวอร์ชันปรับปรุงของเอกสาร API สำหรับผู้พัฒนา – รวมตัวอย่างและแนวทางการใช้งานอย่างปลอดภัย</p>
-        </div>
-        <div class="flex flex-wrap gap-2 text-xs">
-          <span class="px-2 py-1 rounded bg-green-100 text-green-700 font-medium"><i class="fas fa-lock mr-1"></i>Secure</span>
-          <span class="px-2 py-1 rounded bg-blue-100 text-blue-700 font-medium"><i class="fas fa-code mr-1"></i>REST JSON</span>
-          <span class="px-2 py-1 rounded bg-purple-100 text-purple-700 font-medium"><i class="fas fa-bolt mr-1"></i>Low Latency</span>
-          <span class="px-2 py-1 rounded bg-orange-100 text-orange-700 font-medium"><i class="fas fa-rocket mr-1"></i>Quick Start</span>
-        </div>
-        <div class="flex flex-col md:flex-row gap-4 md:items-center">
-          <div class="relative md:w-80">
-            <input id="docsSearch" type="search" placeholder="Search sections..." class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" />
-            <i class="fas fa-search absolute right-3 top-2.5 text-gray-400 text-sm"></i>
-          </div>
-          <button id="mobileNavToggle" class="md:hidden inline-flex items-center gap-2 px-3 py-2 text-xs rounded border border-gray-300 bg-white shadow-sm active:scale-[.97]">
-            <i class="fas fa-list"></i><span>Sections</span>
-          </button>
-        </div>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="section-card bg-white border border-gray-200 rounded-xl p-4 flex items-start gap-3">
-            <i class="fas fa-terminal text-indigo-600 mt-1"></i>
-            <div class="text-xs leading-relaxed">
-              <h3 class="font-semibold mb-1">Quick Start</h3>
-              <p>สร้าง API key, ตั้งค่า env, เรียก login, สร้าง payment intent และฟัง webhook.</p>
+        <hr class="border-gray-200">
+
+        <!-- Auth -->
+        <section id="auth">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">การยืนยันตัวตน (Authentication)</h2>
+          <p class="text-gray-600 mb-4">
+            ยืนยันตัวตนบัญชีของคุณเมื่อใช้งาน API โดยระบุ secret API key ในคำขอ (Request) คุณสามารถจัดการ API keys
+            ของคุณได้ที่ <a href="/developer.html" class="text-purple-600 hover:underline">แดชบอร์ดนักพัฒนา</a>
+          </p>
+
+          <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div class="flex">
+              <i class="fas fa-exclamation-circle text-yellow-400 mt-1 mr-3"></i>
+              <div>
+                <p class="text-sm text-yellow-700 font-bold">เก็บรักษา Key ของคุณให้ปลอดภัย</p>
+                <p class="text-sm text-yellow-700">API keys ของคุณมีสิทธิ์เข้าถึงสูง ดังนั้นต้องเก็บรักษาให้ปลอดภัย!
+                  ห้ามแชร์ secret API keys ในที่สาธารณะ เช่น GitHub หรือในโค้ดฝั่ง Client-side</p>
+              </div>
             </div>
           </div>
-          <div class="section-card bg-white border border-gray-200 rounded-xl p-4 flex items-start gap-3">
-            <i class="fas fa-shield-alt text-green-600 mt-1"></i>
-            <div class="text-xs leading-relaxed">
-              <h3 class="font-semibold mb-1">Security Guidance</h3>
-              <p>ใช้ HTTPS, หมุนเวียน secret, ตรวจสอบ signature ของทุก webhook, เก็บ token อย่างปลอดภัย.</p>
-            </div>
+
+          <h3 class="text-lg font-bold text-gray-800 mb-2">Authorization Header</h3>
+          <p class="text-gray-600 mb-4">ทุกคำขอ API (API requests) ต้องแนบ API key ใน <code>Authorization</code> header
+            ดังนี้:</p>
+
+          <div class="bg-gray-900 rounded-xl p-6 overflow-hidden">
+            <pre class="text-green-400 font-mono text-sm">Authorization: Bearer sk_live_...</pre>
           </div>
-        </div>
-      </header>
+        </section>
 
-		<!-- Authentication -->
-		<section id="authentication" class="section-card bg-white border border-gray-200 rounded-xl p-6">
-			<h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-key text-purple-600 mr-3"></i><span data-i18n="docs.auth.title">Authentication</span><a href="#authentication" class="anchor-link text-xs text-indigo-500">#</a></h2>
-			<p class="text-sm text-gray-700 mb-4" data-i18n="[html]docs.auth.desc.html">ใช้ <code class="bg-gray-100 px-1 rounded">Bearer &lt;token&gt;</code> ใน Header <code class="bg-gray-100 px-1 rounded">Authorization</code> หลังจากล็อกอินสำเร็จ</p>
-			<div class="code-block" data-code="POST /api/v1/auth/login
-Content-Type: application/json
+        <hr class="border-gray-200">
 
-{ &quot;email&quot;: &quot;demo@elixopay.com&quot;, &quot;password&quot;: &quot;Password123&quot; }
+        <!-- Payments -->
+        <section id="payments">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">สร้างการชำระเงิน (Create a Payment)</h2>
+          <p class="text-gray-600 mb-4">ในการสร้างเซสชันการชำระเงินใหม่ ให้ส่งคำขอแบบ POST ไปยัง endpoint การชำระเงิน
+          </p>
 
-# Response (200)
-{
-  &quot;success&quot;: true,
-  &quot;data&quot;: {
-    &quot;token&quot;: &quot;&lt;JWT&gt;&quot;,
-    &quot;refreshToken&quot;: &quot;&lt;JWT_REFRESH&gt;&quot;,
-    &quot;user&quot;: { &quot;id&quot;: 1, &quot;email&quot;: &quot;demo@elixopay.com&quot; }
-  }
-}">POST /api/v1/auth/login
-Content-Type: application/json
-
-{ "email": "demo@elixopay.com", "password": "Password123" }
-
-# Response (200)
-{
-  "success": true,
-  "data": {
-    "token": "&lt;JWT&gt;",
-    "refreshToken": "&lt;JWT_REFRESH&gt;",
-    "user": { "id": 1, "email": "demo@elixopay.com" }
-  }
-}
-              <button type="button">Copy</button>
+          <div class="bg-gray-900 rounded-xl p-6 overflow-hidden mb-4">
+            <div class="flex items-center mb-2">
+              <span class="bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded mr-2">POST</span>
+              <span class="text-gray-300 font-mono text-sm">/api/v1/payments</span>
             </div>
-            <div class="mt-4 text-xs text-gray-600 space-y-1">
-              <p>ใช้ <code class="bg-gray-100 px-1 rounded">Authorization: Bearer &lt;token&gt;</code> กับทุก endpoint ที่มีการระบุว่า "Bearer".</p>
-              <p class="flex items-center gap-2"><i class="fas fa-shield-alt text-green-600"></i> ควรเก็บ token ฝั่งเซิร์ฟเวอร์หรือใช้ HttpOnly cookie ใน production.</p>
-            </div>
-		</section>
-
-		<!-- Payments -->
-		<section id="payments" class="section-card bg-white border border-gray-200 rounded-xl p-6">
-			<h2 class="text-2xl font-semibold mb-6 flex items-center"><i class="fas fa-credit-card text-green-600 mr-3"></i><span data-i18n="docs.payments.title">Payments</span><a href="#payments" class="anchor-link text-xs text-indigo-500">#</a></h2>
-			<table class="w-full text-sm mb-4">
-				<thead>
-					<tr class="text-left text-gray-600 text-xs uppercase tracking-wider">
-						<th class="py-2" data-i18n="docs.payments.th.endpoint">Endpoint</th>
-						<th class="py-2" data-i18n="docs.payments.th.method">Method</th>
-						<th class="py-2" data-i18n="docs.payments.th.description">Description</th>
-						<th class="py-2" data-i18n="docs.payments.th.auth">Auth</th>
-					</tr>
-				</thead>
-				<tbody class="divide-y">
-					<tr>
-						<td>/api/v1/payments</td><td>POST</td><td>Create Payment (Stripe Intent)</td><td>Bearer</td>
-					</tr>
-					<tr>
-						<td>/api/v1/payments/:id/confirm</td><td>POST</td><td>Confirm Payment Intent</td><td>Bearer</td>
-					</tr>
-					<tr>
-						<td>/api/v1/payments/:id/cancel</td><td>POST</td><td>Cancel Pending Payment</td><td>Bearer</td>
-					</tr>
-					<tr>
-						<td>/api/v1/payments/:id/refund</td><td>POST</td><td>Refund a Succeeded Payment</td><td>Bearer</td>
-					</tr>
-					<tr>
-						<td>/api/v1/payments/stats</td><td>GET</td><td>Aggregate Statistics</td><td>Bearer</td>
-					</tr>
-					<tr>
-						<td>/api/v1/payments</td><td>GET</td><td>List Payments (query params)</td><td>Bearer</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="code-block mb-4" data-code="curl -X POST &quot;$BASE_URL/api/v1/payments&quot; \
-  -H &quot;Authorization: Bearer $TOKEN&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;amount&quot;:299900,&quot;currency&quot;:&quot;thb&quot;,&quot;description&quot;:&quot;Test order #1&quot;}'">curl -X POST "$BASE_URL/api/v1/payments" \
-  -H "Authorization: Bearer $TOKEN" \
+            <pre class="text-gray-300 font-mono text-sm overflow-x-auto">
+curl https://api.elixopay.com/v1/payments \
+  -H "Authorization: Bearer sk_live_..." \
   -H "Content-Type: application/json" \
-  -d '{"amount":299900,"currency":"thb","description":"Test order #1"}'
-              <button type="button">Copy</button>
-            </div>
-			<p class="text-xs text-gray-600" data-i18n="docs.payments.note">หมายเหตุ: จำนวนเงิน (amount) ใช้หน่วยเป็นสตางค์ (เช่น 2,999.00 บาท = 299900)</p>
-		</section>
-
-		<!-- Webhooks -->
-		<section id="webhooks" class="section-card bg-white border border-gray-200 rounded-xl p-6">
-			<h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-plug text-blue-600 mr-3"></i><span data-i18n="docs.webhooks.title">Webhooks</span><a href="#webhooks" class="anchor-link text-xs text-indigo-500">#</a></h2>
-			<p class="text-sm text-gray-700 mb-4" data-i18n="[html]docs.webhooks.desc.html">Stripe จะส่งอีเวนต์มายัง <code class="bg-gray-100 px-1 rounded">/api/v1/webhooks/stripe</code> เพื่ออัปเดตสถานะการชำระเงิน (เช่น <code>payment_intent.succeeded</code>, <code>payment_intent.payment_failed</code>, <code>charge.refunded</code>).</p>
-			<div class="code-block" data-code="stripe listen --forward-to http://localhost:3000/api/v1/webhooks/stripe">stripe listen --forward-to http://localhost:3000/api/v1/webhooks/stripe
-              <button type="button">Copy</button>
-            </div>
-            <ul class="mt-4 text-xs text-gray-600 space-y-1 list-disc list-inside">
-              <li>ควรกำหนด secret ใน <code class="bg-gray-100 px-1 rounded">STRIPE_WEBHOOK_SECRET</code>.</li>
-              <li>ตรวจสอบ signature ทุกครั้งก่อนปรับสถานะ payment.</li>
-            </ul>
-		</section>
-
-		<!-- Errors -->
-		<section id="errors" class="section-card bg-white border border-gray-200 rounded-xl p-6">
-			<h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-bug text-red-600 mr-3"></i><span data-i18n="docs.errors.title">Error Handling</span><a href="#errors" class="anchor-link text-xs text-indigo-500">#</a></h2>
-			<p class="text-sm text-gray-700 mb-2" data-i18n="docs.errors.shape">ทุก Response ที่ผิดพลาดจะมีรูปแบบ:</p>
-			<div class="code-block" data-code="{
-  &quot;success&quot;: false,
-  &quot;error&quot;: {
-    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
-    &quot;message&quot;: &quot;Amount must be positive&quot;
-  }
-}">{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Amount must be positive"
-  }
-}
-              <button type="button">Copy</button>
-            </div>
-            <div class="mt-4 grid sm:grid-cols-2 gap-4 text-xs">
-              <div class="p-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2"><i class="fas fa-times-circle text-red-600 mt-0.5"></i><span><strong>4xx</strong> – Client input ผิด เช่น validation, auth</span></div>
-              <div class="p-3 rounded-lg bg-yellow-50 border border-yellow-200 flex items-start gap-2"><i class="fas fa-exclamation-triangle text-yellow-600 mt-0.5"></i><span><strong>5xx</strong> – Internal error ติดต่อ support พร้อม request id</span></div>
-            </div>
-		</section>
-
-    </main>
-  </div>
-
-  <footer class="bg-white border-t border-gray-200 py-6 mt-8 text-center text-xs text-gray-600">
-    <p data-i18n="footer.rights">© 2024 Elixopay API Docs • Built for developers</p>
-  </footer>
-
-  <script>
-    // Dark mode toggle
-    const themeBtn = document.getElementById('themeToggle');
-    function applyTheme(t){
-      const html=document.documentElement; if(t==='dark'){html.classList.add('dark');} else {html.classList.remove('dark');}
-      themeBtn.innerHTML = t==='dark' ? '<i class="fas fa-sun"></i><span class="hidden sm:inline">Light</span>' : '<i class="fas fa-moon"></i><span class="hidden sm:inline">Dark</span>';
-      localStorage.setItem('docs_theme', t);
-    }
-    const savedTheme = localStorage.getItem('docs_theme') || 'light';
-    applyTheme(savedTheme);
-    themeBtn.addEventListener('click',()=>{applyTheme(document.documentElement.classList.contains('dark')?'light':'dark');});
-
-    // Code block copy buttons
-    document.querySelectorAll('.code-block').forEach(block => {
-      const btn = block.querySelector('button');
-      if(!btn) return;
-      btn.addEventListener('click', () => {
-        const text = block.getAttribute('data-code') || block.textContent.trim();
-        navigator.clipboard.writeText(text).then(()=>{
-          btn.textContent='Copied';
-          setTimeout(()=>btn.textContent='Copy',1500);
-        });
-      });
-    });
-
-    // Scroll spy for sidebar
-    const sections = ['authentication','payments','webhooks','errors'].map(id=>document.getElementById(id));
-    const navLinks = Array.from(document.querySelectorAll('#sectionNav a[href^="#"]'));
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if(e.isIntersecting){
-          navLinks.forEach(l=>l.classList.remove('nav-active'));
-          const active = navLinks.find(l=>l.getAttribute('href')===`#${e.target.id}`);
-          if(active) active.classList.add('nav-active');
-        }
-      });
-    }, { rootMargin:'-40% 0px -50% 0px', threshold:0 });
-    sections.forEach(sec=>sec && observer.observe(sec));
-
-    // Live search filter
-    const searchInput = document.getElementById('docsSearch');
-    const docSections = sections.filter(Boolean);
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim().toLowerCase();
-      docSections.forEach(sec => {
-        const text = sec.textContent.toLowerCase();
-        if(q === '' || text.includes(q)) {
-          sec.style.display = '';
-        } else {
-          sec.style.display = 'none';
-        }
-      });
-    });
-
-    // Mobile sidebar toggle
-    const mobileBtn = document.getElementById('mobileNavToggle');
-    const sidebar = document.querySelector('aside');
-    let mobilePanel;
-    function ensurePanel(){
-      if(mobilePanel) return mobilePanel;
-      mobilePanel = document.createElement('div');
-      mobilePanel.className='fixed inset-0 z-50 md:hidden';
-      mobilePanel.innerHTML = `
-        <div class="absolute inset-0 bg-black/40" data-panel-close></div>
-        <div class="absolute left-0 top-0 bottom-0 w-64 bg-white dark:bg-[#0f172a] shadow-lg p-4 overflow-y-auto">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-sm font-semibold">Sections</h3>
-            <button class="text-gray-500 hover:text-gray-700" data-panel-close><i class="fas fa-times"></i></button>
+  -d '{
+    "amount": 1000,
+    "currency": "thb",
+    "description": "Order #1234"
+  }'</pre>
           </div>
-          ${document.getElementById('sectionNav').innerHTML}
-        </div>`;
-      document.body.appendChild(mobilePanel);
-      mobilePanel.addEventListener('click', e=>{ if(e.target.matches('[data-panel-close]')) closePanel(); });
-      mobilePanel.querySelectorAll('a[href^="#"]').forEach(a=>{
-        a.addEventListener('click', ()=>{ closePanel(); });
-      });
-      return mobilePanel;
-    }
-    function openPanel(){ ensurePanel().classList.remove('hidden'); }
-    function closePanel(){ ensurePanel().classList.add('hidden'); }
-    mobileBtn && mobileBtn.addEventListener('click', ()=>{ openPanel(); });
-
-    // Back to top button
-    const backTop = document.createElement('button');
-    backTop.type='button';
-    backTop.className='hidden fixed bottom-6 right-6 z-40 bg-indigo-600 text-white rounded-full w-10 h-10 shadow-lg text-xs flex items-center justify-center hover:bg-indigo-500 active:scale-95';
-    backTop.innerHTML='<i class="fas fa-arrow-up"></i>';
-    backTop.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
-    document.body.appendChild(backTop);
-    window.addEventListener('scroll', () => {
-      if(window.scrollY > 300){ backTop.classList.remove('hidden'); } else { backTop.classList.add('hidden'); }
-    });
-  </script>
-	<script src="js/i18n.js?v=2"></script>
-	<script src="js/ui.js?v=2"></script>
+        </section>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>

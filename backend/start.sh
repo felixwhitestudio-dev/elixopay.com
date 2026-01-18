@@ -14,4 +14,4 @@ fi
 
 # Start the server
 echo "🌟 Starting server..."
-node server.js
+node backend/server.js

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="terms.page_title">Terms of Service - Elixopay</title>
+    <meta name="description" content="ข้อกำหนดการใช้งานสำหรับบริการ Elixopay">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --light-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Nav Copied from about.html but simplified styles */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Content Structure */
+        .page-header {
+            padding: 8rem 0 4rem;
+            background: white;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .content-section {
+            padding: 4rem 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-block {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .content-block h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .content-block p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .content-block ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .content-block li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background: var(--dark-bg);
+            color: #f8fafc;
+            padding: 4rem 0 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html" data-i18n="nav.about">About</a></li>
+                <li><a href="pricing.html" data-i18n="nav.pricing">Pricing</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                <li><a href="login.html" class="btn" data-i18n="nav.login">Login</a></li>
+                <li><a href="signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1 data-i18n="terms.main_title">Terms of Service</h1>
+            <p data-i18n="terms.updated">Last Updated: January 1, 2026</p>
+        </div>
+    </header>
+
+    <main class="content-section">
+        <div class="container">
+            <div class="content-block">
+                <h2 data-i18n="terms.section1.title">1. Agreement to Terms</h2>
+                <p data-i18n="terms.section1.desc">By accessing and using Elixopay services, you accept and agree to be
+                    bound by the terms and conditions of this agreement.</p>
+            </div>
+
+            <div class="content-block">
+                <h2 data-i18n="terms.section2.title">2. Service Description</h2>
+                <p data-i18n="terms.section2.desc">Elixopay provides payment processing, digital wallets, and developer
+                    APIs. We reserve the right to modify, suspend, or discontinue any part of the service at any time.
+                </p>
+            </div>
+
+            <div class="content-block">
+                <h2 data-i18n="terms.section3.title">3. User Accounts</h2>
+                <p data-i18n="terms.section3.desc">To use our services, you must register for an account. You agree to
+                    provide accurate and current information during the registration process.</p>
+                <ul>
+                    <li data-i18n="terms.section3.l1">You are responsible for maintaining the confidentiality of your
+                        password.</li>
+                    <li data-i18n="terms.section3.l2">You are responsible for all activities that occur under your
+                        account.</li>
+                </ul>
+            </div>
+
+            <div class="content-block">
+                <h2 data-i18n="terms.section4.title">4. Prohibited Activities</h2>
+                <p data-i18n="terms.section4.desc">You agree not to engage in the following activities:</p>
+                <ul>
+                    <li data-i18n="terms.section4.l1">Use the service for any illegal purpose or in violation of any
+                        local, state, or international law.</li>
+                    <li data-i18n="terms.section4.l2">Violate the rights of third parties, including intellectual
+                        property rights.</li>
+                    <li data-i18n="terms.section4.l3">Interfere with security features of the service.</li>
+                </ul>
+            </div>
+
+            <div class="content-block">
+                <h2 data-i18n="terms.section5.title">5. Termination</h2>
+                <p data-i18n="terms.section5.desc">We may terminate or suspend your account and access to the service
+                    immediately, without prior notice, for conduct that violates these Terms.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Elixopay</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;" data-i18n="footer.desc">Next-generation payment
+                    infrastructure for the modern web.</p>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.products">Products</h4>
+                <ul>
+                    <li><a href="pricing.html" data-i18n="footer.links.pricing">Pricing</a></li>
+                    <li><a href="docs.html" data-i18n="footer.links.docs">API Docs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.company">Company</h4>
+                <ul>
+                    <li><a href="about.html" data-i18n="footer.links.about">About</a></li>
+                    <li><a href="contact.html" data-i18n="footer.links.contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.legal">Legal</h4>
+                <ul>
+                    <li><a href="terms.html" data-i18n="footer.links.terms">Terms</a></li>
+                    <li><a href="privacy.html" data-i18n="footer.links.privacy">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    <script src="js/i18n.js?v=2"></script>
+    <script src="js/ui.js?v=2"></script>
+</body>
+
+</html>

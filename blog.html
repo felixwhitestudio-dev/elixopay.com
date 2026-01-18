@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บล็อก - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --dark-bg: #0f172a;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --light-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .blog-header {
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .blog-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .blog-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-img {
+            height: 200px;
+            background-color: #e2e8f0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-tag {
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid #f1f5f9;
+            padding-top: 1rem;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: #cbd5e1;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-newspaper"></i>
+                <span>บทความ Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="product.html">อัปเดตผลิตภัณฑ์</a></li>
+                <li><a href="engineering.html">วิศวกรรม</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
+                <li><a href="signup.html" class="btn btn-primary">ติดตาม</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="blog-header">
+        <div class="container">
+            <h1>ข้อมูลเชิงลึกล่าสุด</h1>
+            <p>ข่าวสาร อัปเดต และเรื่องราวจากทีมงาน Elixopay</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="blog-grid">
+            <!-- Article 1 -->
+            <a href="#" class="blog-card">
+                <div class="blog-img" style="background-image: linear-gradient(135deg, #6366f1, #a855f7);"></div>
+                <div class="blog-content">
+                    <span class="blog-tag">Product</span>
+                    <h2 class="blog-title">แนะนำการเชื่อมต่อกับ Stripe เพื่อการชำระเงินที่ราบรื่น</h2>
+                    <p class="blog-excerpt">เรารู้สึกตื่นเต้นที่จะแจ้งให้ร้านค้าทราบว่า
+                        ตอนนี้คุณสามารถรับชำระเงินด้วยบัตรเครดิตได้ทั่วโลกผ่านการเชื่อมต่อใหม่ของเรากับ Stripe</p>
+                    <div class="blog-meta">
+                        <div class="avatar"></div>
+                        <span>Felix Cloud</span>
+                        <span>•</span>
+                        <span>30 ธ.ค. 2568</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Article 2 -->
+            <a href="#" class="blog-card">
+                <div class="blog-img" style="background-image: linear-gradient(135deg, #10b981, #3b82f6);"></div>
+                <div class="blog-content">
+                    <span class="blog-tag">Security</span>
+                    <h2 class="blog-title">เราบรรลุ Uptime 99.99% ในปีนี้ได้อย่างไร</h2>
+                    <p class="blog-excerpt">เจาะลึกการขยายโครงสร้างพื้นฐาน การปรับปรุงฐานข้อมูล และกลยุทธ์ Load
+                        Balancing</p>
+                    <div class="blog-meta">
+                        <div class="avatar"></div>
+                        <span>Sarah Engineer</span>
+                        <span>•</span>
+                        <span>28 ธ.ค. 2568</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Article 3 -->
+            <a href="#" class="blog-card">
+                <div class="blog-img" style="background-image: linear-gradient(135deg, #f59e0b, #ef4444);"></div>
+                <div class="blog-content">
+                    <span class="blog-tag">Community</span>
+                    <h2 class="blog-title">เปิดตัวโปรแกรมพาร์ทเนอร์ Elixopay</h2>
+                    <p class="blog-excerpt">รับค่าคอมมิชชั่นแบบต่อเนื่องโดยการแนะนำธุรกิจ เข้าร่วมระบบนิเวศ Fintech
+                        ที่เติบโตเร็วที่สุดวันนี้</p>
+                    <div class="blog-meta">
+                        <div class="avatar"></div>
+                        <span>Marketing Team</span>
+                        <span>•</span>
+                        <span>25 ธ.ค. 2568</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer style="background: var(--dark-bg); color: #94a3b8; padding: 3rem 0; text-align: center;">
+        <p>&copy; 2026 Elixopay. สงวนลิขสิทธิ์</p>
+    </footer>
+
+</body>
+
+</html>

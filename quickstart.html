@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือเริ่มต้นใช้งาน - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Highlight.js for code snippets -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --light-bg: #f8fafc;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Nav Copied from about.html */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Doc Layout */
+        .doc-layout {
+            display: flex;
+            margin-top: 80px;
+            /* Nav height */
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            padding: 2rem;
+            display: none;
+            /* Hidden on mobile by default */
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 3rem 4rem;
+            max-width: 900px;
+            margin-left: var(--sidebar-width);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: var(--primary-color);
+            background: #eef2ff;
+        }
+
+        .sidebar-group {
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: #475569;
+        }
+
+        code {
+            background: #e2e8f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            color: #d946ef;
+        }
+
+        pre {
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>เอกสาร Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="docs.html">เอกสาร API</a></li>
+                <li><a href="support.html">ช่วยเหลือ</a></li>
+                <li><a href="login.html" class="btn">เข้าสู่ระบบ</a></li>
+                <li><a href="signup.html" class="btn btn-primary">สมัครสมาชิก</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="doc-layout">
+        <aside class="sidebar">
+            <div class="sidebar-group">เริ่มต้นใช้งาน</div>
+            <ul>
+                <li><a href="#intro" class="active">บทนำ</a></li>
+                <li><a href="#api-keys">รับ API Keys</a></li>
+                <li><a href="#install">การติดตั้ง</a></li>
+            </ul>
+
+            <div class="sidebar-group">การเชื่อมต่อ</div>
+            <ul>
+                <li><a href="#checkout">Checkout Flow</a></li>
+                <li><a href="#webhooks">Webhooks</a></li>
+                <li><a href="#testing">การทดสอบ</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <section id="intro">
+                <h1>คู่มือเริ่มต้นใช้งาน</h1>
+                <p>เริ่มรับการชำระเงินในไม่กี่นาทีด้วย API ที่ทันสมัยของ Elixopay
+                    คู่มือนี้จะแนะนำขั้นตอนพื้นฐานในการเชื่อมต่อเกตเวย์การชำระเงินของเราเข้ากับแอปพลิเคชันของคุณ</p>
+            </section>
+
+            <section id="api-keys">
+                <h2>1. รับ API Keys ของคุณ</h2>
+                <p>ในการสื่อสารกับ Elixopay คุณต้องมี API key สมัครบัญชีฟรีและไปที่ส่วน <strong>นักพัฒนา</strong>
+                    ในแดชบอร์ดของคุณ</p>
+                <p><span class="step-badge">เคล็ดลับ</span> คุณจะมีชุดคีย์สองชุด: ชุดหนึ่งสำหรับ <strong>โหมดทดสอบ (Test
+                        Mode)</strong> และอีกชุดสำหรับ <strong>โหมดใช้งานจริง (Live Mode)</strong></p>
+            </section>
+
+            <section id="install">
+                <h2>2. สร้างเซสชันการชำระเงิน</h2>
+                <p>เมื่อลูกค้าพร้อมที่จะชำระเงิน ให้สร้างเซสชันบนแบ็กเอนด์ของคุณ
+                    เพื่อให้แน่ใจว่าจำนวนเงินและสกุลเงินจะไม่ถูกดัดแปลง</p>
+
+                <h3>Request</h3>
+                <pre><code class="language-bash">curl -X POST https://api.elixopay.com/v1/payments \
+  -H "Authorization: Bearer sk_test_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1000,
+    "currency": "THB",
+    "description": "Order #123456",
+    "payment_method_type": "stripe"
+  }'</code></pre>
+
+                <h3>Response</h3>
+                <pre><code class="language-json">{
+  "success": true,
+  "data": {
+    "id": "pay_123...",
+    "checkout_url": "https://elixopay.com/checkout.html?token=...",
+    "clientSecret": "pi_..."
+  }
+}</code></pre>
+            </section>
+
+            <section id="checkout">
+                <h2>3. เปลี่ยนเส้นทางไปยังหน้า Checkout</h2>
+                <p>เปลี่ยนเส้นทางลูกค้าของคุณไปยัง <code>checkout_url</code> ที่ได้รับในการตอบกลับ Elixopay
+                    จะโฮสต์หน้าชำระเงินที่ปลอดภัย จัดการการตรวจสอบความถูกต้องและการปฏิบัติตามมาตรฐาน PCI ทั้งหมดให้คุณ
+                </p>
+                <pre><code class="language-javascript">// Frontend Redirect
+window.location.href = response.data.checkout_url;</code></pre>
+            </section>
+
+            <section id="webhooks">
+                <h2>4. ฟัง Webhooks</h2>
+                <p>ลงทะเบียน webhook endpoint เพื่อรับการอัปเดตแบบเรียลไทม์เมื่อการชำระเงินเสร็จสมบูรณ์</p>
+                <div
+                    style="background: #eff6ff; padding: 1rem; border-left: 4px solid var(--primary-color); border-radius: 4px;">
+                    <strong>Event:</strong> payment_intent.succeeded
+                </div>
+            </section>
+
+            <section id="testing" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                <h2>ขั้นตอนต่อไป</h2>
+                <p>พร้อมที่จะเจาะลึกแล้วหรือยัง? สำรวจ <a href="docs.html"
+                        style="color: var(--primary-color);">เอกสารอ้างอิง API</a> ฉบับเต็มของเรา หรือดู <a
+                        href="usecases.html" style="color: var(--primary-color);">ตัวอย่างกรณีการใช้งาน</a></p>
+                <a href="signup.html" class="btn btn-primary">สร้างบัญชีฟรี</a>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

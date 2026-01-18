@@ -1,38 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const adminController = require('../controllers/adminController');
 
-/**
- * @route   GET /api/v1/admin/stats
- * @desc    Get admin statistics
- * @access  Private (Admin only)
- */
-router.get('/stats', authenticate, (req, res) => {
-  res.json({
-    success: true,
-    data: {
-      stats: {
-        totalUsers: 10,
-        totalPayments: 135,
-        totalRevenue: 99999,
-        activePartners: 5
-      }
-    }
-  });
-});
-
-/**
- * @route   GET /api/v1/admin/users
- * @desc    Get all users (admin)
- * @access  Private (Admin only)
- */
-router.get('/users', authenticate, (req, res) => {
-  res.json({
-    success: true,
-    data: {
-      users: []
-    }
-  });
-});
+// Verification Routes
+router.get('/verifications', authenticate, adminController.getPendingVerifications);
+router.get('/verifications/:userId', authenticate, adminController.getVerificationDetails);
+router.post('/verifications/:userId/review', authenticate, adminController.reviewVerification);
 
 module.exports = router;

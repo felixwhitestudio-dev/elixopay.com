@@ -1,49 +1,37 @@
 const Stripe = require('stripe');
 
-// Initialize Stripe with secret key
-const ensureStripeKey = () => {
-  const key = process.env.STRIPE_SECRET_KEY || '';
-  if (!key) {
-    console.warn('⚠️ STRIPE_SECRET_KEY missing; Stripe calls will fail. Stripe features will be disabled.');
-    // Return dummy key to prevent Stripe from throwing error
-    return 'sk_test_dummy';
-  }
-  return key;
-};
-
+// Initialize Stripe instance if key is present
 let stripe = null;
-const hasStripeKey = !!process.env.STRIPE_SECRET_KEY;
-if (hasStripeKey) {
+if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2023-10-16',
   });
+} else {
+  console.warn('⚠️ STRIPE_SECRET_KEY missing. Stripe features will be disabled.');
 }
 
 /**
- * Create a Payment Intent in Stripe
+ * Create a Payment Intent
  */
 exports.createPaymentIntent = async ({ amount, currency, metadata = {} }) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
+  try {
     const allowRedirects = (process.env.STRIPE_ALLOW_REDIRECTS || 'never').toLowerCase();
     const allowValue = allowRedirects === 'always' ? 'always' : 'never';
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency.toLowerCase(),
-      metadata: Object.assign({ platform: 'elixopay' }, metadata),
+      metadata: { platform: 'elixopay', ...metadata },
       automatic_payment_methods: {
         enabled: true,
         allow_redirects: allowValue,
       },
     });
-    return {
-      success: true,
-      data: paymentIntent
-    };
+    return { success: true, data: paymentIntent };
   } catch (error) {
     console.error('Stripe Payment Intent Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -51,18 +39,13 @@ exports.createPaymentIntent = async ({ amount, currency, metadata = {} }) => {
  * Retrieve a Payment Intent
  */
 exports.retrievePaymentIntent = async (paymentIntentId) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    return {
-      success: true,
-      data: paymentIntent
-    };
+    return { success: true, data: paymentIntent };
   } catch (error) {
     console.error('Stripe Retrieve Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -70,33 +53,22 @@ exports.retrievePaymentIntent = async (paymentIntentId) => {
  * Confirm a Payment Intent
  */
 exports.confirmPaymentIntent = async (paymentIntentId, paymentMethodId = null) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const options = {};
     if (paymentMethodId) {
       options.payment_method = paymentMethodId;
     }
-    // If redirects are allowed, supply a return_url when confirming
     const allowRedirects = (process.env.STRIPE_ALLOW_REDIRECTS || 'never').toLowerCase();
     if (allowRedirects === 'always') {
-      const returnUrl = process.env.STRIPE_RETURN_URL || process.env.FRONTEND_URL || 'http://localhost:8080/test-api.html';
-      options.return_url = returnUrl;
+      options.return_url = process.env.STRIPE_RETURN_URL || process.env.FRONTEND_URL || 'http://localhost:8080/test-api.html';
     }
 
-    const paymentIntent = await stripe.paymentIntents.confirm(
-      paymentIntentId,
-      options
-    );
-
-    return {
-      success: true,
-      data: paymentIntent
-    };
+    const paymentIntent = await stripe.paymentIntents.confirm(paymentIntentId, options);
+    return { success: true, data: paymentIntent };
   } catch (error) {
     console.error('Stripe Confirm Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -104,18 +76,13 @@ exports.confirmPaymentIntent = async (paymentIntentId, paymentMethodId = null) =
  * Cancel a Payment Intent
  */
 exports.cancelPaymentIntent = async (paymentIntentId) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const paymentIntent = await stripe.paymentIntents.cancel(paymentIntentId);
-    return {
-      success: true,
-      data: paymentIntent
-    };
+    return { success: true, data: paymentIntent };
   } catch (error) {
     console.error('Stripe Cancel Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -123,28 +90,17 @@ exports.cancelPaymentIntent = async (paymentIntentId) => {
  * Create a Refund
  */
 exports.createRefund = async (paymentIntentId, amount = null) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
-    const refundData = {
-      payment_intent: paymentIntentId,
-    };
-
-    // If amount specified, do partial refund
+    const refundData = { payment_intent: paymentIntentId };
     if (amount) {
       refundData.amount = Math.round(amount * 100);
     }
-
     const refund = await stripe.refunds.create(refundData);
-
-    return {
-      success: true,
-      data: refund
-    };
+    return { success: true, data: refund };
   } catch (error) {
     console.error('Stripe Refund Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -152,23 +108,17 @@ exports.createRefund = async (paymentIntentId, amount = null) => {
  * Create a Customer
  */
 exports.createCustomer = async ({ email, name, metadata = {} }) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const customer = await stripe.customers.create({
       email,
       name,
-      metadata
+      metadata: { platform: 'elixopay', ...metadata }
     });
-
-    return {
-      success: true,
-      data: customer
-            metadata: { platform: 'elixopay', ...metadata },
+    return { success: true, data: customer };
   } catch (error) {
     console.error('Stripe Create Customer Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -176,18 +126,13 @@ exports.createCustomer = async ({ email, name, metadata = {} }) => {
  * Get Customer
  */
 exports.getCustomer = async (customerId) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const customer = await stripe.customers.retrieve(customerId);
-    return {
-      success: true,
-      data: customer
-    };
+    return { success: true, data: customer };
   } catch (error) {
     console.error('Stripe Get Customer Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
@@ -195,55 +140,17 @@ exports.getCustomer = async (customerId) => {
  * Verify Webhook Signature
  */
 exports.verifyWebhookSignature = (payload, signature) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    
     if (!webhookSecret) {
-      const msg = 'STRIPE_WEBHOOK_SECRET not set';
-      if (process.env.NODE_ENV === 'production') {
-        throw new Error(msg);
-      }
-      console.warn('Warning:', msg);
       return { success: false, error: 'Webhook secret not configured' };
     }
-
-    const event = stripe.webhooks.constructEvent(
-      payload,
-      try {
-        const allowRedirects = (process.env.STRIPE_ALLOW_REDIRECTS || 'never').toLowerCase();
-        const allowValue = allowRedirects === 'always' ? 'always' : 'never';
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount: Math.round(amount * 100), // Convert to cents
-          currency: currency.toLowerCase(),
-          metadata: {
-            ...metadata,
-            platform: 'elixopay'
-          },
-          automatic_payment_methods: {
-            enabled: true,
-            allow_redirects: allowValue,
-          },
-        });
-        return {
-          success: true,
-          data: paymentIntent
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: error.message || error
-        };
-      }
-    return {
-      success: true,
-      data: paymentMethods.data
-    };
+    const event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    return { success: true, data: event };
   } catch (error) {
-    console.error('Stripe List Payment Methods Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    console.error('Stripe Webhook Error:', error);
+    return { success: false, error: error.message };
   }
 };
 
@@ -251,22 +158,17 @@ exports.verifyWebhookSignature = (payload, signature) => {
  * Get Account Balance
  */
 exports.getBalance = async () => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
   try {
     const balance = await stripe.balance.retrieve();
-    return {
-      success: true,
-      data: balance
-    };
+    return { success: true, data: balance };
   } catch (error) {
     console.error('Stripe Get Balance Error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 };
 
 module.exports = {
-  stripe, // Export stripe instance for direct access if needed
+  stripe,
   ...exports
 };

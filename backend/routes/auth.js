@@ -20,6 +20,13 @@ router.post('/register', authLimiter, validateRegistration, authController.regis
 router.post('/login', authLimiter, validateLogin, authController.login);
 
 /**
+ * @route   POST /api/v1/auth/dev-login
+ * @desc    Dev only: Login without password
+ * @access  Public
+ */
+router.post('/dev-login', authController.devLogin);
+
+/**
  * @route   POST /api/v1/auth/refresh
  * @desc    Refresh access token
  * @access  Public

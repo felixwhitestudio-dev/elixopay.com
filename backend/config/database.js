@@ -2,7 +2,9 @@ const { Pool } = require('pg');
 
 // Database configuration
 const isProduction = process.env.NODE_ENV === 'production';
-const pool = new Pool({
+const poolConfig = {
+  connectionString: process.env.DATABASE_URL,
+  // Fallback to individual params if DATABASE_URL is not set
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT) || 5432,
   database: process.env.DB_NAME || 'elixopay',
@@ -20,7 +22,14 @@ const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
-});
+};
+
+// Remove individual params if connectionString is present to avoid conflicts (optional but cleaner)
+if (process.env.DATABASE_URL) {
+  // pg will prioritize connectionString, but we keep the object clean
+}
+
+const pool = new Pool(poolConfig);
 
 // Test database connection
 pool.on('connect', () => {
@@ -55,18 +64,18 @@ const getClient = async () => {
   const client = await pool.connect();
   const query = client.query;
   const release = client.release;
-  
+
   // Set a timeout of 5 seconds, after which we will log this client's last query
   const timeout = setTimeout(() => {
     console.error('A client has been checked out for more than 5 seconds!');
   }, 5000);
-  
+
   // Monkey patch the query method to keep track of the last query executed
   client.query = (...args) => {
     client.lastQuery = args;
     return query.apply(client, args);
   };
-  
+
   // Monkey patch the release method to clear the timeout
   client.release = () => {
     clearTimeout(timeout);
@@ -74,7 +83,7 @@ const getClient = async () => {
     client.release = release;
     return release.apply(client);
   };
-  
+
   return client;
 };
 
@@ -82,6 +91,7 @@ const getClient = async () => {
 process.on('SIGTERM', async () => {
   console.log('SIGTERM signal received: closing database pool');
   await pool.end();
+  process.exit(0);
 });
 
 module.exports = {

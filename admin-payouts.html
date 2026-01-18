@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Elixopay Payout Management" />
+    <title>Payout Management - Elixopay Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="admin"></script>
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
+            <div class="h-16 flex items-center px-6 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-red-600 flex items-center">
+                    <i class="fas fa-shield-alt mr-2"></i> Admin
+                </h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <button onclick="switchTab('payouts')" id="nav-payouts"
+                    class="w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-red-50 text-red-700">
+                    <i class="fas fa-money-bill-wave w-5 mr-3"></i> Payouts
+                </button>
+                <button onclick="switchTab('users')" id="nav-users"
+                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
+                    <i class="fas fa-users w-5 mr-3"></i> Users
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings"
+                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
+                    <i class="fas fa-cog w-5 mr-3"></i> Settings
+                </button>
+                <button onclick="switchTab('transactions')" id="nav-transactions"
+                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
+                    <i class="fas fa-list-ul w-5 mr-3"></i> Transactions
+                </button>
+                <button onclick="switchTab('audit')" id="nav-audit"
+                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
+                    <i class="fas fa-shield-alt w-5 mr-3"></i> Audit Logs
+                </button>
+            </nav>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold mr-3"
+                        id="user-initial">A</div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-700 truncate" id="user-name">Admin</p>
+                        <p class="text-xs text-gray-500">Super User</p>
+                    </div>
+                </div>
+                <button onclick="logout()"
+                    class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Mobile Header -->
+            <header class="md:hidden bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
+                <h1 class="text-lg font-bold text-red-600">Admin Panel</h1>
+                <button onclick="logout()" class="text-gray-500"><i class="fas fa-sign-out-alt"></i></button>
+            </header>
+
+            <main class="flex-1 overflow-auto p-8">
+
+                <!-- Payouts View -->
+                <div id="view-payouts">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Payout Requests</h2>
+                            <p class="text-gray-600">Manage pending withdrawals</p>
+                        </div>
+                        <button onclick="loadPendingWithdrawals()"
+                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
+                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Date</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        User</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Amount</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Details</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payoutsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Users View -->
+                <div id="view-users" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
+                            <p class="text-gray-600">View and manage registered users</p>
+                        </div>
+                        <button onclick="loadUsers()"
+                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
+                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        User</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Role</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Balance</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Joined</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="view-settings" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">System Settings</h2>
+                            <p class="text-gray-600">Configure system parameters and fees</p>
+                        </div>
+                        <button onclick="saveSettings()"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm">
+                            <i class="fas fa-save mr-2"></i> Save Changes
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Fee Settings -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-percentage text-blue-500 mr-2"></i> Fees
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Withdrawal Fee
+                                        (THB)</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-500 sm:text-sm">฿</span>
+                                        </div>
+                                        <input type="number" id="setting_withdrawal_fee_thb"
+                                            class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
+                                            placeholder="0.00">
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500">Fixed fee per withdrawal transaction.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Exchange Rate Settings -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-exchange-alt text-green-500 mr-2"></i> Exchange Rates
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">USDT to THB
+                                        Rate</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-500 sm:text-sm">1 USDT =</span>
+                                        </div>
+                                        <input type="number" step="0.01" id="setting_exchange_rate_usdt_thb"
+                                            class="focus:ring-green-500 focus:border-green-500 block w-full pl-20 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
+                                            placeholder="0.00">
+                                        <div
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-500 sm:text-sm">THB</span>
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500">Used for estimating portfolio value.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions View -->
+                <div id="view-transactions" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Transaction History</h2>
+                            <p class="text-gray-600">View all system transactions (Last 100)</p>
+                        </div>
+                        <button onclick="loadAllTransactions()"
+                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
+                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Date</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        User</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Type</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Amount</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider pl-12">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ref</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Audit Logs View -->
+                <div id="view-audit" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Audit Logs</h2>
+                            <p class="text-gray-600">Review system activities and security events</p>
+                        </div>
+                        <button onclick="loadAuditLogs()"
+                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
+                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Date</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        User</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Action</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Entity</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Details</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+            <h3 class="text-lg font-bold mb-4 text-red-600">Reject Withdrawal</h3>
+            <p class="mb-4 text-gray-600">The amount will be refunded to the user's wallet.</p>
+            <input type="hidden" id="rejectId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                <textarea id="rejectReason"
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-500 focus:outline-none"
+                    rows="3"></textarea>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeRejectModal()"
+                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                <button onclick="submitReject()"
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Confirm Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Core Utils ---
+        function logout() {
+            ['token', 'user'].forEach(k => localStorage.removeItem(k));
+            window.location.href = '/login.html';
+        }
+
+        async function safeFetch(url, options = {}) {
+            const token = localStorage.getItem('token');
+            if (!token) window.location.href = '/login.html'; // No token? Bye.
+
+            // Ensure base URL just in case
+            if (!url.startsWith('http')) {
+                // Determine base - reuse from api-config logic if available or hardcode for now since we are in admin flow
+                // Better: rely on relative path if proxy is set up or assume same origin if hosted there?
+                // Actually existing script used api-config.js. Let's assume apiFetch equivalent logic.
+                // But let's stick to simple handling:
+                const API_BASE = window.API_CONFIG ? window.API_CONFIG.BASE_URL : 'http://localhost:3000';
+                url = API_BASE + url;
+            }
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+                ...options.headers
+            };
+
+            const res = await fetch(url, { ...options, headers });
+            if (res.status === 401 || res.status === 403) {
+                // Token expired or Unauthorized
+                logout();
+                return null;
+            }
+            return res.json();
+        }
+
+        // --- Tabs ---
+        function switchTab(tab) {
+            // UI Update
+            document.querySelectorAll('[id^=view-]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+
+            document.querySelectorAll('[id^=nav-]').forEach(el => {
+                el.classList.remove('bg-red-50', 'text-red-700');
+                el.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+            const activeNav = document.getElementById(`nav-${tab}`);
+            activeNav.classList.remove('text-gray-600', 'hover:bg-gray-50');
+            activeNav.classList.add('bg-red-50', 'text-red-700');
+
+            // Data Load
+            if (tab === 'payouts') loadPendingWithdrawals();
+            if (tab === 'users') loadUsers();
+            if (tab === 'settings') loadSettings();
+            if (tab === 'transactions') loadAllTransactions();
+            if (tab === 'audit') loadAuditLogs();
+        }
+
+        // ... existing functions ...
+
+        // --- Audit Logs Logic ---
+        async function loadAuditLogs() {
+            const tbody = document.getElementById('auditTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
+
+            try {
+                const data = await safeFetch('/api/v1/admin/audit-logs');
+                if (!data) return;
+
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(log => {
+                        let detailsStr = '';
+                        try {
+                            if (log.details) {
+                                const dets = JSON.parse(log.details);
+                                detailsStr = `
+                                    <div class="group relative inline-block">
+                                        <span class="cursor-pointer text-blue-600 border-b border-dashed border-blue-600">View</span>
+                                        <div class="hidden group-hover:block absolute z-50 right-0 w-64 p-3 bg-gray-800 text-white text-xs rounded shadow-lg overflow-hidden break-words">
+                                            <pre>${JSON.stringify(dets, null, 2)}</pre>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        } catch (e) { detailsStr = log.details || '-'; }
+
+                        return `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${new Date(log.createdAt).toLocaleString()}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                ${log.user}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-xs font-bold text-gray-700 uppercase tracking-wide">
+                                ${log.action}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${log.entityType ? `<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">${log.entityType} #${log.entityId || ''}</span>` : '-'}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${detailsStr}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono text-xs">
+                                ${log.ipAddress || '-'}
+                            </td>
+                        </tr>
+                    `}).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">No audit logs found.</td></tr>';
+                }
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Failed to load audit logs.</td></tr>';
+            }
+        }
+
+        // --- Payouts Logic ---
+        async function loadPendingWithdrawals() {
+            const tbody = document.getElementById('payoutsTableBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
+
+            try {
+                const data = await safeFetch('/api/v1/admin/withdrawals/pending');
+                if (!data) return; // Auth failure redirected
+
+                if (data.success && data.data.withdrawals.length > 0) {
+                    tbody.innerHTML = data.data.withdrawals.map(w => `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${new Date(w.created_at).toLocaleDateString()}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">${w.user?.name || '-'}</div>
+                                <div class="text-sm text-gray-500">${w.user?.email}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                                ${w.amount.toLocaleString()} ${w.currency}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                                ${w.metadata?.bank_account || w.reference || '-'}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="approve('${w.id}')" class="bg-green-100 text-green-700 px-3 py-1 rounded-md text-xs font-bold hover:bg-green-200 uppercase tracking-wide mr-2">Approve</button>
+                                <button onclick="openRejectModal('${w.id}')" class="bg-red-100 text-red-700 px-3 py-1 rounded-md text-xs font-bold hover:bg-red-200 uppercase tracking-wide">Reject</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending withdrawals.</td></tr>';
+                }
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Failed to load data.</td></tr>';
+            }
+        }
+
+        async function approve(id) {
+            if (!confirm("Approve this payout?")) return;
+            const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
+            if (res && res.success) {
+                loadPendingWithdrawals();
+            } else {
+                alert(res?.message || 'Failed');
+            }
+        }
+
+        // --- Transactions Logic ---
+        async function loadAllTransactions() {
+            const tbody = document.getElementById('transactionsTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
+
+            try {
+                const data = await safeFetch('/api/v1/admin/transactions');
+                if (!data) return;
+
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(tx => {
+                        const isPositive = ['DEPOSIT', 'TRANSFER_IN', 'SELL_USDT'].includes(tx.type);
+                        const isFee = tx.type.includes('FEE');
+                        const amountColor = isPositive ? 'text-green-600' : (isFee ? 'text-gray-500' : 'text-red-600');
+                        const amountPrefix = isPositive ? '+' : '';
+
+                        let statusColor = 'bg-gray-100 text-gray-800';
+                        if (tx.status === 'COMPLETED') statusColor = 'bg-green-100 text-green-800';
+                        if (tx.status === 'PENDING') statusColor = 'bg-yellow-100 text-yellow-800';
+                        if (tx.status === 'FAILED') statusColor = 'bg-red-100 text-red-800';
+
+                        return `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${new Date(tx.createdAt).toLocaleDateString()} ${new Date(tx.createdAt).toLocaleTimeString()}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                ${tx.user}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                ${tx.type.replace('_', ' ')}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${amountColor}">
+                                ${amountPrefix}${parseFloat(tx.amount).toLocaleString()}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap pl-12">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">
+                                    ${tx.status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono truncate max-w-xs">
+                                ${tx.reference || '-'}
+                            </td>
+                        </tr>
+                    `}).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">No transactions found.</td></tr>';
+                }
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Failed to load transactions.</td></tr>';
+            }
+        }
+
+        // --- Reject Logic ---
+        function openRejectModal(id) {
+            document.getElementById('rejectId').value = id;
+            document.getElementById('rejectModal').classList.remove('hidden');
+            document.getElementById('rejectModal').classList.add('flex');
+        }
+        function closeRejectModal() {
+            document.getElementById('rejectModal').classList.add('hidden');
+            document.getElementById('rejectModal').classList.remove('flex');
+        }
+        async function submitReject() {
+            const id = document.getElementById('rejectId').value;
+            const reason = document.getElementById('rejectReason').value;
+            const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/reject`, { method: 'POST', body: JSON.stringify({ reason }) });
+            if (res && res.success) {
+                closeRejectModal();
+                loadPendingWithdrawals();
+            } else {
+                alert(res?.message || 'Failed');
+            }
+        }
+
+        // --- Users Logic ---
+        async function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
+
+            try {
+                const data = await safeFetch('/api/v1/admin/users');
+                if (!data) return;
+
+                if (data.success && data.data.users.length > 0) {
+                    tbody.innerHTML = data.data.users.map(u => `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">${u.name}</div>
+                                <div class="text-sm text-gray-500">${u.email}</div>
+                            </td>
+                             <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}">
+                                    ${u.role}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                ${parseFloat(u.balance).toLocaleString()} ${u.currency}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                    ${u.isActive ? 'Active' : 'Suspended'}
+                                </span>
+                            </td>
+                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${new Date(u.joinedAt).toLocaleDateString()}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                ${u.role !== 'admin' ? `
+                                    <button onclick="toggleUserStatus('${u.id}', ${!u.isActive})" 
+                                        class="${u.isActive ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'} font-bold">
+                                        ${u.isActive ? '<i class="fas fa-ban mr-1"></i> Ban' : '<i class="fas fa-check-circle mr-1"></i> Unban'}
+                                    </button>
+                                ` : '<span class="text-gray-300 italic">Protected</span>'}
+                            </td>
+                        </tr>
+                     `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-400">No users found?</td></tr>';
+                }
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Failed to load users.</td></tr>';
+            }
+        }
+
+        async function toggleUserStatus(id, newStatus) {
+            if (!confirm(`Are you sure you want to ${newStatus ? 'ACTIVATE' : 'SUSPEND'} this user?`)) return;
+            try {
+                const res = await safeFetch(`/api/v1/admin/users/${id}/status`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ isActive: newStatus })
+                });
+                if (res && res.success) {
+                    loadUsers();
+                } else {
+                    alert(res?.message || 'Failed');
+                }
+            } catch (e) {
+                alert('Error updating status');
+            }
+        }
+
+        // --- Settings Logic ---
+        async function loadSettings() {
+            try {
+                const data = await safeFetch('/api/v1/admin/settings');
+                if (data && data.success) {
+                    const s = data.data;
+                    document.getElementById('setting_withdrawal_fee_thb').value = s.withdrawal_fee_thb || '';
+                    document.getElementById('setting_exchange_rate_usdt_thb').value = s.exchange_rate_usdt_thb || '';
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Failed to load settings');
+            }
+        }
+
+        async function saveSettings() {
+            const withdrawal_fee_thb = document.getElementById('setting_withdrawal_fee_thb').value;
+            const exchange_rate_usdt_thb = document.getElementById('setting_exchange_rate_usdt_thb').value;
+
+            try {
+                const res = await safeFetch('/api/v1/admin/settings', {
+                    method: 'POST',
+                    body: JSON.stringify({ withdrawal_fee_thb, exchange_rate_usdt_thb })
+                });
+                if (res && res.success) {
+                    alert('Settings saved successfully!');
+                } else {
+                    alert('Failed to save settings');
+                }
+            } catch (e) {
+                alert('Error saving settings');
+            }
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const u = JSON.parse(userStr);
+                document.getElementById('user-name').textContent = u.email;
+                document.getElementById('user-initial').textContent = u.email.charAt(0).toUpperCase();
+            }
+            // Load default tab
+            loadPendingWithdrawals();
+        });
+    </script>
+    <p class="mb-4 text-gray-600">Are you sure you want to reject this request? The funds will be refunded to
+        the partner's balance.</p>
+    <input type="hidden" id="rejectId">
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Reason for Rejection</label>
+        <textarea id="rejectReason" class="w-full border border-gray-300 rounded p-2" rows="3"
+            placeholder="e.g. Invalid bank details"></textarea>
+    </div>
+    <div class="flex justify-end space-x-3">
+        <button onclick="closeRejectModal()"
+            class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50">Cancel</button>
+        <button onclick="submitReject()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Confirm
+            Reject</button>
+    </div>
+    </div>
+    </div>
+
+    <script>
+        function logout() {
+            ['token', 'user'].forEach(k => localStorage.removeItem(k));
+            window.location.href = '/login.html';
+        }
+
+        async function safeFetch(endpoint, options = {}) {
+            if (typeof window.apiFetch !== 'function') {
+                console.error('apiFetch is not defined. Ensure api-config.js is loaded.');
+                return null;
+            }
+            try {
+                const response = await window.apiFetch(endpoint, options);
+                if (!response) return null; // apiFetch handles redirects on 401
+                return response.json();
+            } catch (e) {
+                console.error('SafeFetch Error:', e);
+                return null;
+            }
+        }
+
+        async function loadPendingWithdrawals() {
+            const tbody = document.getElementById('payoutsTableBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>';
+
+            try {
+                const data = await safeFetch('/api/v1/admin/withdrawals/pending');
+
+                if (data.success && data.data.withdrawals.length > 0) {
+                    tbody.innerHTML = '';
+                    data.data.withdrawals.forEach(w => {
+                        const tr = document.createElement('tr');
+                        const date = new Date(w.created_at).toLocaleString();
+                        // Support both old metadata format and reference string
+                        const bankInfo = w.metadata?.bank_account || w.reference || 'Unknown';
+                        const bankDisplay = `<span class="font-mono text-sm">${bankInfo}</span>`;
+
+                        tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${w.user?.name || 'Unknown'}</div>
+                            <div class="text-sm text-gray-500">${w.user?.email || ''}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                             ${w.amount.toLocaleString()} ${w.currency || 'THB'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${bankDisplay}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="approve('${w.id}')" class="text-green-600 hover:text-green-900 mr-3"><i class="fas fa-check"></i> Approve</button>
+                            <button onclick="openRejectModal('${w.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-times"></i> Reject</button>
+                        </td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No pending withdrawals found.</td></tr>';
+                }
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Error loading data.</td></tr>';
+            }
+        }
+
+        async function approve(id) {
+            if (!confirm('Are you sure you want to approve this withdrawal? This will mark it as PAID.')) return;
+
+            try {
+                const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
+                if (res.success) {
+                    alert('Withdrawal approved successfully!');
+                    loadPendingWithdrawals();
+                } else {
+                    alert('Failed: ' + (res.message || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Error approving withdrawal');
+            }
+        }
+
+        function openRejectModal(id) {
+            document.getElementById('rejectId').value = id;
+            document.getElementById('rejectModal').style.display = 'flex';
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+            document.getElementById('rejectReason').value = '';
+        }
+
+        async function submitReject() {
+            const id = document.getElementById('rejectId').value;
+            const reason = document.getElementById('rejectReason').value;
+
+            try {
+                const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/reject`, {
+                    method: 'POST',
+                    body: JSON.stringify({ reason })
+                });
+
+                if (res.success) {
+                    alert('Withdrawal rejected and refunded.');
+                    closeRejectModal();
+                    loadPendingWithdrawals();
+                } else {
+                    alert('Failed: ' + (res.message || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Error rejecting withdrawal');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPendingWithdrawals();
+
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const u = JSON.parse(userStr);
+                document.getElementById('user-name').textContent = u.email;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แดชบอร์ดพาร์ทเนอร์ - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --light-bg: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+            margin-bottom: 3rem;
+        }
+
+        .logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #eef2ff;
+            color: var(--primary-color);
+        }
+
+        .user-profile {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #cbd5e1;
+            border-radius: 50%;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 3rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .trend-up {
+            color: var(--secondary-color);
+        }
+
+        /* Ref Link */
+        .ref-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border: 1px solid #f1f5f9;
+        }
+
+        .ref-box {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ref-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 100;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <a href="/" class="logo">
+            <i class="fas fa-handshake"></i>
+            <span data-i18n="partner.menu.title">Partners</span>
+        </a>
+        <ul class="nav-items">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" id="nav-overview" onclick="switchTab('overview')">
+                    <i class="fas fa-chart-pie"></i> <span data-i18n="partner.menu.overview">ภาพรวม</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="nav-referrals" onclick="switchTab('referrals')">
+                    <i class="fas fa-users"></i> <span data-i18n="partner.menu.referrals">การแนะนำ</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="nav-payouts" onclick="switchView('payouts')">
+                    <i class="fas fa-wallet"></i> <span data-i18n="partner.menu.payouts">การจ่ายเงิน</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="nav-earnings" onclick="switchView('earnings')">
+                    <i class="fas fa-coins"></i> <span data-i18n="partner.menu.earnings">รายได้ (Earnings)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="nav-verification" onclick="switchView('verification')">
+                    <i class="fas fa-id-card"></i> <span data-i18n="partner.menu.verification">ยืนยันตัวตน
+                        (Verification)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="nav-settings" onclick="switchView('settings')">
+                    <i class="fas fa-cog"></i> <span data-i18n="partner.menu.settings">ตั้งค่า (Settings)</span>
+                </a>
+            </li>
+        </ul>
+        <div class="user-profile">
+            <div class="avatar"></div>
+            <div>
+                <div style="font-weight: 600;" id="sidebarUserName">Loading...</div>
+                <div style="font-size: 0.8rem; color: #64748b;" id="sidebarUserEmail">...</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <!-- View: Overview -->
+        <div id="view-overview" class="view-section active">
+            <header>
+                <h1 data-i18n="partner.overview.title">ภาพรวมพาร์ทเนอร์</h1>
+                <button class="btn btn-primary" onclick="openWithdrawModal()"
+                    data-i18n="partner.overview.withdraw">ถอนเงิน</button>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label" data-i18n="partner.stats.earnings">รายได้ทั้งหมด</div>
+                    <div class="stat-value" id="totalEarnings">฿0.00</div>
+                    <!-- <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 12% จากเดือนที่แล้ว</div> -->
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" data-i18n="partner.stats.active_referrals">การแนะนำที่ใช้งานอยู่</div>
+                    <div class="stat-value" id="referralsCount">0</div>
+                    <!-- <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 4 รายใหม่</div> -->
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" data-i18n="partner.stats.clicks">ยอดคลิก</div>
+                    <div class="stat-value" id="clicksCount">0</div>
+                    <!-- <div class="stat-trend" style="color: #64748b;">คงที่</div> -->
+                </div>
+            </div>
+
+            <div class="ref-section">
+                <h3 style="margin-top: 0;" data-i18n="partner.ref.title">ลิงก์แนะนำของคุณ</h3>
+                <p style="color: #64748b;" data-i18n="partner.ref.desc">แชร์ลิงก์นี้เพื่อรับค่าคอมมิชชั่น 20%
+                    จากทุกธุรกรรมของคนที่คุณแนะนำ</p>
+                <div class="ref-box">
+                    <input type="text" class="ref-input" value="https://elixopay.com/signup?ref=felix_partner" readonly
+                        id="refLink">
+                    <button class="btn btn-primary" onclick="copyLink()" data-i18n="partner.ref.copy">คัดลอก</button>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem;" data-i18n="partner.payouts.title">การจ่ายเงินล่าสุด</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="partner.table.date">วันที่</th>
+                            <th data-i18n="partner.table.amount">จำนวนเงิน</th>
+                            <th data-i18n="partner.table.status">สถานะ</th>
+                            <th data-i18n="partner.table.method">วิธี</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payoutsTableBody">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- View: Referrals (Team) -->
+        <div id="view-referrals" class="view-section">
+            <header>
+                <h1 data-i18n="partner.menu.referrals">ทีมของคุณ (Your Team)</h1>
+                <button class="btn btn-primary" onclick="openAddMemberModal()"> <i class="fas fa-plus"></i>
+                    เพิ่มสมาชิก</button>
+            </header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ชื่อ</th>
+                            <th>อีเมล</th>
+                            <th>ตำแหน่ง</th>
+                            <th>สถานะ</th>
+                            <th>วันที่สมัคร</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamTableBody">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+                <div id="noTeamMsg"
+                    style="text-align: center; padding: 3rem; color: var(--text-secondary); display: none;">
+                    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <h3>ยังไม่มีข้อมูลทีมงาน</h3>
+                    <p>เมื่อมีผู้สมัครผ่านลิงก์ของคุณ ข้อมูลจะปรากฏที่นี่</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Payouts -->
+        <div id="view-payouts" class="view-section">
+            <header>
+                <h1 data-i18n="partner.menu.payouts">ประวัติการจ่ายเงิน</h1>
+            </header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="partner.table.date">วันที่</th>
+                            <th data-i18n="partner.table.amount">จำนวนเงิน</th>
+                            <th data-i18n="partner.table.status">สถานะ</th>
+                            <th data-i18n="partner.table.method">วิธี</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payoutsFullTableBody">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- View: Earnings (Commissions) -->
+        <div id="view-earnings" class="view-section">
+            <header>
+                <h1 data-i18n="partner.menu.earnings">ประวัติรายได้ (Commission History)</h1>
+            </header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>วันที่ (Date)</th>
+                            <th>จาก (From User)</th>
+                            <th>ยอดรับ (Amount)</th>
+                            <th>%</th>
+                            <th>สถานะ (Status)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="earningsTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align:center;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="noEarningsMsg"
+                    style="text-align:center; padding:3rem; color:var(--text-secondary); display:none;">
+                    <i class="fas fa-coins" style="font-size:3rem; opacity:0.5; margin-bottom:1rem;"></i>
+                    <h3>ยังไม่มีรายได้</h3>
+                    <p>Refer more merchants to start earning!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Verification -->
+        <div id="view-verification" class="view-section">
+            <header>
+                <h1 data-i18n="partner.menu.verification">ยืนยันตัวตน (Verification)</h1>
+            </header>
+
+            <div class="card"
+                style="background:white; padding:1.5rem; border-radius:12px; margin-bottom:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                <h3>สถานะบัญชี (Account Status)</h3>
+                <div id="verification-status-badge"
+                    style="display:inline-block; padding:0.5rem 1rem; border-radius:8px; font-weight:bold; background:#eee;">
+                    Loading...</div>
+                <p id="verification-message" style="margin-top:1rem; color:#64748b;"></p>
+            </div>
+
+            <div class="card"
+                style="background:white; padding:1.5rem; border-radius:12px; margin-bottom:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.1);"
+                id="doc-upload-section">
+                <h3>อัปโหลดเอกสาร (Upload Documents)</h3>
+                <p style="color:#64748b; margin-bottom:1.5rem;">กรุณาอัปโหลดเอกสารเพื่อยนยันตัวตน (บัตรประชาชน /
+                    Passport)</p>
+
+                <form id="uploadDocForm" onsubmit="uploadDocument(event)">
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:500;">ประเภทเอกสาร (Document
+                            Type)</label>
+                        <select id="docType" class="ref-input"
+                            style="width:100%; padding:0.75rem; border:1px solid #e2e8f0; border-radius:8px;">
+                            <option value="id_card">บัตรประชาชน (National ID)</option>
+                            <option value="passport">หนังสือเดินทาง (Passport)</option>
+                            <option value="business_reg">หนังสือรับรองบริษัท (Business Registration)</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:500;">ไฟล์เอกสาร (File)</label>
+                        <input type="file" id="docFile" class="ref-input"
+                            style="width:100%; padding:0.75rem; border:1px solid #e2e8f0; border-radius:8px;"
+                            accept=".jpg,.jpeg,.png,.pdf" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn-upload-doc">อัปโหลด (Upload)</button>
+                </form>
+
+                <hr style="margin:2rem 0; border-top:1px solid #eee;">
+
+                <h4 style="margin-bottom:1rem;">เอกสารของคุณ (Your Documents)</h4>
+                <div id="uploaded-docs-list">
+                    <!-- List loaded here -->
+                </div>
+
+                <div style="margin-top:2rem;">
+                    <button class="btn btn-primary" style="width:100%; background:#10b981; border:none;"
+                        onclick="submitVerificationRequest()" id="btn-submit-verification">ส่งขออนุมัติ (Submit for
+                        Approval)</button>
+                    <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem; text-align:center;">
+                        กดปุ่มนี้เมื่ออัปโหลดเอกสารครบถ้วนแล้ว</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Settings -->
+        <div id="view-settings" class="view-section">
+            <header>
+                <h1 data-i18n="partner.menu.settings">การตั้งค่าพาร์ทเนอร์</h1>
+            </header>
+            <div class="ref-section">
+                <h3 style="margin-top: 0;">ข้อมูลบัญชีรับเงิน (ค่าเริ่มต้น)</h3>
+                <form onsubmit="event.preventDefault(); alert('บันทึกข้อมูลเรียบร้อย');">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">ธนาคาร</label>
+                        <select class="ref-input" style="width: 100%;">
+                            <option value="">-- เลือกธนาคาร --</option>
+                            <option value="KBANK">Kasikornbank</option>
+                            <option value="SCB">SCB</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">เลขที่บัญชี</label>
+                        <input type="text" class="ref-input" style="width: 100%;" placeholder="xxx-x-xxxxx-x">
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">ชื่อบัญชี</label>
+                        <input type="text" class="ref-input" style="width: 100%;" placeholder="Name Surname">
+                    </div>
+                    <button class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Withdrawal Modal -->
+    <div id="withdrawModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+        <div
+            style="background: white; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px; position: relative;">
+            <button onclick="closeModal()"
+                style="position: absolute; top: 1rem; right: 1rem; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
+            <h2 style="margin-top: 0;" data-i18n="partner.withdraw.title">ถอนเงิน</h2>
+            <div id="withdrawAlert"
+                style="display: none; padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+            </div>
+
+            <form id="withdrawForm" onsubmit="submitWithdrawal(event)">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
+                        data-i18n="partner.withdraw.amount">จำนวนเงิน</label>
+                    <input type="number" id="withdrawAmount" step="0.01" min="1" required class="ref-input"
+                        style="width: 100%;">
+                    <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+                        <span data-i18n="partner.withdraw.available">ยอดที่ถอนได้:</span> <span
+                            id="modalAvailable">0.00</span>
+                    </div>
+                </div>
+
+                <h4 style="margin-bottom: 0.5rem;" data-i18n="partner.withdraw.bankDetails">รายละเอียดบัญชีรับเงิน</h4>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
+                        data-i18n="partner.withdraw.bankName">ธนาคาร</label>
+                    <select id="withdrawBank" required class="ref-input" style="width: 100%;">
+                        <option value="" data-i18n="partner.withdraw.selectBank">-- เลือกธนาคาร --</option>
+                        <option value="KBANK">Kasikornbank</option>
+                        <option value="SCB">SCB</option>
+                        <option value="BBL">Bangkok Bank</option>
+                        <option value="KTB">Krungthai Bank</option>
+                        <option value="BAY">Krungsri</option>
+                        <option value="TTB">TTB</option>
+                        <option value="GSB">GSB</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
+                        data-i18n="partner.withdraw.accountNo">เลขที่บัญชี</label>
+                    <input type="text" id="withdrawAccountNo" required class="ref-input" style="width: 100%;"
+                        placeholder="xxx-x-xxxxx-x">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
+                        data-i18n="partner.withdraw.accountName">ชื่อบัญชี</label>
+                    <input type="text" id="withdrawAccountName" required class="ref-input" style="width: 100%;"
+                        placeholder="Name Surname">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="withdrawSubmitBtn"
+                    data-i18n="partner.withdraw.submit">ยืนยันการถอน</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addMemberModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+        <div
+            style="background: white; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px; position: relative;">
+            <button onclick="closeAddMemberModal()"
+                style="position: absolute; top: 1rem; right: 1rem; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
+            <h2 style="margin-top: 0;">เพิ่มสมาชิกใหม่</h2>
+            <div id="addMemberAlert"
+                style="display: none; padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+            </div>
+
+            <form id="addMemberForm" onsubmit="submitAddMember(event)">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">ชื่อ (First Name)</label>
+                    <input type="text" id="newMemberFirstName" required class="ref-input" style="width: 100%;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">นามสกุล (Last Name)</label>
+                    <input type="text" id="newMemberLastName" required class="ref-input" style="width: 100%;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">อีเมล</label>
+                    <input type="email" id="newMemberEmail" required class="ref-input" style="width: 100%;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">รหัสผ่าน</label>
+                    <input type="password" id="newMemberPassword" required class="ref-input" style="width: 100%;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">ตำแหน่ง (Role)</label>
+                    <select id="newMemberRole" required class="ref-input" style="width: 100%;">
+                        <!-- Options populated via JS -->
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;"
+                    id="addMemberSubmitBtn">สร้างบัญชี</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/i18n.js?v=2"></script>
+    <script>
+        let currentBalance = 0;
+        let balanceCurrency = 'THB';
+
+        function copyLink() {
+            var copyText = document.getElementById("refLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Copied: " + copyText.value);
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            // Remove active class from nav links
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+
+            // Show selected view
+            document.getElementById('view-' + tabId).classList.add('active');
+            // Add active class to nav link
+            document.getElementById('nav-' + tabId).classList.add('active');
+
+            // If switching to payouts, ensure table is populated (duplicate logic for now or share)
+            if (tabId === 'payouts') {
+                // Copy content from summary table to full table if empty
+                const summaryBody = document.getElementById('payoutsTableBody');
+                const fullBody = document.getElementById('payoutsFullTableBody');
+                if (fullBody.children.length === 0 && summaryBody.children.length > 0) {
+                    fullBody.innerHTML = summaryBody.innerHTML;
+                }
+            }
+            if (tabId === 'earnings') {
+                loadCommissions();
+            }
+        }
+        window.switchView = switchTab;
+
+        async function loadCommissions() {
+            const tbody = document.getElementById('earningsTableBody');
+            const noMsg = document.getElementById('noEarningsMsg');
+
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/v1/partners/commissions', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = '';
+                    noMsg.style.display = 'none';
+
+                    data.data.forEach(log => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${new Date(log.created_at).toLocaleDateString()} ${new Date(log.created_at).toLocaleTimeString()}</td>
+                            <td>
+                                <div>${log.first_name} ${log.last_name || ''}</div>
+                                <div style="font-size:0.8rem; color:#64748b;">${log.email}</div>
+                            </td>
+                            <td style="color:#10b981; font-weight:bold;">+${log.amount} ${log.currency}</td>
+                            <td>${(log.rate_snapshot * 100).toFixed(2)}%</td>
+                            <td><span class="status-badge status-paid">${log.status}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '';
+                    noMsg.style.display = 'block';
+                }
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error loading data</td></tr>';
+            }
+        }
+
+        // Modal Functions
+        function openWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'flex';
+            document.getElementById('withdrawAmount').value = currentBalance > 0 ? currentBalance : '';
+            document.getElementById('modalAvailable').textContent = balanceCurrency + ' ' + currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
+            document.getElementById('withdrawAlert').style.display = 'none';
+        }
+
+        function closeModal() {
+            document.getElementById('withdrawModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function (event) {
+            const modal = document.getElementById('withdrawModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        async function submitWithdrawal(e) {
+            e.preventDefault();
+            const btn = document.getElementById('withdrawSubmitBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            const alertBox = document.getElementById('withdrawAlert');
+            alertBox.style.display = 'none';
+
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const bankName = document.getElementById('withdrawBank').value;
+            const accountNumber = document.getElementById('withdrawAccountNo').value;
+            const accountName = document.getElementById('withdrawAccountName').value;
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const res = await fetch('/api/v1/partners/withdraw', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ amount, bankName, accountNumber, accountName })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    currentBalance = data.data.newBalance; // Update local balance
+                    alert('Withdrawal requested successfully!');
+                    closeModal();
+                    // Refresh Dashboard Data
+                    loadDashboardData();
+                } else {
+                    alertBox.style.display = 'block';
+                    alertBox.style.background = '#fef2f2';
+                    alertBox.style.color = '#dc2626';
+                    alertBox.textContent = data.message || 'Withdrawal failed';
+                }
+            } catch (err) {
+                console.error(err);
+                alertBox.style.display = 'block';
+                alertBox.style.background = '#fef2f2';
+                alertBox.style.color = '#dc2626';
+                alertBox.textContent = 'Network error. Please try again.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function loadDashboardData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                // Fetch Stats
+                const statsRes = await fetch('/api/v1/partners/stats', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const statsData = await statsRes.json();
+
+                if (statsData.success && statsData.data) {
+                    const d = statsData.data;
+                    const stats = d.stats || {};
+
+                    if (stats) {
+                        currentBalance = stats.balance || 0;
+                        balanceCurrency = stats.currency || 'THB';
+                        // ... existing stats update ...
+                        document.getElementById('totalEarnings').textContent = (stats.currency || 'THB') + ' ' + (stats.totalEarnings || 0).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        document.getElementById('referralsCount').textContent = stats.referrals || 0;
+                        document.getElementById('clicksCount').textContent = stats.clicks || 0;
+                    }
+                    // Use invite code if available in user object? 
+                    // Fetch current user details to get invite_code and update profile
+                    fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+                        .then(r => r.json())
+                        .then(me => {
+                            if (me.success) {
+                                // Update Sidebar Profile
+                                const u = me.data.user;
+                                document.getElementById('sidebarUserName').textContent = u.firstName + ' ' + u.lastName;
+                                document.getElementById('sidebarUserEmail').textContent = u.email;
+
+                                // Update Ref Link
+                                if (u.inviteCode) {
+                                    document.getElementById('refLink').value = window.location.origin + '/signup.html?ref=' + u.inviteCode;
+                                } else if (d.agencyId) {
+                                    // Fallback
+                                    document.getElementById('refLink').value = window.location.origin + '/signup.html?ref=' + d.agencyId;
+                                }
+                            }
+                        });
+                }
+
+                // Fetch Team
+                try {
+                    const teamRes = await fetch('/api/v1/partners/team', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    if (teamRes.ok) {
+                        const teamData = await teamRes.json();
+                        const teamBody = document.getElementById('teamTableBody');
+                        const noTeamMsg = document.getElementById('noTeamMsg');
+                        teamBody.innerHTML = '';
+
+                        if (teamData.success && teamData.data && teamData.data.length > 0) {
+                            noTeamMsg.style.display = 'none';
+                            teamData.data.forEach(member => {
+                                const tr = document.createElement('tr');
+                                const joined = new Date(member.created_at).toLocaleDateString();
+                                tr.innerHTML = `
+                                    <td>${member.first_name || ''} ${member.last_name || ''}</td>
+                                    <td>${member.email}</td>
+                                    <td><span class="status-badge" style="background:#e0f2fe; color:#0369a1;">${member.account_type}</span></td>
+                                    <td><span class="status-badge status-paid">${member.status}</span></td>
+                                    <td>${joined}</td>
+                                `;
+                                teamBody.appendChild(tr);
+                            });
+                        } else {
+                            noTeamMsg.style.display = 'block';
+                        }
+                    }
+                } catch (e) { console.error('Error fetching team', e); }
+
+                // Fetch Payouts
+
+                // Fetch Payouts
+                const payoutsRes = await fetch('/api/v1/partners/payouts', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const payoutsData = await payoutsRes.json();
+
+                const tbody = document.getElementById('payoutsTableBody');
+                tbody.innerHTML = '';
+
+                if (payoutsData.success && payoutsData.data.length > 0) {
+                    payoutsData.data.forEach(p => {
+                        const tr = document.createElement('tr');
+                        const date = new Date(p.created_at).toLocaleDateString();
+
+                        let statusClass = 'status-pending';
+                        let statusText = p.status;
+
+                        if (p.status === 'PAID') statusClass = 'status-paid';
+                        if (p.status === 'PENDING') statusClass = 'status-pending'; // Yellow/Orange
+
+                        tr.innerHTML = `
+                             <td>${date}</td>
+                             <td>${p.currency} ${parseFloat(p.amount).toLocaleString()}</td>
+                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                             <td>${p.method}</td>
+                         `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No payouts yet</td></tr>';
+                }
+
+            } catch (e) {
+                console.error('Error fetching partner data', e);
+            }
+        }
+
+
+
+        // Verification Functions
+        async function loadVerificationStatus() {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/v1/verification/status', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+
+                const statusBadge = document.getElementById('verification-status-badge');
+                const message = document.getElementById('verification-message');
+                const currentStatus = data.data.status;
+
+                let color = '#eee';
+                let text = 'Unverified';
+
+                if (currentStatus === 'unverified') { color = '#f3f4f6'; text = 'ยังไม่ยืนยัน (Unverified)'; }
+                if (currentStatus === 'pending') { color = '#fff7ed'; text = 'รอตรวจสอบ (Pending Review)'; document.getElementById('verification-status-badge').style.color = '#c2410c'; }
+                if (currentStatus === 'verified') { color = '#f0fdf4'; text = 'ยืนยันแล้ว (Verified)'; document.getElementById('verification-status-badge').style.color = '#15803d'; }
+                if (currentStatus === 'rejected') { color = '#fef2f2'; text = 'ถูกปฏิเสธ (Rejected)'; document.getElementById('verification-status-badge').style.color = '#dc2626'; }
+
+                statusBadge.style.backgroundColor = color;
+                statusBadge.textContent = text;
+                statusBadge.style.color = (currentStatus === 'pending') ? '#c2410c' : (currentStatus === 'verified') ? '#15803d' : (currentStatus === 'rejected') ? '#dc2626' : '#1e293b';
+
+                // Handle documents list
+                const list = document.getElementById('uploaded-docs-list');
+                list.innerHTML = '';
+                if (data.data.documents.length === 0) {
+                    list.innerHTML = '<p style="color:#94a3b8; font-style:italic;">ยังไม่มีเอกสาร (No documents uploaded)</p>';
+                } else {
+                    data.data.documents.forEach(doc => {
+                        const div = document.createElement('div');
+                        div.style.padding = '0.75rem';
+                        div.style.border = '1px solid #e2e8f0';
+                        div.style.borderRadius = '8px';
+                        div.style.marginBottom = '0.5rem';
+                        div.style.display = 'flex';
+                        div.style.justifyContent = 'space-between';
+                        div.innerHTML = `<span><i class="fas fa-file"></i> ${doc.type}</span> <span style="font-size:0.8rem; color:#64748b;">${new Date(doc.created_at).toLocaleDateString()}</span>`;
+                        list.appendChild(div);
+                    });
+                }
+
+                // Disable upload if pending or verified
+                if (currentStatus === 'pending' || currentStatus === 'verified') {
+                    document.getElementById('doc-upload-section').style.opacity = '0.5';
+                    document.getElementById('doc-upload-section').style.pointerEvents = 'none';
+                    message.textContent = currentStatus === 'verified' ? 'บัญชีของคุณได้รับการยืนยันแล้ว' : 'เอกสารของคุณกำลังอยู่ในระหว่างการตรวจสอบ';
+                }
+
+            } catch (e) {
+                console.error('Verif status error', e);
+            }
+        }
+
+        async function uploadDocument(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-upload-doc');
+            btn.textContent = 'Uploading...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('type', document.getElementById('docType').value);
+            formData.append('document', document.getElementById('docFile').files[0]);
+
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/v1/verification/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('Upload successful');
+                    document.getElementById('uploadDocForm').reset();
+                    loadVerificationStatus();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (e) {
+                alert('Upload failed');
+            } finally {
+                btn.textContent = 'อัปโหลด (Upload)';
+                btn.disabled = false;
+            }
+        }
+
+        async function submitVerificationRequest() {
+            if (!confirm('ยืนยันส่งขออนุมัติ? (Confirm Submit?)')) return;
+            const btn = document.getElementById('btn-submit-verification');
+            btn.disabled = true;
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/v1/verification/submit', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('ส่งคำขอเรียบร้อยแล้ว');
+                    loadVerificationStatus();
+                } else {
+                    alert('Error: ' + data.message);
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert('Connection error');
+                btn.disabled = false;
+            }
+        }
+
+        // Add Member Modal Functions
+        function closeAddMemberModal() {
+            document.getElementById('addMemberModal').style.display = 'none';
+        }
+
+        async function openAddMemberModal() {
+            // 1. Get Current User Role
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                if (!data.success) {
+                    alert('Error fetching user permissions');
+                    return;
+                }
+                const myRole = data.data.user.role; // partner, organizer, agent
+
+                // 2. Populate Options based on Role
+                const roleSelect = document.getElementById('newMemberRole');
+                roleSelect.innerHTML = '';
+
+                const roles = {
+                    'partner': [
+                        { val: 'organizer', label: 'Organizer' },
+                        { val: 'agent', label: 'Agent' },
+                        { val: 'merchant', label: 'Merchant' }
+                    ],
+                    'organizer': [
+                        { val: 'agent', label: 'Agent' },
+                        { val: 'merchant', label: 'Merchant' }
+                    ],
+                    'agent': [
+                        { val: 'merchant', label: 'Merchant' }
+                    ]
+                };
+
+                const allowed = roles[myRole] || [];
+                if (allowed.length === 0) {
+                    alert('You do not have permission to add members.');
+                    return;
+                }
+
+                allowed.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.val;
+                    option.textContent = opt.label;
+                    roleSelect.appendChild(option);
+                });
+
+                // 3. Show Modal
+                document.getElementById('addMemberModal').style.display = 'flex';
+                document.getElementById('addMemberAlert').style.display = 'none';
+                document.getElementById('addMemberForm').reset();
+
+            } catch (e) {
+                console.error(e);
+                alert('Connection error');
+            }
+        }
+
+        async function submitAddMember(e) {
+            e.preventDefault();
+            const btn = document.getElementById('addMemberSubmitBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            const alertBox = document.getElementById('addMemberAlert');
+            alertBox.style.display = 'none';
+
+            const firstName = document.getElementById('newMemberFirstName').value;
+            const lastName = document.getElementById('newMemberLastName').value;
+            const email = document.getElementById('newMemberEmail').value;
+            const password = document.getElementById('newMemberPassword').value;
+            const role = document.getElementById('newMemberRole').value;
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const res = await fetch('/api/v1/partners/team/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ firstName, lastName, email, password, role })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('Member created successfully!');
+                    closeAddMemberModal();
+                    loadDashboardData(); // Refresh table
+                } else {
+                    alertBox.style.display = 'block';
+                    alertBox.style.background = '#fef2f2';
+                    alertBox.style.color = '#dc2626';
+                    alertBox.textContent = data.message || 'Creation failed';
+                }
+            } catch (err) {
+                console.error(err);
+                alertBox.style.display = 'block';
+                alertBox.style.background = '#fef2f2';
+                alertBox.style.color = '#dc2626';
+                alertBox.textContent = 'Network error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+
+</html>

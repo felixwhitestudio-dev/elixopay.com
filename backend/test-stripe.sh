@@ -24,8 +24,8 @@ echo "------------------------------"
 LOGIN_RESPONSE=$(curl -s -X POST "$BASE_URL/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "demo@elixopay.com",
-    "password": "demo1234"
+    "email": "admin@elixopay.com",
+    "password": "StrongPassword123!"
   }')
 
 TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.data.token')
@@ -52,6 +52,8 @@ PAYMENT_RESPONSE=$(curl -s -X POST "$BASE_URL/payments" \
     "description": "Stripe Integration Test Payment",
     "customer_email": "test@stripe.com",
     "customer_name": "Test Customer",
+    "return_url": "http://localhost:8080/success",
+    "cancel_url": "http://localhost:8080/cancel",
     "metadata": {
       "test": "true",
       "environment": "development"
@@ -60,9 +62,9 @@ PAYMENT_RESPONSE=$(curl -s -X POST "$BASE_URL/payments" \
 
 echo $PAYMENT_RESPONSE | jq .
 
-PAYMENT_ID=$(echo $PAYMENT_RESPONSE | jq -r '.data.payment.id')
+PAYMENT_ID=$(echo $PAYMENT_RESPONSE | jq -r '.data.id')
 CLIENT_SECRET=$(echo $PAYMENT_RESPONSE | jq -r '.data.clientSecret // empty')
-PAYMENT_INTENT_ID=$(echo $PAYMENT_RESPONSE | jq -r '.data.payment.payment_intent_id')
+PAYMENT_INTENT_ID=$(echo $PAYMENT_RESPONSE | jq -r '.data.payment_intent_id')
 
 if [ "$PAYMENT_ID" == "null" ] || [ -z "$PAYMENT_ID" ]; then
   echo -e "${RED}❌ Payment creation failed${NC}"
