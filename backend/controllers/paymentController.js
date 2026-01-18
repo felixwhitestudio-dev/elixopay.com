@@ -3,29 +3,7 @@ const commissionService = require('../services/commissionService'); // Import se
 // ...
 
 // 5. Update Payment Status
-await client.query('UPDATE payments SET status = $1, payer_id = $2, paid_at = NOW() WHERE id = $3', ['completed', payerId, payment.id]);
-
-// 6. Logs (using existing Enum types: transfer_in/transfer_out)
-const logDesc = `Payment to ${payment.description || 'Merchant'} (Ref: ${payment.token})`;
-
-await client.query(
-  `INSERT INTO transaction_logs (user_id, wallet_id, type, amount, currency, description, created_at)
-             VALUES ($1, $2, 'transfer_out', $3, 'THB', $4, NOW())`,
-  [payerId, payerWallet.id, amount, logDesc]
-);
-
-await client.query(
-  `INSERT INTO transaction_logs (user_id, wallet_id, type, amount, currency, description, created_at)
-             VALUES ($1, $2, 'transfer_in', $3, 'THB', $4, NOW())`,
-  [payment.merchant_id, merchantWallet.id, amount, logDesc]
-);
-
-await client.query('COMMIT');
-
-// 7. Distribute Commissions (Async - don't block response)
-// We pass merchant_id (user_id), transaction_id, amount
-commissionService.distributeCommissions(payment.id, payment.merchant_id, amount, 'THB')
-  .catch(err => console.error('Commission Error:', err));
+// Orphaned code removed to fix top-level await error
 const { v4: uuidv4 } = require('uuid');
 const stripeService = require('../utils/stripe');
 
