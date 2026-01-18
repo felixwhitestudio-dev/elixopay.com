@@ -4,7 +4,7 @@
 (function () {
   // Preferred production API URL
   // TODO: Update this to your actual production domain when ready (e.g. https://api.elixopay.com)
-  const PROD_BASE = 'https://replace-with-your-api-domain.com';
+  const PROD_BASE = 'https://elixopay-com.onrender.com';
   const DEV_BASE = 'http://localhost:3000';
 
   // Allow overriding the API base via localStorage for flexibility
