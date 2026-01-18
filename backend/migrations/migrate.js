@@ -125,7 +125,7 @@ async function runMigrations() {
       const initialPassword = 'Elixopay2026!';
       const demoHash = await bcrypt.hash(initialPassword, 10);
       await pool.query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, company_name, status, email_verified)
+        `INSERT INTO users (email, password, first_name, last_name, company_name, status, email_verified)
          VALUES ($1, $2, $3, $4, $5, $6, $7);`,
         ['demo@elixopay.com', demoHash, 'Demo', 'User', 'Demo Company', 'active', true]
       );
@@ -135,7 +135,7 @@ async function runMigrations() {
       console.log('🔐 Ensuring demo user has correct password...');
       const newPw = 'Elixopay2026!';
       const newHash = await bcrypt.hash(newPw, 10);
-      await pool.query(`UPDATE users SET password_hash = $1 WHERE email = $2;`, [newHash, 'demo@elixopay.com']);
+      await pool.query(`UPDATE users SET password = $1 WHERE email = $2;`, [newHash, 'demo@elixopay.com']);
       console.log('✅ Demo user password synchronized to: Elixopay2026!');
     }
 
