@@ -28,9 +28,16 @@ app.use(cors({
         'https://elixopay.com',
         'http://localhost:8080',
         'http://127.0.0.1:8080'
-      ]; // Minimal defaults
+      ];
 
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.ALLOW_RAILWAY_WILDCARD === 'true') {
+    // Dynamic checks for Vercel/Render previews
+    const isAllowed =
+      allowedOrigins.indexOf(origin) !== -1 ||
+      (origin && origin.endsWith('.vercel.app')) ||
+      (origin && origin.endsWith('.onrender.com')) ||
+      process.env.ALLOW_RAILWAY_WILDCARD === 'true';
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       console.warn(`BLOCKED CORS: ${origin}`);
