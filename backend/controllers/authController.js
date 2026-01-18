@@ -372,8 +372,13 @@ exports.login = async (req, res, next) => {
     if (user.status !== 'active') {
       return res.status(403).json({ success: false, error: { message: 'Account is disabled' } });
     }
-    // Check password
-    const valid = await verifyPassword(password, user.password_hash, user.id);
+    // Check password (handle inconsistent column naming: password_hash vs password)
+    const storedHash = user.password_hash || user.password;
+    if (!storedHash) {
+      console.error('Login Error: Password hash missing for user', email);
+      return res.status(500).json({ success: false, error: { message: 'Account data error' } });
+    }
+    const valid = await verifyPassword(password, storedHash, user.id);
     if (!valid) {
       recordFailedAttempt(email);
       return res.status(401).json({ success: false, error: { message: 'Invalid email or password' } });
