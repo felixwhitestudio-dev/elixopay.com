@@ -2,6 +2,10 @@ const { Pool } = require('pg');
 
 // Database configuration
 const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction && !process.env.DATABASE_URL) {
+  console.error('❌ CRITICAL ERROR: DATABASE_URL environment variable is missing!');
+  console.error('Please configure DATABASE_URL in your Render Dashboard settings.');
+}
 const poolConfig = {
   connectionString: process.env.DATABASE_URL,
   // Fallback to individual params if DATABASE_URL is not set
