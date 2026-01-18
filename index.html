@@ -747,6 +747,38 @@
                 gap: 1.5rem;
             }
         }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 6rem 1rem 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem !important;
+            }
+
+            .hero-card {
+                padding: 1.5rem !important;
+                margin: 0 -1rem;
+                /* Negative margin to pull card to edges on very small screens */
+                border-radius: 20px !important;
+            }
+
+            nav .container {
+                padding: 0 1rem;
+            }
+
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            /* Safe area for iPhone X+ */
+            body {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+        }
     </style>
     <!-- Shared theme/animation styles -->
     <link rel="stylesheet" href="styles/theme.css">
@@ -812,7 +844,8 @@
                     /* Custom Currency Selector Styles */
                     .custom-select-container {
                         position: relative;
-                        min-width: 160px;
+                        min-width: 100px;
+                        /* Reduced from 160px for mobile safety */
                         height: 100%;
                     }
 
@@ -856,7 +889,12 @@
                         position: absolute;
                         top: 110%;
                         right: 0;
-                        width: 300px;
+                        width: 100%;
+                        /* Changed from 300px to 100% of container or min-content */
+                        min-width: 250px;
+                        /* Ensure it's not too small */
+                        max-width: 80vw;
+                        /* Prevent screen overflow */
                         background: white;
                         border: 1px solid #eee;
                         border-radius: 12px;
@@ -940,12 +978,12 @@
                     <label
                         style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;"
                         data-i18n="calc.send">You send</label>
-                    <div style="display: flex; gap: 1rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                         <input type="number" id="calc-send" value="1000"
-                            style="flex: 1; padding: 1rem; font-size: 1.5rem; font-weight: bold; border: 1px solid #ddd; border-radius: 8px; color: var(--primary-color); outline: none;">
+                            style="flex: 1; min-width: 140px; padding: 1rem; font-size: 1.5rem; font-weight: bold; border: 1px solid #ddd; border-radius: 8px; color: var(--primary-color); outline: none;">
 
                         <!-- Custom Select From -->
-                        <div class="custom-select-container" id="select-from">
+                        <div class="custom-select-container" id="select-from" style="flex: 1; min-width: 120px;">
                             <div class="custom-select-trigger" onclick="toggleCurrency('from')">
                                 <img src="https://flagcdn.com/w40/th.png" class="flag-icon" id="flag-from-img">
                                 <span class="currency-code" id="code-from-display">THB</span>
@@ -989,12 +1027,12 @@
                     <label
                         style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;"
                         data-i18n="calc.recipient">Recipient gets</label>
-                    <div style="display: flex; gap: 1rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                         <input type="text" id="calc-get" value="..." disabled
-                            style="flex: 1; padding: 1rem; font-size: 1.5rem; font-weight: bold; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
+                            style="flex: 1; min-width: 140px; padding: 1rem; font-size: 1.5rem; font-weight: bold; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
 
                         <!-- Custom Select To -->
-                        <div class="custom-select-container" id="select-to">
+                        <div class="custom-select-container" id="select-to" style="flex: 1; min-width: 120px;">
                             <div class="custom-select-trigger" onclick="toggleCurrency('to')">
                                 <img src="https://flagcdn.com/w40/us.png" class="flag-icon" id="flag-to-img">
                                 <span class="currency-code" id="code-to-display">USD</span>
