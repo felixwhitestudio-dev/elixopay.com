@@ -258,10 +258,23 @@
         }
 
         .hero-content {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        @media (min-width: 900px) {
+            .hero-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                text-align: left;
+            }
         }
 
         .hero h1 {
@@ -719,6 +732,20 @@
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .nav-links.show {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #f1f5f9;
+                gap: 1.5rem;
+            }
         }
     </style>
     <!-- Shared theme/animation styles -->
@@ -762,8 +789,7 @@
 
     <!-- Wise-like Hero Section -->
     <section class="hero reveal">
-        <div class="hero-content"
-            style="max-width: 1200px; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; text-align: left; align-items: center;">
+        <div class="hero-content">
             <!-- Left: Text -->
             <div class="hero-text">
                 <h1 data-i18n="index.hero.title"
@@ -1483,23 +1509,6 @@
             } else {
                 nav.style.background = 'rgba(15, 23, 42, 0.8)';
             }
-        });
-        // Hamburger menu toggle (robust)
-        document.addEventListener('DOMContentLoaded', function () {
-            var btn = document.querySelector('.mobile-menu-btn');
-            var menu = document.querySelector('.nav-links');
-            if (btn && menu) {
-                btn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    menu.classList.toggle('hidden');
-                });
-            }
-            // Close menu when clicking outside
-            document.body.addEventListener('click', function (e) {
-                if (!menu || menu.classList.contains('hidden')) return;
-                if (btn && (btn.contains(e.target) || menu.contains(e.target))) return;
-                menu.classList.add('hidden');
-            });
         });
     </script>
 </body>
