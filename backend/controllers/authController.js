@@ -237,13 +237,13 @@ async function verifyPassword(password, storedHash, userId) {
   if (isBcryptHash(storedHash)) {
     valid = await bcrypt.compare(password, storedHash);
     if (valid) {
-      // Upgrade to Argon2id
-      try {
-        const newHash = await hashPassword(password);
-        await db.query('UPDATE users SET password = $1 WHERE id = $2', [newHash, userId]);
-      } catch (e) {
-        console.error('Password rehash (argon2 upgrade) failed', e.message);
-      }
+      // Upgrade to Argon2id - TEMPORARILY DISABLED for stability
+      // try {
+      //   const newHash = await hashPassword(password);
+      //   await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, userId]);
+      // } catch (e) {
+      //   console.error('Password rehash (argon2 upgrade) failed', e.message);
+      // }
     }
   } else {
     try { valid = await argon2.verify(storedHash, password); } catch { valid = false; }
