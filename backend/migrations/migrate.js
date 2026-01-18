@@ -1,8 +1,10 @@
 const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // Use pure JS version for compatibility
+console.log('DEBUG: migrate.js loaded dependencies');
 require('dotenv').config();
+console.log('DEBUG: Environment variables loaded');
 
 async function runMigrations() {
   let poolConfig;
