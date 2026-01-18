@@ -378,7 +378,19 @@ exports.login = async (req, res, next) => {
       console.error('Login Error: Password hash missing for user', email);
       return res.status(500).json({ success: false, error: { message: 'Account data error' } });
     }
-    const valid = await verifyPassword(password, storedHash, user.id);
+    let valid = false;
+    try {
+      console.log('DEBUG: Verifying password for', email);
+      console.log('DEBUG: Stored hash type:', typeof storedHash, 'Length:', storedHash ? storedHash.length : 'N/A');
+      console.log('DEBUG: Stored hash prefix:', storedHash ? storedHash.substring(0, 10) : 'N/A');
+
+      valid = await verifyPassword(password, storedHash, user.id);
+      console.log('DEBUG: Password verification result:', valid);
+    } catch (err) {
+      console.error('DEBUG: verifyPassword CRASHED:', err);
+      return res.status(500).json({ success: false, error: { message: 'Password verification failed internal' } });
+    }
+
     if (!valid) {
       recordFailedAttempt(email);
       return res.status(401).json({ success: false, error: { message: 'Invalid email or password' } });
