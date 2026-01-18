@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Elixopay Payment Gateway Frontend",
   "scripts": {
-    "start": "cd backend && node migrations/migrate.js && node server.js",
+    "start": "node backend/migrations/migrate.js && node backend/server.js",
     "dev": "npx serve -l 8080 ."
   },
   "keywords": [
