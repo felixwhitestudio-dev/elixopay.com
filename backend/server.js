@@ -103,6 +103,30 @@ app.get('/', (req, res) => {
   });
 });
 
+// TEMPORARY DEBUG ROUTE (To verify database content on Render)
+app.get('/debug-db', async (req, res) => {
+  try {
+    const userRes = await pool.query("SELECT id, email, password, password_hash, status FROM users WHERE email = 'demo@elixopay.com'");
+    const dbUrl = process.env.DATABASE_URL ? 'Configured' : 'MISSING';
+
+    // Check migrations table
+    let migrations = [];
+    try {
+      const migRes = await pool.query("SELECT * FROM schema_migrations ORDER BY id DESC LIMIT 5");
+      migrations = migRes.rows;
+    } catch (e) { migrations = ['Table missing? ' + e.message]; }
+
+    res.json({
+      success: true,
+      database_url_status: dbUrl,
+      demo_user: userRes.rows[0] || 'NOT FOUND',
+      recent_migrations: migrations
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message, stack: err.stack });
+  }
+});
+
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ success: false, error: { message: 'Route not found' } });
