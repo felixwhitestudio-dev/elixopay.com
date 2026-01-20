@@ -16,7 +16,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:3000'],
+    origin: [
+        'http://localhost:8080',
+        'http://127.0.0.1:8080',
+        'http://localhost:3000',
+        'https://elixopay.com',
+        'https://www.elixopay.com',
+        'https://elixopay-com.onrender.com'
+    ],
     credentials: true
 }));
 app.use(helmet());
