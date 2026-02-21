@@ -3,3 +3,8 @@
 /pricing /pricing.html 200
 /contact /contact.html 200
 /usecases /usecases.html 200
+/login /login.html 200
+/signup /signup.html 200
+/dashboard /dashboard.html 200
+/partner-portal /partner-portal.html 200
+/partner /partner-portal.html 301

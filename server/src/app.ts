@@ -9,6 +9,10 @@ import adminRouter from './routes/admin.routes';
 import authRouter from './routes/auth.routes';
 import walletRouter from './routes/wallet.routes';
 import kbankRouter from './routes/kbank.routes';
+import bblRouter from './routes/bbl.routes';
+import kycRouter from './routes/kyc.routes';
+import bankRouter from './routes/bank.routes';
+import path from 'path';
 
 const app = express();
 
@@ -33,7 +37,13 @@ app.use(morgan('dev'));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users/wallet', walletRouter);
 app.use('/api/v1/kbank', kbankRouter);
+app.use('/api/v1/bbl', bblRouter);
 app.use('/api/v1/admin', adminRouter);
+app.use('/api/v1/kyc', kycRouter);
+app.use('/api/v1/bank', bankRouter);
+
+// Serve static files (KYC documents)
+app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
 // 404 Handler
 app.all(/(.*)/, (req, res, next) => {

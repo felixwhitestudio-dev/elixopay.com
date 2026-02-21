@@ -16,13 +16,46 @@ model User {
   password  String
   firstName String?
   lastName  String?
-  role      String   @default("user") // user, admin
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isActive  Boolean  @default(true)
-  wallet    Wallet?
-  transactions Transaction[]
-  auditLogs AuditLog[]
+  role            String    @default("user") // user, admin
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  isActive        Boolean   @default(true)
+  
+  // KYC Fields
+  kycStatus       String    @default("unverified") // unverified, pending, verified, rejected
+  kycIdCardUrl    String?
+  kycStatementUrl String?
+  kycSelfieUrl    String?  // Selfie with document (BOT required)
+  kycRejectionReason String? // Admin rejection note shown to user
+  kycSubmittedAt  DateTime?
+  kycVerifiedAt   DateTime?
+  kycReviewedBy   String?  // Email of admin who approved/rejected — BOT audit trail
+
+  // Bank Account Fields (BOT-compliant: locked after KYC approval)
+  bankName          String?  // e.g. KBANK, SCB, BBL, KTB, BAY, TTB
+  bankAccountNumber String?
+  bankAccountName   String?  // Must match KYC name
+  bankVerified      Boolean  @default(false) // Locked to true after admin KYC approval
+
+  wallet          Wallet?
+  transactions    Transaction[]
+  auditLogs       AuditLog[]
+  bankChangeRequests BankAccountChangeRequest[]
+}
+
+model BankAccountChangeRequest {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  // New requested values
+  newBankName          String
+  newAccountNumber     String
+  newAccountName       String
+  reason               String  // Reason for requesting the change
+  status               String  @default("pending") // pending, approved, rejected
+  adminNote            String? // Admin's response note
+  createdAt            DateTime @default(now())
+  resolvedAt           DateTime?
 }
 
 model Wallet {

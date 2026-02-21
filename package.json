@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Elixopay Payment Gateway Frontend",
   "scripts": {
-    "start": "node backend/migrations/migrate.js && node backend/server.js",
-    "dev": "npx serve -l 8080 ."
+    "start": "node app-server/migrations/migrate.js && node app-server/server.js",
+    "dev": "concurrently \"npx serve -l 8080 public-site\" \"npx serve -l 8081 app-server/public\" \"nodemon app-server/server.js\""
   },
   "keywords": [
     "payment",
@@ -39,6 +39,7 @@
     "concurrently": "^8.2.2",
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",
+    "puppeteer": "^24.37.5",
     "supertest": "^6.3.4"
   }
 }

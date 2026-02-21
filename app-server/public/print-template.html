@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Elixopay API Reference Manual</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+        @page {
+            size: A4;
+            margin: 25mm 20mm;
+
+            @bottom-right {
+                content: counter(page);
+                font-family: 'Inter', sans-serif;
+                font-size: 9pt;
+                color: #64748b;
+            }
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --bg-code: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            background: white;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Cover Page */
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            page-break-after: always;
+            padding: 40mm 20mm;
+            box-sizing: border-box;
+            border-left: 10px solid var(--primary);
+        }
+
+        .cover-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 32px;
+            margin-bottom: 2rem;
+        }
+
+        .cover h1 {
+            font-size: 48pt;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin: 0 0 1rem 0;
+        }
+
+        .cover p {
+            font-size: 16pt;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        .cover-meta {
+            margin-top: auto;
+            font-size: 10pt;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Table of Contents Placeholder */
+        .toc {
+            page-break-after: always;
+            padding-top: 2rem;
+        }
+
+        .toc h2 {
+            font-size: 24pt;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 12pt;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .toc-item span.page {
+            color: var(--text-muted);
+        }
+
+        /* Content Typography */
+        .section {
+            page-break-before: always;
+            padding-top: 2rem;
+        }
+
+        h2 {
+            font-size: 28pt;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 18pt;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            page-break-after: avoid;
+        }
+
+        p {
+            font-size: 11pt;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* API Endpoint Badge */
+        .endpoint {
+            display: inline-flex;
+            align-items: center;
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.25rem 0.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 10pt;
+            margin-bottom: 1.5rem;
+            page-break-after: avoid;
+        }
+
+        .method {
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .method.post {
+            color: #0ea5e9;
+        }
+
+        .method.get {
+            color: #10b981;
+        }
+
+        .path {
+            color: #334155;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2.5rem;
+            page-break-inside: avoid;
+        }
+
+        th {
+            text-align: left;
+            font-size: 10pt;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid var(--border);
+            background: #f8fafc;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        td.param-name {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 9.5pt;
+        }
+
+        td.param-meta {
+            font-size: 9pt;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        td.param-meta span.required {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        td.param-meta span.type {
+            color: #3b82f6;
+        }
+
+        td p {
+            margin: 0;
+            font-size: 10pt;
+            color: var(--text-muted);
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 9.5pt;
+            line-height: 1.5;
+            overflow-x: auto;
+            page-break-inside: avoid;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-title {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 0.5rem 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin-bottom: -1rem;
+            /* Overlap with pre */
+            position: relative;
+            z-index: 1;
+            border-bottom: 1px solid #334155;
+        }
+
+        /* Notes/Alerts */
+        .alert {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem 1.5rem;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 2rem;
+            page-break-inside: avoid;
+        }
+
+        .alert h4 {
+            margin: 0 0 0.5rem 0;
+            color: #991b1b;
+            font-size: 11pt;
+        }
+
+        .alert p {
+            margin: 0;
+            color: #7f1d1d;
+            font-size: 10pt;
+        }
+
+        .alert.info {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .alert.info h4 {
+            color: #1e40af;
+        }
+
+        .alert.info p {
+            color: #1e3a8a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Cover Page -->
+    <div class="cover">
+        <div class="cover-logo">E</div>
+        <h1>API Reference<br>Manual</h1>
+        <p>Complete documentation for integrating Elixopay's payment infrastructure into your application.</p>
+        <div class="cover-meta">
+            Version 1.0 &nbsp;&bull;&nbsp; Generated 2026
+        </div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+        <h2>Contents</h2>
+        <div class="toc-item"><span>1. Introduction & Authentication</span><span class="page">3</span></div>
+        <div class="toc-item"><span>2. Create Payment</span><span class="page">5</span></div>
+        <div class="toc-item"><span>3. Check Payment Status</span><span class="page">8</span></div>
+        <div class="toc-item"><span>4. Webhooks</span><span class="page">10</span></div>
+    </div>
+
+    <!-- 1. Introduction -->
+    <div class="section">
+        <h2>1. Introduction & Authentication</h2>
+        <p>Welcome to the Elixopay Developer Guide! This manual provides all the necessary details to integrate our
+            secure and resilient payment system into your platform. Our API uses a standard REST architecture, always
+            responds with JSON, and properly utilizes HTTP Status Codes.</p>
+
+        <h3>API Environments</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Environment</th>
+                    <th>Base URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="param-name">Production</td>
+                    <td><code>https://api.elixopay.com/v1</code></td>
+                </tr>
+                <tr>
+                    <td class="param-name">Sandbox (Test)</td>
+                    <td><code>https://sandbox.elixopay.com/v1</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Authentication</h3>
+        <p>Elixopay uses API keys to authenticate requests. You can view and manage your API keys in the Developer
+            Dashboard.</p>
+        <p>Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in
+            publicly accessible areas such as GitHub, client-side code, and so forth.</p>
+
+        <div class="alert info">
+            <h4>Authorization Header</h4>
+            <p>All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without
+                authentication will also fail.</p>
+        </div>
+
+        <div class="code-title">Example Request</div>
+        <pre><code>curl -X GET https://api.elixopay.com/v1/payments \
+  -H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxx"</code></pre>
+    </div>
+
+    <!-- 2. Create Payment -->
+    <div class="section">
+        <h2>2. Create Payment</h2>
+        <p>Creates a new payment intent and returns a payment URL for the customer to complete the transaction.</p>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/v1/payments/create</span>
+        </div>
+
+        <h3>Request Parameters</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="param-name">amount</div>
+                        <div class="param-meta"><span class="required">Required</span> &nbsp;&bull;&nbsp; <span
+                                class="type">Number</span></div>
+                    </td>
+                    <td>
+                        <p>The total amount for the transaction. Must be strictly greater than 0.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="param-name">currency</div>
+                        <div class="param-meta"><span class="required">Required</span> &nbsp;&bull;&nbsp; <span
+                                class="type">String</span></div>
+                    </td>
+                    <td>
+                        <p>Three-letter ISO currency code, in lowercase. Currently supported: <code>thb</code>.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="param-name">order_id</div>
+                        <div class="param-meta"><span class="required">Required</span> &nbsp;&bull;&nbsp; <span
+                                class="type">String</span></div>
+                    </td>
+                    <td>
+                        <p>A unique identifier for the order in your system. Max 255 characters.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="param-name">return_url</div>
+                        <div class="param-meta"><span class="required">Required</span> &nbsp;&bull;&nbsp; <span
+                                class="type">String</span></div>
+                    </td>
+                    <td>
+                        <p>The URL where the customer will be redirected after completing the payment.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-title">Request Example</div>
+        <pre><code>curl -X POST https://api.elixopay.com/v1/payments/create \
+  -H "Authorization: Bearer sk_live_xxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1500.00,
+    "currency": "THB",
+    "order_id": "ORD-2026-001",
+    "return_url": "https://your-store.com/checkout/success"
+  }'</code></pre>
+
+        <div class="code-title">Response Example (200 OK)</div>
+        <pre><code>{
+  "status": "success",
+  "data": {
+    "id": "txn_12345abcde",
+    "payment_url": "https://checkout.elixopay.com/pay/txn_12345abcde",
+    "amount": 1500.00,
+    "currency": "THB",
+    "status": "pending",
+    "created_at": "2026-02-21T10:00:00Z"
+  }
+}</code></pre>
+    </div>
+
+    <!-- 3. Check Status -->
+    <div class="section">
+        <h2>3. Check Payment Status</h2>
+        <p>Retrieves the details of an existing payment. You need only supply the unique payment identifier that was
+            returned upon payment creation.</p>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <span class="path">/v1/payments/{id}</span>
+        </div>
+
+        <h3>Path Parameters</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="param-name">id</div>
+                        <div class="param-meta"><span class="required">Required</span> &nbsp;&bull;&nbsp; <span
+                                class="type">String</span></div>
+                    </td>
+                    <td>
+                        <p>The unique identifier of the payment you want to retrieve. Begins with <code>txn_</code>.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-title">Request Example</div>
+        <pre><code>curl -X GET https://api.elixopay.com/v1/payments/txn_12345abcde \
+  -H "Authorization: Bearer sk_live_xxxx"</code></pre>
+
+        <div class="code-title">Response Example (200 OK)</div>
+        <pre><code>{
+  "status": "success",
+  "data": {
+    "id": "txn_12345abcde",
+    "order_id": "ORD-2026-001",
+    "amount": 1500.00,
+    "status": "paid",
+    "paid_at": "2026-02-21T10:05:12Z"
+  }
+}</code></pre>
+    </div>
+
+    <!-- 4. Webhooks -->
+    <div class="section">
+        <h2>4. Webhooks</h2>
+        <p>Elixopay uses webhooks to notify your application when an event happens in your account. Webhooks are
+            particularly useful for asynchronous events such as when a customer completes a payment.</p>
+
+        <div class="alert">
+            <h4>Verification Required</h4>
+            <p>Always verify the webhook signature (<code>X-Elixopay-Signature</code>) to ensure the request genuinely
+                originated from Elixopay and has not been tampered with.</p>
+        </div>
+
+        <h3>Webhook Payload</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="param-name">event</div>
+                        <div class="param-meta"><span class="type">String</span></div>
+                    </td>
+                    <td>
+                        <p>The type of event that occurred. Example: <code>payment.success</code>,
+                            <code>payment.failed</code>.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="param-name">data</div>
+                        <div class="param-meta"><span class="type">Object</span></div>
+                    </td>
+                    <td>
+                        <p>The actual payment object associated with the event.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-title">Webhook Example (payment.success)</div>
+        <pre><code>{
+  "event": "payment.success",
+  "created_at": "2026-02-21T10:05:12Z",
+  "data": {
+    "id": "txn_12345abcde",
+    "order_id": "ORD-2026-001",
+    "amount": 1500.00,
+    "status": "paid",
+    "customer": {
+      "email": "customer@example.com"
+    }
+  }
+}</code></pre>
+    </div>
+
+</body>
+
+</html>

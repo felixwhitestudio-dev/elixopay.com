@@ -1,0 +1,134 @@
+openapi: 3.0.0
+info:
+  title: Elixopay API
+  description: API for Elixopay payment gateway.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://api.elixopay.com/v1
+    description: Production server
+paths:
+  /payments:
+    post:
+      summary: Create a new payment
+      description: Create a payment session and get a checkout URL.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+              properties:
+                amount:
+                  type: number
+                  description: Amount to charge (e.g., 1000.00)
+                currency:
+                  type: string
+                  description: Currency code (e.g., THB)
+                description:
+                  type: string
+                  description: Description of the payment
+                reference_id:
+                  type: string
+                  description: Unique reference ID from your system
+                return_url:
+                  type: string
+                  description: URL to redirect users after payment
+      responses:
+        '200':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      checkout_url:
+                        type: string
+                      status:
+                        type: string
+  /payments/{id}:
+    get:
+      summary: Retrieve payment status
+      description: Get the status and details of a specific payment.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment details retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                      amount:
+                        type: number
+                      currency:
+                        type: string
+  /api-keys:
+    get:
+      summary: List API keys
+      description: Retrieve a list of API keys for the current user.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      apiKeys:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            public_key:
+                              type: string
+                            status:
+                              type: string
+                            created_at:
+                              type: string
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer

@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # FAIL2BAN / FIREWALL (Host level is best, but we can have application gateway)
+
+  # REVERSE PROXY (Public Zone)
+  nginx:
+    image: nginx:stable-alpine
+    container_name: elixopay_proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./backend/public:/usr/share/nginx/html/api # (Optional) Static assets
+      - ../:/usr/share/nginx/html # Serve frontend
+    networks:
+      - public_net
+      - app_net
+    depends_on:
+      - backend
+
+  # BACKEND API (App Zone - Private)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: elixopay_api
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - PORT=8080
+    networks:
+      - app_net
+      - data_net
+    depends_on:
+      - db
+
+  # DATABASE (Data Zone - Strictly Private)
+  db:
+    image: postgres:15-alpine
+    container_name: elixopay_db
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME:-elixopay}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - data_net
+    # NO PORTS EXPOSED to host!
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  public_net:
+    driver: bridge
+  app_net:
+    internal: true
+  data_net:
+    internal: true

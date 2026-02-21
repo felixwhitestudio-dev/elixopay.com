@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="status.page_title">System Status - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --success: #10b981;
+            --success-dim: rgba(16, 185, 129, 0.15);
+            --success-border: rgba(16, 185, 129, 0.35);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --primary: #6366f1;
+            --primary-dim: rgba(99, 102, 241, 0.15);
+            --dark-bg: #0d0f1a;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(ellipse 80% 40% at 50% -10%, rgba(99, 102, 241, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 30% at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.02);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo .logo-icon {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: white;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Language switcher */
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .lang-btn {
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .lang-btn.active {
+            color: white;
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            padding: 3rem 2rem 5rem;
+            max-width: 860px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+            border: 1px solid var(--success-border);
+            margin-bottom: 3rem;
+            gap: 1rem;
+        }
+
+        .hero-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--success-dim);
+            border: 1px solid var(--success-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--success);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .hero-status h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--success);
+        }
+
+        .hero-status p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 420px;
+        }
+
+        .uptime-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success-border);
+            border-radius: 99px;
+            padding: 4px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .status-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .status-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .item-icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: var(--primary-dim);
+            color: #818cf8;
+            flex-shrink: 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .item-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .item-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .status-dot-sm {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 0 0 currentColor;
+            animation: pulse-sm 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-sm {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .incidents-section {
+            margin-bottom: 2rem;
+        }
+
+        .incident-card {
+            padding: 1.25rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 0.75rem;
+        }
+
+        .incident-date {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .incident-title {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--success);
+        }
+
+        .incident-body {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            line-height: 1.6;
+        }
+
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+            Elixopay
+        </a>
+        <div class="header-right">
+            <!-- Language Switcher -->
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="changeLang('th')">TH</button>
+                <button class="lang-btn" onclick="changeLang('en')">EN</button>
+                <button class="lang-btn" onclick="changeLang('zh')">中文</button>
+            </div>
+            <a href="index.html" class="back-link" data-i18n="status.back">
+                ← กลับหน้าหลัก
+            </a>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Hero Status -->
+        <div class="hero-status">
+            <div class="hero-icon"><i class="fas fa-check-circle"></i></div>
+            <h1 data-i18n="status.all_operational">ระบบทั้งหมดทำงานปกติ</h1>
+            <p data-i18n="status.all_operational_desc">บริการทั้งหมดของ Elixopay กำลังทำงานตามปกติ
+                ไม่มีรายงานเหตุการณ์ผิดปกติในขณะนี้</p>
+            <span class="uptime-badge">
+                <i class="fas fa-chart-line"></i>
+                <span data-i18n="status.uptime_badge">Uptime 99.99% (30 วันที่ผ่านมา)</span>
+            </span>
+        </div>
+
+        <!-- Services -->
+        <p class="section-title" data-i18n="status.services_title">สถานะบริการ</p>
+        <div class="status-grid">
+            <div class="status-item">
+                <div class="item-left">
+                    <div class="item-icon-wrap"><i class="fas fa-code"></i></div>
+                    <div>
+                        <div class="item-name" data-i18n="status.api_name">API Gateway</div>
+                        <div class="item-subtitle">api.elixopay.com</div>
+                    </div>
+                </div>
+                <span class="item-status"><span class="status-dot-sm"></span> <span
+                        data-i18n="status.operational">ใช้งานได้ปกติ</span></span>
+            </div>
+
+            <div class="status-item">
+                <div class="item-left">
+                    <div class="item-icon-wrap"><i class="fas fa-chart-bar"></i></div>
+                    <div>
+                        <div class="item-name" data-i18n="status.dashboard_name">Dashboard</div>
+                        <div class="item-subtitle">app.elixopay.com</div>
+                    </div>
+                </div>
+                <span class="item-status"><span class="status-dot-sm"></span> <span
+                        data-i18n="status.operational">ใช้งานได้ปกติ</span></span>
+            </div>
+
+            <div class="status-item">
+                <div class="item-left">
+                    <div class="item-icon-wrap"><i class="fas fa-credit-card"></i></div>
+                    <div>
+                        <div class="item-name" data-i18n="status.payment_name">ระบบชำระเงิน (PromptPay / QR)</div>
+                        <div class="item-subtitle">Payment Processing</div>
+                    </div>
+                </div>
+                <span class="item-status"><span class="status-dot-sm"></span> <span
+                        data-i18n="status.operational">ใช้งานได้ปกติ</span></span>
+            </div>
+
+            <div class="status-item">
+                <div class="item-left">
+                    <div class="item-icon-wrap"><i class="fas fa-wallet"></i></div>
+                    <div>
+                        <div class="item-name" data-i18n="status.wallet_name">ระบบ Wallet</div>
+                        <div class="item-subtitle">Balance &amp; Transfers</div>
+                    </div>
+                </div>
+                <span class="item-status"><span class="status-dot-sm"></span> <span
+                        data-i18n="status.operational">ใช้งานได้ปกติ</span></span>
+            </div>
+
+            <div class="status-item">
+                <div class="item-left">
+                    <div class="item-icon-wrap"><i class="fas fa-bell"></i></div>
+                    <div>
+                        <div class="item-name" data-i18n="status.webhooks_name">Webhooks</div>
+                        <div class="item-subtitle">Event Notifications</div>
+                    </div>
+                </div>
+                <span class="item-status"><span class="status-dot-sm"></span> <span
+                        data-i18n="status.operational">ใช้งานได้ปกติ</span></span>
+            </div>
+
+            <div class="status-item">
+                <div class="item-left">
+                    <div class="item-icon-wrap"><i class="fas fa-database"></i></div>
+                    <div>
+                        <div class="item-name" data-i18n="status.db_name">Database</div>
+                        <div class="item-subtitle">Data Infrastructure</div>
+                    </div>
+                </div>
+                <span class="item-status"><span class="status-dot-sm"></span> <span
+                        data-i18n="status.operational">ใช้งานได้ปกติ</span></span>
+            </div>
+        </div>
+
+        <!-- Past Incidents -->
+        <p class="section-title" data-i18n="status.incidents_title">เหตุการณ์ที่ผ่านมา</p>
+        <div class="incidents-section">
+            <div class="incident-card">
+                <div class="incident-date">20 Feb 2026</div>
+                <div class="incident-title"><i class="fas fa-check-circle" style="margin-right:6px;"></i><span
+                        data-i18n="status.no_incident">ไม่มีรายงานเหตุการณ์</span></div>
+            </div>
+            <div class="incident-card">
+                <div class="incident-date">19 Feb 2026</div>
+                <div class="incident-title"><i class="fas fa-check-circle" style="margin-right:6px;"></i><span
+                        data-i18n="status.no_incident">ไม่มีรายงานเหตุการณ์</span></div>
+            </div>
+            <div class="incident-card">
+                <div class="incident-date">18 Feb 2026</div>
+                <div class="incident-title" style="color: var(--warning);"><i class="fas fa-wrench"
+                        style="margin-right:6px;"></i><span data-i18n="status.maintenance">ปิดปรับปรุงชั่วคราว —
+                        อัปเกรดฐานข้อมูล</span></div>
+                <div class="incident-body" data-i18n="status.maintenance_desc">งานปรับปรุงแล้วเสร็จสมบูรณ์ตามแผน
+                    ภายในกรอบเวลา 02:00–03:30 น. ระบบกลับมาทำงานตามปกติ</div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        &copy; 2026 Elixopay. &nbsp;|&nbsp;
+        <a href="privacy.html">Privacy Policy</a> &nbsp;|&nbsp;
+        <a href="terms.html">Terms of Service</a>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script>
+        // Sync active button with current language and update page title
+        function changeLang(lang) {
+            if (window.changeLanguage) window.changeLanguage(lang);
+            syncLangButtons(lang);
+        }
+
+        function syncLangButtons(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                const map = { th: 'TH', en: 'EN', zh: '中文' };
+                // Match by text content
+                if (btn.textContent.trim() === (map[lang] || lang.toUpperCase())) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Sync on load after i18n initializes
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('elixopay-lang') || 'th';
+            syncLangButtons(saved);
+        });
+
+        // Also listen for language changes triggered from i18n.js
+        window.addEventListener('languageChanged', (e) => {
+            syncLangButtons(e.detail.lang);
+        });
+    </script>
+</body>
+
+</html>

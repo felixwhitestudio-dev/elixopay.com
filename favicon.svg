@@ -1,0 +1,15 @@
+<svg width="136" height="136" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Purple Gradient Shield Background -->
+  <defs>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded Square Background -->
+  <rect width="136" height="136" rx="28" fill="url(#purpleGrad)"/>
+  
+  <!-- Letter "E" -->
+  <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800" fill="white" text-anchor="middle">E</text>
+</svg>

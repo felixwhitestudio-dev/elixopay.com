@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Public Zone (DMZ) - Load Balancer / Reverse Proxy
+  # In a real setup, this would be Nginx or HAProxy.
+  # For simulation, we'll use Nginx serving static frontend files.
+  frontend:
+    image: nginx:alpine
+    container_name: elixopay-dmz-frontend
+    networks:
+      - public_net
+      - app_net
+    ports:
+      - "8080:80"
+    volumes:
+      - ../:/usr/share/nginx/html:ro # Mount root to serve frontend files
+
+  # App Zone (Private) - Backend Application
+  backend:
+    build:
+      context: ./backend
+    container_name: elixopay-app-backend
+    networks:
+      - app_net
+      - data_net
+      - mgmt_net
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - PGYOUSER=postgres
+      - PGPASSWORD=securepassword
+      - PGDATABASE=elixopay
+    depends_on:
+      - db
+
+  # Data Zone (Secure) - Database
+  db:
+    image: postgres:15-alpine
+    container_name: elixopay-data-db
+    networks:
+      - data_net
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=securepassword
+      - POSTGRES_DB=elixopay
+    # No ports exposed to host machine!
+    # Accessible only from 'backend' via 'data_net'
+
+    # Management Zone - Logging / Monitoring (Simulation)
+  monitoring:
+    image: prom/prometheus
+    container_name: elixopay-mgmt-monitor
+    networks:
+      - mgmt_net
+    ports:
+      - "9090:9090"
+
+networks:
+  public_net:
+    driver: bridge
+  app_net:
+    driver: bridge
+    internal: true # No internet access (simulated, though bridge usually has NAT)
+  data_net:
+    driver: bridge
+    internal: true # Strictly internal
+  mgmt_net:
+    driver: bridge
+    internal: true

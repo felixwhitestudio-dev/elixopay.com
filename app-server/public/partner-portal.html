@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Portal - Elixopay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        /* Premium Gradients */
+        .bg-premium {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-premium {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Table Styles */
+        .premium-table th {
+            font-weight: 500;
+            color: #94a3b8;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-table td {
+            padding: 1rem;
+            color: #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="/dashboard.html" class="flex items-center group mr-8">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-2 shadow-lg">
+                            E</div>
+                        <span class="text-xl font-bold text-white tracking-tight">Elixopay <span
+                                class="text-indigo-400 font-normal">Partner</span></span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <div class="relative group">
+                        <button
+                            class="flex items-center text-sm font-medium text-gray-400 hover:text-white transition focus:outline-none">
+                            <i class="fas fa-globe mr-1.5"></i>
+                            <span id="current-lang-label">TH</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div
+                            class="absolute right-0 mt-2 w-32 bg-[#1e293b] border border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+                            <div class="py-1">
+                                <a href="#" onclick="changeLanguage('th'); return false;"
+                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-white transition">🇹🇭
+                                    ไทย</a>
+                                <a href="#" onclick="changeLanguage('en'); return false;"
+                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-white transition">🇺🇸
+                                    English</a>
+                                <a href="#" onclick="changeLanguage('zh'); return false;"
+                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-white transition">🇨🇳
+                                    中文</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-6 w-px bg-gray-700"></div>
+
+                    <a href="/dashboard.html" class="text-sm font-medium text-gray-400 hover:text-white transition"
+                        data-i18n="nav.dashboard">Back
+                        to Dashboard</a>
+                    <div class="h-6 w-px bg-gray-700"></div>
+                    <div class="flex items-center">
+                        <div
+                            class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                            <i class="fas fa-user-tie text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+        <!-- Header -->
+        <div class="text-center mb-12 animate-in" style="animation-delay: 0.1s;">
+            <h1 class="text-4xl font-bold text-white mb-4 tracking-tight" data-i18n="partner.overview.title">Partner
+                Network</h1>
+            <p class="text-gray-400 max-w-2xl mx-auto text-lg" data-i18n="partner.overview.subtitle">Manage your
+                referrals, track commissions, and grow your agency network from one
+                powerful interface.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-in"
+            style="animation-delay: 0.2s;">
+            <!-- Total Earnings -->
+            <div
+                class="card-premium rounded-2xl p-6 relative overflow-hidden group hover:border-indigo-500/30 transition duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-coins text-6xl text-indigo-400"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-medium text-indigo-400 mb-1 uppercase tracking-wider"
+                        data-i18n="partner.stats.earnings">TOTAL EARNINGS</p>
+                    <h3 class="text-3xl font-bold text-white mb-2" id="total-earnings">฿0</h3>
+                    <div
+                        class="flex items-center text-xs font-medium text-emerald-400 bg-emerald-400/10 w-fit px-2 py-1 rounded-full">
+                        <i class="fas fa-arrow-up mr-1"></i> +0% this month
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Merchants -->
+            <div
+                class="card-premium rounded-2xl p-6 relative overflow-hidden group hover:border-purple-500/30 transition duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-users text-6xl text-purple-400"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-medium text-purple-400 mb-1 uppercase tracking-wider"
+                        data-i18n="partner.stats.active_referrals">ACTIVE MERCHANTS</p>
+                    <h3 class="text-3xl font-bold text-white mb-2" id="total-merchants">0</h3>
+                    <p class="text-sm text-gray-500">Businesses in your network</p>
+                </div>
+            </div>
+
+            <!-- Pending Payout -->
+            <div
+                class="card-premium rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/30 transition duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-hourglass-half text-6xl text-amber-400"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-medium text-amber-400 mb-1 uppercase tracking-wider"
+                        data-i18n="partner.stats.pending_payout">PENDING PAYOUT</p>
+                    <h3 class="text-3xl font-bold text-white mb-2" id="pending-balance">฿0</h3>
+                    <p class="text-sm text-gray-500">Available for withdrawal soon</p>
+                </div>
+            </div>
+
+            <!-- Clicks -->
+            <div
+                class="card-premium rounded-2xl p-6 relative overflow-hidden group hover:border-blue-500/30 transition duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                    <i class="fas fa-mouse-pointer text-6xl text-blue-400"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-medium text-blue-400 mb-1 uppercase tracking-wider"
+                        data-i18n="partner.stats.clicks">LINK CLICKS</p>
+                    <h3 class="text-3xl font-bold text-white mb-2" id="total-clicks">0</h3>
+                    <p class="text-sm text-gray-500">Traffic from your link</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-in" style="animation-delay: 0.3s;">
+            <!-- Network Table -->
+            <div class="lg:col-span-2 card-premium rounded-2xl overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-gray-700/50 flex justify-between items-center">
+                    <h2 class="text-lg font-bold text-white flex items-center">
+                        <i class="fas fa-sitemap mr-2 text-indigo-400"></i> <span data-i18n="partner.network.title">My
+                            Network</span>
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="openCreateModal()"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors flex items-center">
+                            <i class="fas fa-plus mr-1.5"></i> <span data-i18n="partner.network.add_member">Add
+                                Member</span>
+                        </button>
+                        <button onclick="fetchHierarchy()"
+                            class="text-gray-400 hover:text-white text-sm font-medium transition flex items-center">
+                            <i class="fas fa-sync-alt mr-1"></i> <span
+                                data-i18n="partner.network.refresh">Refresh</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto flex-grow">
+                    <table class="w-full premium-table">
+                        <thead>
+                            <tr>
+                                <th class="text-xs uppercase tracking-wider" data-i18n="partner.network.col.name">
+                                    Business Name</th>
+                                <th class="text-xs uppercase tracking-wider" data-i18n="partner.network.col.domain">
+                                    Domain</th>
+                                <th class="text-xs uppercase tracking-wider" data-i18n="partner.network.col.status">
+                                    Status</th>
+                                <th class="text-xs uppercase tracking-wider" data-i18n="partner.network.col.joined">
+                                    Joined Date</th>
+                                <th class="text-right"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="network-table-body">
+                            <!-- Populated by JS -->
+                            <tr>
+                                <td colspan="5" class="text-center py-8">
+                                    <div class="flex flex-col items-center justify-center text-gray-500">
+                                        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                                        <p>Loading network data...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Referral Link Card -->
+            <div class="space-y-6">
+                <div class="card-premium rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-4" data-i18n="partner.ref.title">Your Referral Link</h3>
+                    <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700/50 flex items-center mb-4">
+                        <code class="text-indigo-300 text-sm truncate flex-1 font-mono"
+                            id="referral-link">Loading...</code>
+                        <button onclick="copyRefLink()" class="ml-2 text-gray-400 hover:text-white transition">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-4 leading-relaxed" data-i18n="partner.ref.desc">
+                        Share this link with potential merchants. You'll earn <span class="text-white font-bold">20%
+                            commission</span> on their transaction fees forever.
+                    </p>
+                    <button onclick="copyRefLink()"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
+                        <span data-i18n="partner.ref.copy">Copy Link</span>
+                    </button>
+                </div>
+
+                <!-- Support Card -->
+                <div class="card-premium rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-2" data-i18n="partner.support.title">Partner Support</h3>
+                    <p class="text-sm text-gray-400 mb-4" data-i18n="partner.support.desc">Need help with your earnings
+                        or network?</p>
+                    <button onclick="location.href='mailto:partners@elixopay.com'"
+                        class="w-full border border-gray-700 hover:border-gray-500 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl transition duration-200">
+                        <i class="far fa-envelope mr-2"></i> <span data-i18n="partner.support.contact">Contact
+                            Manager</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <!-- User Modal -->
+    <div id="userModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" aria-hidden="true"
+                onclick="closeModal()"></div>
+
+            <!-- This element is to trick the browser into centering the modal contents. -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <!-- Modal panel -->
+            <div
+                class="inline-block align-bottom bg-[#1e293b] rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-700">
+                <div class="bg-[#1e293b] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-white" id="modalTitle">
+                                Add New Member
+                            </h3>
+                            <div class="mt-4">
+                                <form id="userForm" class="space-y-4">
+                                    <input type="hidden" id="editUserId">
+
+                                    <!-- Error Message -->
+                                    <div id="modalError"
+                                        class="hidden bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-red-500 text-sm mb-4">
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-400 mb-1">First
+                                                Name</label>
+                                            <input type="text" id="modalFirstName"
+                                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-400 mb-1">Last
+                                                Name</label>
+                                            <input type="text" id="modalLastName"
+                                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-1">Email</label>
+                                        <input type="email" id="modalEmail"
+                                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+
+                                    <!-- Create Only Fields -->
+                                    <div id="passwordGroup">
+                                        <label class="block text-sm font-medium text-gray-400 mb-1">Password</label>
+                                        <input type="password" id="modalPassword"
+                                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+
+                                    <div id="roleSelectGroup">
+                                        <label class="block text-sm font-medium text-gray-400 mb-1">Role</label>
+                                        <select id="modalRole"
+                                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                            <option value="organizer">Organizer (Sub-Partner)</option>
+                                            <option value="agent">Agent</option>
+                                            <option value="merchant">Merchant</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Commission Fee Allocation -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-400 mb-1">
+                                            Commission Allocation (%)
+                                            <span class="text-xs text-indigo-400 ml-1"
+                                                title="Percentage of transaction amount given to this user">(Fee
+                                                Rate)</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input type="number" id="modalFee" step="0.01" min="0" max="100"
+                                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                placeholder="e.g. 0.5">
+                                            <div
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                <span class="text-gray-500">%</span>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">This rate will be deducted from your
+                                            earnings and given to this user.</p>
+                                    </div>
+
+                                    <!-- Status (Edit Only) -->
+                                    <div id="statusGroup" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-400 mb-1">Status</label>
+                                        <select id="modalStatus"
+                                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                            <option value="active">Active</option>
+                                            <option value="suspended">Suspended</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-700">
+                    <button type="button" onclick="saveUser()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Save Changes
+                    </button>
+                    <button type="button" onclick="closeModal()"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-600 shadow-sm px-4 py-2 bg-transparent text-base font-medium text-gray-300 hover:bg-gray-700 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/i18n.js"></script>
+    <script src="/js/partner-management.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/ui-enhancements.js"></script>
+</body>
+
+</html>
