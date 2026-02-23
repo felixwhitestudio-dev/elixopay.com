@@ -1,12 +1,13 @@
 import express from 'express';
 import * as bankController from '../controllers/bank.controller';
 import { protect, restrictTo } from '../middlewares/auth.middleware';
+import { requireKyc } from '../middlewares/kyc.middleware';
 
 const router = express.Router();
 
 // ── User Routes ──
 router.get('/me', protect, bankController.getMyBankInfo);
-router.post('/change-request', protect, bankController.submitChangeRequest);
+router.post('/change-request', protect, requireKyc, bankController.submitChangeRequest);
 
 // ── Admin Routes ──
 router.get('/change-requests', protect, restrictTo('admin'), bankController.listChangeRequests);
