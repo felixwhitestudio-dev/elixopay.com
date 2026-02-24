@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../utils/prisma';
 import { catchAsync } from '../utils/catchAsync';
@@ -163,7 +164,7 @@ export const approveChangeRequest = catchAsync(async (req: Request, res: Respons
             );
         }
     } catch (emailErr: any) {
-        console.error('[Bank] Email send failed (non-fatal):', emailErr.message);
+        logger.error('[Bank] Email send failed (non-fatal):', emailErr.message);
     }
 
     res.status(200).json({
@@ -217,7 +218,7 @@ export const rejectChangeRequest = catchAsync(async (req: Request, res: Response
             );
         }
     } catch (emailErr: any) {
-        console.error('[Bank] Email send failed (non-fatal):', emailErr.message);
+        logger.error('[Bank] Email send failed (non-fatal):', emailErr.message);
     }
 
     res.status(200).json({

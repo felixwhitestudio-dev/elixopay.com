@@ -1,45 +1,55 @@
 import winston from 'winston';
+import path from 'path';
 
-const levels = {
-    error: 0,
-    warn: 1,
-    info: 2,
-    http: 3,
-    debug: 4,
-};
+const { combine, timestamp, printf, colorize, errors } = winston.format;
 
-const level = () => {
-    const env = process.env.NODE_ENV || 'development';
-    return env === 'development' ? 'debug' : 'warn';
-};
-
-const colors = {
-    error: 'red',
-    warn: 'yellow',
-    info: 'green',
-    http: 'magenta',
-    debug: 'white',
-};
-
-winston.addColors(colors);
-
-const format = winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-    winston.format.colorize({ all: true }),
-    winston.format.printf(
-        (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-    ),
-);
-
-const transports = [
-    new winston.transports.Console(),
-];
-
-const Logger = winston.createLogger({
-    level: level(),
-    levels,
-    format,
-    transports,
+// Custom format for console output
+const consoleFormat = printf(({ level, message, timestamp, stack, ...meta }) => {
+    const metaStr = Object.keys(meta).filter(k => k !== 'service').length
+        ? ` ${JSON.stringify(Object.fromEntries(Object.entries(meta).filter(([k]) => k !== 'service')))}`
+        : '';
+    return `${timestamp} [${level}]${stack ? ` ${stack}` : ` ${message}`}${metaStr}`;
 });
 
-export default Logger;
+const logDir = path.join(process.cwd(), 'logs');
+
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    defaultMeta: { service: 'elixopay-api' },
+    transports: [
+        // Console: colorized, human-readable
+        new winston.transports.Console({
+            format: combine(
+                colorize(),
+                timestamp({ format: 'HH:mm:ss' }),
+                errors({ stack: true }),
+                consoleFormat
+            )
+        }),
+        // File: all logs (info+)
+        new winston.transports.File({
+            filename: path.join(logDir, 'app.log'),
+            format: combine(
+                timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+                errors({ stack: true }),
+                winston.format.json()
+            ),
+            maxsize: 5 * 1024 * 1024, // 5MB per file
+            maxFiles: 5,              // Keep last 5 files
+        }),
+        // File: errors only
+        new winston.transports.File({
+            filename: path.join(logDir, 'error.log'),
+            level: 'error',
+            format: combine(
+                timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+                errors({ stack: true }),
+                winston.format.json()
+            ),
+            maxsize: 5 * 1024 * 1024,
+            maxFiles: 10,
+        }),
+    ],
+});
+
+export default logger;

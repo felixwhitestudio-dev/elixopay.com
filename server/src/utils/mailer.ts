@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import nodemailer from 'nodemailer';
 
 // ── Transport ──────────────────────────────────────────────
@@ -26,7 +27,7 @@ async function getTransporter() {
             secure: false,
             auth: { user: testAccount.user, pass: testAccount.pass },
         });
-        console.log('[Mailer] Using Ethereal test account:', testAccount.user);
+        logger.info('[Mailer] Using Ethereal test account:', testAccount.user);
     }
     return transporter;
 }
@@ -56,7 +57,7 @@ export async function sendKycApprovedEmail(to: string, firstName: string) {
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] KYC Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] KYC Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── KYC Rejected ─────────────────────────────────────────
@@ -84,7 +85,7 @@ export async function sendKycRejectedEmail(to: string, firstName: string, reason
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] KYC Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] KYC Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Bank Approved ─────────────────────────────────────────
@@ -105,7 +106,7 @@ export async function sendBankApprovedEmail(to: string, firstName: string, bankN
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] Bank Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Bank Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Bank Rejected ─────────────────────────────────────────
@@ -129,7 +130,7 @@ export async function sendBankRejectedEmail(to: string, firstName: string, reaso
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] Bank Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Bank Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Email Verification ───────────────────────────────────
@@ -157,7 +158,7 @@ export async function sendVerificationEmail(to: string, firstName: string, verif
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] Verification email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Verification email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 export async function sendPasswordResetEmail(to: string, firstName: string, resetUrl: string) {
@@ -185,7 +186,7 @@ export async function sendPasswordResetEmail(to: string, firstName: string, rese
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] Password reset email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Password reset email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Payout Approved ───────────────────────────────────────
@@ -210,7 +211,7 @@ export async function sendPayoutApprovedEmail(to: string, firstName: string, amo
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] Payout Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Payout Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Payout Rejected ───────────────────────────────────────
@@ -234,5 +235,5 @@ export async function sendPayoutRejectedEmail(to: string, firstName: string, amo
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    console.log('[Mailer] Payout Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Payout Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }

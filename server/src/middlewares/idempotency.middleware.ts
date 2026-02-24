@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AppError } from '../utils/AppError';
@@ -74,7 +75,7 @@ export const verifyIdempotency = async (req: Request, res: Response, next: NextF
                     responseBody: JSON.stringify(body),
                     isLocked: false // Unlock
                 }
-            }).catch(err => console.error('Failed to update IdempotencyKey:', err));
+            }).catch(err => logger.error('Failed to update IdempotencyKey:', err));
 
             return originalJson(body);
         };

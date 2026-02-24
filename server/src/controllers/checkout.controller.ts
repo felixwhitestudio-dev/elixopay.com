@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
@@ -58,7 +59,7 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
         const qrResponse = await KBankService.generateQR(amount, `K${Date.now()}`); // Simplified ref
         qrImage = qrResponse.qrCode; // Not qrImage
     } catch (err) {
-        console.warn('Failed to generate real KBank QR, using fallback for API:', err);
+        logger.warn('Failed to generate real KBank QR, using fallback for API:', err);
         // Fallback or Test mock QR
         qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=PROMPTPAY-DEMO-${amount}`;
     }

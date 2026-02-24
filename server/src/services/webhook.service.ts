@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import crypto from 'crypto';
 import axios from 'axios';
 import prisma from '../utils/prisma';
@@ -74,7 +75,7 @@ export class WebhookService {
                     await this.sendToEndpoint(ep.url, ep.secret, eventType, payload);
                 }
             } catch (error) {
-                console.error(`Failed to parse events for webhook ${ep.id}`, error);
+                logger.error(`Failed to parse events for webhook ${ep.id}`, error);
             }
         }
     }
@@ -101,9 +102,9 @@ export class WebhookService {
                 },
                 timeout: 5000 // 5 seconds max
             });
-            console.log(`[Webhook] Successfully dispatched ${eventType} to ${url}`);
+            logger.info(`[Webhook] Successfully dispatched ${eventType} to ${url}`);
         } catch (error: any) {
-            console.error(`[Webhook] Failed to dispatch ${eventType} to ${url}: ${error.message}`);
+            logger.error(`[Webhook] Failed to dispatch ${eventType} to ${url}: ${error.message}`);
             // In a production environment, we should queue failed webhooks for automatic retries
         }
     }

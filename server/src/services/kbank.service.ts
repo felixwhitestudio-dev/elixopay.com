@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -35,10 +36,10 @@ export class KBankService {
 
             return this.accessToken!;
         } catch (error: any) {
-            console.error('KBank OAuth Error:', error.response?.data || error.message);
+            logger.error('KBank OAuth Error:', error.response?.data || error.message);
 
             if (process.env.NODE_ENV !== 'production') {
-                console.warn('⚠️ KBank Sandbox Error: Using Mock Access Token');
+                logger.warn('⚠️ KBank Sandbox Error: Using Mock Access Token');
                 this.accessToken = 'mock_access_token_' + Date.now();
                 this.tokenExpiresAt = Date.now() + 3600000;
                 return this.accessToken;
@@ -86,10 +87,10 @@ export class KBankService {
                 refId: partnerPaymentId
             };
         } catch (error: any) {
-            console.error('KBank QR Error:', error.response?.data || error.message);
+            logger.error('KBank QR Error:', error.response?.data || error.message);
             // For sandbox/demo purposes if API fails (common in sandbox), mock a response
             if (process.env.NODE_ENV !== 'production') {
-                console.log("Mocking KBank QR response due to error/sandbox limitation");
+                logger.info("Mocking KBank QR response due to error/sandbox limitation");
                 return {
                     qrCode: "00020101021129370016A000000677010111011300660000000005802TH53037646304100.5406100.00",
                     txnId: `MOCK_KBANK_${Date.now()}`,

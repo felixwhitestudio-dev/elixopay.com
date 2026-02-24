@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response } from 'express';
 import { KBankService } from '../services/kbank.service';
 import { WebhookService } from '../services/webhook.service';
@@ -18,7 +19,7 @@ export const generateQR = async (req: Request, res: Response) => {
             data: result
         });
     } catch (error: any) {
-        console.error('KBank Controller Error:', error);
+        logger.error('KBank Controller Error:', error);
         res.status(500).json({ message: error.message || 'Failed to generate QR Code' });
     }
 };
@@ -49,7 +50,7 @@ export const handleWebhook = async (req: Request, res: Response) => {
 
         res.status(200).send('OK');
     } catch (error) {
-        console.error('Webhook Error:', error);
+        logger.error('Webhook Error:', error);
         res.status(500).send('Internal Server Error');
     }
 };

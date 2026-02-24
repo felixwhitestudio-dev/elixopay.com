@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../utils/prisma';
 import { catchAsync } from '../utils/catchAsync';
@@ -43,7 +44,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
 
     // Fire and forget email
     sendVerificationEmail(newUser.email, newUser.firstName || 'User', verifyUrl).catch(err => {
-        console.error('Failed to send verification email:', err);
+        logger.error('Failed to send verification email:', err);
     });
 
     // We do NOT sign in the user immediately, they must verify first.
@@ -117,7 +118,7 @@ export const me = catchAsync(async (req: Request, res: Response, next: NextFunct
             });
             user.wallet = newWallet;
         } catch (err) {
-            console.error('Failed to auto-generate wallet in /me endpoint:', err);
+            logger.error('Failed to auto-generate wallet in /me endpoint:', err);
         }
     }
 
@@ -349,7 +350,7 @@ export const resendVerification = catchAsync(async (req: Request, res: Response,
     const verifyUrl = `${process.env.APP_URL || 'http://localhost:8080'}/verify-email.html?token=${verification.token}`;
 
     sendVerificationEmail(user.email, user.firstName || 'User', verifyUrl).catch(err => {
-        console.error('Failed to resend verification email:', err);
+        logger.error('Failed to resend verification email:', err);
     });
 
     res.status(200).json({

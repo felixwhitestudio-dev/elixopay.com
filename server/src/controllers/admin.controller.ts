@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { catchAsync } from "../utils/catchAsync";
 import { AppError } from "../utils/AppError";
@@ -77,7 +78,7 @@ export const approveWithdrawal = catchAsync(async (req: Request, res: Response, 
             transactionRecord.user.email,
             transactionRecord.user.firstName || 'User',
             Number(transactionRecord.amount)
-        ).catch(err => console.error('[Mailer] Failed to send payout approval email', err));
+        ).catch(err => logger.error('[Mailer] Failed to send payout approval email', err));
     }
 
     // Log Action
@@ -164,7 +165,7 @@ export const rejectWithdrawal = catchAsync(async (req: Request, res: Response, n
             transactionRecord.user.firstName || 'User',
             Number(transactionRecord.amount),
             reason
-        ).catch(err => console.error('[Mailer] Failed to send payout rejection email', err));
+        ).catch(err => logger.error('[Mailer] Failed to send payout rejection email', err));
     }
 
     // Log Action

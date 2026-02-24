@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import axios from 'axios';
 import prisma from '../utils/prisma';
 import { AppError } from '../utils/AppError';
@@ -50,7 +51,7 @@ export const getRate = async () => {
 
         return cachedRate;
     } catch (error) {
-        console.error('Error fetching rate from Bitkub, falling back to manual rate:', error);
+        logger.error('Error fetching rate from Bitkub, falling back to manual rate:', error);
         // Fallback to manual rate
         return {
             buy: manualRate * (1 + FEE_PERCENT),

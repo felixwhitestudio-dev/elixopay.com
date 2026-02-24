@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response } from 'express';
 import { BBLService } from '../services/bbl.service';
 
@@ -17,7 +18,7 @@ export class BBLController {
             // 1. Basic Auth Validation
             const authHeader = req.headers.authorization;
             if (!authHeader || !BBLService.validateBasicAuth(authHeader)) {
-                console.warn('❌ BBL Webhook: Invalid Basic Auth');
+                logger.warn('❌ BBL Webhook: Invalid Basic Auth');
                 return res.status(401).json({ error: 'Unauthorized' });
             }
 
@@ -30,11 +31,11 @@ export class BBLController {
                     const decoded = BBLService.verifyJWT(token);
 
                 } catch (jwtError) {
-                    console.error('❌ BBL Webhook: JWT Verification Failed', jwtError);
+                    logger.error('❌ BBL Webhook: JWT Verification Failed', jwtError);
                     return res.status(401).json({ error: 'Invalid Signature' });
                 }
             } else {
-                console.warn('⚠️ BBL Webhook: No JWT Signature Header found. Proceeding with caution (Sandbox/Dev).');
+                logger.warn('⚠️ BBL Webhook: No JWT Signature Header found. Proceeding with caution (Sandbox/Dev).');
             }
 
             // 3. Process Payment Logic (Mocking success)
@@ -78,7 +79,7 @@ export class BBLController {
             return res.status(200).json(responsePayload);
 
         } catch (error: any) {
-            console.error('❌ BBL Webhook Error:', error);
+            logger.error('❌ BBL Webhook Error:', error);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     }

@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 
 import prisma from '../utils/prisma';
 
@@ -46,7 +47,7 @@ export const logAction = async (
     } catch (error) {
         // We generally don't want audit logging failure to crash the main request,
         // so we log the error but don't rethrow.
-        console.error('Failed to create audit log:', error);
+        logger.error('Failed to create audit log:', error);
     }
 };
 

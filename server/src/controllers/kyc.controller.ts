@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../utils/prisma';
 import { catchAsync } from '../utils/catchAsync';
@@ -205,7 +206,7 @@ export const verifyKyc = catchAsync(async (req: Request, res: Response, next: Ne
             await sendKycRejectedEmail(userToUpdate.email, userToUpdate.firstName || 'ผู้ใช้งาน', reason || 'เอกสารไม่ผ่านการตรวจสอบ');
         }
     } catch (emailErr: any) {
-        console.error('[KYC] Email send failed (non-fatal):', emailErr.message);
+        logger.error('[KYC] Email send failed (non-fatal):', emailErr.message);
     }
 
     res.status(200).json({

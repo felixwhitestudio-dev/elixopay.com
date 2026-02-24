@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import * as Sentry from '@sentry/node';
 import { AppError } from '../utils/AppError';
 import Logger from '../utils/logger';
 
@@ -34,7 +35,16 @@ export const globalErrorHandler = (
         // 1) Log error
         Logger.error('ERROR 💥', err);
 
-        // 2) Send generic message
+        // 2) Report to Sentry (only unexpected errors, not operational ones)
+        Sentry.captureException(err, {
+            extra: {
+                url: req.originalUrl,
+                method: req.method,
+                body: req.body,
+            }
+        });
+
+        // 3) Send generic message
         res.status(500).json({
             success: false,
             status: 'error',

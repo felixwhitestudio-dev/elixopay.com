@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import cron from 'node-cron';
 import prisma from '../utils/prisma';
 import { KBankService } from '../services/kbank.service';
@@ -10,7 +11,7 @@ export const initCronJobs = () => {
     // Run at 00:00 every day: '0 0 * * *'
     // For testing/demo purposes, you could change this to '* * * * *' (every minute)
     cron.schedule('0 0 * * *', async () => {
-        console.log('[CRON] Sweeping for due subscriptions...');
+        logger.info('[CRON] Sweeping for due subscriptions...');
 
         try {
             const now = new Date();
@@ -31,11 +32,11 @@ export const initCronJobs = () => {
             });
 
             if (dueSubscriptions.length === 0) {
-                console.log('[CRON] No due subscriptions found today.');
+                logger.info('[CRON] No due subscriptions found today.');
                 return;
             }
 
-            console.log(`[CRON] Found ${dueSubscriptions.length} subscriptions due for billing. Processing...`);
+            logger.info(`[CRON] Found ${dueSubscriptions.length} subscriptions due for billing. Processing...`);
 
             // Process each due subscription
             for (const sub of dueSubscriptions) {
@@ -46,7 +47,7 @@ export const initCronJobs = () => {
                         where: { id: sub.id },
                         data: { status: 'canceled' }
                     });
-                    console.log(`[CRON] Subscription ${sub.id} canceled as requested.`);
+                    logger.info(`[CRON] Subscription ${sub.id} canceled as requested.`);
                     continue; // Skip billing
                 }
 
@@ -101,13 +102,13 @@ export const initCronJobs = () => {
                 // 5. Fire Webhook/Email to Merchant to tell them to send the QR.
                 // In a production app, we would emit an event like 'invoice.created'
                 // For now, log the action.
-                console.log(`[CRON] Invoice ${invoice.id} generated for Subscription ${sub.id}. Trans ID: ${transaction.id}`);
+                logger.info(`[CRON] Invoice ${invoice.id} generated for Subscription ${sub.id}. Trans ID: ${transaction.id}`);
             }
 
         } catch (error) {
-            console.error('[CRON ERROR] Failed to process subscription sweep:', error);
+            logger.error('[CRON ERROR] Failed to process subscription sweep:', error);
         }
     });
 
-    console.log('[CRON] Subscription Billing sweep scheduled successfully.');
+    logger.info('[CRON] Subscription Billing sweep scheduled successfully.');
 };

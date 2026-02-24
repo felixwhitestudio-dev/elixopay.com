@@ -1,3 +1,4 @@
+import logger from '../utils/logger';
 import crypto from 'crypto';
 import prisma from '../utils/prisma';
 import { AppError } from '../utils/AppError';
@@ -120,7 +121,7 @@ export class ApiKeyService {
         prisma.apiKey.update({
             where: { id: apiKey.id },
             data: { lastUsed: new Date() }
-        }).catch(err => console.error('Failed to update API key lastUsed:', err));
+        }).catch(err => logger.error('Failed to update API key lastUsed:', err));
 
         return {
             user: apiKey.user,

@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import logger from './utils/logger';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -90,7 +91,7 @@ const possibleFrontendPaths = [
     path.join(__dirname, '../../app-server/public'),      // local dev
 ];
 const frontendPath = possibleFrontendPaths.find(p => require('fs').existsSync(p)) || possibleFrontendPaths[0];
-console.log(`[STATIC] Serving frontend from: ${frontendPath}`);
+logger.info(`[STATIC] Serving frontend from: ${frontendPath}`);
 app.use(express.static(frontendPath));
 
 // Explicit route for the login page to bypass static middleware flakiness
