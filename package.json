@@ -4,7 +4,7 @@
   "description": "Elixopay Payment Gateway Frontend",
   "scripts": {
     "start": "node app-server/migrations/migrate.js && node app-server/server.js",
-    "dev": "concurrently \"npx serve -l 8080 public-site\" \"npx serve -l 8081 app-server/public\" \"nodemon app-server/server.js\""
+    "dev": "concurrently \"npx serve -l 8080 public-site\" \"npx serve -l 8081 app-server/public\" \"PORT=3001 nodemon app-server/server.js\""
   },
   "keywords": [
     "payment",

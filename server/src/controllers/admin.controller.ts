@@ -3,6 +3,7 @@ import { catchAsync } from "../utils/catchAsync";
 import { AppError } from "../utils/AppError";
 import prisma from '../utils/prisma';
 import { logAction, formatUpdateDetails } from "../services/audit.service"; // Import service
+import { sendPayoutApprovedEmail, sendPayoutRejectedEmail } from '../utils/mailer';
 
 export const getPendingWithdrawals = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const withdrawals = await prisma.transaction.findMany({
@@ -46,9 +47,12 @@ export const getPendingWithdrawals = catchAsync(async (req: Request, res: Respon
 export const approveWithdrawal = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
+    let transactionRecord: any = null;
+
     await prisma.$transaction(async (tx) => {
         const transaction = await tx.transaction.findUnique({
-            where: { id: Number(id) }
+            where: { id: Number(id) },
+            include: { user: true }
         });
 
         if (!transaction) {
@@ -64,7 +68,17 @@ export const approveWithdrawal = catchAsync(async (req: Request, res: Response, 
             where: { id: Number(id) },
             data: { status: 'COMPLETED' }
         });
+        transactionRecord = transaction;
     });
+
+    // Send Email Notification
+    if (transactionRecord && transactionRecord.user?.email) {
+        sendPayoutApprovedEmail(
+            transactionRecord.user.email,
+            transactionRecord.user.firstName || 'User',
+            Number(transactionRecord.amount)
+        ).catch(err => console.error('[Mailer] Failed to send payout approval email', err));
+    }
 
     // Log Action
     // @ts-ignore
@@ -80,9 +94,12 @@ export const rejectWithdrawal = catchAsync(async (req: Request, res: Response, n
     const { id } = req.params;
     const { reason } = req.body;
 
+    let transactionRecord: any = null;
+
     await prisma.$transaction(async (tx) => {
         const transaction = await tx.transaction.findUnique({
-            where: { id: Number(id) }
+            where: { id: Number(id) },
+            include: { user: true }
         });
 
         if (!transaction) {
@@ -153,7 +170,18 @@ export const rejectWithdrawal = catchAsync(async (req: Request, res: Response, n
                 }
             }
         });
+        transactionRecord = transaction;
     });
+
+    // Send Email Notification
+    if (transactionRecord && transactionRecord.user?.email) {
+        sendPayoutRejectedEmail(
+            transactionRecord.user.email,
+            transactionRecord.user.firstName || 'User',
+            Number(transactionRecord.amount),
+            reason
+        ).catch(err => console.error('[Mailer] Failed to send payout rejection email', err));
+    }
 
     // Log Action
     // @ts-ignore
@@ -323,3 +351,164 @@ export const getAuditLogs = catchAsync(async (req: Request, res: Response, next:
         }))
     });
 });
+
+export const getStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+    const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
+
+    res.status(200).json({
+        success: true,
+        data: {
+            usdt: usdtSetting ? parseFloat(usdtSetting.value) : 0,
+            thb: thbSetting ? parseFloat(thbSetting.value) : 0
+        }
+    });
+});
+
+export const getLiquidity = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+
+    res.status(200).json({
+        success: true,
+        data: {
+            balance: usdtSetting ? parseFloat(usdtSetting.value) : 0
+        }
+    });
+});
+
+export const addLiquidity = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { amount, currency } = req.body;
+    // @ts-ignore
+    const adminUserId = req.user.id;
+
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+        return next(new AppError('Please provide a valid numeric amount greater than 0.', 400));
+    }
+
+    if (currency !== 'USDT') {
+        return next(new AppError('Currently, only USDT liquidity addition is supported via this interface.', 400));
+    }
+
+    const numericAmount = Number(amount);
+
+    await prisma.$transaction(async (tx) => {
+        // 1. Create a transaction record to log the addition
+        await tx.transaction.create({
+            data: {
+                userId: adminUserId,
+                amount: numericAmount,
+                type: 'SYSTEM_LIQUIDITY_ADD',
+                status: 'COMPLETED',
+                reference: 'On-chain deposit via Admin UI',
+                metadata: JSON.stringify({ currency })
+            }
+        });
+
+        // 2. Fetch current settings and increment
+        const existingUsdtSetting = await tx.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+        const currentBalance = existingUsdtSetting && !isNaN(parseFloat(existingUsdtSetting.value))
+            ? parseFloat(existingUsdtSetting.value)
+            : 0;
+
+        const newBalance = currentBalance + numericAmount;
+
+        // 3. Upsert
+        await tx.systemSetting.upsert({
+            where: { key: 'platform_usdt_balance' },
+            update: { value: newBalance.toString() },
+            create: { key: 'platform_usdt_balance', value: newBalance.toString(), description: 'Platform liquidity pool for USDT' }
+        });
+    });
+
+    res.status(200).json({
+        success: true,
+        message: 'Successfully added liquidity.',
+    });
+});
+
+export const getLiquidityHistory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const history = await prisma.transaction.findMany({
+        where: { type: 'SYSTEM_LIQUIDITY_ADD' },
+        orderBy: { createdAt: 'desc' },
+        take: 50
+    });
+
+    res.status(200).json({
+        success: true,
+        data: {
+            transactions: history.map(tx => ({
+                id: tx.id,
+                created_at: tx.createdAt,
+                type: 'deposit', // Mapping SYSTEM_LIQUIDITY_ADD to 'deposit' for UI consistency
+                amount: tx.amount,
+                currency: tx.metadata ? JSON.parse(tx.metadata).currency || 'USDT' : 'USDT',
+                status: tx.status
+            }))
+        }
+    });
+});
+
+export const getDashboardOverview = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // 1. Get total users
+    const totalUsers = await prisma.user.count({
+        where: { role: 'user' }
+    });
+
+    // 2. Get pending KYC requests
+    const pendingKyc = await prisma.user.count({
+        where: { kycStatus: 'pending' }
+    });
+
+    // 3. Get pending bank requests
+    const pendingBankRequests = await prisma.bankAccountChangeRequest.count({
+        where: { status: 'pending' }
+    });
+
+    // 4. Get active platforms balances (USDT and THB)
+    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+    const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
+
+    // 5. Calculate total withdraw volume (Completed THB withdrawals)
+    const completedWithdrawals = await prisma.transaction.aggregate({
+        where: { type: 'WITHDRAW', status: 'COMPLETED' },
+        _sum: { amount: true }
+    });
+    const totalWithdrawVolume = completedWithdrawals._sum.amount ? Math.abs(Number(completedWithdrawals._sum.amount)) : 0;
+
+    // 6. Recent users for the chart (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Group by date - raw query or fetch and group in memory since it's SQLite
+    const recentUsers = await prisma.user.findMany({
+        where: {
+            role: 'user',
+            createdAt: { gte: sevenDaysAgo }
+        },
+        select: { createdAt: true }
+    });
+
+    const userSignupsByDate = recentUsers.reduce((acc: Record<string, number>, user) => {
+        const dateStr = user.createdAt.toISOString().split('T')[0];
+        acc[dateStr] = (acc[dateStr] || 0) + 1;
+        return acc;
+    }, {});
+
+    res.status(200).json({
+        success: true,
+        data: {
+            stats: {
+                totalUsers,
+                pendingKyc,
+                pendingBankRequests,
+                platformUsdtBalance: usdtSetting && !isNaN(parseFloat(usdtSetting.value)) ? parseFloat(usdtSetting.value) : 0,
+                platformThbBalance: thbSetting && !isNaN(parseFloat(thbSetting.value)) ? parseFloat(thbSetting.value) : 0,
+                totalWithdrawVolume
+            },
+            chartData: {
+                userSignupsByDate
+            }
+        }
+    });
+});
+

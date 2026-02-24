@@ -8,7 +8,26 @@ const CACHE_DURATION = 60 * 1000; // 60 seconds
 
 export const getRate = async () => {
     const now = Date.now();
-    if (cachedRate && now - cachedRate.timestamp < CACHE_DURATION) {
+
+    // Always check DB settings first
+    const modeSetting = await prisma.systemSetting.findUnique({ where: { key: 'exchange_rate_mode' } });
+    const rateSetting = await prisma.systemSetting.findUnique({ where: { key: 'exchange_rate_usdt_thb' } });
+
+    const mode = modeSetting?.value || 'manual';
+    const manualRate = rateSetting ? parseFloat(rateSetting.value) : 34.00;
+    const FEE_PERCENT = 0.01; // 1%
+
+    if (mode === 'manual') {
+        // Use manual rate without caching to allow instant updates
+        return {
+            buy: manualRate * (1 + FEE_PERCENT),
+            sell: manualRate * (1 - FEE_PERCENT),
+            timestamp: now
+        };
+    }
+
+    // Auto Mode: Try from Cache
+    if (cachedRate && now - cachedRate.timestamp < CACHE_DURATION && cachedRate.buy !== (manualRate * (1 + FEE_PERCENT))) {
         return cachedRate;
     }
 
@@ -22,10 +41,7 @@ export const getRate = async () => {
         }
 
         const marketPrice = data.last; // Last traded price
-        const FEE_PERCENT = 0.01; // 1%
 
-        // Buy USDT: User pays THB. Price = Market * (1 + fee)
-        // Sell USDT: User gets THB. Price = Market * (1 - fee)
         cachedRate = {
             buy: marketPrice * (1 + FEE_PERCENT),
             sell: marketPrice * (1 - FEE_PERCENT),
@@ -34,9 +50,13 @@ export const getRate = async () => {
 
         return cachedRate;
     } catch (error) {
-        console.error('Error fetching rate:', error);
-        // Fallback or re-throw
-        throw new AppError('Unable to fetch exchange rates', 503);
+        console.error('Error fetching rate from Bitkub, falling back to manual rate:', error);
+        // Fallback to manual rate
+        return {
+            buy: manualRate * (1 + FEE_PERCENT),
+            sell: manualRate * (1 - FEE_PERCENT),
+            timestamp: now
+        };
     }
 };
 

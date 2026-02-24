@@ -70,6 +70,10 @@ window.handleLogin = async function (event) {
                     localStorage.setItem('user', JSON.stringify(user));
                 }
 
+                const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000'
+                    : 'https://app.elixopay.com';
+
                 // Redirect
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirect = urlParams.get('redirect');
@@ -79,13 +83,13 @@ window.handleLogin = async function (event) {
                         if (targetUrl.origin === window.location.origin) {
                             window.location.href = redirect;
                         } else {
-                            window.location.href = '/dashboard.html';
+                            window.location.href = baseUrl + '/dashboard.html';
                         }
                     } catch (e) {
-                        window.location.href = '/dashboard.html';
+                        window.location.href = baseUrl + '/dashboard.html';
                     }
                 } else {
-                    window.location.href = '/dashboard.html';
+                    window.location.href = baseUrl + '/dashboard.html';
                 }
             } else {
                 // Show error but success=true? rare case

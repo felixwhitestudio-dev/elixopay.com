@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { KBankService } from '../services/kbank.service';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { WebhookService } from '../services/webhook.service';
+import prisma from '../utils/prisma';
 
 export const generateQR = async (req: Request, res: Response) => {
     try {
@@ -13,9 +12,6 @@ export const generateQR = async (req: Request, res: Response) => {
         }
 
         const result = await KBankService.generateQR(parseFloat(amount), orderId, description);
-
-        // Ideally, we might want to save this transaction state here, but for now we return the QR
-        // The actual Transaction record might be created before calling this endpoint
 
         res.json({
             success: true,
@@ -29,17 +25,28 @@ export const generateQR = async (req: Request, res: Response) => {
 
 export const handleWebhook = async (req: Request, res: Response) => {
     try {
-        // KBank sends payment notification here
         const payload = req.body;
         console.log('Received KBank Webhook:', JSON.stringify(payload, null, 2));
 
-        // Validate valid signature (omitted for brevity in sandbox, but critical for prod)
+        // In a real system:
+        // 1. Verify KBank Signature
+        // 2. Find internal Transaction by payload.partnerTxnUid
+        // 3. Update DB to COMPLETED
+        // 4. Update Merchant Wallet Balance
 
-        // Find transaction by refId (partnerTxnUid)
-        // const transaction = await prisma.transaction.findFirst({ ... });
+        // Mock Example: Assuming we found transaction ID 1 for User ID X and updated it
+        // const transaction = await prisma.transaction.update({ ... });
 
-        // Update status
-        // await prisma.transaction.update({ ... });
+        // --- Webhook Dispatch to Merchant ---
+        // If the transaction has metadata indicating it was created via API, 
+        // OR just unconditionally fire a 'payment.success' for this merchant.
+        // await WebhookService.dispatchEvent(transaction.userId, 'payment.success', {
+        //     id: transaction.id,
+        //     amount: transaction.amount,
+        //     currency: 'THB',
+        //     reference: transaction.reference,
+        //     status: 'COMPLETED'
+        // });
 
         res.status(200).send('OK');
     } catch (error) {

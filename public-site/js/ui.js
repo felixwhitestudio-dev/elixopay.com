@@ -24,15 +24,6 @@
     }
     */
 
-    // Mobile menu toggle
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    if (mobileBtn && navLinks) {
-      mobileBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('show');
-      });
-    }
-
     // Reveal on scroll
     const revealEls = document.querySelectorAll('.reveal');
     if ('IntersectionObserver' in window && revealEls.length) {
@@ -215,3 +206,38 @@
 
   });
 })();
+
+// --- Newsletter Subscription (Global) ---
+window.subscribeNewsletter = function () {
+  const emailInput = document.getElementById('newsletterEmail');
+  if (!emailInput) return;
+
+  const email = emailInput.value.trim();
+
+  // Attempt localized messages if i18n is available, else fallback to English
+  const msgEmpty = (typeof ElixopayI18n !== 'undefined' && ElixopayI18n.currentLang === 'th')
+    ? 'กรุณากรอกอีเมลของคุณ' : 'Please enter your email address.';
+  const msgInvalid = (typeof ElixopayI18n !== 'undefined' && ElixopayI18n.currentLang === 'th')
+    ? 'รูปแบบอีเมลไม่ถูกต้อง' : 'Please enter a valid email address.';
+  const msgSuccess = (typeof ElixopayI18n !== 'undefined' && ElixopayI18n.currentLang === 'th')
+    ? 'สมัครรับข่าวสารสำเร็จ! ขอบคุณครับ' : 'Successfully subscribed! Thank you.';
+
+  if (!email) {
+    if (typeof showToast === 'function') showToast(msgEmpty, 'warning');
+    else alert(msgEmpty);
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    if (typeof showToast === 'function') showToast(msgInvalid, 'warning');
+    else alert(msgInvalid);
+    return;
+  }
+
+  // Simulate API call success
+  if (typeof showToast === 'function') showToast(msgSuccess, 'success');
+  else alert(msgSuccess);
+
+  emailInput.value = '';
+};

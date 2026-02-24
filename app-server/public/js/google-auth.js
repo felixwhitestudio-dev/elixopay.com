@@ -1,5 +1,5 @@
 // Google OAuth Sign-In (Popup Flow)
-const GOOGLE_CLIENT_ID = '908736098316-3b1itv1mt4jvvavtpdj7i7ptmvk8ethl.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '811815196850-rvb15n3t7sr6qjg34a0k735kr2gjsivp.apps.googleusercontent.com';
 let tokenClient;
 
 // Initialize Token Client on load
@@ -82,12 +82,17 @@ function handleGoogleCallback(accessToken) {
 }
 
 // Auto-init when script loads (if GIS is ready)
-window.onload = () => {
+window.addEventListener('load', () => {
 	// Wait for GIS script
+	let attempts = 0;
 	const checkGoogle = setInterval(() => {
+		attempts++;
 		if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
 			initGoogleAuth();
 			clearInterval(checkGoogle);
+		} else if (attempts > 20) {
+			console.warn("Google Auth library failed to load within 10 seconds.");
+			clearInterval(checkGoogle);
 		}
 	}, 500);
-}
+});

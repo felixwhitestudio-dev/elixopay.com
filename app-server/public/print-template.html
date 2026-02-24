@@ -316,7 +316,8 @@
         <div class="toc-item"><span>1. Introduction & Authentication</span><span class="page">3</span></div>
         <div class="toc-item"><span>2. Create Payment</span><span class="page">5</span></div>
         <div class="toc-item"><span>3. Check Payment Status</span><span class="page">8</span></div>
-        <div class="toc-item"><span>4. Webhooks</span><span class="page">10</span></div>
+        <div class="toc-item"><span>4. Create Payout (Withdrawal)</span><span class="page">10</span></div>
+        <div class="toc-item"><span>5. Webhooks</span><span class="page">12</span></div>
     </div>
 
     <!-- 1. Introduction -->
@@ -500,9 +501,65 @@
 }</code></pre>
     </div>
 
-    <!-- 4. Webhooks -->
+    <!-- 4. Create Payout -->
     <div class="section">
-        <h2>4. Webhooks</h2>
+        <h2>4. Create Payout (Withdrawal)</h2>
+        <p>Use this endpoint to request a withdrawal from your Wallet. The funds will be transferred to your bound bank
+            account.</p>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <span class="path">/v1/wallet/withdraw</span>
+        </div>
+
+        <h3>Request Parameters</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="param-name">amount</div>
+                        <div class="param-meta"><span class="required">Required</span> &nbsp;&bull;&nbsp; <span
+                                class="type">Number</span></div>
+                    </td>
+                    <td>
+                        <p>The amount to withdraw (must have sufficient balance including fees), e.g., 500.00.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-title">Request Example</div>
+        <pre><code>curl -X POST https://api.elixopay.com/v1/wallet/withdraw \
+  -H "Authorization: Bearer sk_live_xxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 500.00
+  }'</code></pre>
+
+        <div class="code-title">Response Example (200 OK)</div>
+        <pre><code>{
+  "success": true,
+  "transaction": {
+    "id": "txn_89012cd",
+    "type": "WITHDRAWAL",
+    "amount": 500.00,
+    "fee": 15.00,
+    "netAmount": 485.00,
+    "status": "PENDING",
+    "createdAt": "2026-02-21T10:15:22Z"
+  }
+}</code></pre>
+    </div>
+
+    <!-- 5. Webhooks -->
+    <div class="section">
+        <h2>5. Webhooks</h2>
         <p>Elixopay uses webhooks to notify your application when an event happens in your account. Webhooks are
             particularly useful for asynchronous events such as when a customer completes a payment.</p>
 

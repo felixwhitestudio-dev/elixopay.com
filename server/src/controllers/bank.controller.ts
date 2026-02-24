@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../utils/prisma';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
+import { sendBankApprovedEmail, sendBankRejectedEmail } from '../utils/mailer';
 
 // =============================================
 // USER: Submit a bank account change request
@@ -118,7 +119,7 @@ export const approveChangeRequest = catchAsync(async (req: Request, res: Respons
     const requestId = parseInt(req.params.id, 10);
     const { adminNote } = req.body;
 
-    const changeRequest = await prisma.bankAccountChangeRequest.findUnique({ where: { id: requestId } });
+    const changeRequest = await prisma.bankAccountChangeRequest.findUnique({ where: { id: requestId }, include: { user: true } });
     if (!changeRequest) return next(new AppError('Change request not found', 404));
     if (changeRequest.status !== 'pending') return next(new AppError('This request has already been resolved', 400));
 
@@ -152,6 +153,19 @@ export const approveChangeRequest = catchAsync(async (req: Request, res: Respons
         })
     ]);
 
+    // Send email notification (non-fatal)
+    try {
+        if (changeRequest.user && changeRequest.user.email) {
+            await sendBankApprovedEmail(
+                changeRequest.user.email,
+                changeRequest.user.firstName || 'ผู้ใช้งาน',
+                changeRequest.newBankName
+            );
+        }
+    } catch (emailErr: any) {
+        console.error('[Bank] Email send failed (non-fatal):', emailErr.message);
+    }
+
     res.status(200).json({
         success: true,
         message: 'Bank account change approved and updated successfully.'
@@ -169,7 +183,7 @@ export const rejectChangeRequest = catchAsync(async (req: Request, res: Response
 
     if (!adminNote) return next(new AppError('Please provide a reason for rejection (adminNote is required)', 400));
 
-    const changeRequest = await prisma.bankAccountChangeRequest.findUnique({ where: { id: requestId } });
+    const changeRequest = await prisma.bankAccountChangeRequest.findUnique({ where: { id: requestId }, include: { user: true } });
     if (!changeRequest) return next(new AppError('Change request not found', 404));
     if (changeRequest.status !== 'pending') return next(new AppError('This request has already been resolved', 400));
 
@@ -192,6 +206,19 @@ export const rejectChangeRequest = catchAsync(async (req: Request, res: Response
             }
         })
     ]);
+
+    // Send email notification (non-fatal)
+    try {
+        if (changeRequest.user && changeRequest.user.email) {
+            await sendBankRejectedEmail(
+                changeRequest.user.email,
+                changeRequest.user.firstName || 'ผู้ใช้งาน',
+                adminNote
+            );
+        }
+    } catch (emailErr: any) {
+        console.error('[Bank] Email send failed (non-fatal):', emailErr.message);
+    }
 
     res.status(200).json({
         success: true,

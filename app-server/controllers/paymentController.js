@@ -322,9 +322,17 @@ exports.getPaymentById = async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
 
+    // Remove 'pay_' prefix if it was passed by external merchants
+    const cleanId = id.startsWith('pay_') ? id.substring(4) : id;
+
+    // Optional safety check: Ensure ID is an integer
+    if (isNaN(cleanId)) {
+      return res.status(400).json({ success: false, error: { message: 'Invalid payment ID format' } });
+    }
+
     const result = await pool.query(
       `SELECT * FROM payments WHERE id = $1 AND (merchant_id = $2 OR payer_id = $2)`,
-      [id, userId]
+      [cleanId, userId]
     );
 
     if (result.rows.length === 0) {

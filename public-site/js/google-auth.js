@@ -1,5 +1,5 @@
 // Google OAuth Sign-In (Popup Flow)
-const GOOGLE_CLIENT_ID = '908736098316-3b1itv1mt4jvvavtpdj7i7ptmvk8ethl.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '811815196850-rvb15n3t7sr6qjg34a0k735kr2gjsivp.apps.googleusercontent.com';
 let tokenClient;
 
 // Initialize Token Client on load
@@ -42,10 +42,14 @@ function handleGoogleCallback(accessToken) {
 	req.then(async res => {
 		const result = await res.json();
 		if (res.ok && result.success) {
+			const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+				? 'http://localhost:3000'
+				: 'https://app.elixopay.com';
+
 			if (result.status === 'REQUIRE_COMPLETION') {
 				// User does not exist, redirect to complete profile
 				sessionStorage.setItem('tempGoogleToken', result.data.tempToken);
-				window.location.href = '/complete-profile.html';
+				window.location.href = baseUrl + '/complete-profile.html';
 				return;
 			}
 
@@ -67,9 +71,9 @@ function handleGoogleCallback(accessToken) {
 			// Redirect based on role
 			const role = result.data?.user?.role || 'user';
 			if (role === 'admin') {
-				window.location.href = '/admin-dashboard.html';
+				window.location.href = baseUrl + '/admin-dashboard.html';
 			} else {
-				window.location.href = '/dashboard.html';
+				window.location.href = baseUrl + '/dashboard.html';
 			}
 		} else {
 			alert(result.error?.message || result.message || 'Google login failed');

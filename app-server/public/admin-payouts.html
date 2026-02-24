@@ -84,33 +84,39 @@
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
                             <i class="fas fa-sync-alt mr-2"></i> Refresh
                         </button>
+                        <button onclick="exportTableToCSV('payouts-table-id', 'Payout_Requests')"
+                            class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
+                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                        </button>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        User</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Amount</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Details</th>
-                                    <th
-                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="payoutsTableBody" class="bg-white divide-y divide-gray-200">
-                                <!-- JS Populated -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200" id="payouts-table-id">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            User</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Details</th>
+                                        <th
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="payoutsTableBody" class="bg-white divide-y divide-gray-200">
+                                    <!-- JS Populated -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -125,36 +131,42 @@
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
                             <i class="fas fa-sync-alt mr-2"></i> Refresh
                         </button>
+                        <button onclick="exportTableToCSV('users-table-id', 'User_Management')"
+                            class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
+                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                        </button>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        User</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Balance</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Status</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Joined</th>
-                                    <th
-                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
-                                <!-- JS Populated -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200" id="users-table-id">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            User</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Role</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Balance</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Joined</th>
+                                        <th
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                    <!-- JS Populated -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -175,7 +187,8 @@
                         <!-- System Reserve -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:col-span-2">
                             <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-university text-purple-600 mr-2"></i> System Reserve (Liquidity)
+                                <i class="fas fa-university text-purple-600 mr-2"></i> System Reserve
+                                (Liquidity)
                             </h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="p-4 bg-gray-50 rounded-lg border border-gray-100">
@@ -213,7 +226,8 @@
                                             class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
                                             placeholder="0.00">
                                     </div>
-                                    <p class="mt-1 text-xs text-gray-500">Fixed fee per withdrawal transaction.</p>
+                                    <p class="mt-1 text-xs text-gray-500">Fixed fee per withdrawal transaction.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +239,8 @@
                             </h3>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rate Mode</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rate
+                                        Mode</label>
                                     <select id="setting_exchange_rate_mode"
                                         class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 bg-white">
                                         <option value="manual">Manual Set</option>
@@ -237,7 +252,8 @@
                                     </p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">USDT to THB Rate</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">USDT to THB
+                                        Rate</label>
                                     <div class="relative rounded-md shadow-sm">
                                         <div
                                             class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -251,7 +267,8 @@
                                             <span class="text-gray-500 sm:text-sm">THB</span>
                                         </div>
                                     </div>
-                                    <p class="mt-1 text-xs text-gray-500">Used for estimating portfolio value.</p>
+                                    <p class="mt-1 text-xs text-gray-500">Used for estimating portfolio value.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -269,36 +286,42 @@
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
                             <i class="fas fa-sync-alt mr-2"></i> Refresh
                         </button>
+                        <button onclick="exportTableToCSV('transactions-table-id', 'Transaction_History')"
+                            class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
+                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                        </button>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        User</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Type</th>
-                                    <th
-                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Amount</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider pl-12">
-                                        Status</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Ref</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transactionsTableBody" class="bg-white divide-y divide-gray-200">
-                                <!-- JS Populated -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200" id="transactions-table-id">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            User</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Type</th>
+                                        <th
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider pl-12">
+                                            Status</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Ref</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody" class="bg-white divide-y divide-gray-200">
+                                    <!-- JS Populated -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -313,36 +336,42 @@
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
                             <i class="fas fa-sync-alt mr-2"></i> Refresh
                         </button>
+                        <button onclick="exportTableToCSV('audit-logs-table-id', 'Audit_Logs')"
+                            class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
+                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                        </button>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        User</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Action</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Entity</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Details</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        IP Address</th>
-                                </tr>
-                            </thead>
-                            <tbody id="auditTableBody" class="bg-white divide-y divide-gray-200">
-                                <!-- JS Populated -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200" id="audit-logs-table-id">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            User</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Action</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Entity</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Details</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            IP Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditTableBody" class="bg-white divide-y divide-gray-200">
+                                    <!-- JS Populated -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -732,7 +761,7 @@
             }
         });
 
-        function toggleRateInput(mode) {
+        async function toggleRateInput(mode) {
             const rateInput = document.getElementById('setting_exchange_rate_usdt_thb');
             if (!rateInput) return;
 
@@ -740,6 +769,17 @@
                 rateInput.disabled = true;
                 rateInput.classList.add('bg-gray-100');
                 rateInput.title = "Rate is synced automatically from Bitkub";
+
+                // Fetch the live rate from the backend
+                try {
+                    const res = await safeFetch('/api/v1/users/wallet/exchange/rate');
+                    if (res && res.success && res.data) {
+                        // Use the buy rate or average as the display rate
+                        rateInput.value = res.data.buy.toFixed(2);
+                    }
+                } catch (e) {
+                    console.error('Failed to sync rate from Bitkub', e);
+                }
             } else {
                 rateInput.disabled = false;
                 rateInput.classList.remove('bg-gray-100');
@@ -784,153 +824,8 @@
             loadPendingWithdrawals();
         });
     </script>
-    <p class="mb-4 text-gray-600">Are you sure you want to reject this request? The funds will be refunded to
-        the partner's balance.</p>
-    <input type="hidden" id="rejectId">
-    <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Reason for Rejection</label>
-        <textarea id="rejectReason" class="w-full border border-gray-300 rounded p-2" rows="3"
-            placeholder="e.g. Invalid bank details"></textarea>
-    </div>
-    <div class="flex justify-end space-x-3">
-        <button onclick="closeRejectModal()"
-            class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50">Cancel</button>
-        <button onclick="submitReject()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Confirm
-            Reject</button>
-    </div>
-    </div>
-    </div>
-
-    <script>
-        async function logout() {
-            try {
-                if (window.apiFetch && window.API_CONFIG) {
-                    await window.apiFetch(window.API_CONFIG.ENDPOINTS.auth.logout, { method: 'POST' });
-                }
-            } catch (e) {
-                console.error('Logout error', e);
-            }
-            ['token', 'user'].forEach(k => localStorage.removeItem(k));
-            window.location.href = '/login.html';
-        }
-
-        async function safeFetch(endpoint, options = {}) {
-            if (typeof window.apiFetch !== 'function') {
-                console.error('apiFetch is not defined. Ensure api-config.js is loaded.');
-                return null;
-            }
-            try {
-                const response = await window.apiFetch(endpoint, options);
-                if (!response) return null; // apiFetch handles redirects on 401
-                return response.json();
-            } catch (e) {
-                console.error('SafeFetch Error:', e);
-                return null;
-            }
-        }
-
-        async function loadPendingWithdrawals() {
-            const tbody = document.getElementById('payoutsTableBody');
-            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>';
-
-            try {
-                const data = await safeFetch('/api/v1/admin/withdrawals/pending');
-
-                if (data.success && data.data.withdrawals.length > 0) {
-                    tbody.innerHTML = '';
-                    data.data.withdrawals.forEach(w => {
-                        const tr = document.createElement('tr');
-                        const date = new Date(w.created_at).toLocaleString();
-                        // Support both old metadata format and reference string
-                        const bankInfo = w.metadata?.bank_account || w.reference || 'Unknown';
-                        const bankDisplay = `<span class="font-mono text-sm">${bankInfo}</span>`;
-
-                        tr.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">${w.user?.name || 'Unknown'}</div>
-                            <div class="text-sm text-gray-500">${w.user?.email || ''}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                             ${w.amount.toLocaleString()} ${w.currency || 'THB'}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${bankDisplay}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button onclick="approve('${w.id}')" class="text-green-600 hover:text-green-900 mr-3"><i class="fas fa-check"></i> Approve</button>
-                            <button onclick="openRejectModal('${w.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-times"></i> Reject</button>
-                        </td>
-                    `;
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No pending withdrawals found.</td></tr>';
-                }
-            } catch (error) {
-                console.error(error);
-                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Error loading data.</td></tr>';
-            }
-        }
-
-        async function approve(id) {
-            if (!confirm('Are you sure you want to approve this withdrawal? This will mark it as PAID.')) return;
-
-            try {
-                const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
-                if (res.success) {
-                    alert('Withdrawal approved successfully!');
-                    loadPendingWithdrawals();
-                } else {
-                    alert('Failed: ' + (res.message || 'Unknown error'));
-                }
-            } catch (e) {
-                alert('Error approving withdrawal');
-            }
-        }
-
-        function openRejectModal(id) {
-            document.getElementById('rejectId').value = id;
-            document.getElementById('rejectModal').style.display = 'flex';
-        }
-
-        function closeRejectModal() {
-            document.getElementById('rejectModal').style.display = 'none';
-            document.getElementById('rejectReason').value = '';
-        }
-
-        async function submitReject() {
-            const id = document.getElementById('rejectId').value;
-            const reason = document.getElementById('rejectReason').value;
-
-            try {
-                const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/reject`, {
-                    method: 'POST',
-                    body: JSON.stringify({ reason })
-                });
-
-                if (res.success) {
-                    alert('Withdrawal rejected and refunded.');
-                    closeRejectModal();
-                    loadPendingWithdrawals();
-                } else {
-                    alert('Failed: ' + (res.message || 'Unknown error'));
-                }
-            } catch (e) {
-                alert('Error rejecting withdrawal');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPendingWithdrawals();
-
-            const userStr = localStorage.getItem('user');
-            if (userStr) {
-                const u = JSON.parse(userStr);
-                document.getElementById('user-name').textContent = u.email;
-            }
-        });
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/csv-export.js"></script>
     <script src="js/ui-enhancements.js"></script>
 </body>
 

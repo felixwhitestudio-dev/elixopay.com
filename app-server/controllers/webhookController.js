@@ -203,6 +203,36 @@ exports.handleKBankWebhook = async (req, res) => {
       console.warn('Commission error:', e.message);
     }
 
+    // 3. Trigger Post-Payment Webhook (if configured)
+    try {
+      const whRes = await db.query(
+        `SELECT url, id, enabled_events, secret FROM webhook_endpoints 
+         WHERE user_id = $1 AND is_active = true`,
+        [payment.user_id]
+      );
+
+      for (const endpoint of whRes.rows) {
+        let eventsArray = [];
+        try {
+          eventsArray = typeof endpoint.enabled_events === 'string'
+            ? JSON.parse(endpoint.enabled_events)
+            : endpoint.enabled_events;
+        } catch (e) { }
+
+        if (!eventsArray || eventsArray.includes('payment.succeeded') || eventsArray.includes('*')) {
+          sendWebhook(endpoint.url, 'payment.succeeded', {
+            id: payment.id,
+            amount: payment.amount,
+            currency: payment.currency,
+            status: 'succeeded',
+            timestamp: new Date().toISOString()
+          }, endpoint.secret);
+        }
+      }
+    } catch (e) {
+      console.warn('⚠️ Webhook dispatch error:', e.message);
+    }
+
     res.json({ success: true });
 
   } catch (error) {
@@ -251,22 +281,27 @@ async function handlePaymentIntentSucceeded(paymentIntent) {
 
       // 3. Trigger Post-Payment Webhook (if configured)
       const whRes = await db.query(
-        `SELECT url, id, enabled_events FROM webhook_endpoints 
+        `SELECT url, id, enabled_events, secret FROM webhook_endpoints 
          WHERE user_id = $1 AND is_active = true`,
         [payment.user_id]
       );
 
-      // Check if user has a webhook that subscribes to payment.succeeded (or all)
       for (const endpoint of whRes.rows) {
-        // Simple check: if enabled_events implies it (assuming array of strings)
-        if (!endpoint.enabled_events || endpoint.enabled_events.includes('payment.succeeded') || endpoint.enabled_events.includes('*')) {
+        let eventsArray = [];
+        try {
+          eventsArray = typeof endpoint.enabled_events === 'string'
+            ? JSON.parse(endpoint.enabled_events)
+            : endpoint.enabled_events;
+        } catch (e) { }
+
+        if (!eventsArray || eventsArray.includes('payment.succeeded') || eventsArray.includes('*')) {
           sendWebhook(endpoint.url, 'payment.succeeded', {
             id: payment.id,
             amount: payment.amount,
             currency: payment.currency,
             status: 'succeeded',
             timestamp: new Date().toISOString()
-          });
+          }, endpoint.secret);
         }
       }
 

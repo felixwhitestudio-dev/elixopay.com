@@ -159,6 +159,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
         }
 
         .logo {
@@ -597,6 +607,28 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .nav-links.show {
+                display: flex !important;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                background: rgba(15, 23, 42, 0.98);
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
         @media (max-width: 600px) {
             .hero h1 {
                 font-size: 2rem;
@@ -629,13 +661,16 @@
                 <div class="logo-mark">E</div>
                 Elixopay
             </a>
+            <button class="mobile-menu-btn" style="color: var(--text-primary);"><i class="fas fa-bars"></i></button>
             <ul class="nav-links">
                 <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
                 <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
-                <li><a href="docs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
                 <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
-                <li><a href="https://app.elixopay.com/login.html" class="btn-nav-outline" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
-                <li><a href="https://app.elixopay.com/signup.html" class="btn-nav-primary" data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li><a href="https://app.elixopay.com/login.html" class="btn-nav-outline"
+                        data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="https://app.elixopay.com/signup.html" class="btn-nav-primary"
+                        data-i18n="nav.signup">ลงทะเบียน</a></li>
                 <li>
                     <select id="langSelect" class="lang-select" aria-label="Language">
                         <option value="th">TH</option>
@@ -698,7 +733,7 @@
                     <div class="ic-title">ตอบไวแน่นอน</div>
                 </div>
                 <div class="ic-desc">เราตอบกลับทุกข้อความ ไม่มีเรื่องใดถูกละเลย ลูกค้าคือสิ่งสำคัญที่สุดของเรา</div>
-                <div style="display:flex;gap:1rem;margin-top:1rem;">
+                <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;justify-content:center;">
                     <div
                         style="text-align:center;flex:1;background:rgba(255,255,255,0.04);border-radius:10px;padding:0.75rem 0.5rem;">
                         <div style="font-size:1.4rem;font-weight:800;color:#f472b6;">&lt;1h</div>
@@ -788,7 +823,7 @@
             <div class="footer-col">
                 <h5 data-i18n="footer.products">ผลิตภัณฑ์</h5>
                 <ul>
-                    <li><a href="docs.html" data-i18n="footer.links.docs">เอกสาร API</a></li>
+                    <li><a href="apidocs.html" data-i18n="footer.links.docs">เอกสาร API</a></li>
                     <li><a href="usecases.html" data-i18n="footer.links.usecases">Use Cases</a></li>
                 </ul>
             </div>

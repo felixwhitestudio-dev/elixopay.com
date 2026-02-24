@@ -27,7 +27,9 @@
             <div class="flex justify-between h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="/dashboard.html" class="flex items-center group">
+                    <a href="#"
+                        onclick="window.location.href=(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000' : 'https://app.elixopay.com') + '/dashboard.html'"
+                        class="flex items-center group">
                         <div
                             class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl mr-2 shadow-lg group-hover:scale-110 transition-transform">
                             E</div>
@@ -37,10 +39,16 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <button onclick="window.location.href='/dashboard.html'"
+                    <button
+                        onclick="window.location.href=(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000' : 'https://app.elixopay.com') + '/dashboard.html'"
                         class="text-gray-500 hover:text-purple-600 font-medium">Dashboard</button>
+                    <!-- Logout Button -->
+                    <button
+                        onclick="localStorage.removeItem('user'); localStorage.removeItem('token'); localStorage.removeItem('authToken'); window.location.href=(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000' : 'https://app.elixopay.com') + '/login.html'"
+                        class="text-red-500 hover:text-red-700 font-medium ml-2"><i class="fas fa-sign-out-alt"></i>
+                        Logout</button>
                     <div
-                        class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 flex items-center justify-center text-purple-600 font-bold">
+                        class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 flex items-center justify-center text-purple-600 font-bold ml-2">
                         <span id="user-initial">U</span>
                     </div>
                 </div>

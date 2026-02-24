@@ -21,7 +21,7 @@
       localStorage.setItem('user', JSON.stringify(user));
 
       if (requiredRole) {
-        if (user.role === 'admin') {
+        if (user.role?.toLowerCase() === 'admin') {
           // Admin can access everything
         } else if (user.role === requiredRole) {
           // Exact match

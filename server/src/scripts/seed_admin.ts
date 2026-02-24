@@ -1,7 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
+
+function generateMerchantIdSync(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const PREFIX = 'ELXP';
+    let code = '';
+    const bytes = crypto.randomBytes(6);
+    for (let i = 0; i < 6; i++) {
+        code += chars[bytes[i] % chars.length];
+    }
+    return `${PREFIX}-${code}`;
+}
 
 async function main() {
     const email = 'admin@elixopay.com';
@@ -28,7 +40,8 @@ async function main() {
                 password: hash,
                 firstName: 'Admin',
                 lastName: 'User',
-                role: 'admin'
+                role: 'admin',
+                merchantId: generateMerchantIdSync(),
             }
         });
 
@@ -42,9 +55,23 @@ async function main() {
         });
     }
 
+    // Backfill merchantId for any existing users who don't have one
+    const usersWithoutMerchantId = await prisma.user.findMany({
+        where: { merchantId: '' }
+    });
+    for (const user of usersWithoutMerchantId) {
+        const newId = generateMerchantIdSync();
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { merchantId: newId }
+        });
+        console.log(`Backfilled merchantId for ${user.email}: ${newId}`);
+    }
+
     console.log('Admin seeded successfully.');
 }
 
 main()
     .catch(e => console.error(e))
     .finally(async () => await prisma.$disconnect());
+

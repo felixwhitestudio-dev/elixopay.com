@@ -193,6 +193,22 @@
             .nav-links {
                 display: none;
             }
+
+            .nav-links.show {
+                display: flex !important;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e2e8f0;
+                gap: 1.5rem;
+                z-index: 1000;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -214,12 +230,14 @@
                 </svg>
                 <span>Elixopay</span>
             </a>
+            <button class="mobile-menu-btn" style="color: var(--text-primary);"><i class="fas fa-bars"></i></button>
             <ul class="nav-links">
                 <li><a href="about.html" data-i18n="nav.about">About</a></li>
 
                 <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
                 <li><a href="https://app.elixopay.com/login.html" class="btn" data-i18n="nav.login">Login</a></li>
-                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a></li>
+                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign
+                        Up</a></li>
             </ul>
         </div>
     </nav>
@@ -292,7 +310,7 @@
                 <h4 data-i18n="footer.products">Products</h4>
                 <ul>
 
-                    <li><a href="docs.html" data-i18n="footer.links.docs">API Docs</a></li>
+                    <li><a href="apidocs.html" data-i18n="footer.links.docs">API Docs</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -315,7 +333,7 @@
     <script src="js/ui.js?v=2"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/ui-enhancements.js"></script>
+    <script src="js/ui-enhancements.js?v=3"></script>
 </body>
 
 </html>

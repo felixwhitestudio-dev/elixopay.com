@@ -21,4 +21,11 @@ router.post('/settings', adminController.updateSettings);
 router.get('/transactions', adminController.getAllTransactions);
 router.get('/audit-logs', adminController.getAuditLogs);
 
+router.get('/dashboard-overview', adminController.getDashboardOverview);
+
+router.get('/stats', adminController.getStats);
+router.get('/liquidity', adminController.getLiquidity);
+router.post('/liquidity/add', adminController.addLiquidity);
+router.get('/liquidity/history', adminController.getLiquidityHistory);
+
 export default router;

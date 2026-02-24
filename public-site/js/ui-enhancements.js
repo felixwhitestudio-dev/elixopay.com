@@ -189,7 +189,27 @@ document.addEventListener('DOMContentLoaded', () => {
     initCookieConsent();
     initCopyCodeButtons();
     initStatusIndicator();
+    initAuthNavigation();
+    initMobileMenu();
 });
+
+// --- 2.5. Mobile Menu Toggle ---
+function initMobileMenu() {
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    if (mobileBtn && navLinks) {
+        // Remove existing listeners by cloning (defensive programming)
+        const newBtn = mobileBtn.cloneNode(true);
+        if (mobileBtn.parentNode) {
+            mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
+        }
+
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navLinks.classList.toggle('show');
+        });
+    }
+}
 
 
 // --- 3. Copy Code Buttons ---
@@ -341,3 +361,60 @@ function initStatusIndicator() {
     document.body.appendChild(pill);
 }
 
+// --- 5. Global Auth Navigation Toggle ---
+function initAuthNavigation() {
+    const userStr = localStorage.getItem('user');
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+
+    if (userStr && token) {
+        try {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                // Remove login/signup wrappers
+                const loginBtn = navLinks.querySelector('a[href*="login.html"]');
+                const signupBtn = navLinks.querySelector('a[href*="signup.html"]');
+                if (loginBtn && loginBtn.parentElement && loginBtn.parentElement.tagName === 'LI') loginBtn.parentElement.remove();
+                if (signupBtn && signupBtn.parentElement && signupBtn.parentElement.tagName === 'LI' && signupBtn.parentElement !== (loginBtn && loginBtn.parentElement)) signupBtn.parentElement.remove();
+                if (loginBtn && loginBtn.parentElement && loginBtn.parentElement.tagName !== 'LI') loginBtn.remove();
+                if (signupBtn && signupBtn.parentElement && signupBtn.parentElement.tagName !== 'LI') signupBtn.remove();
+
+                const dashboardUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000/dashboard.html'
+                    : 'https://app.elixopay.com/dashboard.html';
+
+                // Dashboard Button
+                const dashboardLi = document.createElement('li');
+                dashboardLi.className = 'auth-dynamic-btn';
+                dashboardLi.innerHTML = `
+                    <a href="${dashboardUrl}" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); line-height: 1.5;">
+                        <i class="fas fa-layer-group"></i> <span data-i18n="nav.dashboard">Dashboard</span>
+                    </a>
+                `;
+
+                // Logout Button
+                const logoutLi = document.createElement('li');
+                logoutLi.className = 'auth-dynamic-btn';
+                logoutLi.innerHTML = `
+                    <a href="#" class="btn btn-outline" style="border: 1px solid rgba(239, 68, 68, 0.5); color: #ef4444; line-height: 1.5;" onclick="localStorage.removeItem('user'); localStorage.removeItem('token'); localStorage.removeItem('authToken'); window.location.reload(); return false;">
+                        <i class="fas fa-sign-out-alt"></i> <span data-i18n="nav.logout">ออกจากระบบ</span>
+                    </a>
+                `;
+
+                // Insert components avoiding the language selector
+                const langSelect = navLinks.querySelector('.lang-select');
+                if (langSelect && langSelect.parentElement && langSelect.parentElement.tagName === 'LI') {
+                    navLinks.insertBefore(dashboardLi, langSelect.parentElement);
+                    navLinks.insertBefore(logoutLi, langSelect.parentElement);
+                } else if (langSelect) {
+                    navLinks.insertBefore(dashboardLi, langSelect);
+                    navLinks.insertBefore(logoutLi, langSelect);
+                } else {
+                    navLinks.appendChild(dashboardLi);
+                    navLinks.appendChild(logoutLi);
+                }
+            }
+        } catch (e) {
+            console.error('Error handling auth navigation', e);
+        }
+    }
+}

@@ -4,7 +4,7 @@
 (function () {
   // Preferred production API URL
   // TODO: Update this to your actual production domain when ready (e.g. https://api.elixopay.com)
-  const PROD_BASE = 'https://elixopay-com.onrender.com';
+  const PROD_BASE = 'https://api.elixopay.com';
   const DEV_BASE = 'http://localhost:3000';
 
   // Allow overriding the API base via localStorage for flexibility
@@ -163,4 +163,16 @@
     localStorage.setItem('api_base_url', url);
     window.location.reload();
   };
+
+  // Frontend URL resolution to ensure the Home/Logo links point to the correct environment
+  const FRONTEND_PROD = 'https://www.elixopay.com';
+  const FRONTEND_DEV = 'http://localhost:8080'; // Local public site running on 8080
+  window.API_CONFIG.FRONTEND_URL = isLocalhost ? FRONTEND_DEV : FRONTEND_PROD;
+
+  // Automatically update all hardcoded Elixopay homepage links to resolve conditionally based on the environment
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href^="https://www.elixopay.com"]').forEach(link => {
+      link.href = window.API_CONFIG.FRONTEND_URL;
+    });
+  });
 })();

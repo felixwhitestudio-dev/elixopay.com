@@ -11,8 +11,9 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id         Int      @id @default(autoincrement())
+  merchantId String   @unique          // e.g. "ELXP-A7K2M9" — unique, non-guessable merchant identifier
+  email      String   @unique
   password  String
   firstName String?
   lastName  String?
@@ -20,6 +21,13 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   isActive        Boolean   @default(true)
+  
+  // Security / Email Verification
+  isEmailVerified    Boolean   @default(false)
+  verifyToken        String?
+  verifyTokenExpires DateTime?
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
   
   // KYC Fields
   kycStatus       String    @default("unverified") // unverified, pending, verified, rejected
@@ -41,6 +49,10 @@ model User {
   transactions    Transaction[]
   auditLogs       AuditLog[]
   bankChangeRequests BankAccountChangeRequest[]
+  apiKeys         ApiKey[]
+  webhooks        WebhookEndpoint[]
+  customers       Customer[]
+  products        Product[]
 }
 
 model BankAccountChangeRequest {
@@ -63,6 +75,7 @@ model Wallet {
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
   balance   Decimal  @default(0.00)
+  testBalance Decimal @default(0.00)
   usdtBalance Decimal @default(0.00)
   currency  String   @default("THB")
   updatedAt DateTime @updatedAt
@@ -78,6 +91,15 @@ model Transaction {
   reference      String?  // Bank reference or Slip ID
   idempotencyKey String?  @unique // Critical for stability
   metadata       String?  // JSON string
+  
+  // New Tracking Fields for Refunds
+  refundedAmount Decimal  @default(0.00) // Tracks how much has been refunded
+  parentId       Int?     // Links a REFUND transaction to its original PAYMENT
+  parent         Transaction?  @relation("TransactionRefunds", fields: [parentId], references: [id])
+  refunds        Transaction[] @relation("TransactionRefunds")
+  
+  invoice        Invoice?
+
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
@@ -100,4 +122,108 @@ model AuditLog {
   ipAddress  String?
   userAgent  String?
   createdAt  DateTime @default(now())
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  name      String   // e.g., "Production Key", "Test Key"
+  keyPrefix String   // To show in UI (e.g., ep_prod_xxxx...)
+  keyHash   String   // Hashed version of the secret key for security
+  mode      String   @default("test") // test, live
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  lastUsed  DateTime?
+}
+
+model WebhookEndpoint {
+  id          String   @id @default(uuid())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  url         String
+  secret      String   // Used to sign webhook payloads so merchant can verify
+  events      String   // JSON array of subscribed events: ["payment.success", "payment.failed"]
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model IdempotencyKey {
+  id              Int      @id @default(autoincrement())
+  key             String   @unique
+  userId          Int?
+  requestPath     String
+  requestMethod   String
+  requestPayload  String?  // Storing as JSON string
+  responseStatus  Int?
+  responseBody    String?  // Storing as JSON string
+  isLocked        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Customer {
+  id             String   @id @default(uuid())
+  merchantId     Int
+  merchant       User     @relation(fields: [merchantId], references: [id])
+  name           String
+  email          String
+  phone          String?
+  subscriptions  Subscription[]
+  invoices       Invoice[]
+  metadata       String?
+  createdAt      DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  merchantId  Int
+  merchant    User     @relation(fields: [merchantId], references: [id])
+  name        String
+  description String?
+  prices      Price[]
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Price {
+  id            String   @id @default(uuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  amount        Decimal
+  currency      String   @default("THB")
+  interval      String   // "month", "year", "week"
+  intervalCount Int      @default(1)
+  isActive      Boolean  @default(true)
+  subscriptions Subscription[]
+  createdAt     DateTime @default(now())
+}
+
+model Subscription {
+  id                   String   @id @default(uuid())
+  customerId           String
+  customer             Customer @relation(fields: [customerId], references: [id])
+  priceId              String
+  price                Price    @relation(fields: [priceId], references: [id])
+  status               String   @default("active") // active, past_due, canceled
+  currentPeriodStart   DateTime @default(now())
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean  @default(false)
+  invoices             Invoice[]
+  createdAt            DateTime @default(now())
+}
+
+model Invoice {
+  id              String   @id @default(uuid())
+  subscriptionId  String
+  subscription    Subscription @relation(fields: [subscriptionId], references: [id])
+  customerId      String
+  customer        Customer @relation(fields: [customerId], references: [id])
+  transactionId   Int?     @unique // Links to the actual Elixopay Transaction for payment
+  transaction     Transaction? @relation(fields: [transactionId], references: [id])
+  amountDue       Decimal
+  status          String   @default("open") // open, paid, void, uncollectible
+  dueDate         DateTime
+  paidAt          DateTime?
+  createdAt       DateTime @default(now())
 }

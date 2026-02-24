@@ -20,6 +20,7 @@ router.post(
 
 // Admin Routes
 router.get('/pending', protect, restrictTo('admin'), kycController.getPendingKyc);
+router.get('/all', protect, restrictTo('admin'), kycController.getAllKyc);
 router.put('/verify/:userId', protect, restrictTo('admin'), kycController.verifyKyc);
 
 export default router;

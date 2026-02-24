@@ -141,6 +141,52 @@
       object-fit: contain;
       background: #f8fafc;
     }
+
+    /* Dashboard Stats */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-card-title {
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-card-value {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 0.5rem;
+    }
+
+    .stat-card-subtitle {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+
+    .chart-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
   </style>
 </head>
 
@@ -171,14 +217,51 @@
   <main class="main-content">
     <!-- Dashboard Overview -->
     <div id="view-dashboard" class="tab-view">
-      <h1>Admin Overview</h1>
-      <p>Welcome, Super Admin.</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h1>Admin Overview</h1>
+        <button onclick="fetchDashboardStats()" class="btn btn-primary"
+          style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #e2e8f0; color: #334155; cursor: pointer; font-weight: 600;"><i
+            class="fas fa-sync-alt"></i> Refresh</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <span class="stat-card-title">Total Users</span>
+          <span class="stat-card-value" id="stat-total-users">--</span>
+          <span class="stat-card-subtitle">Registered Accounts</span>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+          <span class="stat-card-title">Pending KYC</span>
+          <span class="stat-card-value" id="stat-pending-kyc">--</span>
+          <span class="stat-card-subtitle">Awaiting Verification</span>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid #10b981;">
+          <span class="stat-card-title">System USDT</span>
+          <span class="stat-card-value" id="stat-usdt-balance">--</span>
+          <span class="stat-card-subtitle">Liquidity Pool</span>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid #3b82f6;">
+          <span class="stat-card-title">Total Withdrawals</span>
+          <span class="stat-card-value" id="stat-withdrawals">--</span>
+          <span class="stat-card-subtitle">Completed Volume (THB)</span>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3 style="margin-top: 0; color: #334155; font-size: 1.1rem; margin-bottom: 1rem;">New Users (Last 7 Days)</h3>
+        <canvas id="userSignupsChart" height="80"></canvas>
+      </div>
     </div>
 
     <!-- Verification Queue -->
     <div id="view-verifications" class="tab-view" style="display:none;">
-      <h1>Pending Verifications</h1>
-      <table class="verification-table">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h1 style="margin:0;">Pending Verifications</h1>
+        <button onclick="exportTableToCSV('verification-table-id', 'Pending_Verifications')" class="btn btn-primary"
+          style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #e2e8f0; color: #334155; cursor: pointer; font-weight: 600;"><i
+            class="fas fa-file-csv"></i> Export CSV</button>
+      </div>
+      <table id="verification-table-id" class="verification-table">
         <thead>
           <tr>
             <th>Date</th>
@@ -196,8 +279,13 @@
 
     <!-- Bank Account Change Requests -->
     <div id="view-bank-requests" class="tab-view" style="display:none;">
-      <h1>Bank Account Change Requests</h1>
-      <table class="verification-table">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h1 style="margin:0;">Bank Account Change Requests</h1>
+        <button onclick="exportTableToCSV('bank-requests-table-id', 'Bank_Requests')" class="btn btn-primary"
+          style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #e2e8f0; color: #334155; cursor: pointer; font-weight: 600;"><i
+            class="fas fa-file-csv"></i> Export CSV</button>
+      </div>
+      <table id="bank-requests-table-id" class="verification-table">
         <thead>
           <tr>
             <th>Date</th>
@@ -242,6 +330,7 @@
 
     // On Load
     document.addEventListener('DOMContentLoaded', () => {
+      fetchDashboardStats();
       fetchVerifications();
     });
 
@@ -250,14 +339,82 @@
       document.getElementById(`view-${tab}`).style.display = 'block';
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       event.currentTarget.classList.add('active');
+      if (tab === 'dashboard') fetchDashboardStats();
       if (tab === 'verifications') fetchVerifications();
       if (tab === 'bank-requests') fetchBankChangeRequests();
+    }
+
+    let usersChartInstance = null;
+
+    async function fetchDashboardStats() {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(window.apiUrl('/api/v1/admin/dashboard-overview'), {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+
+        if (data.success && data.data) {
+          const stats = data.data.stats;
+
+          document.getElementById('stat-total-users').textContent = stats.totalUsers.toLocaleString();
+          document.getElementById('stat-pending-kyc').textContent = stats.pendingKyc.toLocaleString();
+          document.getElementById('stat-usdt-balance').textContent = stats.platformUsdtBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₮';
+          document.getElementById('stat-withdrawals').textContent = '฿ ' + stats.totalWithdrawVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+          // Render Chart
+          const chartData = data.data.chartData.userSignupsByDate;
+
+          // Generate last 7 days array for consistent x-axis filling
+          const dates = [];
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            dates.push(d.toISOString().split('T')[0]);
+          }
+
+          const counts = dates.map(d => chartData[d] || 0);
+
+          const ctx = document.getElementById('userSignupsChart').getContext('2d');
+
+          if (usersChartInstance) {
+            usersChartInstance.destroy();
+          }
+
+          usersChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: dates,
+              datasets: [{
+                label: 'New Users',
+                data: counts,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#2563eb'
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Failed to load dashboard stats', e);
+      }
     }
 
     async function fetchVerifications() {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('/api/v1/kyc/pending', {
+        const res = await fetch(window.apiUrl('/api/v1/kyc/pending'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -395,7 +552,7 @@
         // action comes in as 'approve' or 'reject' from the button
         const statusToSet = action === 'approve' ? 'verified' : 'rejected';
 
-        const res = await fetch(`/api/v1/kyc/verify/${currentUserId}`, {
+        const res = await fetch(window.apiUrl(`/api/v1/kyc/verify/${currentUserId}`), {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -433,7 +590,7 @@
       const token = localStorage.getItem('token');
       const tbody = document.getElementById('bank-request-list');
       try {
-        const res = await fetch('/api/v1/bank/change-requests?status=pending', {
+        const res = await fetch(window.apiUrl('/api/v1/bank/change-requests?status=pending'), {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -471,7 +628,7 @@
       });
       if (!isConfirmed) return;
       try {
-        const res = await fetch(`/api/v1/bank/change-requests/${requestId}/approve`, {
+        const res = await fetch(window.apiUrl(`/api/v1/bank/change-requests/${requestId}/approve`), {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ adminNote: 'Approved by admin' })
@@ -500,7 +657,7 @@
       if (!isConfirmed || !adminNote) return;
       const token = localStorage.getItem('token');
       try {
-        const res = await fetch(`/api/v1/bank/change-requests/${requestId}/reject`, {
+        const res = await fetch(window.apiUrl(`/api/v1/bank/change-requests/${requestId}/reject`), {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ adminNote })
@@ -519,6 +676,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/csv-export.js"></script>
   <script src="js/ui-enhancements.js"></script>
 </body>
 

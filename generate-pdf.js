@@ -9,10 +9,10 @@ const path = require('path');
 
     console.log('Navigating to local print template...');
     // Load the local HTML file directly
-    const templatePath = path.join(__dirname, 'print-template.html');
+    const templatePath = path.join(__dirname, 'app-server', 'public', 'print-template.html');
     await page.goto(`file://${templatePath}`, { waitUntil: 'networkidle0' });
 
-    const dir = path.join(__dirname, 'assets', 'downloads');
+    const dir = path.join(__dirname, 'public-site', 'assets', 'downloads');
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const requireKyc = require('../middleware/kyc');
 const walletController = require('../controllers/walletController');
 const exchangeController = require('../controllers/exchangeController');
 
@@ -9,7 +10,7 @@ const exchangeController = require('../controllers/exchangeController');
  * @desc    Request a withdrawal
  * @access  Private
  */
-router.post('/withdraw', authenticate, walletController.requestWithdrawal);
+router.post('/withdraw', authenticate, requireKyc, walletController.requestWithdrawal);
 // router.post('/deposit', authenticate, walletController.processDeposit); // DISABLED FOR LICENSE-FREE MODE
 
 /**

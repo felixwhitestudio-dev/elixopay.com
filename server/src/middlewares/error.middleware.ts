@@ -17,11 +17,17 @@ export const globalErrorHandler = (
 
     // Operational, trusted error: send message to client
     if (err.isOperational) {
-        res.status(err.statusCode).json({
-            success: false, // Changed to match frontend expectation
+        const errorResponse: any = {
+            success: false,
             status: err.status,
             message: err.message,
-        });
+        };
+
+        if (err.code) {
+            errorResponse.error = { code: err.code };
+        }
+
+        res.status(err.statusCode).json(errorResponse);
     }
     // Programming or other unknown error: don't leak details
     else {

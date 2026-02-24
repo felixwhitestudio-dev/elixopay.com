@@ -129,6 +129,44 @@ export const getPendingKyc = catchAsync(async (req: Request, res: Response, next
     });
 });
 
+export const getAllKyc = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // Exclude users who haven't started KYC
+    const kycRequests = await prisma.user.findMany({
+        where: { kycStatus: { not: 'unverified' } },
+        select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            kycStatus: true,
+            kycIdCardUrl: true,
+            kycStatementUrl: true,
+            kycSelfieUrl: true,
+            kycSubmittedAt: true,
+            kycVerifiedAt: true,
+            kycRejectionReason: true,
+            createdAt: true,
+            bankName: true,
+            bankAccountNumber: true,
+            bankAccountName: true,
+            wallet: {
+                select: {
+                    currency: true
+                }
+            }
+        },
+        orderBy: { kycSubmittedAt: 'desc' }
+    });
+
+    res.status(200).json({
+        success: true,
+        results: kycRequests.length,
+        data: {
+            users: kycRequests
+        }
+    });
+});
+
 export const verifyKyc = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const userId = parseInt(req.params.userId, 10);
     const { status, reason } = req.body; // status: 'verified' | 'rejected'

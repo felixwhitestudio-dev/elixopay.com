@@ -84,11 +84,13 @@
 				<div class="hidden md:flex items-center space-x-8">
 					<a href="dashboard.html"
 						class="text-sm font-medium text-slate-400 hover:text-white transition">Dashboard</a>
+					<a href="billing.html"
+						class="text-sm font-medium text-slate-400 hover:text-white transition">Billing</a>
 					<a href="api-keys.html" class="text-sm font-medium text-indigo-400 relative">
 						Developer API
 						<span class="absolute -bottom-6 left-0 right-0 h-0.5 bg-indigo-500 rounded-t-full"></span>
 					</a>
-					<a href="docs.html" class="text-sm font-medium text-slate-400 hover:text-white transition">Docs</a>
+					<a href="https://www.elixopay.com/apidocs.html" class="text-sm font-medium text-slate-400 hover:text-white transition">Docs</a>
 				</div>
 
 				<!-- User Profile -->
@@ -114,7 +116,7 @@
 				<h1 class="text-3xl font-bold text-white mb-2">Developer Resources</h1>
 				<p class="text-slate-400">Manage your API keys and webhook endpoints for integration.</p>
 			</div>
-			<a href="docs.html" target="_blank"
+			<a href="https://www.elixopay.com/apidocs.html" target="_blank"
 				class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded-xl transition flex items-center gap-2 border border-slate-700">
 				<i class="fas fa-external-link-alt text-slate-400"></i> Read Documentation
 			</a>
@@ -278,27 +280,36 @@
 
 					// Check KYC Status
 					if (user.kycStatus !== 'verified' && user.role !== 'admin') {
-						const mainEl = document.querySelector('main');
-						if (mainEl) {
-							mainEl.innerHTML = `
-							<div class="flex flex-col items-center justify-center py-20 text-center">
-								<div class="w-20 h-20 rounded-full bg-red-900/30 flex items-center justify-center text-red-500 text-4xl mb-6 shadow-lg shadow-red-500/20">
-									<i class="fas fa-lock"></i>
+						// Show Test Mode Warning Banner
+						const warningHtml = `
+							<div class="mb-8 bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-5 relative overflow-hidden flex items-start shrink-0">
+								<div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
+								<div class="text-yellow-500 text-2xl mr-4 mt-0.5"><i class="fas fa-exclamation-triangle"></i></div>
+								<div>
+									<h3 class="text-yellow-400 font-bold mb-1">Sandbox Test Mode</h3>
+									<p class="text-sm text-yellow-200/70">Your account is not fully verified yet. You can generate "Test" keys to experiment with the API in a sandbox environment, but "Live" key generation is disabled until KYC approval.</p>
 								</div>
-								<h2 class="text-3xl font-bold text-white mb-4">KYC Verification Required</h2>
-								<p class="text-slate-400 max-w-lg mx-auto mb-8 leading-relaxed">
-									Your account must be fully verified before you can access the Developer API, generate Access Keys, and configure Webhooks. <br><br>
-									Please return to the dashboard to complete your identity verification.
-								</p>
-								<a href="dashboard.html" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition shadow-lg shadow-indigo-500/20 flex items-center gap-2">
-									<i class="fas fa-arrow-left"></i> Return to Dashboard
-								</a>
-							</div>`;
+								<a href="dashboard.html" class="ml-auto shrink-0 px-4 py-2 bg-yellow-600/20 hover:bg-yellow-600/40 text-yellow-500 text-sm font-medium rounded-lg transition border border-yellow-500/20">Verify Now</a>
+							</div>
+						`;
+
+						// Insert warning above the grid
+						const grid = document.querySelector('.grid.grid-cols-1.lg\\:grid-cols-3');
+						if (grid) {
+							const warningWrapper = document.createElement('div');
+							warningWrapper.innerHTML = warningHtml;
+							grid.parentNode.insertBefore(warningWrapper.firstElementChild, grid);
 						}
-						return; // Halt further execution
+
+						// Disable 'live' option in select
+						const liveOption = document.querySelector('#key-type option[value="live"]');
+						if (liveOption) {
+							liveOption.disabled = true;
+							liveOption.textContent = 'Live Mode (Requires KYC)';
+						}
 					}
 
-					// Initial Data Load (Only if verified)
+					// Initial Data Load
 					loadKeys();
 					loadWebhooks();
 				}

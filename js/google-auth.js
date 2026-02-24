@@ -1,5 +1,5 @@
 // Google OAuth Sign-In (Popup Flow)
-const GOOGLE_CLIENT_ID = '908736098316-3b1itv1mt4jvvavtpdj7i7ptmvk8ethl.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '811815196850-rvb15n3t7sr6qjg34a0k735kr2gjsivp.apps.googleusercontent.com';
 let tokenClient;
 
 // Initialize Token Client on load

@@ -98,9 +98,16 @@ window.handleLogin = async function (event) {
 
             // Handle "User not found" specifically if needed
             if (response.status === 404) {
-                errorMsg.textContent = 'ไม่พบผู้ใช้งานนี้ในระบบ';
+                errorMsg.innerHTML = 'ไม่พบผู้ใช้งานนี้ในระบบ';
             } else if (response.status === 401) {
-                errorMsg.textContent = 'รหัสผ่านไม่ถูกต้อง';
+                errorMsg.innerHTML = 'รหัสผ่านไม่ถูกต้อง';
+            } else if (response.status === 403 && data.status === 'UNVERIFIED') {
+                errorMsg.innerHTML = `
+                    บัญชีของคุณยังไม่ได้ยืนยันอีเมล กรุณาตรวจสอบกล่องจดหมายของคุณ<br>
+                    <button type="button" onclick="resendVerification('${email}')" class="mt-2 px-3 py-1 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded text-sm font-medium transition">
+                        ส่ิงอีเมลยืนยันอีกครั้ง
+                    </button>
+                `;
             }
 
             errorBox.classList.remove('hidden');
@@ -112,6 +119,42 @@ window.handleLogin = async function (event) {
     } finally {
         if (btn) btn.disabled = false;
         if (spinner) spinner.classList.add('hidden');
+    }
+};
+
+window.resendVerification = async function (email) {
+    Swal.fire({
+        title: 'กำลังส่งอีเมล...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        const response = await window.apiFetch(window.API_CONFIG.ENDPOINTS.auth.resendVerification || '/api/v1/auth/resend-verification', {
+            method: 'POST',
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'ส่งอีเมลแล้ว!',
+                text: 'กรุณาตรวจสอบกล่องจดหมาย หรือ Junk Folder ของคุณ',
+                confirmButtonColor: '#635BFF'
+            });
+        } else {
+            throw new Error(data.message || 'ส่งอีเมลไม่สำเร็จ');
+        }
+    } catch (err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'ผิดพลาด',
+            text: err.message,
+            confirmButtonColor: '#635BFF'
+        });
     }
 };
 
