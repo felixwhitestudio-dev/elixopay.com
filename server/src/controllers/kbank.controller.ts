@@ -26,7 +26,6 @@ export const generateQR = async (req: Request, res: Response) => {
 export const handleWebhook = async (req: Request, res: Response) => {
     try {
         const payload = req.body;
-        console.log('Received KBank Webhook:', JSON.stringify(payload, null, 2));
 
         // In a real system:
         // 1. Verify KBank Signature

@@ -123,22 +123,6 @@ export const rejectWithdrawal = catchAsync(async (req: Request, res: Response, n
         });
 
         // 2. Refund money to user wallet
-        // Note: transaction.amount is negative for withdrawals, so we subtract it (double negative = positive) 
-        // OR we just use Math.abs. Let's look at wallet service:
-        // withdraw service: amount: -amount.
-        // So transaction.amount is e.g. -500.
-        // To refund, we need to add 500 back.
-        // balance increment: -(-500) = +500.
-        // But safer to just use Math.abs() to be sure.
-
-        await tx.wallet.update({
-            where: { userId: transaction.userId },
-            data: {
-                balance: {
-                    increment: Math.abs(Number(transaction.amount))
-                }
-            }
-        });
 
         // Optional: Create a refund transaction record? 
         // Usually good practice, but for simplicity we rely on the FAILED status of the original tx to explain why money didn't leave?
@@ -262,16 +246,12 @@ export const getSettings = catchAsync(async (req: Request, res: Response, next: 
 });
 
 export const updateSettings = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log('updateSettings called');
-    console.log('Prisma keys:', Object.keys(prisma));
     const updates = req.body;
-    console.log('Updates:', updates);
 
     // Fetch old settings for logging
     const oldSettings = await prisma.systemSetting.findMany({
         where: { key: { in: Object.keys(updates) } }
     });
-    console.log('Old settings fetched');
     const oldSettingsMap = oldSettings.reduce((acc: any, curr) => ({ ...acc, [curr.key]: curr.value }), {});
 
     const results = [];
@@ -283,14 +263,10 @@ export const updateSettings = catchAsync(async (req: Request, res: Response, nex
         });
         results.push(setting);
     }
-    console.log('Settings upserted');
 
     // Log Action
     // @ts-ignore
-    console.log('Logging action for user:', req.user?.id);
-    // @ts-ignore
     await logAction(req.user.id, 'UPDATE_SETTINGS', 'SYSTEM', undefined, formatUpdateDetails(oldSettingsMap, updates), req);
-    console.log('Action logged');
 
     res.status(200).json({
         success: true,

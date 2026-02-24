@@ -172,7 +172,13 @@
   // Automatically update all hardcoded Elixopay homepage links to resolve conditionally based on the environment
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="https://www.elixopay.com"]').forEach(link => {
-      link.href = window.API_CONFIG.FRONTEND_URL;
+      try {
+        const url = new URL(link.href);
+        const frontendUrl = new URL(window.API_CONFIG.FRONTEND_URL);
+        link.href = `${frontendUrl.origin}${url.pathname}${url.search}${url.hash}`;
+      } catch (e) {
+        link.href = window.API_CONFIG.FRONTEND_URL;
+      }
     });
   });
 })();

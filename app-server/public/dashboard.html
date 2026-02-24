@@ -2325,7 +2325,6 @@
                 let url = '';
 
                 try {
-                    console.log('Wallet Action is:', walletAction);
 
                     if (walletAction === 'deposit') {
                         // Call Instant Deposit API
@@ -2337,15 +2336,10 @@
                     } else if (walletAction === 'withdraw') {
                         url = '/api/v1/users/wallet/withdraw';
 
-                        console.log('Bank Name field value:', form.bank_name ? form.bank_name.value : 'MISSING');
-                        console.log('Account Number field value:', form.account_number ? form.account_number.value : 'MISSING');
-                        console.log('Account Name field value:', form.account_name ? form.account_name.value : 'MISSING');
-
                         body = {
                             amount: amount,
                             bankAccount: `${form.bank_name.value} - ${form.account_number.value} (${form.account_name.value})`
                         };
-                        console.log('Constructed withdraw body:', body);
                     } else if (walletAction === 'transfer') {
                         // Transfer logic
                         // Transfer logic
@@ -2362,6 +2356,15 @@
                     }
 
                     if (!url) throw new Error('Invalid action');
+
+                    // --- SECURITY: Re-authentication for Withdrawals ---
+                    if (walletAction === 'withdraw' && window.ElixopaySecurity) {
+                        const actionDesc = window.ElixopayI18n ? window.ElixopayI18n.t('modal.action.withdraw') || 'withdraw funds' : 'withdraw funds';
+                        // Wait for password verification
+                        await window.ElixopaySecurity.promptReauth(actionDesc);
+                        // If it fails or is cancelled, it throws an error and falls to the catch block, aborting the transfer
+                    }
+                    // ---------------------------------------------------
 
                     const response = await apiFetch(url, {
                         method: 'POST',
@@ -2723,8 +2726,8 @@
                     const accounts = data.data.bank_accounts;
 
                     if (accounts.length === 0) {
-                        select.innerHTML = `<option value="">${window.ElixopayI18n ? window.ElixopayI18n.t('modal.no_accounts') : 'No saved accounts'}</option>`;
-                        select.disabled = true;
+                        ct.innerHTML = `<option value="">${window.ElixopayI18n ? window.ElixopayI18n.t('modal.no_accounts') : 'No saved accounts'}</option>`;
+                        abled = true;
                     } else {
                         select.disabled = false;
                         select.innerHTML = `<option value="">${window.ElixopayI18n ? window.ElixopayI18n.t('modal.select_bank_account') : 'Select Bank Account'}</option>` +

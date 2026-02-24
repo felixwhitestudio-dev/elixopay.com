@@ -129,6 +129,42 @@ export const me = catchAsync(async (req: Request, res: Response, next: NextFunct
     });
 });
 
+export const verifyPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore - User is attached by protect middleware
+    const userId = req.user.id;
+    const { password } = req.body;
+
+    if (!password) {
+        return next(new AppError('Please provide your password', 400));
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user || !(await authService.comparePassword(password, user.password))) {
+        return res.status(401).json({
+            success: false,
+            message: 'Incorrect password',
+            error: { message: 'Incorrect password' }
+        });
+    }
+
+    // Optional: Return a short-lived signed action token if you want robust stateless re-auth.
+    // For now, returning success true is enough for the frontend to proceed.
+    const actionToken = jwt.sign(
+        { id: user.id, action: 'sensitive_operation' },
+        process.env.JWT_SECRET || 'super-secret-dev-key',
+        { expiresIn: '5m' }
+    );
+
+    res.status(200).json({
+        success: true,
+        message: 'Password verified',
+        data: {
+            actionToken
+        }
+    });
+});
+
 export const googleLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken } = req.body;
     if (!accessToken) return next(new AppError('No token provided', 400));

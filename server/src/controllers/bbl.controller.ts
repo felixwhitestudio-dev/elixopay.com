@@ -12,9 +12,6 @@ export class BBLController {
      * 4. Return Signed JWT Response.
      */
     static async handleWebhook(req: Request, res: Response) {
-        console.log('--- BBL Webhook Received ---');
-        console.log('Headers:', req.headers);
-        console.log('Body:', req.body);
 
         try {
             // 1. Basic Auth Validation
@@ -31,7 +28,7 @@ export class BBLController {
             if (token) {
                 try {
                     const decoded = BBLService.verifyJWT(token);
-                    console.log('✅ BBL Webhook: JWT Verified', decoded);
+
                 } catch (jwtError) {
                     console.error('❌ BBL Webhook: JWT Verification Failed', jwtError);
                     return res.status(401).json({ error: 'Invalid Signature' });
@@ -56,7 +53,7 @@ export class BBLController {
                 billerId
             } = bodyData;
 
-            console.log(`Processing Payment: Ref1=${reference1}, Amount=${totalAmount}, Status=${paymentStatus}`);
+
 
             // 4. Prepare Response
             // Spec requires: responseCode, responseMesg

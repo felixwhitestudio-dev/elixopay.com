@@ -90,7 +90,8 @@
 						Developer API
 						<span class="absolute -bottom-6 left-0 right-0 h-0.5 bg-indigo-500 rounded-t-full"></span>
 					</a>
-					<a href="https://www.elixopay.com/apidocs.html" class="text-sm font-medium text-slate-400 hover:text-white transition">Docs</a>
+					<a href="https://www.elixopay.com/apidocs.html"
+						class="text-sm font-medium text-slate-400 hover:text-white transition">Docs</a>
 				</div>
 
 				<!-- User Profile -->
@@ -371,6 +372,16 @@
 				return;
 			}
 
+			// --- SECURITY: Re-authentication ---
+			if (window.ElixopaySecurity) {
+				try {
+					await window.ElixopaySecurity.promptReauth('generate a new API key');
+				} catch (e) {
+					return; // User cancelled or failed
+				}
+			}
+			// -----------------------------------
+
 			try {
 				const resp = await apiFetch('/api/v1/apikeys', {
 					method: 'POST',
@@ -413,6 +424,16 @@
 			});
 
 			if (result.isConfirmed) {
+				// --- SECURITY: Re-authentication ---
+				if (window.ElixopaySecurity) {
+					try {
+						await window.ElixopaySecurity.promptReauth('revoke this API key');
+					} catch (e) {
+						return; // User cancelled or failed
+					}
+				}
+				// -----------------------------------
+
 				try {
 					const resp = await apiFetch(`/api/v1/apikeys/${id}`, { method: 'DELETE' });
 					if (resp.ok) {
@@ -473,6 +494,16 @@
 				return;
 			}
 
+			// --- SECURITY: Re-authentication ---
+			if (window.ElixopaySecurity) {
+				try {
+					await window.ElixopaySecurity.promptReauth('add a new webhook endpoint');
+				} catch (e) {
+					return; // User cancelled or failed
+				}
+			}
+			// -----------------------------------
+
 			try {
 				const resp = await apiFetch('/api/v1/webhooks', {
 					method: 'POST',
@@ -493,14 +524,38 @@
 		}
 
 		async function deleteWebhook(id) {
-			try {
-				const resp = await apiFetch(`/api/v1/webhooks/${id}`, { method: 'DELETE' });
-				if (resp.ok) {
-					showToast('Webhook removed', 'success');
-					loadWebhooks();
+			const result = await Swal.fire({
+				title: 'Remove Webhook?',
+				text: "You will stop receiving events at this endpoint immediately.",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#ef4444',
+				cancelButtonColor: '#334155',
+				confirmButtonText: 'Yes, remove it',
+				background: '#1e293b',
+				color: '#fff'
+			});
+
+			if (result.isConfirmed) {
+				// --- SECURITY: Re-authentication ---
+				if (window.ElixopaySecurity) {
+					try {
+						await window.ElixopaySecurity.promptReauth('remove this webhook endpoint');
+					} catch (e) {
+						return; // User cancelled or failed
+					}
 				}
-			} catch (e) {
-				showToast('Failed to remove webhook', 'error');
+				// -----------------------------------
+
+				try {
+					const resp = await apiFetch(`/api/v1/webhooks/${id}`, { method: 'DELETE' });
+					if (resp.ok) {
+						showToast('Webhook removed', 'success');
+						loadWebhooks();
+					}
+				} catch (e) {
+					showToast('Failed to remove webhook', 'error');
+				}
 			}
 		}
 

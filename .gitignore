@@ -11,8 +11,18 @@ logs/
 dist/
 build/
 coverage/
+.env
 .env.local
 .env.*.local
 
+# Sensitive Files
+ec2_env.txt
+rds_endpoint.txt
+token.json
+*.db
+
 # Local Netlify folder
 .netlify
+
+# Deployment logs
+nohup.out
