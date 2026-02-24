@@ -45,6 +45,10 @@ model User {
   bankAccountName   String?  // Must match KYC name
   bankVerified      Boolean  @default(false) // Locked to true after admin KYC approval
 
+  // Two-Factor Authentication
+  twoFactorSecret   String?  // Encrypted TOTP secret
+  twoFactorEnabled  Boolean  @default(false)
+
   wallet          Wallet?
   transactions    Transaction[]
   auditLogs       AuditLog[]

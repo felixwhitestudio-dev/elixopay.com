@@ -1,6 +1,7 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import * as authController from '../controllers/auth.controller';
+import * as twofaController from '../controllers/twofa.controller';
 import { protect } from '../middlewares/auth.middleware';
 
 const router = express.Router();
@@ -45,5 +46,11 @@ router.post('/forgot-password', forgotPasswordLimiter, authController.forgotPass
 router.post('/reset-password/:token', authController.resetPassword);
 router.get('/me', protect, authController.me);
 router.post('/verify-password', protect, sensitiveActionLimiter, authController.verifyPassword);
+
+// --- 2FA Routes ---
+router.post('/2fa/setup', protect, twofaController.setup2FA);
+router.post('/2fa/verify', protect, sensitiveActionLimiter, twofaController.verify2FA);
+router.post('/2fa/validate', sensitiveActionLimiter, twofaController.validate2FA);  // No protect - uses tempToken
+router.post('/2fa/disable', protect, sensitiveActionLimiter, twofaController.disable2FA);
 
 export default router;

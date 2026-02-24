@@ -87,20 +87,40 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
         return next(new AppError('Your account has been suspended. Please contact support.', 403));
     }
 
+    // Check if 2FA is enabled — if so, issue a temporary token
+    if (user.twoFactorEnabled) {
+        const tempToken = jwt.sign(
+            { id: user.id, purpose: '2fa' },
+            process.env.JWT_SECRET || 'fallback-secret',
+            { expiresIn: '5m' } // 5 minutes to enter 2FA code
+        );
+
+        return res.status(200).json({
+            success: true,
+            status: 'REQUIRE_2FA',
+            message: 'Two-factor authentication required.',
+            data: {
+                tempToken,
+                email: user.email,
+            }
+        });
+    }
+
     const token = authService.signToken(user.id);
 
     res.status(200).json({
         success: true,
-        token, // Send token at root level for dashboard compatibility
+        token,
         data: {
-            token, // Also send inside data for consistency
+            token,
             user: {
                 id: user.id,
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: user.role,
-                wallet: user.wallet
+                wallet: user.wallet,
+                twoFactorEnabled: user.twoFactorEnabled,
             }
         }
     });

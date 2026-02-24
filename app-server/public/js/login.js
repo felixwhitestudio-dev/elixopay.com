@@ -59,7 +59,66 @@ window.handleLogin = async function (event) {
         const data = await response.json();
 
         if (response.ok && data.success) {
-            // Support both top-level token and nested data.token
+            // --- Handle 2FA required ---
+            if (data.status === 'REQUIRE_2FA') {
+                const { tempToken, email: userEmail } = data.data;
+                const { value: totpCode } = await Swal.fire({
+                    title: '🔐 Two-Factor Authentication',
+                    html: `
+                        <p style="margin-bottom:12px;color:#6b7280;">กรุณากรอกรหัส 6 หลักจากแอป Authenticator ของคุณ</p>
+                        <input id="totp-input" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]*"
+                            autocomplete="one-time-code"
+                            placeholder="000000"
+                            style="text-align:center;font-size:28px;letter-spacing:8px;padding:12px;width:200px;border:2px solid #e5e7eb;border-radius:12px;outline:none;font-family:monospace;"
+                            onfocus="this.style.borderColor='#635BFF'"
+                            onblur="this.style.borderColor='#e5e7eb'">
+                    `,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonColor: '#635BFF',
+                    preConfirm: () => {
+                        const code = document.getElementById('totp-input').value;
+                        if (!code || code.length !== 6) {
+                            Swal.showValidationMessage('กรุณากรอกรหัส 6 หลัก');
+                            return false;
+                        }
+                        return code;
+                    },
+                    didOpen: () => {
+                        const inp = document.getElementById('totp-input');
+                        if (inp) inp.focus();
+                    }
+                });
+
+                if (!totpCode) {
+                    // User cancelled
+                    return;
+                }
+
+                // Validate 2FA code
+                const twoFaRes = await window.apiFetch('/api/v1/auth/2fa/validate', {
+                    method: 'POST',
+                    body: JSON.stringify({ email: userEmail, token: totpCode, tempToken })
+                });
+                const twoFaData = await twoFaRes.json();
+
+                if (twoFaRes.ok && twoFaData.success) {
+                    const finalToken = twoFaData.token || (twoFaData.data && twoFaData.data.token);
+                    localStorage.setItem('token', finalToken);
+                    if (twoFaData.data && twoFaData.data.user) {
+                        localStorage.setItem('user', JSON.stringify(twoFaData.data.user));
+                    }
+                    window.location.href = '/dashboard.html';
+                } else {
+                    errorMsg.textContent = twoFaData.message || 'รหัส 2FA ไม่ถูกต้อง';
+                    errorBox.classList.remove('hidden');
+                }
+                return;
+            }
+
+            // --- Normal login (no 2FA) ---
             const token = data.token || (data.data && data.data.token);
 
             if (token) {

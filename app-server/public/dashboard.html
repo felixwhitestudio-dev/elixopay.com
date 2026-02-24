@@ -729,6 +729,12 @@
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-700 text-gray-200 border border-gray-600">
                                 <i class="fas fa-check-circle text-green-400 mr-1.5"></i> DDoS Protection
                             </span>
+                            <span id="twofa-badge"
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-700 text-gray-200 border border-gray-600 cursor-pointer"
+                                onclick="toggle2FA()">
+                                <i id="twofa-badge-icon" class="fas fa-times-circle text-red-400 mr-1.5"></i>
+                                <span id="twofa-badge-text">2FA Disabled</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -2915,13 +2921,137 @@
             Swal.fire({
                 title: `<span class="text-slate-200">${title}</span>`,
                 html: `<div class="text-slate-400 text-sm py-4"><i class="fas fa-inbox text-3xl mb-3 opacity-50 block"></i>${msg}</div>`,
-                background: '#1e293b', // slate-800
-                confirmButtonColor: '#6366f1', // indigo-500
+                background: '#1e293b',
+                confirmButtonColor: '#6366f1',
                 confirmButtonText: window.ElixopayI18n ? window.ElixopayI18n.t('common.close') || 'Close' : 'Close',
                 customClass: {
                     popup: 'rounded-xl border border-slate-700 shadow-2xl'
                 }
             });
+        }
+
+        // ===== 2FA Management =====
+        function update2FABadge(enabled) {
+            const icon = document.getElementById('twofa-badge-icon');
+            const text = document.getElementById('twofa-badge-text');
+            if (enabled) {
+                icon.className = 'fas fa-check-circle text-green-400 mr-1.5';
+                text.textContent = '2FA Active';
+            } else {
+                icon.className = 'fas fa-times-circle text-red-400 mr-1.5';
+                text.textContent = '2FA Disabled';
+            }
+        }
+
+        // Check 2FA status on page load
+        (async function check2FAStatus() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                const res = await window.apiFetch('/api/v1/auth/me', { method: 'GET' });
+                const data = await res.json();
+                if (data.success && data.data && data.data.user) {
+                    update2FABadge(data.data.user.twoFactorEnabled);
+                }
+            } catch (e) { /* silent */ }
+        })();
+
+        async function toggle2FA() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            // Check current status first
+            const meRes = await window.apiFetch('/api/v1/auth/me', { method: 'GET' });
+            const meData = await meRes.json();
+            const isEnabled = meData.data?.user?.twoFactorEnabled;
+
+            if (isEnabled) {
+                // --- Disable 2FA ---
+                const { value: password } = await Swal.fire({
+                    title: '🔓 ปิด Two-Factor Authentication',
+                    html: '<p style="color:#94a3b8;margin-bottom:12px;">กรุณากรอกรหัสผ่านเพื่อยืนยัน</p><input id="disable-2fa-pw" type="password" placeholder="รหัสผ่าน" style="width:100%;padding:10px;border:2px solid #334155;border-radius:10px;background:#1e293b;color:white;outline:none;">',
+                    background: '#0f172a',
+                    showCancelButton: true,
+                    confirmButtonText: 'ปิด 2FA',
+                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonColor: '#ef4444',
+                    preConfirm: () => {
+                        const pw = document.getElementById('disable-2fa-pw').value;
+                        if (!pw) { Swal.showValidationMessage('กรุณากรอกรหัสผ่าน'); return false; }
+                        return pw;
+                    },
+                    customClass: { popup: 'rounded-xl border border-slate-700' }
+                });
+                if (!password) return;
+
+                const res = await window.apiFetch('/api/v1/auth/2fa/disable', {
+                    method: 'POST',
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    update2FABadge(false);
+                    Swal.fire({ icon: 'success', title: 'ปิด 2FA แล้ว', background: '#0f172a', confirmButtonColor: '#6366f1', customClass: { popup: 'rounded-xl border border-slate-700' } });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: data.message, background: '#0f172a', confirmButtonColor: '#6366f1', customClass: { popup: 'rounded-xl border border-slate-700' } });
+                }
+            } else {
+                // --- Enable 2FA ---
+                Swal.fire({ title: 'กำลังตั้งค่า...', allowOutsideClick: false, background: '#0f172a', didOpen: () => Swal.showLoading(), customClass: { popup: 'rounded-xl border border-slate-700' } });
+
+                const setupRes = await window.apiFetch('/api/v1/auth/2fa/setup', { method: 'POST' });
+                const setupData = await setupRes.json();
+
+                if (!setupRes.ok || !setupData.success) {
+                    Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: setupData.message, background: '#0f172a', confirmButtonColor: '#6366f1', customClass: { popup: 'rounded-xl border border-slate-700' } });
+                    return;
+                }
+
+                const { qrCode, secret } = setupData.data;
+
+                const { value: verifyCode } = await Swal.fire({
+                    title: '🔐 ตั้งค่า Two-Factor Authentication',
+                    html: `
+                        <div style="text-align:center;">
+                            <p style="color:#94a3b8;margin-bottom:12px;">สแกน QR Code นี้ด้วยแอป Google Authenticator หรือ Authy</p>
+                            <img src="${qrCode}" alt="QR Code" style="margin:0 auto 12px;width:200px;height:200px;border-radius:12px;border:2px solid #334155;">
+                            <p style="color:#64748b;font-size:11px;word-break:break-all;">Manual key: ${secret}</p>
+                            <hr style="border-color:#334155;margin:12px 0;">
+                            <p style="color:#94a3b8;margin-bottom:8px;">กรอกรหัส 6 หลักจากแอปเพื่อยืนยัน</p>
+                            <input id="verify-2fa-code" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]*"
+                                placeholder="000000"
+                                style="text-align:center;font-size:28px;letter-spacing:8px;padding:12px;width:200px;border:2px solid #334155;border-radius:12px;background:#1e293b;color:white;outline:none;font-family:monospace;">
+                        </div>
+                    `,
+                    background: '#0f172a',
+                    showCancelButton: true,
+                    confirmButtonText: 'เปิดใช้ 2FA',
+                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonColor: '#22c55e',
+                    preConfirm: () => {
+                        const code = document.getElementById('verify-2fa-code').value;
+                        if (!code || code.length !== 6) { Swal.showValidationMessage('กรุณากรอกรหัส 6 หลัก'); return false; }
+                        return code;
+                    },
+                    didOpen: () => { const inp = document.getElementById('verify-2fa-code'); if (inp) inp.focus(); },
+                    customClass: { popup: 'rounded-xl border border-slate-700' }
+                });
+
+                if (!verifyCode) return;
+
+                const verifyRes = await window.apiFetch('/api/v1/auth/2fa/verify', {
+                    method: 'POST',
+                    body: JSON.stringify({ token: verifyCode })
+                });
+                const verifyData = await verifyRes.json();
+
+                if (verifyRes.ok && verifyData.success) {
+                    update2FABadge(true);
+                    Swal.fire({ icon: 'success', title: '🎉 เปิดใช้ 2FA สำเร็จ!', text: 'บัญชีของคุณปลอดภัยยิ่งขึ้น', background: '#0f172a', confirmButtonColor: '#6366f1', customClass: { popup: 'rounded-xl border border-slate-700' } });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: verifyData.message, background: '#0f172a', confirmButtonColor: '#6366f1', customClass: { popup: 'rounded-xl border border-slate-700' } });
+                }
+            }
         }
     </script>
 </body>
