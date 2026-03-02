@@ -712,7 +712,7 @@
 		<div class="left-panel">
 			<div class="brand-badge">
 				<i class="fas fa-shield-alt"></i>
-				Payment Gateway ที่เชื่อถือได้
+				<span data-i18n="signup.badge">Payment Gateway ที่เชื่อถือได้</span>
 			</div>
 			<h1 data-i18n="signup.title">เริ่มต้น<br>รับชำระเงิน<br>วันนี้</h1>
 			<p class="tagline" data-i18n="signup.subtitle">
@@ -723,22 +723,23 @@
 				<div class="feat">
 					<div class="feat-icon v"><i class="fas fa-bolt"></i></div>
 					<div>
-						<h4>เชื่อมต่อในไม่กี่นาที</h4>
-						<p>API พร้อมใช้งาน เอกสารครบถ้วน พร้อม sandbox สำหรับทดสอบ</p>
+						<h4 data-i18n="signup.feat1Title">เชื่อมต่อในไม่กี่นาที</h4>
+						<p data-i18n="signup.feat1Desc">API พร้อมใช้งาน เอกสารครบถ้วน พร้อม sandbox สำหรับทดสอบ</p>
 					</div>
 				</div>
 				<div class="feat">
 					<div class="feat-icon g"><i class="fas fa-shield-alt"></i></div>
 					<div>
-						<h4>ปลอดภัยระดับธนาคาร</h4>
-						<p>เข้ารหัส end-to-end ผ่านมาตรฐาน PCI DSS ได้รับอนุญาตจากธนาคาร</p>
+						<h4 data-i18n="signup.feat2Title">ปลอดภัยระดับธนาคาร</h4>
+						<p data-i18n="signup.feat2Desc">เข้ารหัส end-to-end ผ่านมาตรฐาน PCI DSS ได้รับอนุญาตจากธนาคาร
+						</p>
 					</div>
 				</div>
 				<div class="feat">
 					<div class="feat-icon p"><i class="fas fa-headset"></i></div>
 					<div>
-						<h4>Support 24/7</h4>
-						<p>ทีมผู้เชี่ยวชาญพร้อมช่วยเหลือตลอด ตอบกลับภายใน 1 ชั่วโมง</p>
+						<h4 data-i18n="signup.feat3Title">Support 24/7</h4>
+						<p data-i18n="signup.feat3Desc">ทีมผู้เชี่ยวชาญพร้อมช่วยเหลือตลอด ตอบกลับภายใน 1 ชั่วโมง</p>
 					</div>
 				</div>
 			</div>
@@ -750,11 +751,11 @@
 				</div>
 				<div class="stat">
 					<div class="num">&lt;1h</div>
-					<div class="lbl">ตอบกลับ</div>
+					<div class="lbl" data-i18n="signup.stat.response">ตอบกลับ</div>
 				</div>
 				<div class="stat">
 					<div class="num">฿0</div>
-					<div class="lbl">ค่ารายเดือน</div>
+					<div class="lbl" data-i18n="signup.stat.monthly">ค่ารายเดือน</div>
 				</div>
 			</div>
 		</div>
@@ -763,7 +764,7 @@
 		<div class="right-panel">
 			<div class="form-wrap">
 				<h2 data-i18n="signup.title">สร้างบัญชีของคุณ</h2>
-				<p class="sub">กรอกข้อมูลด้านล่าง แล้วเราจะให้คุณเริ่มต้นได้ทันที</p>
+				<p class="sub" data-i18n="signup.formSubtitle">กรอกข้อมูลด้านล่าง แล้วเราจะให้คุณเริ่มต้นได้ทันที</p>
 
 				<!-- Referral banner -->
 				<div id="refBanner"><i class="fas fa-handshake"></i> <span id="refText"></span></div>
@@ -772,13 +773,15 @@
 				<form id="signupForm" onsubmit="handleSignup(event)">
 					<div class="fgrid">
 						<div class="fg">
-							<label for="firstName">ชื่อ</label>
-							<input id="firstName" name="firstName" type="text" required placeholder="ชื่อ">
+							<label for="firstName" data-i18n="signup.firstNameLabel">ชื่อ</label>
+							<input id="firstName" name="firstName" type="text" required
+								data-i18n="[placeholder]signup.firstNamePh" placeholder="ชื่อ">
 							<div class="error-msg" id="name-error"></div>
 						</div>
 						<div class="fg">
-							<label for="lastName">นามสกุล</label>
-							<input id="lastName" name="lastName" type="text" required placeholder="นามสกุล">
+							<label for="lastName" data-i18n="signup.lastNameLabel">นามสกุล</label>
+							<input id="lastName" name="lastName" type="text" required
+								data-i18n="[placeholder]signup.lastNamePh" placeholder="นามสกุล">
 							<div class="error-msg" id="lastname-error"></div>
 						</div>
 						<div class="fg">
@@ -829,7 +832,8 @@
 					<!-- OR divider -->
 					<div style="display:flex;align-items:center;gap:0.75rem;margin:1rem 0;">
 						<div style="flex:1;height:1px;background:rgba(255,255,255,0.1);"></div>
-						<span style="font-size:0.78rem;color:var(--muted);font-weight:500;">หรือ</span>
+						<span style="font-size:0.78rem;color:var(--muted);font-weight:500;"
+							data-i18n="signup.or">หรือ</span>
 						<div style="flex:1;height:1px;background:rgba(255,255,255,0.1);"></div>
 					</div>
 
@@ -852,7 +856,7 @@
 								d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 6.294C4.672 4.169 6.656 3.58 9 3.58z"
 								fill="#EA4335" />
 						</svg>
-						สมัครด้วย Google
+						<span data-i18n="signup.googleBtn">สมัครด้วย Google</span>
 					</button>
 					<p class="login-link">
 						<span data-i18n="signup.loginPrompt">มีบัญชีแล้ว?</span>
