@@ -665,7 +665,7 @@
             <ul class="nav-links">
                 <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
                 <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
-                <li><a href="https://www.elixopay.com/apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
                 <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
                 <li><a href="https://app.elixopay.com/login.html" class="btn-nav-outline"
                         data-i18n="nav.login">เข้าสู่ระบบ</a></li>
@@ -681,6 +681,11 @@
             </ul>
         </div>
     </nav>
+    <script>
+        document.querySelector(".mobile-menu-btn").addEventListener("click", function() {
+            document.querySelector(".nav-links").classList.toggle("show");
+        });
+    </script>
 
     <!-- Hero -->
     <section class="hero">
@@ -823,7 +828,7 @@
             <div class="footer-col">
                 <h5 data-i18n="footer.products">ผลิตภัณฑ์</h5>
                 <ul>
-                    <li><a href="https://www.elixopay.com/apidocs.html" data-i18n="footer.links.docs">เอกสาร API</a></li>
+                    <li><a href="apidocs.html" data-i18n="footer.links.docs">เอกสาร API</a></li>
                     <li><a href="usecases.html" data-i18n="footer.links.usecases">Use Cases</a></li>
                 </ul>
             </div>
@@ -838,7 +843,7 @@
                 <h5 data-i18n="footer.help">ช่วยเหลือ</h5>
                 <ul>
                     <li><a href="help.html" data-i18n="footer.links.help">ศูนย์ช่วยเหลือ</a></li>
-                    <li><a href="https://www.elixopay.com/security.html" data-i18n="footer.links.security">ความปลอดภัย</a></li>
+                    <li><a href="security.html" data-i18n="footer.links.security">ความปลอดภัย</a></li>
                     <li><a href="privacy.html" data-i18n="footer.links.privacy">นโยบายฯ</a></li>
                 </ul>
             </div>

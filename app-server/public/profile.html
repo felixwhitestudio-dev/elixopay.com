@@ -4,92 +4,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>โปรไฟล์ผู้ใช้ - Elixopay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>User Profile - Elixopay</title>
+    <link rel="stylesheet" href="/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js"></script>
+    <style>
+        .profile-card {
+            background: var(--ep-bg-card);
+            border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg);
+            padding: 2rem;
+            max-width: 600px;
+        }
+        .profile-card h2 {
+            font-size: 1.5rem; font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .profile-card .sub {
+            font-size: 0.85rem; color: var(--ep-text-muted);
+            margin-bottom: 1.75rem;
+        }
+        .pf-group { margin-bottom: 1.25rem; }
+        .pf-group label {
+            display: block; font-size: 0.75rem; font-weight: 700;
+            color: var(--ep-text-muted); text-transform: uppercase;
+            letter-spacing: 0.05em; margin-bottom: 0.4rem;
+        }
+        .pf-group input, .pf-group select {
+            width: 100%;
+            background: var(--ep-bg-base);
+            border: 1px solid var(--ep-border);
+            border-radius: 10px; padding: 0.75rem 1rem;
+            color: var(--ep-text-primary);
+            font-family: var(--ep-font-ui); font-size: 0.92rem;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .pf-group input:focus, .pf-group select:focus {
+            border-color: rgba(124,58,237,0.5);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+        }
+        .pf-group select option { background: var(--ep-bg-base); }
+        .pf-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--ep-purple), #9333ea);
+            color: #fff; border: none; border-radius: 12px;
+            padding: 0.85rem; font-size: 1rem; font-weight: 700;
+            font-family: var(--ep-font-ui); cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+        }
+        .pf-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(124,58,237,0.4); }
+        #kyc-message { margin-top: 1rem; text-align: center; font-size: 0.85rem; }
+        .text-green-500 { color: #22c55e !important; }
+    </style>
 </head>
 
-<body class="bg-gray-50">
-    <div class="max-w-xl mx-auto py-10 px-4">
-        <h2 class="text-2xl font-bold mb-6 text-center" data-i18n="profile.title">โปรไฟล์ผู้ใช้</h2>
-        <form id="kyc-form" class="bg-white rounded-lg shadow p-6 space-y-6">
-            <div>
-                <label class="block text-gray-700 mb-1" data-i18n="profile.fullname">ชื่อ-นามสกุล</label>
-                <input type="text" name="fullname" id="fullname" class="w-full border rounded px-3 py-2" required />
-            </div>
-            <div>
-                <label class="block text-gray-700 mb-1" data-i18n="profile.idcard">เลขบัตรประชาชน</label>
-                <input type="text" name="idcard" id="idcard" maxlength="13" class="w-full border rounded px-3 py-2"
-                    required />
-            </div>
-            <div>
-                <label class="block text-gray-700 mb-1" data-i18n="profile.bank">ธนาคาร</label>
-                <select name="bank" id="bank" class="w-full border rounded px-3 py-2" required>
-                    <option value="" data-i18n="profile.bank.select">-- เลือกธนาคาร --</option>
-                    <option value="kbank">Kasikornbank</option>
-                    <option value="bbl">Bangkok Bank</option>
-                    <option value="scb">SCB</option>
-                    <option value="ktb">Krungthai</option>
-                    <option value="tmb">TTB</option>
-                    <option value="bay">Krungsri</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-gray-700 mb-1" data-i18n="profile.account">เลขที่บัญชี</label>
-                <input type="text" name="bank_account" id="bank_account" maxlength="20"
-                    class="w-full border rounded px-3 py-2" required />
-            </div>
-            <button type="submit"
-                class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
-                data-i18n="profile.save">บันทึกข้อมูล</button>
-            <div id="kyc-message" class="mt-4 text-center text-sm"></div>
-        </form>
-    </div>
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
+
+        <div class="profile-card">
+            <h2 data-i18n="profile.title"><i class="fas fa-user-circle" style="color:var(--ep-purple-light);margin-right:8px;"></i>User Profile</h2>
+            <p class="sub" data-i18n="profile.subtitle">Update your personal and banking information</p>
+
+            <form id="kyc-form">
+                <div class="pf-group">
+                    <label data-i18n="profile.fullname">Full Name</label>
+                    <input type="text" name="fullname" id="fullname" required placeholder="Your full name">
+                </div>
+                <div class="pf-group">
+                    <label data-i18n="profile.idcard">ID Card Number</label>
+                    <input type="text" name="idcard" id="idcard" maxlength="13" required placeholder="13-digit ID number">
+                </div>
+                <div class="pf-group">
+                    <label data-i18n="profile.bank">Bank</label>
+                    <select name="bank" id="bank" required>
+                        <option value="" data-i18n="profile.bank.select">-- Select Bank --</option>
+                        <option value="kbank">Kasikornbank</option>
+                        <option value="bbl">Bangkok Bank</option>
+                        <option value="scb">SCB</option>
+                        <option value="ktb">Krungthai</option>
+                        <option value="tmb">TTB</option>
+                        <option value="bay">Krungsri</option>
+                    </select>
+                </div>
+                <div class="pf-group">
+                    <label data-i18n="profile.account">Bank Account Number</label>
+                    <input type="text" name="bank_account" id="bank_account" maxlength="20" required placeholder="Account number">
+                </div>
+                <button type="submit" class="pf-btn" data-i18n="profile.save">
+                    <i class="fas fa-save" style="margin-right:6px;"></i>Save Profile
+                </button>
+                <div id="kyc-message"></div>
+            </form>
+        </div>
+
+    </main>
+    </div><!-- /ep-main-wrap -->
+    </div><!-- /ep-layout -->
+
     <script src="js/i18n.js"></script>
     <script>
-        // Load Profile Data
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Use apiFetch to support Demo Mode interception
-                // In a real app, this endpoint would return the user's profile
                 const response = await window.apiFetch(window.API_CONFIG.ENDPOINTS.auth.me);
                 const data = await response.json();
-
                 if (data.success && data.data && data.data.user) {
                     const user = data.data.user;
-                    // Pre-fill data if available (Mock data structure might need adjustment depending on what we return)
                     document.getElementById('fullname').value = (user.first_name || '') + ' ' + (user.last_name || '');
-                    // Other fields might not be in the basic auth user object, but we simulate fetching them
                 }
             } catch (error) {
                 console.error("Failed to load profile", error);
             }
         });
 
-        // Save Profile Data
         document.getElementById('kyc-form').onsubmit = async function (e) {
             e.preventDefault();
             const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
+            const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.textContent = '...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
-            // Simulate API delay
             setTimeout(() => {
-                const msg = window.ElixopayI18n ? window.ElixopayI18n.t('profile.saved') : 'บันทึกข้อมูลเรียบร้อยแล้ว';
+                const msg = window.ElixopayI18n ? window.ElixopayI18n.t('profile.saved') : 'Profile saved successfully';
                 const msgEl = document.getElementById('kyc-message');
-                msgEl.textContent = msg;
-                msgEl.className = 'mt-4 text-center text-sm text-green-600';
-
+                msgEl.textContent = '✅ ' + msg;
+                msgEl.className = 'text-green-500';
                 submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
+                submitBtn.innerHTML = originalText;
             }, 1000);
         };
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/ui-enhancements.js"></script>
+    <script src="/js/sidebar.js"></script>
 </body>
 
 </html>

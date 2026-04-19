@@ -2,6 +2,25 @@
 const GOOGLE_CLIENT_ID = '811815196850-rvb15n3t7sr6qjg34a0k735kr2gjsivp.apps.googleusercontent.com';
 let tokenClient;
 
+// Show a non-blocking toast message instead of alert()
+function showGoogleToast(msg, isError) {
+	let toast = document.getElementById('google-toast');
+	if (!toast) {
+		toast = document.createElement('div');
+		toast.id = 'google-toast';
+		toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:500;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:opacity 0.3s,transform 0.3s;opacity:0;transform:translateX(-50%) translateY(-20px);';
+		document.body.appendChild(toast);
+	}
+	toast.style.background = isError ? 'linear-gradient(135deg,#ef4444,#dc2626)' : 'linear-gradient(135deg,#7c3aed,#6366f1)';
+	toast.textContent = msg;
+	toast.style.opacity = '1';
+	toast.style.transform = 'translateX(-50%) translateY(0)';
+	setTimeout(() => {
+		toast.style.opacity = '0';
+		toast.style.transform = 'translateX(-50%) translateY(-20px)';
+	}, 4000);
+}
+
 // Initialize Token Client on load
 function initGoogleAuth() {
 	if (typeof google === 'undefined') return;
@@ -24,7 +43,7 @@ function handleGoogleSignIn() {
 	if (tokenClient) {
 		tokenClient.requestAccessToken();
 	} else {
-		alert('Google Auth library not loaded yet. Please try again.');
+		showGoogleToast('Google Sign-In is not available. Please use email login.', true);
 	}
 }
 
@@ -33,7 +52,7 @@ function handleGoogleCallback(accessToken) {
 	const path = '/api/v1/auth/google';
 	const req = window.apiFetch
 		? window.apiFetch(path, { method: 'POST', body: JSON.stringify({ accessToken }) })
-		: fetch(((window.API_CONFIG && window.API_CONFIG.BASE_URL) || 'http://localhost:3000') + path, {
+		: fetch(path, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ accessToken })
@@ -43,13 +62,11 @@ function handleGoogleCallback(accessToken) {
 		const result = await res.json();
 		if (res.ok && result.success) {
 			if (result.status === 'REQUIRE_COMPLETION') {
-				// User does not exist, redirect to complete profile
 				sessionStorage.setItem('tempGoogleToken', result.data.tempToken);
 				window.location.href = '/complete-profile.html';
 				return;
 			}
 
-			// Standard Login Success (User exists)
 			if (result.data) {
 				if (result.data.token || result.token) {
 					const finalToken = result.data.token || result.token;
@@ -64,7 +81,6 @@ function handleGoogleCallback(accessToken) {
 				}
 			}
 
-			// Redirect based on role
 			const role = result.data?.user?.role || 'user';
 			if (role === 'admin') {
 				window.location.href = '/admin-dashboard.html';
@@ -72,18 +88,17 @@ function handleGoogleCallback(accessToken) {
 				window.location.href = '/dashboard.html';
 			}
 		} else {
-			alert(result.error?.message || result.message || 'Google login failed');
+			showGoogleToast(result.error?.message || result.message || 'Google login failed', true);
 		}
 	})
 		.catch(err => {
-			console.error(err);
-			alert('Google login error: ' + err.message);
+			console.warn('Google login error:', err.message);
+			showGoogleToast('Google Sign-In is temporarily unavailable. Please use email login.', true);
 		});
 }
 
 // Auto-init when script loads (if GIS is ready)
 window.addEventListener('load', () => {
-	// Wait for GIS script
 	let attempts = 0;
 	const checkGoogle = setInterval(() => {
 		attempts++;

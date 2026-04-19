@@ -806,6 +806,17 @@
       'profile.save': 'บันทึกข้อมูล',
       'profile.saved': 'บันทึกข้อมูลเรียบร้อยแล้ว',
 
+      // Sidebar
+      'sidebar.main': 'หลัก',
+      'sidebar.developer': 'นักพัฒนา',
+      'sidebar.partner': 'พาร์ทเนอร์',
+      'sidebar.account': 'บัญชี',
+      'sidebar.profile': 'โปรไฟล์',
+      'sidebar.kyc': 'ยืนยันตัวตน',
+      'nav.billing': 'การเรียกเก็บเงิน',
+      'nav.signout': 'ออกจากระบบ',
+      'nav.partner': 'พาร์ทเนอร์',
+
       // About
       'about.title': 'เกี่ยวกับเรา - Elixopay',
       'about.hero.title': 'เรากำลังสร้างอนาคตของการชำระเงินดิจิทัล',
@@ -1936,6 +1947,17 @@
       'profile.save': 'Save Changes',
       'profile.saved': 'Profile data saved successfully',
 
+      // Sidebar
+      'sidebar.main': 'Main',
+      'sidebar.developer': 'Developer',
+      'sidebar.partner': 'Partner',
+      'sidebar.account': 'Account',
+      'sidebar.profile': 'Profile',
+      'sidebar.kyc': 'KYC Verification',
+      'nav.billing': 'Billing',
+      'nav.signout': 'Sign Out',
+      'nav.partner': 'Partner Hub',
+
       // About Pop Theme
       'about.pop.hero.title': 'Payment System<br>Cute & Easy! 💜',
       'about.pop.hero.desc': 'Elixopay makes accepting payments fun! 🎉 Designed to help your business grow happily.',
@@ -2888,6 +2910,17 @@
       'profile.account': '账号',
       'profile.save': '保存更改',
       'profile.saved': '资料保存成功',
+
+      // Sidebar
+      'sidebar.main': '主菜单',
+      'sidebar.developer': '开发者',
+      'sidebar.partner': '合作伙伴',
+      'sidebar.account': '账户',
+      'sidebar.profile': '个人资料',
+      'sidebar.kyc': '身份验证',
+      'nav.billing': '账单',
+      'nav.signout': '退出登录',
+      'nav.partner': '合作中心',
 
       // About
       'about.title': '关于我们 - Elixopay',

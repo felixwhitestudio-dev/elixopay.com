@@ -49,10 +49,10 @@ exports.googleOAuth = async (req, res) => {
       // Generate unusable placeholder hash — Google users login via OAuth only
       const googlePasswordPlaceholder = 'google:' + crypto.randomBytes(32).toString('hex');
       const newUserRes = await db.query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, account_type, status, email_verified, invite_code, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP)
+        `INSERT INTO users (email, password, name, first_name, last_name, account_type, status, email_verified, invite_code, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)
          RETURNING *`,
-        [email, googlePasswordPlaceholder, firstName, lastName, 'merchant', 'active', true, newInviteCode]
+        [email, googlePasswordPlaceholder, `${firstName} ${lastName}`.trim(), firstName, lastName, 'merchant', 'active', true, newInviteCode]
       );
       user = newUserRes.rows[0];
 
@@ -97,7 +97,8 @@ exports.googleOAuth = async (req, res) => {
           email: user.email,
           name: `${user.first_name || firstName} ${user.last_name || lastName}`.trim(),
           role: user.account_type,
-          isVerified: user.email_verified
+          isVerified: user.email_verified,
+          kycStatus: user.verification_status
         },
         token: access,
         refreshToken: refresh,
@@ -342,10 +343,10 @@ exports.register = async (req, res, next) => {
     const newInviteCode = crypto.randomBytes(4).toString('hex');
 
     const insert = await db.query(
-      `INSERT INTO users (email, password_hash, first_name, last_name, account_type, status, email_verified, parent_id, invite_code, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,CURRENT_TIMESTAMP)
+      `INSERT INTO users (email, password, name, first_name, last_name, account_type, status, email_verified, parent_id, invite_code, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,CURRENT_TIMESTAMP)
        RETURNING id, email, first_name, last_name, account_type, email_verified, invite_code, created_at`,
-      [email, hashedPassword, firstName, lastName, role, 'active', true, parentId, newInviteCode]
+      [email, hashedPassword, `${firstName} ${lastName}`.trim(), firstName, lastName, role, 'active', true, parentId, newInviteCode]
     );
     const user = insert.rows[0];
 
@@ -389,7 +390,8 @@ exports.register = async (req, res, next) => {
           role: user.account_type,
           inviteCode: user.invite_code,
           isVerified: user.email_verified,
-          createdAt: user.created_at
+          createdAt: user.created_at,
+          kycStatus: user.verification_status
         }, token: access, refreshToken: refresh, csrf
       }
     });
@@ -424,12 +426,7 @@ exports.login = async (req, res, next) => {
     }
     let valid = false;
     try {
-      console.log('DEBUG: Verifying password for', email);
-      console.log('DEBUG: Stored hash type:', typeof storedHash, 'Length:', storedHash ? storedHash.length : 'N/A');
-      console.log('DEBUG: Stored hash prefix:', storedHash ? storedHash.substring(0, 10) : 'N/A');
-
       valid = await verifyPassword(password, storedHash, user.id);
-      console.log('DEBUG: Password verification result:', valid);
     } catch (err) {
       console.error('DEBUG: verifyPassword CRASHED:', err);
       return res.status(500).json({ success: false, error: { message: 'Password verification failed internal' } });
@@ -455,7 +452,8 @@ exports.login = async (req, res, next) => {
           name: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
           role: user.account_type,
           isVerified: user.email_verified,
-          createdAt: user.created_at
+          createdAt: user.created_at,
+          kycStatus: user.verification_status
         }, token: access, refreshToken: refresh, csrf
       }
     });
@@ -485,9 +483,9 @@ exports.devLogin = async (req, res, next) => {
     if (!user) {
       console.log('Dev Login: Demo user not found, creating...');
       const newRes = await db.query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, account_type, status, email_verified) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-        [demoEmail, '$argon2id$v=19$m=65536,t=3,p=4$dummyhash$dummyhash', 'Demo', 'User', 'merchant', 'active', true]
+        `INSERT INTO users (email, password, name, first_name, last_name, account_type, status, email_verified) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+        [demoEmail, '$argon2id$v=19$m=65536,t=3,p=4$dummyhash$dummyhash', 'Demo User', 'Demo', 'User', 'merchant', 'active', true]
       );
       user = newRes.rows[0];
     }
@@ -691,11 +689,47 @@ exports.getCurrentUser = async (req, res, next) => {
 exports.forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, error: { message: 'Email is required' } });
+    }
 
-    res.json({
-      success: true,
-      message: 'Password reset email sent'
-    });
+    // Always respond with success to prevent email enumeration
+    const userRes = await db.query('SELECT id, email, first_name FROM users WHERE email = $1', [email]);
+    if (userRes.rows.length > 0) {
+      const user = userRes.rows[0];
+      const resetToken = crypto.randomBytes(32).toString('hex');
+      const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+      await db.query(
+        'UPDATE users SET reset_token = $1, reset_token_expires = $2 WHERE id = $3',
+        [hashedToken, expiresAt.toISOString(), user.id]
+      );
+
+      // Send email with reset link
+      try {
+        const nodemailer = require('nodemailer');
+        const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST || 'smtp.gmail.com',
+          port: parseInt(process.env.SMTP_PORT || '587'),
+          secure: false,
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+        });
+        const resetUrl = `${process.env.FRONTEND_URL || 'https://app.elixopay.com'}/reset-password.html?token=${resetToken}`;
+        await transporter.sendMail({
+          from: process.env.SMTP_FROM || 'noreply@elixopay.com',
+          to: email,
+          subject: 'Elixopay — รีเซ็ตรหัสผ่าน',
+          html: `<p>สวัสดีคุณ ${user.first_name || 'ผู้ใช้งาน'},</p><p>คลิกลิงก์ด้านล่างเพื่อรีเซ็ตรหัสผ่านของคุณ (ลิงก์นี้หมดอายุใน 1 ชั่วโมง):</p><p><a href="${resetUrl}">${resetUrl}</a></p>`,
+        });
+      } catch (emailErr) {
+        console.error('Password reset email send failed (non-fatal):', emailErr.message);
+      }
+
+      await logAudit(req, user.id, 'forgot_password', { email });
+    }
+
+    res.json({ success: true, message: 'If the email exists, a reset link has been sent.' });
   } catch (error) {
     next(error);
   }
@@ -709,11 +743,37 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   try {
     const { token, password } = req.body;
+    if (!token || !password) {
+      return res.status(400).json({ success: false, error: { message: 'Token and new password are required' } });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, error: { message: 'Password must be at least 8 characters' } });
+    }
 
-    res.json({
-      success: true,
-      message: 'Password reset successfully'
-    });
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const userRes = await db.query(
+      'SELECT id, email FROM users WHERE reset_token = $1 AND reset_token_expires > $2',
+      [hashedToken, new Date().toISOString()]
+    );
+
+    if (userRes.rows.length === 0) {
+      return res.status(400).json({ success: false, error: { message: 'Invalid or expired reset token' } });
+    }
+
+    const user = userRes.rows[0];
+    const newHash = await hashPassword(password);
+
+    await db.query(
+      'UPDATE users SET password = $1, reset_token = NULL, reset_token_expires = NULL WHERE id = $2',
+      [newHash, user.id]
+    );
+
+    // Invalidate all sessions for security
+    await db.query('DELETE FROM sessions WHERE user_id = $1', [user.id]);
+
+    await logAudit(req, user.id, 'reset_password', { email: user.email });
+
+    res.json({ success: true, message: 'Password reset successfully. Please login with your new password.' });
   } catch (error) {
     next(error);
   }
@@ -727,11 +787,29 @@ exports.resetPassword = async (req, res, next) => {
 exports.verifyEmail = async (req, res, next) => {
   try {
     const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ success: false, error: { message: 'Verification token is required' } });
+    }
 
-    res.json({
-      success: true,
-      message: 'Email verified successfully'
-    });
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const userRes = await db.query(
+      'SELECT id, email FROM users WHERE verify_token = $1 AND verify_token_expires > $2',
+      [hashedToken, new Date().toISOString()]
+    );
+
+    if (userRes.rows.length === 0) {
+      return res.status(400).json({ success: false, error: { message: 'Invalid or expired verification token' } });
+    }
+
+    const user = userRes.rows[0];
+    await db.query(
+      'UPDATE users SET email_verified = true, verify_token = NULL, verify_token_expires = NULL WHERE id = $1',
+      [user.id]
+    );
+
+    await logAudit(req, user.id, 'verify_email', { email: user.email });
+
+    res.json({ success: true, message: 'Email verified successfully' });
   } catch (error) {
     next(error);
   }
@@ -744,11 +822,30 @@ exports.verifyEmail = async (req, res, next) => {
  */
 exports.enable2FA = async (req, res, next) => {
   try {
+    const { authenticator } = require('otplib');
+    const QRCode = require('qrcode');
+    const userId = req.user.id;
+    const userEmail = req.user.email;
+
+    // Generate a real TOTP secret
+    const secret = authenticator.generateSecret();
+    const otpauthUrl = authenticator.keyuri(userEmail, 'Elixopay', secret);
+
+    // Save secret to DB (not yet enabled — user must verify first)
+    await db.query('UPDATE users SET two_factor_secret = $1 WHERE id = $2', [secret, userId]);
+
+    // Generate QR code as data URL
+    const qrCodeDataUrl = await QRCode.toDataURL(otpauthUrl);
+
+    await logAudit(req, userId, '2fa_setup_initiated', { email: userEmail });
+
     res.json({
       success: true,
-      message: '2FA enabled successfully',
+      message: 'Scan the QR code with your authenticator app, then verify with a code.',
       data: {
-        secret: 'mock_2fa_secret'
+        secret,
+        qrCode: qrCodeDataUrl,
+        otpauthUrl,
       }
     });
   } catch (error) {
@@ -763,11 +860,37 @@ exports.enable2FA = async (req, res, next) => {
  */
 exports.verify2FA = async (req, res, next) => {
   try {
+    const { authenticator } = require('otplib');
     const { code } = req.body;
+    const userId = req.user.id;
+
+    if (!code) {
+      return res.status(400).json({ success: false, error: { message: 'Verification code is required' } });
+    }
+
+    // Get the stored secret
+    const userRes = await db.query('SELECT two_factor_secret, two_factor_enabled FROM users WHERE id = $1', [userId]);
+    if (userRes.rows.length === 0 || !userRes.rows[0].two_factor_secret) {
+      return res.status(400).json({ success: false, error: { message: '2FA has not been set up. Please enable 2FA first.' } });
+    }
+
+    const secret = userRes.rows[0].two_factor_secret;
+    const isValid = authenticator.verify({ token: code, secret });
+
+    if (!isValid) {
+      return res.status(401).json({ success: false, error: { message: 'Invalid verification code' } });
+    }
+
+    // Enable 2FA if not already enabled
+    if (!userRes.rows[0].two_factor_enabled) {
+      await db.query('UPDATE users SET two_factor_enabled = true WHERE id = $1', [userId]);
+    }
+
+    await logAudit(req, userId, '2fa_verified', {});
 
     res.json({
       success: true,
-      message: '2FA verified successfully'
+      message: '2FA verified and enabled successfully'
     });
   } catch (error) {
     next(error);

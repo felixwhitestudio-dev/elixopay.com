@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Elixopay API Documentation">
+  <title data-i18n="docs.title">เอกสาร API - Elixopay</title>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            stripe: {
+              50: '#f8fbfc',
+              100: '#eefcfd',
+              600: '#635bff',
+              700: '#4b45cf',
+            },
+            glass: {
+              surface: 'rgba(255, 255, 255, 0.65)',
+              border: 'rgba(255, 255, 255, 0.5)',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles/theme.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation - Premium Glass Effect */
+    body nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      /* White Glass Effect */
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 1000;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    nav .container {
+      width: 100%;
+      /* Left Aligned - Full Width */
+      margin: 0;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Logo - Gradient & Modern */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover i {
+      transform: scale(1.05);
+    }
+
+    .logo span {
+      color: #FFFFFF;
+      /* White Text for Contrast */
+      background: none;
+      -webkit-text-fill-color: initial;
+    }
+
+    /* Nav Links - Clean & Interactive */
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #FFFFFF;
+      /* White links for dark navbar */
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      opacity: 0.9;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-color);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--gradient-1);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+
+
+    /* Docs Specific Styles */
+    .docs-sidebar {
+      position: sticky;
+      top: 100px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .docs-sidebar a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .docs-sidebar a:hover,
+    .docs-sidebar a.active {
+      background: rgba(124, 58, 237, 0.1);
+      color: #c084fc;
+    }
+
+    .docs-sidebar a:hover,
+    .docs-sidebar a:last-child {
+      border-bottom: none;
+    }
+
+    /* Stripe-style Split-Pane CSS */
+    .api-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .api-section {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+      }
+    }
+
+    .api-code {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    /* Code Tabs Components */
+    .code-tabs-container {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .code-tabs-header {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 0.5rem;
+      overflow-x: auto;
+    }
+
+    .code-tabs-header::-webkit-scrollbar {
+      height: 0px;
+    }
+
+    .code-tab-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .code-tab-btn:hover {
+      color: #e2e8f0;
+    }
+
+    .code-tab-btn.active {
+      color: #c084fc;
+      border-bottom-color: #c084fc;
+    }
+
+    .code-tab-content {
+      display: none;
+    }
+
+    .code-tab-content.active {
+      display: block;
+    }
+
+    /* Override code-block aesthetics when inside a tab container */
+    .code-tabs-container .code-block {
+      border: none;
+      border-radius: 0;
+      margin-bottom: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    /* Parameter Tables */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .param-table th {
+      text-align: left;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 0;
+    }
+
+    .param-table td {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: top;
+    }
+
+    .param-name {
+      font-family: 'Fira Code', monospace;
+      color: #e2e8f0;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 0.25rem;
+    }
+
+    .param-type {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #818cf8;
+      display: inline-block;
+      margin-left: 0.75rem;
+    }
+
+    .param-desc {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-top: 0.5rem;
+    }
+
+    .param-required {
+      font-size: 0.7rem;
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .docs-step-card {
+      background: rgba(30, 27, 75, 0.4);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .docs-step-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--brand-gradient);
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .docs-step-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(139, 92, 246, 0.5);
+      background: rgba(46, 16, 101, 0.4);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(139, 92, 246, 0.05);
+    }
+
+    .docs-step-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    .docs-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+      background: linear-gradient(to right, #ffffff, #a5b4fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .docs-content h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .docs-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .docs-content p {
+      color: #94a3b8;
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+    }
+
+    .code-block {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      padding-right: 5rem;
+      /* Space for absolute copy button */
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+      white-space: pre-wrap;
+    }
+
+    .endpoint-badge {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+    }
+
+    .method-post {
+      color: #34d399;
+      font-weight: 700;
+      margin-right: 0.75rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      padding-right: 0.75rem;
+    }
+
+    .method-get {
+      color: #60a5fa;
+      font-weight: 700;
+      margin-right: 0.75rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      padding-right: 0.75rem;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none !important;
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      .nav-links.show {
+        display: flex !important;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(15, 23, 42, 0.98);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .mobile-menu-btn {
+        display: block !important;
+        font-size: 1.5rem;
+      }
+
+      nav .container {
+        flex-wrap: wrap;
+      }
+
+      .docs-content h1 {
+        font-size: 2.2rem;
+        line-height: 1.2;
+      }
+
+      .docs-content h2 {
+        font-size: 1.75rem;
+      }
+
+      .api-section {
+        grid-template-columns: 1fr;
+      }
+
+      .code-block {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar (Dark Theme) -->
+  <nav>
+    <div class="container" style="max-width: 1400px; margin: 0 auto;">
+      <a href="index.html" class="logo">
+        <svg width="40" height="40" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="purpleGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect width="136" height="136" rx="28" fill="url(#purpleGradNav)" />
+          <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800"
+            fill="white" text-anchor="middle">E</text>
+        </svg>
+        <span>Elixopay</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+        <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
+        <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
+        <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+        <li><a href="https://app.elixopay.com/login.html" class="btn btn-outline" data-i18n="nav.login"
+            style="border-color: rgba(255,255,255,0.2); color: white;">เข้าสู่ระบบ</a></li>
+        <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary" data-i18n="nav.signup">ลงทะเบียน</a>
+        </li>
+        <li>
+          <select id="langSelect" class="lang-select" aria-label="Language"
+            style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0.4rem 0.8rem; appearance: none; cursor: pointer;">
+            <option value="th" style="color: black;">TH</option>
+            <option value="en" style="color: black;">EN</option>
+            <option value="zh" style="color: black;">中文</option>
+          </select>
+        </li>
+      </ul>
+      <button class="mobile-menu-btn" style="color: white;">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+    <script>
+        document.querySelector(".mobile-menu-btn").addEventListener("click", function() {
+            document.querySelector(".nav-links").classList.toggle("show");
+        });
+    </script>
+
+  <!-- Main Content -->
+  <section class="hero" style="padding: 10rem 0 6rem; position: relative; min-height: 100vh; overflow: hidden;">
+    <!-- Tech Grid Background -->
+    <div class="hero-bg-grid"
+      style="position: absolute; inset: 0; background-image: var(--bg-grid); background-size: var(--bg-grid-size); opacity: 0.1; pointer-events: none; z-index: 0;">
+    </div>
+
+    <!-- NEW: Bank-Grade Background Elements -->
+    <div class="hero-grid-overlay" style="z-index: 0;"></div>
+    <div class="bg-noise" style="z-index: 0;"></div>
+
+    <!-- Interactive Network Canvas -->
+    <canvas id="hero-network-canvas"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; z-index: 1;"></canvas>
+
+    <!-- Ambient Glows (Deep Purple) -->
+    <div
+      style="position: absolute; top: -30%; right: -10%; width: 60%; height: 60%; background: radial-gradient(circle, var(--primary-light) 0%, transparent 60%); filter: blur(100px); opacity: 0.5; z-index: 0; pointer-events: none;">
+    </div>
+    <div
+      style="position: absolute; bottom: -20%; left: -10%; width: 60%; height: 60%; background: radial-gradient(circle, #2E1065 0%, transparent 60%); filter: blur(100px); opacity: 0.8; z-index: 0; pointer-events: none;">
+    </div>
+
+    <div class="container" style="position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+
+      <div style="display: grid; grid-template-columns: 250px 1fr; gap: 4rem;">
+
+        <!-- Sidebar -->
+        <div class="hidden md:block">
+          <div class="docs-sidebar"
+            style="border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);">
+            <h3 style="color: white; font-weight: 700; margin-bottom: 1rem; font-size: 1rem; padding-left: 1rem;"
+              data-i18n="docs.sidebar.title">สารบัญ</h3>
+            <a href="#intro" class="active" data-i18n="docs.sidebar.intro">บทนำ</a>
+            <a href="#auth" data-i18n="docs.sidebar.auth">การยืนยันตัวตน</a>
+            <a href="#integration" data-i18n="docs.sidebar.integration">คู่มือทดสอบ (Sandbox)</a>
+            <a href="#create-payment" data-i18n="docs.sidebar.create">สร้างการชำระเงิน</a>
+            <a href="#check-payment" data-i18n="docs.sidebar.check">ตรวจสอบสถานะ</a>
+            <a href="#refunds" data-i18n="docs.sidebar.refunds">การคืนเงิน (Refunds)</a>
+            <a href="#subscriptions" data-i18n="docs.sidebar.subscriptions">ระบบสมาชิก (Subscriptions)</a>
+            <a href="#payouts" data-i18n="docs.sidebar.payouts">สร้างการถอนเงิน (Payout)</a>
+            <a href="#webhooks" data-i18n="docs.sidebar.webhooks">Webhooks</a>
+            <a href="#downloads" data-i18n="nav.docs_downloads">ดาวน์โหลด</a>
+          </div>
+        </div>
+        <!-- Docs Content -->
+        <div class="docs-content">
+
+          <!-- Intro -->
+          <div id="intro" class="api-section" style="border-top: none; padding-top: 0;">
+            <div class="api-prose">
+              <h1 data-i18n="docs.intro.title">เอกสาร API</h1>
+              <p data-i18n="docs.intro.desc" style="font-size: 1.1rem; color: #94a3b8; line-height: 1.8;">
+                ยินดีต้อนรับสู่คู่มือนักพัฒนาของ Elixopay!
+                ออกแบบมาเพื่อให้คุณผสานระบบการชำระเงินที่ปลอดภัยและเสถียรเข้ากับแพลตฟอร์มของคุณได้อย่างรวดเร็ว API
+                ของเราใช้สถาปัตยกรรม REST ที่ได้มาตรฐาน ตอบกลับเป็น JSON เสมอ และใช้ HTTP Status Codes อย่างถูกต้อง
+              </p>
+            </div>
+            <div class="api-code">
+              <!-- Reserve space for Intro Graphic or Code Example -->
+            </div>
+          </div>
+
+          <!-- Auth -->
+          <div id="auth" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.auth.title">การยืนยันตัวตน (Authentication)</h2>
+              <p data-i18n="docs.auth.desc1">
+                Elixopay API ใช้ <b>API Keys</b> ในการยืนยันตัวตน คุณสามารถจัดการและสร้างคีย์ใหม่ได้ที่แดชบอร์ดนักพัฒนา
+              </p>
+
+              <div
+                style="background: rgba(234, 179, 8, 0.1); border-left: 4px solid #eab308; padding: 1rem 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 1.5rem;">
+                <h4
+                  style="color: #fde047; font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;"
+                  data-i18n="docs.auth.warning.title"><i class="fas fa-exclamation-triangle"></i> คำเตือนความปลอดภัย
+                </h4>
+                <p style="color: #fef08a; margin: 0; font-size: 0.95rem;" data-i18n="docs.auth.warning.desc">ห้ามเปิดเผย
+                  Secret API Key ของคุณในที่สาธารณะ เช่น ในฝั่ง Client-side (เบราว์เซอร์, แอปมือถือ) หรือใน GitHub
+                  repository การประมวลผลการชำระเงินทั้งหมดต้องทำผ่านเซิร์ฟเวอร์ (Backend) เท่านั้น</p>
+              </div>
+
+              <p data-i18n="docs.auth.desc2">การร้องขอทั้งหมดต้องส่งคีย์ผ่าน <code>Authorization</code> Header ในรูปแบบ
+                Bearer token:</p>
+            </div>
+
+            <div class="api-code">
+              <div class="code-block" style="margin-bottom: 3rem;">
+                Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxxxx
+              </div>
+            </div>
+          </div>
+
+          <!-- Integration / Sandbox Guide -->
+          <div id="integration" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.integration.title">คู่มือทดลองเชื่อมต่อ (Sandbox Guide)</h2>
+              <p data-i18n="docs.integration.desc" style="margin-bottom: 2rem;">
+                สำหรับนักพัฒนาที่ต้องการนำ Elixopay ไปทดสอบเชื่อมต่อกับระบบของตัวเอง สามารถทำตามขั้นตอนทั้ง 5
+                นี้ได้เลยครับ
+              </p>
+
+              <div style="display: grid; gap: 1.5rem; margin-bottom: 3rem;">
+                <div class="docs-step-card">
+                  <h3 data-i18n="docs.integration.step1.title"
+                    style="color: #c084fc; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-key" style="font-size: 1rem;"></i> 1. ขอรับ API Keys
+                    (Test Mode)
+                  </h3>
+                  <p data-i18n="docs.integration.step1.desc"
+                    style="margin: 0; font-size: 0.95rem; color: #cbd5e1; line-height: 1.6;">สมัครสมาชิกและเข้าสู่
+                    Developer Dashboard ไปที่เมนู API Keys เพื่อคัดลอกคีย์ทดสอบที่ขึ้นต้นด้วย <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #f472b6;">sk_test_...</code>
+                    (การทำรายการด้วยคีย์นี้จะไม่เกิดการตัดเงินจริง)</p>
+                </div>
+
+                <div class="docs-step-card">
+                  <h3 data-i18n="docs.integration.step2.title"
+                    style="color: #c084fc; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-terminal" style="font-size: 1rem;"></i> 2.
+                    ยิงคำสั่งสร้างการชำระเงิน (Create Payment)
+                  </h3>
+                  <p data-i18n="docs.integration.step2.desc"
+                    style="margin: 0; font-size: 0.95rem; color: #cbd5e1; line-height: 1.6;">เมื่อลูกค้ากดจ่ายเงิน
+                    ให้ Backend ของคุณยิง <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #34d399;">POST /api/v1/payments</code>
+                    มาที่ Elixopay พร้อมแนบคีย์
+                    <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #f472b6;">sk_test_...</code>
+                    (ตามตัวอย่างในหัวข้อก่อนหน้า)
+                  </p>
+                </div>
+
+                <div class="docs-step-card">
+                  <h3 data-i18n="docs.integration.step3.title"
+                    style="color: #c084fc; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-external-link-alt" style="font-size: 1rem;"></i> 3.
+                    พาผู้ใช้ไปหน้าชำระเงิน (Redirect)
+                  </h3>
+                  <p data-i18n="docs.integration.step3.desc"
+                    style="margin: 0; font-size: 0.95rem; color: #cbd5e1; line-height: 1.6;">หลังจากยิง API สำเร็จ
+                    Elixopay จะตอบกลับมาเป็น <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #60a5fa;">checkout_url</code>
+                    ระบบของคุณแค่ต้อง Redirect ลูกค้าไปที่ลิงก์นั้น
+                    เพื่อให้ลูกค้ากรอกข้อมูลบัตรหรือแสกน QR ทดสอบ</p>
+                </div>
+
+                <div class="docs-step-card">
+                  <h3 data-i18n="docs.integration.step4.title"
+                    style="color: #c084fc; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-satellite-dish" style="font-size: 1rem;"></i> 4.
+                    รับรู้ผลการชำระเงิน (Check Status / Webhooks)
+                  </h3>
+                  <p data-i18n="docs.integration.step4.desc"
+                    style="margin: 0; font-size: 0.95rem; color: #cbd5e1; line-height: 1.6;">เมื่อรายการทดสอบเสร็จสิ้น
+                    Elixopay จะเด้งลูกค้ากลับไปยัง <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #60a5fa;">return_url</code>
+                    ที่คุณตั้งไว้
+                    และจะยิง Webhook แจ้งเตือนสถานะสำเร็จไปยังระบบหลังบ้านของคุณ</p>
+                </div>
+
+                <div class="docs-step-card"
+                  style="border-color: rgba(16, 185, 129, 0.4); background: linear-gradient(135deg, rgba(30, 27, 75, 0.6) 0%, rgba(6, 78, 59, 0.2) 100%);">
+                  <h3 data-i18n="docs.integration.step5.title"
+                    style="color: #34d399; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-rocket" style="font-size: 1rem;"></i> 5.
+                    เปลี่ยนเป็นโหมดใช้งานจริง (Go Live)
+                  </h3>
+                  <p data-i18n="docs.integration.step5.desc"
+                    style="margin: 0; font-size: 0.95rem; color: #a7f3d0; line-height: 1.6;">เมื่อทดสอบจนมั่นใจแล้ว
+                    ให้เปลี่ยน API Key ในโค้ดจาก <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #f472b6;">sk_test_...</code>
+                    เป็น
+                    <code
+                      style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #facc15;">sk_live_...</code>
+                    เพื่อพร้อมรับชำระเงินจริงจากลูกค้าได้ทันที!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="api-code">
+              <!-- Test Cards -->
+              <div
+                style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.5rem; margin-top: 1rem;">
+                <h4 data-i18n="docs.integration.testcards.title"
+                  style="color: white; font-weight: 600; margin-bottom: 0.5rem;"><i class="far fa-credit-card"
+                    style="color: #c084fc; margin-right: 0.5rem;"></i> บัตรเครดิตสำหรับทดสอบ</h4>
+                <p data-i18n="docs.integration.testcards.desc" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                  ใช้เลขบัตรเหล่านี้สำหรับทดสอบในหน้า Checkout:</p>
+                <div
+                  style="display: flex; flex-direction: column; gap: 0.5rem; font-family: 'Fira Code', monospace; font-size: 0.9rem;">
+                  <div
+                    style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                    <span data-i18n="docs.integration.testcards.success" style="color: #a3e635;">ชำระเงินสำเร็จ:</span>
+                    <span style="color: white;">4242 4242 4242 4242</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding-top: 0.2rem;">
+                    <span data-i18n="docs.integration.testcards.decline"
+                      style="color: #f87171;">ชำระเงินถูกปฏิเสธ:</span>
+                    <span style="color: white;">4000 0000 0000 0002</span>
+                  </div>
+                </div>
+                <div style="font-size: 0.8rem; color: #64748b; margin-top: 1rem;">* วันหมดอายุ: (เดือน/ปี
+                  ใดก็ได้ในอนาคต)
+                  | CVV: 123 หรือเลข 3 หลักใดก็ได้</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Create Payment -->
+          <div id="create-payment" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.create.title">สร้างการชำระเงิน (Create Payment)</h2>
+              <p data-i18n="docs.create.desc">
+                ใช้ Endpoint นี้เพื่อสร้างเซสชันการชำระเงินใหม่สำหรับลูกค้าของคุณ ระบบจะส่งกลับลิงก์สำหรับชำระเงิน
+                (Checkout URL) ที่คุณสามารถพาลูกค้าไปทำรายการต่อได้
+              </p>
+
+              <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/payments</div>
+
+              <h3 data-i18n="docs.create.req_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ Request
+                (Body)</h3>
+              <table class="param-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">amount</span>
+                      <span class="param-type">number</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.req_params.amount">
+                      จำนวนเงินที่ต้องการเรียกเก็บ (เช่น 1000.00 สำหรับหนึ่งพันบาท)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">currency</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.req_params.currency">
+                      สกุลเงินที่ใช้ทำรายการ ปัจจุบันรองรับเฉพาะ <code>THB</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">description</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.req_params.description">
+                      รายละเอียดหรือชื่อสินค้าที่จะแสดงในหน้าชำระเงิน
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">reference_id</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.req_params.reference_id">
+                      รหัสอ้างอิงรายการจากระบบของคุณ (ต้องไม่ซ้ำกันในแต่ละรายการ)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">return_url</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.req_params.return_url">
+                      URL ที่คุณต้องการให้ระบบพาลูกค้ากลับไป หลังจากหน้าชำระเงินดำเนินการเสร็จสิ้น
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">metadata</span>
+                      <span class="param-type">object</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.req_params.metadata">
+                      ข้อมูลเพิ่มเติมแบบ Key-Value (สูงสุด 10 keys) ที่คุณต้องการแนบไว้กับรายการนี้
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h3 data-i18n="docs.create.res_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ
+                Response</h3>
+              <table class="param-table" style="margin-bottom: 0;">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">id</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.res_params.id">
+                      รหัสอ้างอิงรายการของ Elixopay (เริ่มต้นด้วย <code>pay_</code>) นำไปใช้เช็คสถานะต่อไป
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">checkout_url</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.res_params.checkout_url">
+                      ลิงก์หน้าชำระเงินที่คุณต้องนำไป Redirect ลูกค้าย้ายไปหน้าชำระเงิน
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">status</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.create.res_params.status">
+                      สถานะของการชำระเงิน (เริ่มต้นด้วย <code>pending</code> เสมอสำหรับการสร้างรายการใหม่)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.common.request">ตัวอย่าง Request</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active" data-lang="curl">cURL</button>
+                  <button class="code-tab-btn" data-lang="node">Node.js</button>
+                  <button class="code-tab-btn" data-lang="python">Python</button>
+                  <button class="code-tab-btn" data-lang="php">PHP</button>
+                </div>
+
+                <!-- cURL -->
+                <div class="code-tab-content active" data-lang="curl">
+                  <div class="code-block">
+                    curl -X POST https://api.elixopay.com/api/v1/payments \
+                    -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                    "amount": 1000.00,
+                    "currency": "THB",
+                    "description": "Order #EX-12345",
+                    "reference_id": "EX-12345",
+                    "return_url": "https://yourwebsite.com/checkout/success",
+                    "metadata": {
+                    "customer_id": "CUST-987"
+                    }
+                    }'
+                  </div>
+                </div>
+
+                <!-- Node.js -->
+                <div class="code-tab-content" data-lang="node">
+                  <div class="code-block">
+                    const axios = require('axios');
+
+                    axios.post('https://api.elixopay.com/api/v1/payments', {
+                    amount: 1000.00,
+                    currency: 'THB',
+                    description: 'Order #EX-12345',
+                    reference_id: 'EX-12345',
+                    return_url: 'https://yourwebsite.com/checkout/success',
+                    metadata: { customer_id: 'CUST-987' }
+                    }, {
+                    headers: {
+                    'Authorization': 'Bearer sk_live_YOUR_SECRET_KEY',
+                    'Content-Type': 'application/json'
+                    }
+                    }).then(res => console.log(res.data));
+                  </div>
+                </div>
+
+                <!-- Python -->
+                <div class="code-tab-content" data-lang="python">
+                  <div class="code-block">
+                    import requests
+
+                    url = "https://api.elixopay.com/api/v1/payments"
+                    headers = {
+                    "Authorization": "Bearer sk_live_YOUR_SECRET_KEY",
+                    "Content-Type": "application/json"
+                    }
+                    data = {
+                    "amount": 1000.00,
+                    "currency": "THB",
+                    "description": "Order #EX-12345",
+                    "reference_id": "EX-12345",
+                    "return_url": "https://yourwebsite.com/checkout/success",
+                    "metadata": { "customer_id": "CUST-987" }
+                    }
+                    response = requests.post(url, json=data, headers=headers)
+                    print(response.json())
+                  </div>
+                </div>
+
+                <!-- PHP -->
+                <div class="code-tab-content" data-lang="php">
+                  <div class="code-block">
+                    $ch = curl_init('https://api.elixopay.com/api/v1/payments');
+                    $payload = json_encode([
+                    'amount' => 1000.00,
+                    'currency' => 'THB',
+                    'description' => 'Order #EX-12345',
+                    'reference_id' => 'EX-12345',
+                    'return_url' => 'https://yourwebsite.com/checkout/success',
+                    'metadata' => ['customer_id' => 'CUST-987']
+                    ]);
+
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Authorization: Bearer sk_live_YOUR_SECRET_KEY',
+                    'Content-Type: application/json'
+                    ]);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($ch);
+                  </div>
+                </div>
+              </div>
+
+              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (200 OK)</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active">JSON</button>
+                </div>
+                <div class="code-tab-content active">
+                  <div class="code-block" style="color: #a5b4fc;">
+                    {
+                    "id": "pay_xxxxxxxxxxxxxx",
+                    "object": "payment",
+                    "amount": 1000.00,
+                    "currency": "THB",
+                    "status": "pending",
+                    "checkout_url": "https://checkout.elixopay.com/c/pay_xxxxxxxxxxxxxx",
+                    "created_at": 1709280000
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Check Payment -->
+          <div id="check-payment" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.check.title">ตรวจสอบสถานะ (Check Status)</h2>
+              <p data-i18n="docs.check.desc">
+                ดึงข้อมูลรายละเอียดและสถานะล่าสุดของรายการชำระเงินด้วย Payment ID
+              </p>
+
+              <div class="endpoint-badge"><span class="method-get">GET</span> /api/v1/payments/:id</div>
+
+              <h3 data-i18n="docs.check.url_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ URL
+              </h3>
+              <table class="param-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">id</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.url_params.id">
+                      รหัส Payment ID ที่ได้รับตอนสร้างรายการ (<code>pay_xxxxxxxxxxxxxx</code>)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <h3 data-i18n="docs.check.res_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ
+                Response</h3>
+              <table class="param-table" style="margin-bottom: 0;">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">id</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.id">
+                      รหัส Payment ID ของรายการนี้ (เริ่มด้วย <code>pay_</code>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">object</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.object">
+                      ประเภทของออบเจ็กต์ (จะเป็น <code>payment</code> เสมอ)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">amount</span>
+                      <span class="param-type">number</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.amount">
+                      จำนวนเงินของรายการ
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">currency</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.currency">
+                      สกุลเงินของรายการ (เช่น <code>THB</code>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">status</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.status">
+                      สถานะปัจจุบันของการชำระเงิน (<code>pending</code>, <code>successful</code>, <code>failed</code>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">paid_at</span>
+                      <span class="param-type">timestamp</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.paid_at">
+                      เวลาที่รายการชำระเงินสำเร็จ (เป็น Unix Timestamp) จะเป็น null หากยังไม่สำเร็จ
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">payment_method</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.payment_method">
+                      ช่องทางที่ลูกค้าใช้ชำระเงิน (เช่น <code>promptpay</code>, <code>credit_card</code>,
+                      <code>truemoney</code>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">reference_id</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.check.res_params.reference_id">
+                      รหัสอ้างอิงรายการจากระบบของคุณ
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.common.request">ตัวอย่าง Request</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active" data-lang="curl">cURL</button>
+                  <button class="code-tab-btn" data-lang="node">Node.js</button>
+                  <button class="code-tab-btn" data-lang="python">Python</button>
+                  <button class="code-tab-btn" data-lang="php">PHP</button>
+                </div>
+
+                <!-- cURL -->
+                <div class="code-tab-content active" data-lang="curl">
+                  <div class="code-block">
+                    curl -X GET https://api.elixopay.com/api/v1/payments/pay_xxxxxxxxxxxxxx \
+                    -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY"
+                  </div>
+                </div>
+
+                <!-- Node.js -->
+                <div class="code-tab-content" data-lang="node">
+                  <div class="code-block">
+                    const axios = require('axios');
+
+                    axios.get('https://api.elixopay.com/api/v1/payments/pay_xxxxxxxxxxxxxx', {
+                    headers: {
+                    'Authorization': 'Bearer sk_live_YOUR_SECRET_KEY'
+                    }
+                    }).then(res => console.log(res.data));
+                  </div>
+                </div>
+
+                <!-- Python -->
+                <div class="code-tab-content" data-lang="python">
+                  <div class="code-block">
+                    import requests
+
+                    url = "https://api.elixopay.com/api/v1/payments/pay_xxxxxxxxxxxxxx"
+                    headers = {
+                    "Authorization": "Bearer sk_live_YOUR_SECRET_KEY"
+                    }
+                    response = requests.get(url, headers=headers)
+                    print(response.json())
+                  </div>
+                </div>
+
+                <!-- PHP -->
+                <div class="code-tab-content" data-lang="php">
+                  <div class="code-block">
+                    $ch = curl_init('https://api.elixopay.com/api/v1/payments/pay_xxxxxxxxxxxxxx');
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Authorization: Bearer sk_live_YOUR_SECRET_KEY'
+                    ]);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($ch);
+                  </div>
+                </div>
+              </div>
+
+              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (200 OK)</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active">JSON</button>
+                </div>
+                <div class="code-tab-content active">
+                  <div class="code-block" style="color: #a5b4fc;">
+                    {
+                    "id": "pay_xxxxxxxxxxxxxx",
+                    "object": "payment",
+                    "amount": 1000.00,
+                    "currency": "THB",
+                    "status": "successful",
+                    "paid_at": 1709280350,
+                    "payment_method": "promptpay",
+                    "reference_id": "EX-12345"
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Refunds -->
+          <div id="refunds" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.refunds.title">การคืนเงิน (Refunds)</h2>
+              <p data-i18n="docs.refunds.desc">
+                ใช้ Endpoint นี้เพื่อทำการคืนเงิน (Refund) ให้กับลูกค้า หลังจากที่ชำระเงินสำเร็จ (Completed)
+                สามารถระบุจำนวนเงินคืนบางส่วน หรือคืนเต็มจำนวนก็ได้ ยอดเงินจะถูกหักจากกระเป๋าเงิน (Wallet) ของคุณ
+              </p>
+
+              <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/payments/:id/refund
+              </div>
+
+              <h3 data-i18n="docs.refunds.req_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ Request
+                (Body)</h3>
+              <table class="param-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">id</span>
+                      <span class="param-type">number (URL)</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.req_params.id">
+                      ไอดีของการชำระเงินที่ต้องการคืนเงิน (Transaction ID) ส่งผ่าน URL path
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">amount</span>
+                      <span class="param-type">number</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.req_params.amount">
+                      จำนวนเงินที่ต้องการคืน หากไม่ระบุจะเป็นการคืนเต็มจำนวน
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">reason</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.req_params.reason">
+                      เหตุผลในการคืนเงิน (ไม่บังคับ)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h3 data-i18n="docs.refunds.res_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ
+                Response</h3>
+              <table class="param-table" style="margin-bottom: 0;">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">success</span>
+                      <span class="param-type">boolean</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.res_params.success">
+                      ระบุว่าการคืนเงินสำเร็จหรือไม่
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">data.id</span>
+                      <span class="param-type">number</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.res_params.id">
+                      รหัสรายการคืนเงินที่ถูกสร้างขึ้น
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">data.refundedAmount</span>
+                      <span class="param-type">number</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.res_params.refundedAmount">
+                      จำนวนเงินที่คืนให้ลูกค้า
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">data.originalTransactionId</span>
+                      <span class="param-type">number</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.refunds.res_params.originalTransactionId">
+                      รหัสรายการชำระเงินต้นทาง
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.common.request">ตัวอย่าง Request</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active" data-lang="curl">cURL</button>
+                  <button class="code-tab-btn" data-lang="node">Node.js</button>
+                  <button class="code-tab-btn" data-lang="python">Python</button>
+                  <button class="code-tab-btn" data-lang="php">PHP</button>
+                </div>
+
+                <!-- cURL -->
+                <div class="code-tab-content active" data-lang="curl">
+                  <div class="code-block">
+                    curl -X POST https://api.elixopay.com/api/v1/payments/999/refund \
+                    -H "Authorization: Bearer sk_test_YOUR_SECRET_KEY" \
+                    -H "Content-Type: application/json" \
+                    -H "Idempotency-Key: ref_12345" \
+                    -d '{
+                    "amount": 500.00,
+                    "reason": "Customer requested refund"
+                    }'
+                  </div>
+                </div>
+
+                <!-- Node.js -->
+                <div class="code-tab-content" data-lang="node">
+                  <div class="code-block">
+                    const axios = require('axios');
+
+                    axios.post('https://api.elixopay.com/api/v1/payments/999/refund', {
+                    amount: 500.00,
+                    reason: 'Customer requested refund'
+                    }, {
+                    headers: {
+                    'Authorization': 'Bearer sk_test_YOUR_SECRET_KEY',
+                    'Content-Type': 'application/json',
+                    'Idempotency-Key': 'ref_12345'
+                    }
+                    }).then(res => console.log(res.data));
+                  </div>
+                </div>
+
+                <!-- Python -->
+                <div class="code-tab-content" data-lang="python">
+                  <div class="code-block">
+                    import requests
+
+                    url = "https://api.elixopay.com/api/v1/payments/999/refund"
+                    headers = {
+                    "Authorization": "Bearer sk_test_YOUR_SECRET_KEY",
+                    "Content-Type": "application/json",
+                    "Idempotency-Key": "ref_12345"
+                    }
+                    data = {
+                    "amount": 500.00,
+                    "reason": "Customer requested refund"
+                    }
+                    response = requests.post(url, json=data, headers=headers)
+                    print(response.json())
+                  </div>
+                </div>
+
+                <!-- PHP -->
+                <div class="code-tab-content" data-lang="php">
+                  <div class="code-block">
+                    $ch = curl_init('https://api.elixopay.com/api/v1/payments/999/refund');
+                    $payload = json_encode([
+                    'amount' => 500.00,
+                    'reason' => 'Customer requested refund'
+                    ]);
+
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Authorization: Bearer sk_test_YOUR_SECRET_KEY',
+                    'Content-Type: application/json',
+                    'Idempotency-Key: ref_12345'
+                    ]);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($ch);
+                  </div>
+                </div>
+              </div>
+
+              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (200 OK)</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active">JSON</button>
+                </div>
+                <div class="code-tab-content active">
+                  <div class="code-block" style="color: #a5b4fc;">
+                    {
+                    "success": true,
+                    "message": "Refund processed successfully",
+                    "data": {
+                    "id": 165,
+                    "refundedAmount": 500.00,
+                    "originalTransactionId": 999,
+                    "status": "COMPLETED"
+                    }
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscriptions -->
+          <div id="subscriptions" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.subscriptions.title">ระบบสมาชิก (Subscriptions)</h2>
+              <p data-i18n="docs.subscriptions.desc">
+                API จัดการระบบ Subscription ซึ่งอนุญาตให้คุณสร้างสินค้ารายเดือน (Products), แผนราคา (Prices)
+                และพ่วงผูกลูกค้าเข้ากับแพ็กเกจ เพื่อให้เกิดการเรียกเก็บเงินอัตโนมัติ
+              </p>
+
+              <div class="endpoint-badge" style="margin-top: 20px; margin-bottom: 10px;"><span
+                  class="method-post">POST</span> /api/v1/billing/products</div>
+              <p style="font-size:0.9rem; color:#94a3b8; margin-bottom: 20px;"
+                data-i18n="docs.subscriptions.products_desc">สร้างสินค้าเพื่อใช้ในการสมัครสมาชิก (เช่น "Premium Plan")
+              </p>
+
+              <h3 data-i18n="docs.subscriptions.products_params.title"
+                style="margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ Create
+                Product</h3>
+              <table class="param-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">name</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.subscriptions.products_params.name">
+                      ชื่อสินค้าหรือแพลน (เช่น "Premium Plan", "Basic Plan")
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="endpoint-badge" style="margin-bottom: 10px;"><span class="method-post">POST</span>
+                /api/v1/billing/prices</div>
+              <p style="font-size:0.9rem; color:#94a3b8; margin-bottom: 20px;"
+                data-i18n="docs.subscriptions.prices_desc">สร้างราคาและรอบบิล (เช่น เดือนละ 500 บาท) ผูกกับ Product ID
+              </p>
+
+              <h3 data-i18n="docs.subscriptions.prices_params.title"
+                style="margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ Create
+                Price</h3>
+              <table class="param-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">productId</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.subscriptions.prices_params.productId">
+                      รหัส Product ที่ต้องการผูกราคา
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">amount</span>
+                      <span class="param-type">number</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.subscriptions.prices_params.amount">
+                      จำนวนเงินต่อรอบบิล (เช่น 500.00 บาท)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">interval</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.subscriptions.prices_params.interval">
+                      รอบการเก็บเงิน (<code>month</code>, <code>year</code>)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="endpoint-badge" style="margin-bottom: 10px;"><span class="method-post">POST</span>
+                /api/v1/billing/customers</div>
+              <p style="font-size:0.9rem; color:#94a3b8; margin-bottom: 20px;"
+                data-i18n="docs.subscriptions.customers_desc">ลงทะเบียนลูกค้าใหม่เข้าสู่ระบบ Billing</p>
+
+              <div class="endpoint-badge" style="margin-bottom: 10px;"><span class="method-post">POST</span>
+                /api/v1/billing/subscriptions</div>
+              <p style="font-size:0.9rem; color:#94a3b8;" data-i18n="docs.subscriptions.subs_desc">สมัครสมาชิกลูกค้า
+                (พ่วง Customer ID กับ Price ID)</p>
+
+              <h3 data-i18n="docs.subscriptions.subs_params.title"
+                style="margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ Create
+                Subscription</h3>
+              <table class="param-table" style="margin-bottom: 0;">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">customerId</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.subscriptions.subs_params.customerId">
+                      รหัสลูกค้าที่ต้องการสมัครสมาชิก
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">priceId</span>
+                      <span class="param-type">string</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.subscriptions.subs_params.priceId">
+                      รหัสราคา (Price ID) ที่ต้องการผูก
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.common.request">ตัวอย่าง Request</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active" data-lang="curl">cURL</button>
+                  <button class="code-tab-btn" data-lang="node">Node.js</button>
+                  <button class="code-tab-btn" data-lang="python">Python</button>
+                  <button class="code-tab-btn" data-lang="php">PHP</button>
+                </div>
+
+                <!-- cURL -->
+                <div class="code-tab-content active" data-lang="curl">
+                  <div class="code-block">
+                    curl -X POST https://api.elixopay.com/api/v1/billing/subscriptions \
+                    -H "Authorization: Bearer sk_test_YOUR_SECRET_KEY" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                    "customerId": "cus_123",
+                    "priceId": "price_456"
+                    }'
+                  </div>
+                </div>
+
+                <!-- Node.js -->
+                <div class="code-tab-content" data-lang="node">
+                  <div class="code-block">
+                    const axios = require('axios');
+
+                    axios.post('https://api.elixopay.com/api/v1/billing/subscriptions', {
+                    customerId: 'cus_123',
+                    priceId: 'price_456'
+                    }, {
+                    headers: {
+                    'Authorization': 'Bearer sk_test_YOUR_SECRET_KEY',
+                    'Content-Type': 'application/json'
+                    }
+                    }).then(res => console.log(res.data));
+                  </div>
+                </div>
+
+                <!-- Python -->
+                <div class="code-tab-content" data-lang="python">
+                  <div class="code-block">
+                    import requests
+
+                    url = "https://api.elixopay.com/api/v1/billing/subscriptions"
+                    headers = {
+                    "Authorization": "Bearer sk_test_YOUR_SECRET_KEY",
+                    "Content-Type": "application/json"
+                    }
+                    data = {
+                    "customerId": "cus_123",
+                    "priceId": "price_456"
+                    }
+                    response = requests.post(url, json=data, headers=headers)
+                    print(response.json())
+                  </div>
+                </div>
+
+                <!-- PHP -->
+                <div class="code-tab-content" data-lang="php">
+                  <div class="code-block">
+                    $ch = curl_init('https://api.elixopay.com/api/v1/billing/subscriptions');
+                    $payload = json_encode([
+                    'customerId' => 'cus_123',
+                    'priceId' => 'price_456'
+                    ]);
+
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Authorization: Bearer sk_test_YOUR_SECRET_KEY',
+                    'Content-Type: application/json'
+                    ]);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($ch);
+                  </div>
+                </div>
+              </div>
+
+              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (201 Created)</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active">JSON</button>
+                </div>
+                <div class="code-tab-content active">
+                  <div class="code-block" style="color: #a5b4fc;">
+                    {
+                    "success": true,
+                    "data": {
+                    "subscription": {
+                    "id": "sub_789xyz",
+                    "status": "active",
+                    "currentPeriodEnd": "2026-04-01T00:00:00.000Z"
+                    }
+                    }
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payouts -->
+          <div id="payouts" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.payouts.title">สร้างการถอนเงิน (Payouts)</h2>
+              <p data-i18n="docs.payouts.desc">
+                ใช้ Endpoint นี้เพื่อสร้างคำสั่งถอนเงินออกจากกระเป๋าเงิน (Wallet)
+                ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณผูกไว้ในระบบ
+              </p>
+
+              <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/wallet/withdraw</div>
+
+              <h3 data-i18n="docs.payouts.req_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ Request
+                (Body)</h3>
+              <table class="param-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">amount</span>
+                      <span class="param-type">number</span><span class="param-required"
+                        data-i18n="docs.common.table.required">Required</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.payouts.req_params.amount">
+                      จำนวนเงินที่ต้องการถอน (ต้องมียอดคงเหลือเพียงพอรวมค่าธรรมเนียม) ตัวอย่างเช่น 500.00
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h3 data-i18n="docs.payouts.res_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ
+                Response</h3>
+              <table class="param-table" style="margin-bottom: 0;">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">success</span>
+                      <span class="param-type">boolean</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.payouts.res_params.success">
+                      ระบุว่าการส่งคำขอสำเร็จหรือไม่
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">transaction</span>
+                      <span class="param-type">object</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.payouts.res_params.transaction">
+                      ออบเจ็กต์ข้อมูลรายการถอนเงินที่ถูกสร้างขึ้นในสถานะ 'PENDING'
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.common.request">ตัวอย่าง Request</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active" data-lang="curl">cURL</button>
+                  <button class="code-tab-btn" data-lang="node">Node.js</button>
+                  <button class="code-tab-btn" data-lang="python">Python</button>
+                  <button class="code-tab-btn" data-lang="php">PHP</button>
+                </div>
+
+                <!-- cURL -->
+                <div class="code-tab-content active" data-lang="curl">
+                  <div class="code-block">
+                    curl -X POST https://api.elixopay.com/api/v1/wallet/withdraw \
+                    -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                    "amount": 500.00
+                    }'
+                  </div>
+                </div>
+
+                <!-- Node.js -->
+                <div class="code-tab-content" data-lang="node">
+                  <div class="code-block">
+                    const axios = require('axios');
+
+                    axios.post('https://api.elixopay.com/api/v1/wallet/withdraw', {
+                    amount: 500.00
+                    }, {
+                    headers: {
+                    'Authorization': 'Bearer sk_live_YOUR_SECRET_KEY',
+                    'Content-Type': 'application/json'
+                    }
+                    }).then(res => console.log(res.data));
+                  </div>
+                </div>
+
+                <!-- Python -->
+                <div class="code-tab-content" data-lang="python">
+                  <div class="code-block">
+                    import requests
+
+                    url = "https://api.elixopay.com/api/v1/wallet/withdraw"
+                    headers = {
+                    "Authorization": "Bearer sk_live_YOUR_SECRET_KEY",
+                    "Content-Type": "application/json"
+                    }
+                    data = {
+                    "amount": 500.00
+                    }
+                    response = requests.post(url, json=data, headers=headers)
+                    print(response.json())
+                  </div>
+                </div>
+
+                <!-- PHP -->
+                <div class="code-tab-content" data-lang="php">
+                  <div class="code-block">
+                    $ch = curl_init('https://api.elixopay.com/api/v1/wallet/withdraw');
+                    $payload = json_encode([
+                    'amount' => 500.00
+                    ]);
+
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Authorization: Bearer sk_live_YOUR_SECRET_KEY',
+                    'Content-Type: application/json'
+                    ]);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($ch);
+                  </div>
+                </div>
+              </div>
+
+              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (201 Created)</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active">JSON</button>
+                </div>
+                <div class="code-tab-content active">
+                  <div class="code-block" style="color: #a5b4fc;">
+                    {
+                    "success": true,
+                    "message": "Withdrawal requested successfully",
+                    "data": {
+                    "transaction": {
+                    "id": 164,
+                    "amount": 599.00,
+                    "status": "PENDING",
+                    "reference": "WD-16440590",
+                    "fee": "99.00"
+                    }
+                    }
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Webhooks -->
+          <div id="webhooks" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.webhooks.title">Webhooks (รับการแจ้งเตือน)</h2>
+              <p data-i18n="docs.webhooks.desc">
+                Webhooks คือวิธีการที่ Elixopay ส่งการแจ้งเตือนแบบเรียลไทม์ (HTTP POST)
+                ไปยังเซิร์ฟเวอร์ของคุณเมื่อเกิดเหตุการณ์ต่างๆ เช่น ลูกค้าชำระเงินสำเร็จแล้ว
+              </p>
+
+              <div
+                style="background: rgba(52, 211, 153, 0.1); border-left: 4px solid #34d399; padding: 1rem 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 2rem;">
+                <h4
+                  style="color: #6ee7b7; font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;"
+                  data-i18n="docs.webhooks.bestpractice.title"><i class="fas fa-check-circle"></i> Best Practice</h4>
+                <p style="color: #a7f3d0; margin: 0; font-size: 0.95rem;" data-i18n="docs.webhooks.bestpractice.desc">
+                  เพื่อความปลอดภัยสูงสุด คุณควรยืนยันความถูกต้องของ Webhook ทุกครั้งโดยตรวจสอบลายเซ็น (Signature)
+                  เข้ารหัสผ่าน HMAC-SHA256 ที่แนบมาใน Header <code>X-Elixopay-Signature</code></p>
+              </div>
+
+              <h3 data-i18n="docs.webhooks.event_params.title"
+                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">โครงสร้าง Event
+                Payload พารามิเตอร์</h3>
+              <table class="param-table" style="margin-bottom: 0;">
+                <thead>
+                  <tr>
+                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
+                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span class="param-name">event</span>
+                      <span class="param-type">string</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.webhooks.event_params.event">
+                      ประเภทของ Event ที่เกิดขึ้น (เช่น <code>payment.successful</code>, <code>payment.failed</code>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">created_at</span>
+                      <span class="param-type">timestamp</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.webhooks.event_params.created_at">
+                      เวลาที่เกิด Event แจ้งเตือน (Unix Timestamp)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="param-name">data</span>
+                      <span class="param-type">object</span>
+                    </td>
+                    <td class="param-desc" data-i18n="docs.webhooks.event_params.data">
+                      ออบเจ็กต์ข้อมูลที่อัปเดต เช่น ข้อมูลของ Payment ที่สำเร็จ (มีโครงสร้างเดียวกับ Response
+                      การเช็คสถานะ)
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.webhooks.event">ตัวอย่าง Event Payload (`payment.successful`)</h3>
+              <div class="code-tabs-container">
+                <div class="code-tabs-header">
+                  <button class="code-tab-btn active">JSON</button>
+                </div>
+                <div class="code-tab-content active">
+                  <div class="code-block" style="color: #a5b4fc;">
+                    {
+                    "event": "payment.successful",
+                    "created_at": 1709280350,
+                    "data": {
+                    "id": "pay_xxxxxxxxxxxxxx",
+                    "object": "payment",
+                    "amount": 1000.00,
+                    "currency": "THB",
+                    "status": "successful",
+                    "reference_id": "EX-12345"
+                    }
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Downloads -->
+          <div id="downloads" class="api-section">
+            <div class="api-prose">
+              <h2 data-i18n="docs.downloads.title"
+                style="color: white; font-weight: 800; font-size: 2rem; margin-bottom: 1.5rem;">
+                ดาวน์โหลดทรัพยากรสำหรับนักพัฒนา</h2>
+              <p data-i18n="docs.downloads.desc" style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 3rem;">
+                ดาวน์โหลดไฟล์และเครื่องมือที่จะช่วยให้การเชื่อมต่อกับ Elixopay ของคุณง่ายและรวดเร็วยิ่งขึ้น
+              </p>
+
+              <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+                <!-- Postman Collection -->
+                <div
+                  style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden;"
+                  class="group hover:border-purple-500/50">
+                  <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                    <div
+                      style="width: 60px; height: 60px; background: rgba(239, 91, 37, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      <i class="fas fa-parachute-box" style="color: #ef5b25; font-size: 1.8rem;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                      <h3 data-i18n="docs.downloads.postman.title"
+                        style="color: white; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Postman
+                        Collection</h3>
+                      <p data-i18n="docs.downloads.postman.desc"
+                        style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        รวบรวม API Endpoints ทั้งหมดไว้ในที่เดียว เพื่อการทดสอบที่รวดเร็วไม่ต้องตั้งค่าเอง
+                      </p>
+                      <a href="api-specs/postman_collection.json" download
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-orange-500/20">
+                        <i class="fas fa-download text-sm"></i>
+                        <span data-i18n="docs.downloads.btn_download">ดาวน์โหลดไฟล์</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- OpenAPI Specification -->
+                <div
+                  style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; transition: all 0.3s ease;"
+                  class="group hover:border-green-500/50">
+                  <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                    <div
+                      style="width: 60px; height: 60px; background: rgba(52, 211, 153, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      <i class="fas fa-file-code" style="color: #34d399; font-size: 1.8rem;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                      <h3 data-i18n="docs.downloads.openapi.title"
+                        style="color: white; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">OpenAPI
+                        Specification</h3>
+                      <p data-i18n="docs.downloads.openapi.desc"
+                        style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        ไฟล์ YAML มาตรฐานสำหรับใช้กับ Swagger หรือเครื่องมือสร้าง Code Generator ต่างๆ
+                      </p>
+                      <a href="api-specs/openapi.yaml" download
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-emerald-500/20">
+                        <i class="fas fa-download text-sm"></i>
+                        <span data-i18n="docs.downloads.btn_download">ดาวน์โหลดไฟล์</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PDF Reference -->
+                <div
+                  style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; transition: all 0.3s ease;"
+                  class="group hover:border-blue-500/50">
+                  <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                    <div
+                      style="width: 60px; height: 60px; background: rgba(59, 130, 246, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      <i class="fas fa-file-pdf" style="color: #3b82f6; font-size: 1.8rem;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                      <h3 data-i18n="docs.downloads.pdf.title"
+                        style="color: white; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">API Reference
+                        (PDF)</h3>
+                      <p data-i18n="docs.downloads.pdf.desc"
+                        style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        คู่มือฉบับสมบูรณ์ในรูปแบบ PDF สำหรับการอ่านแบบออฟไลน์หรือพิมพ์ออกมาอ้างอิง
+                      </p>
+                      <a href="assets/downloads/Elixopay-API-Reference.pdf" download="Elixopay-API-Reference.pdf"
+                        class="inline-flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-lg hover:shadow-purple-500/25"
+                        style="text-decoration: none;">
+                        <i class="fas fa-download text-sm"></i>
+                        <span data-i18n="docs.downloads.btn_download">Download File</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="api-code" style="display: flex; align-items: center; justify-content: center;">
+              <div
+                style="padding: 2rem; background: rgba(255, 255, 255, 0.02); border-radius: 30px; border: 1px dashed rgba(255, 255, 255, 0.1); text-align: center;">
+                <i class="fas fa-laptop-code"
+                  style="font-size: 4rem; color: rgba(255, 255, 255, 0.05); margin-bottom: 1rem;"></i>
+                <p style="color: rgba(255, 255, 255, 0.2); font-size: 0.9rem;">Elixopay Developer Tools v1.0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer
+    style="background: #1A0B2E; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 6rem; position: relative;">
+    <!-- Accents -->
+    <div
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.5), transparent);">
+    </div>
+
+    <div class="container" style="max-width: 1200px; padding: 0 2rem; margin: 0 auto;">
+      <!-- Top Links Area -->
+      <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem;">
+        <!-- Brand details -->
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <svg width="32" height="32" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="purpleGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect width="136" height="136" rx="28" fill="url(#purpleGradFooter)" />
+              <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800"
+                fill="white" text-anchor="middle">E</text>
+            </svg>
+            <span style="font-size: 1.5rem; font-weight: 800; color: white; letter-spacing: -0.5px;">Elixopay</span>
+          </div>
+          <p data-i18n="footer.desc"
+            style="color: rgba(255, 255, 255, 0.6); line-height: 1.6; font-size: 0.95rem; max-width: 300px;">
+            โครงสร้างพื้นฐานการชำระเงินยุคใหม่สำหรับเว็บสมัยใหม่ ปลอดภัย รวดเร็ว และเป็นมิตรกับนักพัฒนา
+          </p>
+        </div>
+
+        <!-- Resources -->
+        <div>
+          <h4 data-i18n="footer.resources"
+            style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;">
+            ทรัพยากร</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.85rem;">
+              <a href="apidocs.html" class="footer-link-v2" data-i18n="footer.links.docs"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">เอกสาร
+                API</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="usecases.html" class="footer-link-v2" data-i18n="footer.links.usecases"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">กรณีการใช้งาน</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="contact.html" class="footer-link-v2" data-i18n="footer.links.contact"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ติดต่อฝ่ายขาย</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div>
+          <h4 data-i18n="footer.company"
+            style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;">
+            บริษัท</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.85rem;">
+              <a href="about.html" class="footer-link-v2" data-i18n="footer.links.about"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">เกี่ยวกับเรา</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="security.html" class="footer-link-v2" data-i18n="footer.links.security"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ความปลอดภัย</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="blog.html" class="footer-link-v2" data-i18n="footer.links.blog"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">บล็อก</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="contact.html" class="footer-link-v2" data-i18n="footer.links.contact"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ติดต่อเรา</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Support -->
+        <div>
+          <h4 data-i18n="footer.help"
+            style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;">
+            ช่วยเหลือ</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.85rem;">
+              <a href="support.html" class="footer-link-v2" data-i18n="footer.links.helpCenter"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ศูนย์ช่วยเหลือ</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="status.html" class="footer-link-v2" data-i18n="footer.links.status"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">สถานะระบบ</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="privacy.html" class="footer-link-v2" data-i18n="footer.links.privacy"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">นโยบาย</a>
+            </li>
+            <li style="margin-bottom: 0.85rem;">
+              <a href="terms.html" class="footer-link-v2" data-i18n="footer.links.terms"
+                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ข้อกำหนด</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div
+        style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 2rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <p data-i18n="footer.rights" style="color: rgba(255, 255, 255, 0.4); margin: 0; font-size: 0.9rem;">
+          © 2026 Elixopay. สงวนลิขสิทธิ์ | สร้างด้วย ❤️ โดยทีม Elixopay
+        </p>
+        <div style="display: flex; gap: 2rem; align-items: center;">
+          <a href="privacy.html" data-i18n="footer.links.privacy"
+            style="color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;"
+            class="footer-bottom-link">นโยบาย</a>
+          <a href="terms.html" data-i18n="footer.links.terms"
+            style="color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;"
+            class="footer-bottom-link">ข้อกำหนด</a>
+          <a href="cookies.html" data-i18n="footer.links.cookies"
+            style="color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;"
+            class="footer-bottom-link">คุกกี้</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    .footer-link-v2:hover {
+      color: #a5b4fc !important;
+      transform: translateX(4px);
+    }
+
+    .footer-bottom-link:hover {
+      color: #a5b4fc !important;
+    }
+  </style>
+
+  <script src="js/i18n.js?v=3"></script>
+  <script src="js/ui.js?v=2"></script>
+  <script src="js/hero-animation.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/ui-enhancements.js"></script>
+</body>
+
+</html>

@@ -2,7 +2,8 @@
 // ใช้ไฟล์นี้ในทุกหน้าแทนการ hardcode localhost
 
 (function () {
-  // Preferred production API URL
+  // Use same-origin for dashboard (frontend + API on same server)
+  // External API consumers can use api.elixopay.com directly
   const PROD_BASE = 'https://api.elixopay.com';
   const DEV_BASE = 'http://localhost:3000';
 

@@ -9,6 +9,7 @@ const path = require('path');
 
 // Initialize App
 const app = express();
+app.set('trust proxy', 1); // Enable trusting the Cloud Run proxy so express-rate-limit works correctly
 const PORT = process.env.PORT || 3000;
 
 // Security & Middleware
@@ -20,14 +21,15 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
       frameSrc: ["'self'", "https://accounts.google.com"],
-      connectSrc: ["'self'", "https://accounts.google.com"],
+      connectSrc: ["'self'", "https://accounts.google.com", "https://api.elixopay.com", "https://app.elixopay.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      upgradeInsecureRequests: [],
+      // NOTE: upgradeInsecureRequests removed — causes redirect loop with Cloudflare Flexible SSL
       scriptSrcAttr: ["'unsafe-inline'"],
     }
   },
-  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+  crossOriginOpenerPolicy: false,
   crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: false,
   hsts: {
     maxAge: 31536000, // 1 Year
     includeSubDomains: true,
@@ -43,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // CORS Configuration
 const allowedOrigins = process.env.FRONTEND_ALLOWED_ORIGINS
   ? process.env.FRONTEND_ALLOWED_ORIGINS.split(',')
-  : ['https://elixopay.com'];
+  : ['https://elixopay.com', 'https://www.elixopay.com', 'https://app.elixopay.com'];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -133,7 +135,11 @@ app.get('/', (req, res) => {
 
 // 404 Handler
 app.use((req, res) => {
-  res.status(404).json({ success: false, error: { message: 'Route not found' } });
+  if (req.path.startsWith('/api/')) {
+    res.status(404).json({ success: false, error: { message: 'Route not found' } });
+  } else {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+  }
 });
 
 // Error Handler

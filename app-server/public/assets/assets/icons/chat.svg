@@ -1,0 +1,23 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <filter id="shadow">
+        <feDropShadow dx="2" dy="4" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+    
+    <!-- Chat Bubble -->
+    <path d="M10 50C10 27.9086 27.9086 10 50 10C72.0914 10 90 27.9086 90 50C90 72.0914 72.0914 90 50 90C42.5 90 35.5 87.9 29.5 84.3L15 90L19.5 76.5C13.5 69.5 10 60 10 50Z" 
+          fill="url(#chatGradient)" stroke="#be185d" stroke-width="3" filter="url(#shadow)"/>
+          
+    <!-- Inner Highlight -->
+    <ellipse cx="40" cy="30" rx="15" ry="8" fill="white" opacity="0.3" transform="rotate(-15)"/>
+    
+    <!-- Heart Icon -->
+    <path d="M50 70L44.2 64.7C34 55.4 28 49.3 28 41.5C28 35.5 32.5 31 38.5 31C42.2 31 46.2 33 48.5 36.5C50.8 33 54.8 31 58.5 31C64.5 31 69 35.5 69 41.5C69 49.3 63 55.4 52.8 64.7L50 70Z" 
+          fill="#be185d" stroke="white" stroke-width="2"/>
+    
+    <defs>
+        <linearGradient id="chatGradient" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F9A8D4"/>
+            <stop offset="1" stop-color="#F472B6"/>
+        </linearGradient>
+    </defs>
+</svg>

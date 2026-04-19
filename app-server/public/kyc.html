@@ -7,64 +7,74 @@
     <title>KYC Verification - Elixopay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="/styles/index.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js"></script>
 
     <style>
-        body {
-            font-family: 'Prompt', 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
+        /* Dark overrides for Tailwind classes */
+        .bg-gray-50 { background: transparent !important; }
+        .bg-white, .bg-gray-100 { background: var(--ep-bg-card) !important; border-color: var(--ep-border) !important; }
+        .text-gray-800, .text-gray-900 { color: var(--ep-text-primary) !important; }
+        .text-gray-700 { color: var(--ep-text-secondary) !important; }
+        .text-gray-600, .text-gray-500, .text-gray-400 { color: var(--ep-text-muted) !important; }
+        .border-gray-200, .border-gray-300, .border-gray-100 { border-color: var(--ep-border) !important; }
+        .shadow-xl { box-shadow: var(--ep-shadow-lg) !important; }
+        .shadow { box-shadow: var(--ep-shadow-sm) !important; }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* Form inputs dark mode */
+        input, select { background: var(--ep-bg-base) !important; color: var(--ep-text-primary) !important; border-color: var(--ep-border) !important; }
+        input:focus, select:focus { border-color: rgba(124,58,237,0.5) !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.1) !important; }
+        select option { background: var(--ep-bg-base); }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
-        }
+        /* Button overrides */
+        .gradient-text { background: linear-gradient(135deg, var(--ep-purple) 0%, #a855f7 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: linear-gradient(135deg, var(--ep-purple) 0%, #9333ea 100%) !important; box-shadow: 0 4px 15px rgba(124,58,237,0.35); }
+        .btn-primary:hover { box-shadow: 0 8px 25px rgba(124,58,237,0.45); transform: translateY(-1px); }
 
-        .btn-primary:hover {
-            box-shadow: 0 8px 25px -4px rgba(99, 102, 241, 0.5);
-            transform: translateY(-1px);
-        }
+        /* Upload area dark mode */
+        .upload-area { border: 2px dashed var(--ep-border); background: var(--ep-bg-base); transition: all 0.3s ease; }
+        .upload-area:hover, .upload-area.drag-over { border-color: var(--ep-purple); background: rgba(124,58,237,0.06); }
+        .text-indigo-400, .text-indigo-500, .text-indigo-600, .text-indigo-700 { color: var(--ep-purple-light) !important; }
 
-        .upload-area {
-            border: 2px dashed #cbd5e1;
-            transition: all 0.3s ease;
-        }
+        /* Alert boxes dark override */
+        .bg-blue-50 { background: rgba(124,58,237,0.06) !important; border-color: rgba(124,58,237,0.15) !important; }
+        .text-blue-800, .text-blue-500 { color: var(--ep-purple-light) !important; }
+        .bg-amber-50 { background: rgba(245,158,11,0.08) !important; border-color: rgba(245,158,11,0.2) !important; }
+        .bg-red-50 { background: rgba(239,68,68,0.08) !important; border-color: rgba(239,68,68,0.2) !important; }
+        .bg-green-50 { background: rgba(34,197,94,0.08) !important; border-color: rgba(34,197,94,0.2) !important; }
+        .text-amber-700 { color: #fbbf24 !important; }
+        .text-red-600, .text-red-700 { color: #fca5a5 !important; }
+        .text-red-500 { color: #f87171 !important; }
+        .text-green-800, .text-green-700 { color: #86efac !important; }
+        .text-green-600 { color: #4ade80 !important; }
 
-        .upload-area:hover,
-        .upload-area.drag-over {
-            border-color: #6366f1;
-            background-color: #e0e7ff;
-        }
+        /* Step circles - indigo to purple */
+        .border-indigo-500 { border-color: var(--ep-purple) !important; }
+        .bg-indigo-500 { background-color: var(--ep-purple) !important; }
+        .bg-indigo-50 { background: rgba(124,58,237,0.1) !important; }
+        .bg-indigo-100 { background: rgba(124,58,237,0.15) !important; }
+        .bg-indigo-600 { background-color: var(--ep-purple) !important; }
+        .hover\:bg-indigo-700:hover { background-color: #6d28d9 !important; }
+        .accent-indigo-600 { accent-color: var(--ep-purple) !important; }
+        .focus\:ring-indigo-400:focus { box-shadow: 0 0 0 3px rgba(124,58,237,0.2) !important; }
 
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            width: 20px;
-            height: 20px;
-            animation: spin 0.8s linear infinite;
-        }
+        /* Selfie tip boxes */
+        .bg-green-50.border-green-200 { background: rgba(34,197,94,0.06) !important; border-color: rgba(34,197,94,0.15) !important; }
+        .bg-red-50.border-red-200 { background: rgba(239,68,68,0.06) !important; border-color: rgba(239,68,68,0.15) !important; }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        /* Card wrapper override */
+        body .w-full.max-w-2xl { max-width: 720px; border-color: var(--ep-border) !important; }
+
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; width: 20px; height: 20px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 
-<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4 py-12">
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
 
     <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
 
@@ -802,6 +812,11 @@
             }
         }
     </script>
+
+    </main>
+    </div><!-- /ep-main-wrap -->
+    </div><!-- /ep-layout -->
+    <script src="/js/sidebar.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Payout - Elixopay</title>
+    <meta name="description" content="Manage your Elixopay payouts and bank withdrawals.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <style>
+        /* Balance card */
+        .po-balance {
+            background: linear-gradient(135deg, var(--ep-purple-dark), var(--ep-purple));
+            border-radius: var(--ep-radius-xl);
+            padding: 28px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .po-balance::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+        .po-balance-main { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; position: relative; z-index: 1; }
+        .po-balance-icon {
+            width: 52px; height: 52px; border-radius: var(--ep-radius-md);
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.3rem; flex-shrink: 0;
+        }
+        .po-balance-label { font-size: 0.78rem; color: rgba(255,255,255,0.7); display: block; }
+        .po-balance-amount { font-family: var(--ep-font-mono); font-size: 1.8rem; font-weight: 700; color: white; display: block; }
+        .po-balance-sub { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+        .po-withdraw-btn {
+            margin-left: auto; padding: 12px 24px;
+            background: white; color: var(--ep-purple-dark); border: none;
+            border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui);
+            font-size: 0.85rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+            transition: var(--ep-transition);
+        }
+        .po-withdraw-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        .po-balance-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; position: relative; z-index: 1; }
+        .po-stat { background: rgba(255,255,255,0.06); border-radius: var(--ep-radius-md); padding: 12px 16px; backdrop-filter: blur(4px); }
+        .po-stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.6); display: block; margin-bottom: 4px; }
+        .po-stat-value { font-family: var(--ep-font-mono); font-size: 0.95rem; font-weight: 700; color: white; }
+        .po-stat-value.amber { color: var(--ep-warning); }
+
+        /* Section */
+        .po-section {
+            background: var(--ep-bg-card); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg); padding: 20px 24px; margin-bottom: 24px;
+        }
+        .po-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .po-section-header h2 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); }
+        .po-section-header h2 i { margin-right: 8px; color: var(--ep-purple-light); }
+        .po-btn { padding: 8px 16px; border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: var(--ep-transition); border: none; }
+        .po-btn.outline { background: transparent; border: 1px solid var(--ep-border); color: var(--ep-text-secondary); }
+        .po-btn.outline:hover { border-color: var(--ep-text-muted); }
+        .po-btn.primary { background: var(--ep-purple); color: white; }
+        .po-btn.primary:hover { background: var(--ep-purple-dark); }
+
+        /* Bank card */
+        .po-bank-card {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--ep-bg-elevated); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-md); padding: 16px;
+        }
+        .po-bank-logo {
+            width: 44px; height: 44px; border-radius: var(--ep-radius-md);
+            background: linear-gradient(135deg, var(--ep-blue), #6366f1);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .po-bank-info { flex: 1; }
+        .po-bank-info strong { display: block; font-size: 0.85rem; color: var(--ep-text-primary); margin-bottom: 2px; }
+        .po-bank-info span { font-size: 0.75rem; color: var(--ep-text-muted); font-family: var(--ep-font-mono); }
+        .po-bank-badge {
+            font-size: 0.65rem; font-weight: 600; padding: 4px 10px;
+            border-radius: var(--ep-radius-full); background: rgba(245,158,11,0.1); color: var(--ep-warning);
+        }
+        .po-bank-badge.active { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+
+        /* Schedule */
+        .po-schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .po-schedule-item {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--ep-bg-elevated); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-md); padding: 14px;
+        }
+        .po-schedule-icon {
+            width: 36px; height: 36px; border-radius: var(--ep-radius-sm);
+            background: rgba(245,158,11,0.1); color: var(--ep-warning);
+            display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .po-schedule-icon.blue { background: rgba(59,130,246,0.1); color: var(--ep-blue); }
+        .po-schedule-icon.green { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+        .po-schedule-item strong { font-size: 0.78rem; color: var(--ep-text-primary); display: block; }
+        .po-schedule-item span { font-size: 0.7rem; color: var(--ep-text-muted); }
+
+        /* Empty & count */
+        .po-count { font-size: 0.75rem; color: var(--ep-text-muted); }
+        .po-empty { text-align: center; padding: 40px; color: var(--ep-text-muted); }
+        .po-empty i { font-size: 2rem; opacity: 0.3; margin-bottom: 12px; display: block; }
+        .po-empty strong { display: block; color: var(--ep-text-secondary); margin-bottom: 4px; }
+        .po-empty p { font-size: 0.8rem; }
+
+        /* Payout list items */
+        .po-payout-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 0; border-bottom: 1px solid var(--ep-border);
+        }
+        .po-payout-item:last-child { border-bottom: none; }
+        .po-payout-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+        .po-payout-icon.success { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+        .po-payout-icon.pending { background: rgba(245,158,11,0.1); color: var(--ep-warning); }
+        .po-payout-icon.failed { background: rgba(239,68,68,0.1); color: var(--ep-danger); }
+        .po-payout-meta { flex: 1; }
+        .po-payout-meta strong { font-size: 0.82rem; color: var(--ep-text-primary); display: block; }
+        .po-payout-meta span { font-size: 0.7rem; color: var(--ep-text-muted); }
+        .po-payout-amount { font-family: var(--ep-font-mono); font-size: 0.9rem; font-weight: 700; color: var(--ep-text-primary); }
+        .po-payout-status { font-size: 0.65rem; padding: 3px 8px; border-radius: var(--ep-radius-full); font-weight: 600; }
+        .po-payout-status.success { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+        .po-payout-status.pending { background: rgba(245,158,11,0.1); color: var(--ep-warning); }
+
+        /* Modal */
+        .po-modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+        .po-modal-overlay.open { display: flex; }
+        .po-modal { background: var(--ep-bg-card); border: 1px solid var(--ep-border); border-radius: var(--ep-radius-xl); width: 100%; max-width: 480px; padding: 24px; box-shadow: var(--ep-shadow-lg); }
+        .po-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .po-modal-header h3 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); }
+        .po-modal-header h3 i { margin-right: 8px; color: var(--ep-purple-light); }
+        .po-modal-close { background: none; border: none; color: var(--ep-text-muted); font-size: 1.1rem; cursor: pointer; }
+        .po-field { margin-bottom: 16px; }
+        .po-field label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--ep-text-secondary); margin-bottom: 6px; }
+        .po-field input, .po-field select {
+            width: 100%; padding: 10px 12px; background: var(--ep-bg-elevated);
+            border: 1px solid var(--ep-border); color: var(--ep-text-primary);
+            border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui);
+            font-size: 0.85rem; outline: none; transition: var(--ep-transition);
+        }
+        .po-field input:focus, .po-field select:focus { border-color: var(--ep-purple); box-shadow: 0 0 0 3px var(--ep-purple-glow); }
+        .po-field select option { background: var(--ep-bg-card); color: var(--ep-text-primary); }
+        .po-amount-input { position: relative; }
+        .po-currency { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; font-weight: 700; color: var(--ep-text-muted); }
+        .po-amount-input input { padding-left: 32px; font-family: var(--ep-font-mono); font-size: 1.1rem; font-weight: 700; }
+        .po-field-hint { font-size: 0.7rem; color: var(--ep-text-muted); margin-top: 4px; display: block; }
+        .po-withdraw-dest { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--ep-bg-elevated); border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md); }
+        .po-withdraw-dest i { color: var(--ep-blue); }
+        .po-withdraw-dest span { font-size: 0.82rem; color: var(--ep-text-secondary); }
+
+        .po-type-options { display: flex; flex-direction: column; gap: 8px; }
+        .po-type-option { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--ep-bg-elevated); border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md); cursor: pointer; transition: var(--ep-transition); }
+        .po-type-option:has(input:checked) { border-color: var(--ep-purple); background: var(--ep-bg-active); }
+        .po-type-option input { accent-color: var(--ep-purple); }
+        .po-type-content strong { font-size: 0.82rem; color: var(--ep-text-primary); display: block; }
+        .po-type-content span { font-size: 0.7rem; color: var(--ep-text-muted); }
+        .po-instant-badge { font-size: 0.6rem; background: var(--ep-warning); color: #000; padding: 2px 6px; border-radius: var(--ep-radius-full); font-weight: 700; vertical-align: middle; }
+
+        .po-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+        @media (max-width: 640px) {
+            .po-balance-main { flex-wrap: wrap; }
+            .po-withdraw-btn { width: 100%; margin-left: 0; }
+            .po-balance-stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
+
+        <!-- Balance -->
+        <div class="po-balance">
+            <div class="po-balance-main">
+                <div class="po-balance-icon"><i class="fas fa-wallet"></i></div>
+                <div>
+                    <span class="po-balance-label" data-i18n="payout.balance">ยอดเงินคงเหลือ</span>
+                    <strong class="po-balance-amount" id="balanceAmount">฿0.00</strong>
+                    <span class="po-balance-sub" data-i18n="payout.readyToWithdraw">พร้อมถอน</span>
+                </div>
+                <button class="po-withdraw-btn" onclick="openWithdraw()"><i class="fas fa-paper-plane"></i> <span data-i18n="payout.withdrawBtn">ถอนเงิน</span></button>
+            </div>
+            <div class="po-balance-stats">
+                <div class="po-stat">
+                    <span class="po-stat-label" data-i18n="payout.totalWithdrawn">ถอนแล้วทั้งหมด</span>
+                    <strong class="po-stat-value" id="totalWithdrawn">฿0.00</strong>
+                </div>
+                <div class="po-stat">
+                    <span class="po-stat-label" data-i18n="payout.pendingLabel">รอดำเนินการ</span>
+                    <strong class="po-stat-value amber" id="pendingAmount">฿0.00</strong>
+                </div>
+                <div class="po-stat">
+                    <span class="po-stat-label" data-i18n="payout.lastPayout">ถอนครั้งล่าสุด</span>
+                    <strong class="po-stat-value" id="lastPayout">—</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Account -->
+        <div class="po-section">
+            <div class="po-section-header">
+                <h2><i class="fas fa-building-columns"></i> <span data-i18n="payout.bankAccount">บัญชีธนาคาร</span></h2>
+                <button class="po-btn outline" onclick="editBank()"><i class="fas fa-pen"></i> <span data-i18n="payout.editBtn">แก้ไข</span></button>
+            </div>
+            <div class="po-bank-card" id="bankCard">
+                <div class="po-bank-logo"><i class="fas fa-university"></i></div>
+                <div class="po-bank-info">
+                    <strong id="bankName" data-i18n="payout.notConfigured">ยังไม่ได้ตั้งค่า</strong>
+                    <span id="bankAccount" data-i18n="payout.addBank">กรุณาเพิ่มบัญชีธนาคาร</span>
+                </div>
+                <span class="po-bank-badge" id="bankBadge" data-i18n="payout.notConfiguredBadge">ไม่ได้ตั้งค่า</span>
+            </div>
+        </div>
+
+        <!-- Schedule -->
+        <div class="po-section">
+            <div class="po-section-header">
+                <h2><i class="fas fa-calendar-alt"></i> <span data-i18n="payout.schedule">ตารางการถอนเงิน</span></h2>
+            </div>
+            <div class="po-schedule-grid">
+                <div class="po-schedule-item">
+                    <div class="po-schedule-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <strong data-i18n="payout.autoSchedule">รอบถอนอัตโนมัติ</strong>
+                        <span data-i18n="payout.autoScheduleDesc">ทุกวันจันทร์ (T+2 วันทำการ)</span>
+                    </div>
+                </div>
+                <div class="po-schedule-item">
+                    <div class="po-schedule-icon blue"><i class="fas fa-bolt"></i></div>
+                    <div>
+                        <strong data-i18n="payout.instantWithdraw">ถอนเงินทันที</strong>
+                        <span data-i18n="payout.instantDesc">รอยืนยันค่าธรรมเนียม</span>
+                    </div>
+                </div>
+                <div class="po-schedule-item">
+                    <div class="po-schedule-icon green"><i class="fas fa-shield-alt"></i></div>
+                    <div>
+                        <strong data-i18n="payout.minWithdraw">ขั้นต่ำถอน</strong>
+                        <span>฿100.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="po-section">
+            <div class="po-section-header">
+                <h2><i class="fas fa-history"></i> <span data-i18n="payout.history">ประวัติการถอนเงิน</span></h2>
+                <span class="po-count" id="payoutCount">0 รายการ</span>
+            </div>
+            <div id="payoutList"></div>
+            <div class="po-empty" id="payoutEmpty">
+                <i class="fas fa-inbox"></i>
+                <strong data-i18n="payout.noHistory">ยังไม่มีประวัติการถอนเงิน</strong>
+                <p data-i18n="payout.noHistoryDesc">เมื่อถอนเงินครั้งแรก ประวัติจะแสดงที่นี่</p>
+            </div>
+        </div>
+
+    </main>
+    </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div class="po-modal-overlay" id="withdrawModal">
+        <div class="po-modal">
+            <div class="po-modal-header">
+                <h3><i class="fas fa-paper-plane"></i> ถอนเงิน</h3>
+                <button class="po-modal-close" onclick="closeWithdraw()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="po-field">
+                <label>จำนวนเงินที่ต้องการถอน (บาท)</label>
+                <div class="po-amount-input">
+                    <span class="po-currency">฿</span>
+                    <input type="number" id="withdrawAmount" placeholder="0.00" step="0.01" min="100">
+                </div>
+                <span class="po-field-hint">ยอดคงเหลือ: <strong id="modalBalance">฿0.00</strong> | ขั้นต่ำ: ฿100</span>
+            </div>
+            <div class="po-field">
+                <label>ถอนไปยัง</label>
+                <div class="po-withdraw-dest">
+                    <i class="fas fa-university"></i>
+                    <span id="modalBankName">กรุณาตั้งค่าบัญชีธนาคาร</span>
+                </div>
+            </div>
+            <div class="po-field">
+                <label>ประเภทการถอน</label>
+                <div class="po-type-options">
+                    <label class="po-type-option">
+                        <input type="radio" name="withdrawType" value="normal" checked>
+                        <div class="po-type-content">
+                            <strong>ปกติ (T+2)</strong>
+                            <span>ฟรี — 2 วันทำการ</span>
+                        </div>
+                    </label>
+                    <label class="po-type-option">
+                        <input type="radio" name="withdrawType" value="instant">
+                        <div class="po-type-content">
+                            <strong>ทันที <span class="po-instant-badge">INSTANT</span></strong>
+                            <span>มีค่าธรรมเนียม (รอยืนยัน)</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="po-modal-actions">
+                <button class="po-btn outline" onclick="closeWithdraw()">ยกเลิก</button>
+                <button class="po-btn primary" onclick="submitWithdraw()"><i class="fas fa-paper-plane"></i> ยืนยันถอนเงิน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Modal -->
+    <div class="po-modal-overlay" id="bankModal">
+        <div class="po-modal">
+            <div class="po-modal-header">
+                <h3><i class="fas fa-university"></i> ตั้งค่าบัญชีธนาคาร</h3>
+                <button class="po-modal-close" onclick="closeBankModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="po-field">
+                <label>ธนาคาร</label>
+                <select id="bankSelect">
+                    <option value="">เลือกธนาคาร</option>
+                    <option value="กสิกรไทย (KBANK)">กสิกรไทย (KBANK)</option>
+                    <option value="ไทยพาณิชย์ (SCB)">ไทยพาณิชย์ (SCB)</option>
+                    <option value="กรุงเทพ (BBL)">กรุงเทพ (BBL)</option>
+                    <option value="กรุงไทย (KTB)">กรุงไทย (KTB)</option>
+                    <option value="ทหารไทยธนชาต (TTB)">ทหารไทยธนชาต (TTB)</option>
+                    <option value="กรุงศรีอยุธยา (BAY)">กรุงศรีอยุธยา (BAY)</option>
+                </select>
+            </div>
+            <div class="po-field">
+                <label>เลขที่บัญชี</label>
+                <input type="text" id="bankNumber" placeholder="xxx-x-xxxxx-x" maxlength="15">
+            </div>
+            <div class="po-field">
+                <label>ชื่อบัญชี</label>
+                <input type="text" id="bankHolder" placeholder="ชื่อ-นามสกุล">
+            </div>
+            <div class="po-modal-actions">
+                <button class="po-btn outline" onclick="closeBankModal()">ยกเลิก</button>
+                <button class="po-btn primary" onclick="saveBank()"><i class="fas fa-save"></i> บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Payout management logic
+    let bankInfo = JSON.parse(localStorage.getItem('ep-bank') || 'null');
+    let payouts = JSON.parse(localStorage.getItem('ep-payouts') || '[]');
+
+    function loadBankInfo() {
+        if (bankInfo) {
+            document.getElementById('bankName').textContent = bankInfo.bank;
+            document.getElementById('bankAccount').textContent = bankInfo.number + ' — ' + bankInfo.holder;
+            const badge = document.getElementById('bankBadge');
+            badge.textContent = 'Verified'; badge.classList.add('active');
+            document.getElementById('modalBankName').textContent = bankInfo.bank + ' ' + bankInfo.number;
+        }
+    }
+
+    function renderPayouts() {
+        const list = document.getElementById('payoutList');
+        const empty = document.getElementById('payoutEmpty');
+        const count = document.getElementById('payoutCount');
+        count.textContent = payouts.length + ' รายการ';
+        if (payouts.length === 0) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+        empty.style.display = 'none';
+        list.innerHTML = payouts.map(p => `
+            <div class="po-payout-item">
+                <div class="po-payout-icon ${p.status}"><i class="fas ${p.status === 'success' ? 'fa-check' : p.status === 'pending' ? 'fa-clock' : 'fa-times'}"></i></div>
+                <div class="po-payout-meta"><strong>${p.bank}</strong><span>${p.date}</span></div>
+                <span class="po-payout-amount">฿${p.amount.toLocaleString()}</span>
+                <span class="po-payout-status ${p.status}">${p.status === 'success' ? 'สำเร็จ' : p.status === 'pending' ? 'รอดำเนินการ' : 'ล้มเหลว'}</span>
+            </div>
+        `).join('');
+    }
+
+    function openWithdraw() { document.getElementById('withdrawModal').classList.add('open'); }
+    function closeWithdraw() { document.getElementById('withdrawModal').classList.remove('open'); }
+
+    function submitWithdraw() {
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        if (!amount || amount < 100) return alert('ยอดเงินขั้นต่ำ ฿100');
+        if (!bankInfo) return alert('กรุณาตั้งค่าบัญชีธนาคารก่อน');
+        payouts.unshift({ bank: bankInfo.bank, amount, date: new Date().toLocaleDateString('th-TH'), status: 'pending' });
+        localStorage.setItem('ep-payouts', JSON.stringify(payouts));
+        closeWithdraw();
+        renderPayouts();
+    }
+
+    function editBank() { document.getElementById('bankModal').classList.add('open'); if (bankInfo) { document.getElementById('bankSelect').value = bankInfo.bank; document.getElementById('bankNumber').value = bankInfo.number; document.getElementById('bankHolder').value = bankInfo.holder; } }
+    function closeBankModal() { document.getElementById('bankModal').classList.remove('open'); }
+
+    function saveBank() {
+        const bank = document.getElementById('bankSelect').value;
+        const number = document.getElementById('bankNumber').value.trim();
+        const holder = document.getElementById('bankHolder').value.trim();
+        if (!bank || !number || !holder) return alert('กรุณากรอกข้อมูลให้ครบ');
+        bankInfo = { bank, number, holder };
+        localStorage.setItem('ep-bank', JSON.stringify(bankInfo));
+        closeBankModal();
+        loadBankInfo();
+    }
+
+    loadBankInfo();
+    renderPayouts();
+    </script>
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>

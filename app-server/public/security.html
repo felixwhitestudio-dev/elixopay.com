@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ความปลอดภัย - Elixopay</title>
+	<link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<style>
+		:root {
+			--primary-color: #6366f1;
+			--primary-dark: #4f46e5;
+			--success-color: #10b981;
+			--dark-bg: #0f172a;
+			--text-primary: #1e293b;
+			--text-secondary: #64748b;
+			--light-bg: #f8fafc;
+		}
+
+		body {
+			font-family: 'Inter', sans-serif;
+			background-color: var(--light-bg);
+			color: var(--text-primary);
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		nav {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(10px);
+			z-index: 1000;
+			padding: 1rem 0;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		}
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 2rem;
+		}
+
+		nav .container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.logo {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			font-size: 1.5rem;
+			font-weight: 800;
+			color: #1e293b;
+			text-decoration: none;
+		}
+
+		.logo i {
+			color: var(--primary-color);
+		}
+
+		.nav-links {
+			display: flex;
+			gap: 2rem;
+			list-style: none;
+			align-items: center;
+		}
+
+		.nav-links a {
+			color: var(--text-secondary);
+			text-decoration: none;
+			font-weight: 500;
+			transition: color 0.3s;
+		}
+
+		.nav-links a:hover {
+			color: var(--primary-color);
+		}
+
+		.btn {
+			padding: 0.5rem 1rem;
+			border-radius: 8px;
+			font-weight: 600;
+			text-decoration: none;
+		}
+
+		.btn-primary {
+			background: var(--primary-color);
+			color: white;
+		}
+
+		.sec-header {
+			padding: 8rem 0 4rem;
+			text-align: center;
+			background: white;
+		}
+
+		.sec-header h1 {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.sec-header p {
+			font-size: 1.1rem;
+			color: var(--text-secondary);
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.grid-cards {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 2rem;
+			margin: 4rem auto;
+			max-width: 1000px;
+		}
+
+		.card {
+			background: white;
+			padding: 2rem;
+			border-radius: 12px;
+			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+			border: 1px solid #e2e8f0;
+		}
+
+		.card h3 {
+			font-size: 1.25rem;
+			margin-bottom: 1rem;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.card p {
+			color: var(--text-secondary);
+			font-size: 0.95rem;
+		}
+
+		.icon-box {
+			width: 40px;
+			height: 40px;
+			background: #eef2ff;
+			color: var(--primary-color);
+			border-radius: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		footer {
+			background: var(--dark-bg);
+			color: #94a3b8;
+			padding: 3rem 0;
+			margin-top: 4rem;
+			text-align: center;
+		}
+
+		ul.check-list {
+			list-style: none;
+			padding: 0;
+		}
+
+		ul.check-list li {
+			margin-bottom: 0.5rem;
+			display: flex;
+			gap: 0.5rem;
+			align-items: start;
+			font-size: 0.95rem;
+			color: var(--text-secondary);
+		}
+
+		ul.check-list li i {
+			color: var(--success-color);
+			margin-top: 5px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<nav>
+		<div class="container">
+			<a href="/" class="logo">
+				<i class="fas fa-shield-alt"></i>
+				<span>Elixopay Security</span>
+			</a>
+			<button class="mobile-menu-btn" style="color: var(--text-primary);"><i class="fas fa-bars"></i></button>
+			<ul class="nav-links">
+				<li><a href="apidocs.html">เอกสาร</a></li>
+				<li><a href="status.html">สถานะ</a></li>
+				<li><a href="contact.html">ติดต่อ</a></li>
+				<li><a href="https://app.elixopay.com/login.html" class="btn btn-primary">เข้าสู่ระบบ</a></li>
+			</ul>
+		</div>
+	</nav>
+    <script>
+        document.querySelector(".mobile-menu-btn").addEventListener("click", function() {
+            document.querySelector(".nav-links").classList.toggle("show");
+        });
+    </script>
+
+	<header class="sec-header">
+		<div class="container">
+			<h1>ความปลอดภัยของคุณคือสิ่งสำคัญที่สุด</h1>
+			<p>เราใช้มาตรฐานความปลอดภัยระดับเดียวกับธนาคารเพื่อปกป้องทุกธุรกรรมและข้อมูลส่วนตัวของคุณ</p>
+		</div>
+	</header>
+
+	<main class="container">
+		<div class="grid-cards">
+			<div class="card">
+				<h3>
+					<div class="icon-box"><i class="fas fa-lock"></i></div> การเข้ารหัสข้อมูล
+				</h3>
+				<p>ข้อมูลทั้งหมดถูกเข้ารหัสด้วย AES-256 ระหว่างการจัดเก็บ และใช้ TLS 1.3 สำหรับการส่งข้อมูลผ่านเครือข่าย
+					เพื่อให้มั่นใจว่าข้อมูลของคุณปลอดภัยเสมอ</p>
+			</div>
+			<div class="card">
+				<h3>
+					<div class="icon-box"><i class="fas fa-server"></i></div> โครงสร้างพื้นฐาน
+				</h3>
+				<p>ระบบของเราทำงานบน Cloud Infrastructure ที่ได้รับมาตรฐาน ISO 27001 และ SOC 2
+					โดยมีการสำรองข้อมูลอัตโนมัติและการป้องกัน DDoS</p>
+			</div>
+			<div class="card">
+				<h3>
+					<div class="icon-box"><i class="fas fa-user-secret"></i></div> การตรวจสอบการฉ้อโกง
+				</h3>
+				<p>ระบบ AI ของเราวิเคราะห์ธุรกรรมแบบเรียลไทม์เพื่อตรวจจับและป้องกันกิจกรรมที่น่าสงสัย
+					ปกป้องคุณจากการฉ้อโกงบัตรเครดิต</p>
+			</div>
+		</div>
+
+		<div class="card" style="max-width: 800px; margin: 0 auto;">
+			<h3>มาตรฐานที่เราปฏิบัติตาม</h3>
+			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+				<ul class="check-list">
+					<li><i class="fas fa-check-circle"></i> PCI DSS Level 1 Compliant</li>
+					<li><i class="fas fa-check-circle"></i> GDPR Compliant</li>
+					<li><i class="fas fa-check-circle"></i> 24/7 Security Monitoring</li>
+				</ul>
+				<ul class="check-list">
+					<li><i class="fas fa-check-circle"></i> Two-Factor Authentication (2FA)</li>
+					<li><i class="fas fa-check-circle"></i> Bug Bounty Program</li>
+					<li><i class="fas fa-check-circle"></i> Regular Penetration Testing</li>
+				</ul>
+			</div>
+		</div>
+	</main>
+
+	<footer>
+		<div class="container">
+			<p>&copy; 2026 Elixopay. สงวนลิขสิทธิ์</p>
+			<div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; font-size: 0.9rem;">
+				<a href="privacy.html" style="color: inherit;">นโยบายความเป็นส่วนตัว</a>
+				<a href="terms.html" style="color: inherit;">ข้อกำหนดการใช้งาน</a>
+			</div>
+		</div>
+	</footer>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="js/ui-enhancements.js?v=3"></script>
+</body>
+
+</html>

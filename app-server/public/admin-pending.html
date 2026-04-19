@@ -4,59 +4,28 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>รออนุมัติ - Admin Dashboard | Elixopay</title>
-	<link rel="stylesheet" href="styles/theme.css" />
+	<title>KYC Applications - Admin | Elixopay</title>
+	<link rel="stylesheet" href="/css/design-system.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" defer></script>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<style>
-		body {
-			font-family: 'Inter', system-ui, sans-serif;
-			background: #0d1117;
-			color: #e2e8f0;
-			margin: 0;
-		}
+		/* Keep existing dark-mode component styles but use design system vars */
+		body.light { background: #f8fafc; color: #0f172a; }
+		.container { max-width: 1400px; margin: 0 auto; }
+		.header { background: var(--ep-bg-card); padding: 1.25rem; border-radius: var(--ep-radius-lg); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--ep-border); }
+		body.light .header { background: #ffffff; border-color: #e2e8f0; }
 
-		body.light {
-			background: #f8fafc;
-			color: #0f172a;
-		}
-
-		.container {
-			max-width: 1400px;
-			margin: 0 auto;
-			padding: 2rem 1.5rem;
-		}
-
-		.header {
-			background: #1e293b;
-			padding: 1.5rem;
-			border-radius: 12px;
-			margin-bottom: 2rem;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		body.light .header {
-			background: #ffffff;
-			border: 1px solid #e2e8f0;
-		}
-
-		.stats {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-			gap: 1.5rem;
-			margin-bottom: 2rem;
-		}
-
-		.stat-card {
-			background: #1e293b;
-			padding: 1.5rem;
-			border-radius: 12px;
-			border: 1px solid rgba(255, 255, 255, .08);
-		}
+		.stat-card { background: var(--ep-bg-card); padding: 1.25rem; border-radius: var(--ep-radius-lg); border: 1px solid var(--ep-border); }
+		body.light .stat-card { background: #ffffff; border-color: #e2e8f0; }
+		.stat-value { font-family: var(--ep-font-mono); font-size: 1.8rem; font-weight: 700; color: var(--ep-purple-light); }
+		.stat-label { font-size: .8rem; color: var(--ep-text-muted); margin-top: .5rem; }
+		.card { background: var(--ep-bg-card); border-radius: var(--ep-radius-lg); border: 1px solid var(--ep-border); overflow: hidden; }
+		body.light .card { background: #ffffff; border-color: #e2e8f0; }
+		.card-header { padding: 1.25rem; border-bottom: 1px solid var(--ep-border); display: flex; justify-content: space-between; align-items: center; }
+		body.light .card-header { border-bottom-color: #e2e8f0; }
+		table { width: 100%; border-collapse: collapse; }
+		th { text-align: left; padding: 1rem 1.25rem; font-size: .75rem; font-weight: 700; color: var(--ep-text-muted); text-transform: uppercase; letter-spacing: .5px; background: rgba(124, 58, 237, 0.04); }
+		td { padding: 1rem 1.25rem; border-top: 1px solid var(--ep-border); color: var(--ep-text-secondary); }
+		body.light td { border-top-color: #e2e8f0; }
 
 		body.light .stat-card {
 			background: #ffffff;
@@ -294,7 +263,11 @@
 	</style>
 </head>
 
-<body>
+<body class="ep-body">
+	<div class="ep-layout">
+	<div class="ep-main-wrap">
+	<main class="ep-content">
+	<div class="container">
 	<div class="container">
 		<div class="header">
 			<div>
@@ -635,6 +608,11 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="js/ui-enhancements.js"></script>
+	</div><!-- container -->
+	</main>
+	</div><!-- /ep-main-wrap -->
+	</div><!-- /ep-layout -->
+	<script src="/js/admin-sidebar.js"></script>
 </body>
 
 </html>

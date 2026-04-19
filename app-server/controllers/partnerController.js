@@ -64,9 +64,18 @@ exports.getPartnerStats = async (req, res, next) => {
         );
         const referralsCount = parseInt(referralsRes.rows[0].count || 0);
 
-        // 5. Training/Mock Clicks (as we don't track clicks yet)
-        // Use a deterministic pseudo-random based on ID or just a placeholder
-        const clicks = Math.floor(totalEarnings * 0.5) + referralsCount * 10;
+        // 5. Click data — uses link_clicks table if it exists, otherwise returns 0
+        // NOTE: Requires 'link_clicks' table to be created in a future migration
+        let clicks = 0;
+        try {
+            const clicksRes = await db.query(
+                `SELECT COUNT(*) as count FROM link_clicks WHERE agency_id = $1`, [agencyId]
+            );
+            clicks = parseInt(clicksRes.rows[0].count || 0);
+        } catch (e) {
+            // Table doesn't exist yet — return 0 clicks (no mock data)
+            clicks = 0;
+        }
 
         res.json({
             success: true,

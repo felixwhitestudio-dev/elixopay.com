@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Settings - Elixopay</title>
+    <meta name="description" content="Manage your Elixopay merchant settings, notifications, and display preferences.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <style>
+        .st-section {
+            background: var(--ep-bg-card); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg); padding: 24px; margin-bottom: 24px;
+        }
+        .st-section.danger { border-color: rgba(239,68,68,0.2); }
+        .st-section-header { margin-bottom: 20px; }
+        .st-section-header h2 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); margin-bottom: 4px; }
+        .st-section-header h2 i { margin-right: 8px; color: var(--ep-purple-light); }
+        .st-section.danger .st-section-header h2 i { color: var(--ep-danger); }
+        .st-desc { font-size: 0.78rem; color: var(--ep-text-muted); margin: 0; }
+
+        /* Form grid */
+        .st-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .st-field { display: flex; flex-direction: column; }
+        .st-field.full { grid-column: 1 / -1; }
+        .st-field label { font-size: 0.78rem; font-weight: 600; color: var(--ep-text-secondary); margin-bottom: 6px; }
+        .st-field input, .st-field select, .st-field textarea {
+            width: 100%; padding: 10px 12px; background: var(--ep-bg-elevated);
+            border: 1px solid var(--ep-border); color: var(--ep-text-primary);
+            border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui);
+            font-size: 0.85rem; outline: none; transition: var(--ep-transition);
+        }
+        .st-field textarea { resize: vertical; min-height: 60px; }
+        .st-field input:focus, .st-field select:focus, .st-field textarea:focus {
+            border-color: var(--ep-purple); box-shadow: 0 0 0 3px var(--ep-purple-glow);
+        }
+        .st-field select option { background: var(--ep-bg-card); color: var(--ep-text-primary); }
+
+        /* Actions */
+        .st-actions { display: flex; justify-content: flex-end; }
+        .st-btn {
+            padding: 10px 20px; border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui);
+            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: var(--ep-transition);
+            border: none; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .st-btn.primary { background: var(--ep-purple); color: white; }
+        .st-btn.primary:hover { background: var(--ep-purple-dark); transform: translateY(-1px); }
+        .st-btn.outline { background: transparent; border: 1px solid var(--ep-border); color: var(--ep-text-secondary); }
+        .st-btn.outline:hover { border-color: var(--ep-text-muted); }
+        .st-btn.outline.warning { border-color: rgba(245,158,11,0.3); color: var(--ep-warning); }
+        .st-btn.outline.warning:hover { border-color: var(--ep-warning); background: rgba(245,158,11,0.05); }
+        .st-btn.outline.danger { border-color: rgba(239,68,68,0.3); color: var(--ep-danger); }
+        .st-btn.outline.danger:hover { border-color: var(--ep-danger); background: rgba(239,68,68,0.05); }
+
+        /* Toggle switches */
+        .st-toggle-row { display: flex; flex-direction: column; gap: 2px; margin-bottom: 20px; }
+        .st-toggle-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 16px; background: var(--ep-bg-elevated);
+            border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md);
+            transition: var(--ep-transition);
+        }
+        .st-toggle-item:hover { background: var(--ep-bg-hover); }
+        .st-toggle-text strong { font-size: 0.82rem; color: var(--ep-text-primary); display: block; }
+        .st-toggle-text span { font-size: 0.72rem; color: var(--ep-text-muted); }
+
+        /* Toggle switch */
+        .st-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .st-switch input { opacity: 0; width: 0; height: 0; }
+        .st-slider {
+            position: absolute; inset: 0; cursor: pointer;
+            background: var(--ep-bg-base); border: 1px solid var(--ep-border);
+            border-radius: 12px; transition: 0.3s;
+        }
+        .st-slider::before {
+            content: ''; position: absolute; width: 18px; height: 18px;
+            left: 2px; top: 2px; background: var(--ep-text-muted);
+            border-radius: 50%; transition: 0.3s;
+        }
+        .st-switch input:checked + .st-slider { background: var(--ep-purple); border-color: var(--ep-purple); }
+        .st-switch input:checked + .st-slider::before { transform: translateX(20px); background: white; }
+
+        /* Danger zone */
+        .st-danger-items { display: flex; flex-direction: column; gap: 2px; }
+        .st-danger-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 16px; background: var(--ep-bg-elevated);
+            border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md);
+        }
+        .st-danger-item div strong { font-size: 0.82rem; color: var(--ep-text-primary); display: block; }
+        .st-danger-item div span { font-size: 0.72rem; color: var(--ep-text-muted); }
+
+        /* Modal */
+        .st-modal-overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+        .st-modal-overlay.open { display: flex; }
+        .st-modal { background: var(--ep-bg-card); border: 1px solid var(--ep-border); border-radius: var(--ep-radius-xl); width: 100%; max-width: 400px; padding: 24px; box-shadow: var(--ep-shadow-lg); }
+        .st-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .st-modal-header h3 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); }
+        .st-modal-close { background: none; border: none; color: var(--ep-text-muted); font-size: 1.1rem; cursor: pointer; }
+        .st-modal-desc { font-size: 0.85rem; color: var(--ep-text-secondary); margin-bottom: 20px; }
+        .st-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .st-btn.danger-fill { background: var(--ep-danger); color: white; border: none; }
+
+        /* Toast */
+        .st-toast { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: var(--ep-bg-elevated); border: 1px solid var(--ep-success); color: var(--ep-success); padding: 12px 20px; border-radius: var(--ep-radius-md); font-size: 0.82rem; font-weight: 600; display: none; box-shadow: var(--ep-shadow-lg); }
+        .st-toast.show { display: flex; align-items: center; gap: 8px; animation: ep-fade-in 0.3s ease; }
+
+        @media (max-width: 640px) {
+            .st-form-grid { grid-template-columns: 1fr; }
+            .st-danger-item { flex-direction: column; gap: 10px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
+
+        <!-- Business Profile -->
+        <section class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-building"></i> Business Profile</h2>
+                <p class="st-desc">ข้อมูลธุรกิจที่จะแสดงในใบเสร็จและรายงาน</p>
+            </div>
+            <div class="st-form-grid">
+                <div class="st-field">
+                    <label for="bizName">Business Name</label>
+                    <input type="text" id="bizName" placeholder="e.g. My Shop Co., Ltd.">
+                </div>
+                <div class="st-field">
+                    <label for="bizType">Business Type</label>
+                    <select id="bizType">
+                        <option value="">— Select —</option>
+                        <option value="individual">Individual / บุคคลธรรมดา</option>
+                        <option value="company">Company / บริษัท</option>
+                        <option value="partnership">Partnership / ห้างหุ้นส่วน</option>
+                        <option value="association">Association / สมาคม</option>
+                    </select>
+                </div>
+                <div class="st-field">
+                    <label for="bizEmail">Contact Email</label>
+                    <input type="email" id="bizEmail" placeholder="billing@myshop.com">
+                </div>
+                <div class="st-field">
+                    <label for="bizPhone">Phone</label>
+                    <input type="tel" id="bizPhone" placeholder="+66 XX XXX XXXX">
+                </div>
+                <div class="st-field full">
+                    <label for="bizWebsite">Website URL</label>
+                    <input type="url" id="bizWebsite" placeholder="https://www.myshop.com">
+                </div>
+                <div class="st-field full">
+                    <label for="bizAddress">Business Address</label>
+                    <textarea id="bizAddress" rows="2" placeholder="123/45 Sukhumvit Rd., Klongtoey, Bangkok 10110"></textarea>
+                </div>
+            </div>
+            <div class="st-actions">
+                <button class="st-btn primary" onclick="saveSettings('profile')"><i class="fas fa-save"></i> Save Profile</button>
+            </div>
+        </section>
+
+        <!-- Payment Settings -->
+        <section class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-credit-card"></i> Payment Settings</h2>
+                <p class="st-desc">ตั้งค่าเกี่ยวกับการรับชำระเงิน</p>
+            </div>
+            <div class="st-form-grid">
+                <div class="st-field">
+                    <label for="paymentCurrency">Default Currency</label>
+                    <select id="paymentCurrency">
+                        <option value="THB" selected>THB — Thai Baht (฿)</option>
+                        <option value="USD">USD — US Dollar ($)</option>
+                        <option value="EUR">EUR — Euro (€)</option>
+                        <option value="CNY">CNY — Chinese Yuan (¥)</option>
+                    </select>
+                </div>
+                <div class="st-field">
+                    <label for="autoPayout">Auto Payout</label>
+                    <select id="autoPayout">
+                        <option value="manual">Manual — ถอนเอง</option>
+                        <option value="daily">Daily — ทุกวัน</option>
+                        <option value="weekly">Weekly — ทุกสัปดาห์</option>
+                        <option value="monthly">Monthly — ทุกเดือน</option>
+                    </select>
+                </div>
+                <div class="st-field full">
+                    <label for="paymentDesc">Default Payment Description</label>
+                    <input type="text" id="paymentDesc" placeholder="e.g. Payment for order #">
+                </div>
+            </div>
+            <div class="st-toggle-row">
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text">
+                        <strong>Test Mode</strong>
+                        <span>เปิดโหมดทดสอบ — ไม่มีการเรียกเก็บเงินจริง</span>
+                    </div>
+                    <label class="st-switch"><input type="checkbox" id="testMode"><span class="st-slider"></span></label>
+                </div>
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text">
+                        <strong>Auto-capture Payments</strong>
+                        <span>เก็บเงินอัตโนมัติทันทีที่ลูกค้าชำระ</span>
+                    </div>
+                    <label class="st-switch"><input type="checkbox" id="autoCapture" checked><span class="st-slider"></span></label>
+                </div>
+            </div>
+            <div class="st-actions">
+                <button class="st-btn primary" onclick="saveSettings('payment')"><i class="fas fa-save"></i> Save Payment Settings</button>
+            </div>
+        </section>
+
+        <!-- Notifications -->
+        <section class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-bell"></i> Notifications</h2>
+                <p class="st-desc">ตั้งค่าการแจ้งเตือนทาง Email และ SMS</p>
+            </div>
+            <div class="st-toggle-row">
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text"><strong>Email — รายการสำเร็จ</strong><span>แจ้งเตือนทาง email ทุกครั้งที่มีการชำระเงินสำเร็จ</span></div>
+                    <label class="st-switch"><input type="checkbox" id="notifEmailSuccess" checked><span class="st-slider"></span></label>
+                </div>
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text"><strong>Email — รายการล้มเหลว</strong><span>แจ้งเตือนเมื่อการชำระเงินล้มเหลวหรือถูกปฏิเสธ</span></div>
+                    <label class="st-switch"><input type="checkbox" id="notifEmailFail" checked><span class="st-slider"></span></label>
+                </div>
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text"><strong>Email — Payout Completed</strong><span>แจ้งเตือนเมื่อถอนเงินเข้าบัญชีธนาคารสำเร็จ</span></div>
+                    <label class="st-switch"><input type="checkbox" id="notifEmailPayout" checked><span class="st-slider"></span></label>
+                </div>
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text"><strong>Email — Daily Summary</strong><span>รับสรุปรายวันของรายการธุรกรรมทั้งหมด</span></div>
+                    <label class="st-switch"><input type="checkbox" id="notifDailySummary"><span class="st-slider"></span></label>
+                </div>
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text"><strong>SMS — High-value Transactions</strong><span>แจ้งเตือนทาง SMS เมื่อมีรายการที่มูลค่าสูงเกิน ฿10,000</span></div>
+                    <label class="st-switch"><input type="checkbox" id="notifSmsHighValue"><span class="st-slider"></span></label>
+                </div>
+                <div class="st-toggle-item">
+                    <div class="st-toggle-text"><strong>SMS — Security Alerts</strong><span>แจ้งเตือนเมื่อมีกิจกรรมที่น่าสงสัยในบัญชี</span></div>
+                    <label class="st-switch"><input type="checkbox" id="notifSmsSecurity" checked><span class="st-slider"></span></label>
+                </div>
+            </div>
+            <div class="st-actions">
+                <button class="st-btn primary" onclick="saveSettings('notifications')"><i class="fas fa-save"></i> Save Notification Settings</button>
+            </div>
+        </section>
+
+        <!-- Display -->
+        <section class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-palette"></i> Display & Localization</h2>
+                <p class="st-desc">ตั้งค่าภาษา โซนเวลา และรูปแบบการแสดงผล</p>
+            </div>
+            <div class="st-form-grid">
+                <div class="st-field">
+                    <label for="displayLang">Dashboard Language</label>
+                    <select id="displayLang">
+                        <option value="th" selected>ภาษาไทย</option>
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </div>
+                <div class="st-field">
+                    <label for="displayTimezone">Timezone</label>
+                    <select id="displayTimezone">
+                        <option value="Asia/Bangkok" selected>Asia/Bangkok (UTC+7)</option>
+                        <option value="Asia/Shanghai">Asia/Shanghai (UTC+8)</option>
+                        <option value="Asia/Tokyo">Asia/Tokyo (UTC+9)</option>
+                        <option value="US/Eastern">US/Eastern (UTC-5)</option>
+                        <option value="US/Pacific">US/Pacific (UTC-8)</option>
+                        <option value="Europe/London">Europe/London (UTC+0)</option>
+                    </select>
+                </div>
+                <div class="st-field">
+                    <label for="displayDateFormat">Date Format</label>
+                    <select id="displayDateFormat">
+                        <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
+                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                    </select>
+                </div>
+                <div class="st-field">
+                    <label for="displayNumberFormat">Number Format</label>
+                    <select id="displayNumberFormat">
+                        <option value="th" selected>1,234,567.89 (Thai)</option>
+                        <option value="en">1,234,567.89 (International)</option>
+                        <option value="de">1.234.567,89 (European)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="st-actions">
+                <button class="st-btn primary" onclick="saveSettings('display')"><i class="fas fa-save"></i> Save Display Settings</button>
+            </div>
+        </section>
+
+        <!-- Danger Zone -->
+        <section class="st-section danger">
+            <div class="st-section-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Account Actions</h2>
+                <p class="st-desc">การดำเนินการที่มีผลกระทบต่อบัญชีของคุณ</p>
+            </div>
+            <div class="st-danger-items">
+                <div class="st-danger-item">
+                    <div><strong>Export All Data</strong><span>ดาวน์โหลดข้อมูลทั้งหมดของคุณเป็นไฟล์ CSV</span></div>
+                    <button class="st-btn outline" onclick="showToast('Export จะพร้อมเร็วๆ นี้')"><i class="fas fa-download"></i> Export</button>
+                </div>
+                <div class="st-danger-item">
+                    <div><strong>Deactivate Account</strong><span>ปิดการใช้งานบัญชีชั่วคราว — สามารถเปิดใช้งานอีกครั้งได้</span></div>
+                    <button class="st-btn outline warning" onclick="confirmAction('deactivate')"><i class="fas fa-pause-circle"></i> Deactivate</button>
+                </div>
+                <div class="st-danger-item">
+                    <div><strong>Delete Account</strong><span>ลบบัญชีอย่างถาวร — ไม่สามารถเรียกคืนข้อมูลได้</span></div>
+                    <button class="st-btn outline danger" onclick="confirmAction('delete')"><i class="fas fa-trash-alt"></i> Delete</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="st-modal-overlay" id="confirmModal">
+        <div class="st-modal">
+            <div class="st-modal-header">
+                <h3 id="modalTitle">Confirm Action</h3>
+                <button onclick="closeModal()" class="st-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <p id="modalDesc" class="st-modal-desc"></p>
+            <div class="st-modal-actions">
+                <button class="st-btn outline" onclick="closeModal()">Cancel</button>
+                <button class="st-btn danger-fill" id="modalConfirm" onclick="closeModal()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="st-toast" id="stToast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
+
+    <script>
+    // Settings management
+    const SETTINGS_KEY = 'ep-settings';
+    let settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+
+    // Load saved values
+    function loadSettings() {
+        if (settings.profile) {
+            document.getElementById('bizName').value = settings.profile.bizName || '';
+            document.getElementById('bizType').value = settings.profile.bizType || '';
+            document.getElementById('bizEmail').value = settings.profile.bizEmail || '';
+            document.getElementById('bizPhone').value = settings.profile.bizPhone || '';
+            document.getElementById('bizWebsite').value = settings.profile.bizWebsite || '';
+            document.getElementById('bizAddress').value = settings.profile.bizAddress || '';
+        }
+        if (settings.payment) {
+            document.getElementById('paymentCurrency').value = settings.payment.currency || 'THB';
+            document.getElementById('autoPayout').value = settings.payment.autoPayout || 'manual';
+            document.getElementById('paymentDesc').value = settings.payment.desc || '';
+            document.getElementById('testMode').checked = !!settings.payment.testMode;
+            document.getElementById('autoCapture').checked = settings.payment.autoCapture !== false;
+        }
+        if (settings.display) {
+            document.getElementById('displayLang').value = settings.display.lang || 'th';
+            document.getElementById('displayTimezone').value = settings.display.timezone || 'Asia/Bangkok';
+            document.getElementById('displayDateFormat').value = settings.display.dateFormat || 'DD/MM/YYYY';
+            document.getElementById('displayNumberFormat').value = settings.display.numberFormat || 'th';
+        }
+    }
+
+    function saveSettings(section) {
+        if (section === 'profile') {
+            settings.profile = {
+                bizName: document.getElementById('bizName').value,
+                bizType: document.getElementById('bizType').value,
+                bizEmail: document.getElementById('bizEmail').value,
+                bizPhone: document.getElementById('bizPhone').value,
+                bizWebsite: document.getElementById('bizWebsite').value,
+                bizAddress: document.getElementById('bizAddress').value
+            };
+        } else if (section === 'payment') {
+            settings.payment = {
+                currency: document.getElementById('paymentCurrency').value,
+                autoPayout: document.getElementById('autoPayout').value,
+                desc: document.getElementById('paymentDesc').value,
+                testMode: document.getElementById('testMode').checked,
+                autoCapture: document.getElementById('autoCapture').checked
+            };
+        } else if (section === 'notifications') {
+            settings.notifications = {
+                emailSuccess: document.getElementById('notifEmailSuccess').checked,
+                emailFail: document.getElementById('notifEmailFail').checked,
+                emailPayout: document.getElementById('notifEmailPayout').checked,
+                dailySummary: document.getElementById('notifDailySummary').checked,
+                smsHighValue: document.getElementById('notifSmsHighValue').checked,
+                smsSecurity: document.getElementById('notifSmsSecurity').checked
+            };
+        } else if (section === 'display') {
+            settings.display = {
+                lang: document.getElementById('displayLang').value,
+                timezone: document.getElementById('displayTimezone').value,
+                dateFormat: document.getElementById('displayDateFormat').value,
+                numberFormat: document.getElementById('displayNumberFormat').value
+            };
+        }
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+        showToast('บันทึกสำเร็จ ✓');
+    }
+
+    function confirmAction(type) {
+        const modal = document.getElementById('confirmModal');
+        if (type === 'deactivate') {
+            document.getElementById('modalTitle').textContent = 'Deactivate Account';
+            document.getElementById('modalDesc').textContent = 'ปิดการใช้งานบัญชีชั่วคราว? คุณสามารถเปิดใช้งานอีกครั้งได้ภายหลัง';
+        } else {
+            document.getElementById('modalTitle').textContent = 'Delete Account';
+            document.getElementById('modalDesc').textContent = 'ลบบัญชีอย่างถาวร? ข้อมูลทั้งหมดจะถูกลบและไม่สามารถกู้คืนได้';
+        }
+        modal.classList.add('open');
+    }
+    function closeModal() { document.getElementById('confirmModal').classList.remove('open'); }
+
+    function showToast(msg) {
+        const t = document.getElementById('stToast');
+        document.getElementById('toastMsg').textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    loadSettings();
+    </script>
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>

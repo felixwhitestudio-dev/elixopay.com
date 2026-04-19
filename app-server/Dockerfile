@@ -1,14 +1,3 @@
-# Stage 1: Build
-FROM node:18-alpine AS builder
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-
-# Stage 2: Production
 FROM node:18-alpine
 
 WORKDIR /app
@@ -16,14 +5,14 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
-COPY --from=builder /app .
+COPY . .
 
 # Create non-root user for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
-EXPOSE 8080
+EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

@@ -1,460 +1,222 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
-    <!-- Primary Meta Tags (v2) -->
-    <title>เข้าสู่ระบบ - Elixopay Dashboard</title>
-    <meta name="title" content="เข้าสู่ระบบ - Elixopay Dashboard">
-    <meta name="description" content="เข้าสู่ระบบเพื่อจัดการการชำระเงิน ดูรายงาน และตั้งค่าบัญชีของคุณ">
+    <!-- Meta -->
+    <title>Login - Elixopay Dashboard</title>
+    <meta name="description" content="Sign in to manage your payments, view reports, and configure your Elixopay account.">
     <meta name="robots" content="noindex, nofollow">
-
-    <!-- Security Meta Tags -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
 
-    <!-- API Configuration -->
+    <!-- Scripts -->
     <script src="/js/api-config.js"></script>
     <script src="/js/i18n.js"></script>
-    <!-- Force local API during local development -->
-    <!--
-    (function(){
-        try {
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const currentOverride = localStorage.getItem('api_base_url');
-            if (isLocal && window.setApiBase && currentOverride !== 'http://localhost:3000') {
-                // Persist override so all pages use localhost API, but do it only once
-                window.setApiBase('http://localhost:3000');
-                console.log('🔧 Forcing API Base to localhost for development');
-            }
-        } catch (e) { console.warn('API base override failed', e); }
-    })();
-    -->
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <!-- FontAwesome -->
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Identity Services -->
+
+    <!-- Google Identity -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-    <style>
-        * {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 50%, #9B8EFF 100%);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
-            transform: translateY(-2px);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .input-field {
-            transition: all 0.2s ease;
-        }
-
-        .input-field:focus {
-            border-color: #635BFF;
-            box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
-        }
-
-        .input-field.error {
-            border-color: #ef4444;
-        }
-
-        .input-field.error:focus {
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-        }
-
-        .hero-gradient {
-            background: radial-gradient(circle at top right, rgba(99, 91, 255, 0.05) 0%, transparent 50%);
-        }
-
-        .security-badge {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            width: 20px;
-            height: 20px;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Dark Mode Support (Default state when .light is missing) */
-        body:not(.light) {
-            background-color: #0f172a !important;
-            color: #f8fafc !important;
-        }
-
-        body:not(.light) .bg-white {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
-        }
-
-        body:not(.light) .bg-gray-50 {
-            background-color: #0f172a !important;
-        }
-
-        body:not(.light) .text-gray-900 {
-            color: #f8fafc !important;
-        }
-
-        body:not(.light) .text-gray-700 {
-            color: #e2e8f0 !important;
-        }
-
-        body:not(.light) .text-gray-600,
-        body:not(.light) .text-gray-500 {
-            color: #94a3b8 !important;
-        }
-
-        body:not(.light) .border-gray-200,
-        body:not(.light) .border-gray-300 {
-            border-color: #334155 !important;
-        }
-
-        body:not(.light) .input-field {
-            background-color: #0f172a !important;
-            border-color: #334155 !important;
-            color: white !important;
-        }
-
-        body:not(.light) .input-field::placeholder {
-            color: #475569 !important;
-        }
-
-        body:not(.light) .shadow-xl {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4) !important;
-        }
-    </style>
 </head>
 
-<body class="antialiased bg-gray-50 text-gray-900">
+<body class="auth-page">
+    <div class="auth-bg-fx"></div>
+    <div class="auth-grid-bg"></div>
+
     <!-- Mobile Navbar -->
-    <nav class="fixed top-0 left-0 w-full z-50 bg-white shadow-md lg:hidden">
-        <div class="flex items-center justify-between px-4 py-3">
-            <a href="https://www.elixopay.com/" class="font-bold text-xl gradient-text">Elixopay</a>
-            <button id="mobileMenuBtn" class="focus:outline-none" aria-label="Open menu" onclick="toggleMobileMenu()">
-                <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-        </div>
-        <div id="mobileMenu" class="hidden flex-col bg-white border-t border-gray-200 px-4 py-2">
-            <a href="https://www.elixopay.com/" class="block py-2 text-gray-700 font-medium hover:text-purple-600"
-                data-i18n="nav.home">หน้าแรก</a>
-            <a href="https://www.elixopay.com/apidocs.html"
-                class="block py-2 text-gray-700 font-medium hover:text-purple-600" data-i18n="nav.docs">ดูเอกสาร API</a>
-            <a href="/login.html" class="block py-2 text-gray-700 font-medium hover:text-purple-600"
-                data-i18n="nav.login">เข้าสู่ระบบ</a>
-            <a href="/signup.html" class="block py-2 text-gray-700 font-medium hover:text-purple-600"
-                data-i18n="nav.signup">สมัครสมาชิก</a>
+    <div class="auth-mobile-nav">
+        <a href="https://www.elixopay.com/" class="auth-logo">
+            <div class="auth-logo-mark">E</div>
+            Elixopay
+        </a>
+        <select id="langSelectMobile" class="auth-lang-select" aria-label="Language"
+            onchange="if(window.changeLanguage) changeLanguage(this.value);">
+            <option value="th">TH</option>
+            <option value="en">EN</option>
+            <option value="zh">中文</option>
+        </select>
+    </div>
+
+    <!-- Desktop Navbar -->
+    <nav class="auth-nav">
+        <a href="https://www.elixopay.com/" class="auth-logo">
+            <div class="auth-logo-mark">E</div>
+            Elixopay
+        </a>
+        <div class="auth-nav-links">
+            <a href="https://www.elixopay.com/" data-i18n="nav.home">Home</a>
+            <a href="https://www.elixopay.com/apidocs.html" data-i18n="nav.docs">Docs</a>
+            <a href="/signup.html" class="auth-nav-btn" data-i18n="nav.signup">Sign Up</a>
+            <select id="langSelect" class="auth-lang-select" aria-label="Language"
+                onchange="if(window.changeLanguage) changeLanguage(this.value);">
+                <option value="th">TH</option>
+                <option value="en">EN</option>
+                <option value="zh">中文</option>
+            </select>
         </div>
     </nav>
 
-    <div class="min-h-screen flex flex-col lg:flex-row">
+    <!-- Split Layout -->
+    <div class="auth-split">
 
-        <!-- Left Side - Login Form -->
-        <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-gray-50 z-10 order-1">
-            <div class="w-full max-w-md">
+        <!-- Left: Hero panel -->
+        <div class="auth-hero auth-fade-in">
+            <div class="auth-hero-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span data-i18n="login.hero.badge">Trusted Payment Gateway</span>
+            </div>
+            <h1>
+                <span data-i18n="login.hero.welcome">Welcome to</span><br>
+                Elixopay Dashboard
+            </h1>
+            <p class="auth-tagline" data-i18n="login.hero.desc">
+                Manage payments, view real-time reports, and access comprehensive API documentation.
+            </p>
 
-                <!-- Logo -->
-                <div class="text-center mb-8">
-                    <a href="https://www.elixopay.com/" class="inline-block">
-                        <h1 class="text-3xl font-bold gradient-text">Elixopay</h1>
-                    </a>
-                    <p class="text-gray-600 mt-2" data-i18n="login.subtitle">เข้าสู่ระบบเพื่อจัดการการชำระเงินของคุณ</p>
-                </div>
-
-                <!-- Login Form -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-                    <form id="loginForm" class="space-y-6" onsubmit="handleLogin(event)">
-
-                        <!-- CSRF Token (Hidden) -->
-                        <input type="hidden" id="csrf_token" name="csrf_token" value="csrf_token_placeholder">
-
-                        <!-- Email Field -->
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2"
-                                data-i18n="login.email">
-                                อีเมล
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                                </div>
-                                <input type="email" id="email" name="email"
-                                    class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none"
-                                    required autocomplete="email" oninput="clearError('email')"
-                                    data-i18n="[placeholder]login.emailPh" placeholder="your@email.com">
-                            </div>
-                            <p id="email-error" class="mt-1 text-sm text-red-600 hidden"></p>
-                        </div>
-
-                        <!-- Password Field -->
-                        <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2"
-                                data-i18n="login.password">
-                                รหัสผ่าน
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </div>
-                                <input type="password" id="password" name="password"
-                                    class="input-field block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none"
-                                    required minlength="8" autocomplete="current-password"
-                                    oninput="clearError('password')" data-i18n="[placeholder]login.passwordPh"
-                                    placeholder="••••••••">
-                                <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                    onclick="togglePassword()">
-                                    <svg id="eye-icon" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    <svg id="eye-off-icon" class="h-5 w-5 text-gray-400 hover:text-gray-600 hidden"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <p id="password-error" class="mt-1 text-sm text-red-600 hidden"></p>
-                        </div>
-
-                        <!-- Remember Me & Forgot Password -->
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <input id="remember-me" name="remember-me" type="checkbox"
-                                    class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer">
-                                <label for="remember-me" class="ml-2 block text-sm text-gray-700 cursor-pointer"
-                                    data-i18n="login.remember">
-                                    จดจำฉัน
-                                </label>
-                            </div>
-                            <a href="#forgot-password" onclick="showForgotPassword(event)"
-                                class="text-sm font-medium text-purple-600 hover:text-purple-700"
-                                data-i18n="login.forgot">
-                                ลืมรหัสผ่าน?
-                            </a>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" id="login-btn"
-                            class="btn-primary w-full text-white py-3 px-4 rounded-lg font-semibold text-base flex items-center justify-center">
-                            <span id="login-btn-text" data-i18n="login.submit">เข้าสู่ระบบ</span>
-                            <div id="login-spinner" class="spinner hidden ml-3"></div>
-                        </button>
-
-                        <!-- Error Message -->
-                        <div id="form-error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4">
-                            <div class="flex">
-                                <svg class="h-5 w-5 text-red-400 mr-2 flex-shrink-0" fill="currentColor"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <div>
-                                    <p id="form-error-message" class="text-sm text-red-700"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Divider -->
-                        <div class="relative my-6">
-                            <div class="absolute inset-0 flex items-center">
-                                <div class="w-full border-t border-gray-300"></div>
-                            </div>
-                            <div class="relative flex justify-center text-sm">
-                                <span class="px-2 bg-white text-gray-500" data-i18n="login.or">หรือ</span>
-                            </div>
-                        </div>
-
-                        <!-- Social Login (Optional) -->
-                        <div class="space-y-3">
-                            <button type="button" onclick="handleGoogleSignIn()"
-                                class="w-full border border-gray-300 py-3 px-4 rounded-lg font-medium text-gray-700 bg-white hover:bg-gray-50 transition flex items-center justify-center shadow-sm">
-                                <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                                        fill="#4285F4" />
-                                    <path
-                                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                        fill="#34A853" />
-                                    <path
-                                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                                        fill="#FBBC05" />
-                                    <path
-                                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                        fill="#EA4335" />
-                                </svg>
-                                <span data-i18n="login.google">เข้าสู่ระบบด้วย Google</span>
-                            </button>
-                        </div>
-
-
-
-                    </form>
-
-                    <!-- Sign Up Link -->
-                    <div class="mt-6 text-center">
-                        <p class="text-sm text-gray-600">
-                            <span data-i18n="login.noAccount">ยังไม่มีบัญชี?</span>
-                            <a href="/signup.html" class="font-medium text-purple-600 hover:text-purple-700"
-                                data-i18n="login.signup">
-                                สมัครใช้งานฟรี
-                            </a>
-                        </p>
+            <div class="auth-features">
+                <div class="auth-feat">
+                    <div class="auth-feat-icon purple"><i class="fas fa-chart-line"></i></div>
+                    <div>
+                        <h4 data-i18n="login.hero.f1Title">Real-time Reports</h4>
+                        <p data-i18n="login.hero.f1Desc">Track sales and transaction status instantly</p>
                     </div>
                 </div>
-
-                <!-- Security Notice -->
-                <div class="mt-8 text-center">
-                    <div class="flex items-center justify-center gap-4 text-xs text-gray-500">
-                        <div class="flex items-center gap-1 security-badge">
-                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span data-i18n="login.security.ssl">256-bit SSL</span>
-                        </div>
-                        <div class="flex items-center gap-1 security-badge">
-                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span data-i18n="login.security.pci">PCI DSS</span>
-                        </div>
-                        <div class="flex items-center gap-1 security-badge">
-                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span data-i18n="login.security.iso">ISO 27001</span>
-                        </div>
+                <div class="auth-feat">
+                    <div class="auth-feat-icon green"><i class="fas fa-lock"></i></div>
+                    <div>
+                        <h4 data-i18n="login.hero.f2Title">Bank-grade Security</h4>
+                        <p data-i18n="login.hero.f2Desc">End-to-end encryption with PCI DSS compliance</p>
                     </div>
                 </div>
+                <div class="auth-feat">
+                    <div class="auth-feat-icon pink"><i class="fas fa-code"></i></div>
+                    <div>
+                        <h4 data-i18n="login.hero.f3Title">Developer-friendly API</h4>
+                        <p data-i18n="login.hero.f3Desc">Complete docs, SDKs, and sandbox for testing</p>
+                    </div>
+                </div>
+            </div>
 
+            <div class="auth-stats">
+                <div class="auth-stat">
+                    <div class="auth-stat-num">99.9%</div>
+                    <div class="auth-stat-label">Uptime</div>
+                </div>
+                <div class="auth-stat">
+                    <div class="auth-stat-num">&lt;1s</div>
+                    <div class="auth-stat-label">Response</div>
+                </div>
+                <div class="auth-stat">
+                    <div class="auth-stat-num">24/7</div>
+                    <div class="auth-stat-label">Support</div>
+                </div>
             </div>
         </div>
 
-        <!-- Right Side - Hero Image/Gradient -->
-        <div
-            class="hidden lg:flex lg:w-1/2 bg-gray-900 hero-gradient items-center justify-center p-12 relative overflow-hidden order-2">
-            <!-- Language Selector & Theme Toggle -->
-            <style>
-                .hero-gradient {
-                    background: linear-gradient(135deg, #3b2f6b 0%, #635BFF 100%) !important;
-                }
+        <!-- Right: Login Form -->
+        <div class="auth-form-panel auth-fade-in" style="animation-delay: 0.15s;">
+            <div class="auth-form-wrap">
+                <h2 data-i18n="login.title">Sign in to your account</h2>
+                <p class="auth-form-sub" data-i18n="login.subtitle">Enter your credentials to access your dashboard</p>
 
-                .hero-gradient .text-white,
-                .hero-gradient .gradient-text,
-                .hero-gradient h2,
-                .hero-gradient p {
-                    color: #fff !important;
-                    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-                }
-            </style>
-            <div class="absolute top-6 right-6 z-20 flex items-center gap-3">
-                <!-- Theme Toggle Removed -->
-                <select id="langSelect" class="bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 text-sm">
-                    <option value="th">TH</option>
-                    <option value="en">EN</option>
-                    <option value="zh">中文</option>
-                </select>
-            </div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <input type="hidden" id="csrf_token" name="csrf_token" value="csrf_token_placeholder">
 
-            <div class="max-w-lg text-white z-10">
-                <h2 class="text-4xl font-bold mb-6">
-                    <span data-i18n="login.hero.welcome">ยินดีต้อนรับสู่</span><br />
-                    <span
-                        class="gradient-text bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent"
-                        data-i18n="login.hero.brand">
-                        Elixopay Dashboard
-                    </span>
-                </h2>
-                <p class="text-lg text-gray-300 mb-8" data-i18n="login.hero.desc">
-                    จัดการการชำระเงิน ดูรายงานแบบเรียลไทม์ และเข้าถึง API Documentation ที่ครบครัน
-                </p>
-
-                <!-- Features -->
-                <div class="space-y-4">
-                    <div class="flex items-start gap-3">
-                        <div
-                            class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
-                            </svg>
+                    <!-- Email -->
+                    <div class="auth-fg">
+                        <label for="email" data-i18n="login.email">Email</label>
+                        <div class="auth-input-icon">
+                            <i class="far fa-envelope"></i>
+                            <input type="email" id="email" name="email" required autocomplete="email"
+                                oninput="clearError('email')"
+                                data-i18n="[placeholder]login.emailPh" placeholder="your@email.com">
                         </div>
-                        <div>
-                            <h3 class="text-white font-medium" data-i18n="login.hero.f1Title">
-                                รายงานแบบเรียลไทม์</h3>
-                            <p class="text-sm text-gray-400" data-i18n="login.hero.f1Desc">
-                                ติดตามยอดขายและสถานะการทำรายการได้ทันที</p>
+                        <p id="email-error" class="auth-error-msg"></p>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="auth-fg">
+                        <label for="password" data-i18n="login.password">Password</label>
+                        <div class="auth-input-icon" style="position:relative;">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" required minlength="8"
+                                autocomplete="current-password" oninput="clearError('password')"
+                                data-i18n="[placeholder]login.passwordPh" placeholder="••••••••"
+                                style="padding-right: 2.75rem;">
+                            <button type="button" style="position:absolute; right:0.85rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--auth-muted);"
+                                onclick="togglePassword()">
+                                <i id="eye-icon" class="fas fa-eye"></i>
+                            </button>
                         </div>
+                        <p id="password-error" class="auth-error-msg"></p>
+                    </div>
+
+                    <!-- Remember + Forgot -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                        <div class="auth-checkbox-row" style="margin-bottom:0;">
+                            <input id="remember-me" name="remember-me" type="checkbox">
+                            <label for="remember-me" data-i18n="login.remember">Remember me</label>
+                        </div>
+                        <a href="#forgot-password" onclick="showForgotPassword(event)" class="auth-link"
+                            style="font-size:0.82rem;" data-i18n="login.forgot">Forgot password?</a>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" id="login-btn" class="auth-btn-primary">
+                        <span id="login-btn-text" data-i18n="login.submit">Sign In</span>
+                        <div id="login-spinner" class="auth-spinner hidden"></div>
+                    </button>
+
+                    <!-- Error -->
+                    <div id="form-error" class="auth-alert error hidden" style="margin-top:1rem;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p id="form-error-message"></p>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="auth-divider">
+                        <span data-i18n="login.or">or</span>
+                    </div>
+
+                    <!-- Google Sign In -->
+                    <button type="button" onclick="handleGoogleSignIn()" class="auth-btn-social">
+                        <svg class="w-5 h-5" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                        </svg>
+                        <span data-i18n="login.google">Sign in with Google</span>
+                    </button>
+                </form>
+
+                <!-- Sign Up Link -->
+                <div style="text-align:center; margin-top:1.5rem;">
+                    <p style="font-size:0.85rem; color:var(--auth-muted);">
+                        <span data-i18n="login.noAccount">Don't have an account?</span>
+                        <a href="/signup.html" class="auth-link" data-i18n="login.signup">Sign up free</a>
+                    </p>
+                </div>
+
+                <!-- Security -->
+                <div class="auth-security">
+                    <div class="auth-security-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>256-bit SSL</span>
+                    </div>
+                    <div class="auth-security-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>PCI DSS</span>
+                    </div>
+                    <div class="auth-security-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>ISO 27001</span>
                     </div>
                 </div>
             </div>
@@ -465,7 +227,7 @@
     <script src="/js/api-config.js"></script>
     <script src="/js/login.js"></script>
     <script src="/js/ui.js"></script>
-    <script src="/js/google-auth.js"></script>
+    <script src="/js/google-auth.js?v=2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/ui-enhancements.js"></script>
 </body>

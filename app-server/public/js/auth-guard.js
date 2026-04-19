@@ -10,44 +10,73 @@
         window.location.replace('/login.html');
     };
 
-    apiFetch(API_CONFIG.ENDPOINTS.auth.me)
-        .then(resp => {
-            if (!resp || !resp.ok) throw new Error('Auth check failed');
-            return resp.json();
-        })
-        .then(data => {
-            const user = data && data.data && data.data.user;
-            if (!user) throw new Error('User missing in response');
-            localStorage.setItem('user', JSON.stringify(user));
-
-            if (requiredRole) {
-                if (user.role?.toLowerCase() === 'admin') {
-                    // Admin can access everything
-                } else if (user.role === requiredRole) {
-                    // Exact match
-                } else if (requiredRole === 'user' && ['merchant', 'partner', 'organizer', 'agent'].includes(user.role)) {
-                    // Hierarchy roles can access basic user pages
-                } else {
-                    console.warn('Role mismatch. Required:', requiredRole, 'Got:', user.role);
-                    return redirectLogin();
-                }
+    const showPage = (user) => {
+        if (requiredRole) {
+            if (user.role?.toLowerCase() === 'admin') {
+                // Admin can access everything
+            } else if (user.role === requiredRole) {
+                // Exact match
+            } else if (requiredRole === 'user' && ['merchant', 'partner', 'organizer', 'agent'].includes(user.role)) {
+                // Hierarchy roles can access basic user pages
+            } else {
+                console.warn('Role mismatch. Required:', requiredRole, 'Got:', user.role);
+                return redirectLogin();
             }
+        }
 
-            const nameEl = document.getElementById('user-name');
-            if (nameEl) nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
+        const nameEl = document.getElementById('user-name');
+        if (nameEl) nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
 
-            // Notify page scripts that auth is ready
-            try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch (_) { }
-        })
-        .catch(err => {
-            console.warn('Auth guard redirecting:', err.message);
-            return redirectLogin();
-        })
-        .finally(() => {
-            // Reveal page content if we didn't redirect
-            // If redirecting, the navigation will replace document soon
-            root.style.visibility = prevVisibility || 'visible';
-        });
+        // Notify page scripts that auth is ready
+        try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch (_) { }
+
+        // Reveal page
+        root.style.visibility = prevVisibility || 'visible';
+    };
+
+    // Try to use cached user from localStorage as fallback
+    const tryLocalFallback = () => {
+        const cached = localStorage.getItem('user');
+        const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+        if (cached && token) {
+            try {
+                const user = JSON.parse(cached);
+                if (user && (user.email || user.name)) {
+                    console.info('Auth guard: Using cached user (backend unreachable)');
+                    showPage(user);
+                    return true;
+                }
+            } catch (_) { /* invalid JSON */ }
+        }
+        return false;
+    };
+
+    // Primary: verify with backend API
+    if (typeof apiFetch === 'function' && typeof API_CONFIG !== 'undefined') {
+        apiFetch(API_CONFIG.ENDPOINTS.auth.me)
+            .then(resp => {
+                if (!resp || !resp.ok) throw new Error('Auth check failed');
+                return resp.json();
+            })
+            .then(data => {
+                const user = data && data.data && data.data.user;
+                if (!user) throw new Error('User missing in response');
+                localStorage.setItem('user', JSON.stringify(user));
+                showPage(user);
+            })
+            .catch(err => {
+                console.warn('Auth guard: Backend unreachable -', err.message);
+                // Fallback to cached localStorage data
+                if (!tryLocalFallback()) {
+                    redirectLogin();
+                }
+            });
+    } else {
+        // apiFetch/API_CONFIG not loaded — try local fallback
+        if (!tryLocalFallback()) {
+            redirectLogin();
+        }
+    }
 })();
 /**
  * security-utils.js

@@ -1,40 +1,46 @@
 :root {
-  /* Premium SCB Fintech Palette (Deep Royal Purple) */
-  --primary-color: #4E2A84;
-  /* Deep Royal Purple (SCB Base) */
-  --primary-dark: #240E45;
-  /* Darker Shade for Depth */
-  --primary-light: #7C3AED;
+  /* Premium Elixopay Fintech Palette — Unified with Dashboard */
+  --primary-color: #7C3AED;
+  /* Elixopay Brand Purple (matches dashboard --ep-purple) */
+  --primary-dark: #5B21B6;
+  /* Darker Purple for Depth */
+  --primary-light: #A78BFA;
   /* Lighter Purple for Accents */
 
   --secondary-color: #6366F1;
   /* Trust Indigo/Blue */
-  --accent-color: #D946EF;
-  /* Fuchsia for small highlights */
+  --accent-color: #C026D3;
+  /* Fuchsia for highlights */
   --accent-gold: #F59E0B;
   /* Gold for Trust */
 
-  /* Light/Dark Mode Bases */
-  --dark-bg: #1A0B2E;
-  /* Very Deep Purple/Black */
-  --dark-card: #2E1065;
-  --text-primary: #F8FAFC;
-  /* White/Slate-50 */
-  --text-secondary: #CBD5E1;
-  /* Slate-300 */
-  --border-color: rgba(255, 255, 255, 0.1);
+  /* Surface Palette — Aligned with Dashboard */
+  --dark-bg: #0C0A14;
+  /* Deep Purple-Black (aligned with dashboard #08090d) */
+  --dark-card: #14101F;
+  /* Card surface */
+  --text-primary: #F1F5F9;
+  /* Matches dashboard --ep-text-primary */
+  --text-secondary: #94A3B8;
+  /* Matches dashboard --ep-text-secondary */
+  --border-color: rgba(255, 255, 255, 0.08);
 
   /* Premium Gradients */
-  --gradient-scb: linear-gradient(135deg, #4E2A84 0%, #2E1065 100%);
-  /* Solid SCB Gradient */
+  --gradient-scb: linear-gradient(135deg, #1A0B2E 0%, #0C0A14 100%);
+  /* Deep brand gradient */
   --brand-gradient: linear-gradient(135deg, #7C3AED 0%, #C026D3 100%);
-  /* Brighter/Stronger for CTA */
-  --gradient-glow: radial-gradient(circle at center, rgba(124, 58, 237, 0.4) 0%, transparent 60%);
+  /* CTA gradient */
+  --gradient-glow: radial-gradient(circle at center, rgba(124, 58, 237, 0.3) 0%, transparent 60%);
 
-  /* Tech Grid Pattern - More subtle yet visible */
+  /* Utility Gradients */
+  --gradient-1: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
+  --gradient-2: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
+  --gradient-3: linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%);
+
+  /* Tech Grid Pattern */
   --bg-grid:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
   --bg-grid-size: 60px 60px;
 }
 

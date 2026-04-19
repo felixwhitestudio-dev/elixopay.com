@@ -7,40 +7,29 @@
     <title>Platform Liquidity Management - Elixopay Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css">
     <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="admin"></script>
+    <style>
+        .bg-gray-50, .bg-white { background-color: var(--ep-bg-card) !important; color: var(--ep-text-primary) !important; }
+        .text-gray-900, .text-gray-800 { color: var(--ep-text-primary) !important; }
+        .text-gray-700, .text-gray-600 { color: var(--ep-text-secondary) !important; }
+        .text-gray-500 { color: var(--ep-text-muted) !important; }
+        .border-gray-200, .border-gray-300 { border-color: var(--ep-border) !important; }
+        .shadow { box-shadow: var(--ep-shadow-sm) !important; }
+        table th { color: var(--ep-text-muted) !important; border-color: var(--ep-border) !important; }
+        table td { color: var(--ep-text-secondary) !important; border-color: var(--ep-border) !important; }
+        table tbody tr:hover { background: var(--ep-bg-hover) !important; }
+        select, input { background-color: var(--ep-bg-base) !important; color: var(--ep-text-primary) !important; border-color: var(--ep-border) !important; }
+    </style>
 </head>
 
-<body class="bg-gray-50 min-h-screen">
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
 
-    <!-- Navbar -->
-    <nav class="bg-gray-900 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <span
-                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
-                        Elixopay Admin
-                    </span>
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="/admin-dashboard.html"
-                            class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Dashboard</a>
-                        <a href="#"
-                            class="px-3 py-2 rounded-md text-sm font-medium bg-gray-800 text-white">Liquidity</a>
-                        <a href="/admin-users.html"
-                            class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Users</a>
-                    </div>
-                </div>
-                <div>
-                    <button onclick="logout()"
-                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div>
         <div class="md:flex md:items-center md:justify-between mb-8">
             <div class="flex-1 min-w-0">
                 <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
@@ -294,6 +283,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/csv-export.js"></script>
     <script src="js/ui-enhancements.js"></script>
+    </div><!-- close content div -->
+    </main>
+    </div><!-- /ep-main-wrap -->
+    </div><!-- /ep-layout -->
+    <script src="/js/admin-sidebar.js"></script>
 </body>
 
 </html>

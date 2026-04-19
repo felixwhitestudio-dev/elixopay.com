@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title data-i18n="refund.page_title">Refund & Cancellation Policy - Elixopay</title>
+    <meta name="description" content="นโยบายการคืนเงินและยกเลิกบริการสำหรับ Elixopay Payment Gateway">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #050508;
+            --s1: #0a0a10;
+            --s2: #12121c;
+            --brd: rgba(255, 255, 255, 0.06);
+            --txt: #d4d8e0;
+            --dim: #8b92a0;
+            --w: white;
+            --pri: #818cf8;
+            --pri2: #6366f1;
+            --pri3: #c7d2fe;
+            --pri-bg: rgba(129, 140, 248, 0.06);
+            --pri-glow: rgba(129, 140, 248, 0.12);
+            --green: #34d399;
+            --green-bg: rgba(52, 211, 153, 0.08);
+            --amber: #fbbf24;
+            --amber-bg: rgba(251, 191, 36, 0.08);
+            --red: #f87171;
+            --red-bg: rgba(248, 113, 113, 0.08)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased
+        }
+
+        ::selection {
+            background: rgba(129, 140, 248, 0.3)
+        }
+
+        /* MESH CANVAS */
+        #mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: .35;
+            pointer-events: none
+        }
+
+        /* HEX GRID */
+        .hex-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: .04;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23818cf8' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+        }
+
+        /* SCAN LINE */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, var(--pri), rgba(129, 140, 248, .6), var(--pri), transparent);
+            opacity: .5;
+            animation: scanDown 8s linear infinite
+        }
+
+        @keyframes scanDown {
+            0% {
+                top: 0
+            }
+
+            100% {
+                top: 100vh
+            }
+        }
+
+        /* NOISE */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            background: rgba(5, 5, 8, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--brd)
+        }
+
+        .nav-in {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            text-decoration: none;
+            color: var(--w);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -.03em
+        }
+
+        .logo-m {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: .8rem;
+            color: var(--w);
+            position: relative;
+            overflow: hidden
+        }
+
+        .logo-m::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #6366f1, #818cf8)
+        }
+
+        .logo-m::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #818cf8, #a5b4fc);
+            opacity: 0;
+            animation: logoShift 4s ease-in-out infinite
+        }
+
+        @keyframes logoShift {
+
+            0%,
+            100% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        .logo-m span {
+            position: relative;
+            z-index: 1
+        }
+
+        .nav-r {
+            display: flex;
+            align-items: center;
+            gap: .15rem
+        }
+
+        .nav-r a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .82rem;
+            font-weight: 500;
+            padding: .45rem .75rem;
+            border-radius: 8px;
+            transition: all .25s
+        }
+
+        .nav-r a:hover,
+        .nav-r a.active {
+            color: var(--w)
+        }
+
+        .nav-cta {
+            background: rgba(255, 255, 255, .06) !important;
+            color: var(--w) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important
+        }
+
+        /* HERO */
+        .hero {
+            padding: 8rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 5
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(99, 102, 241, .18), rgba(129, 140, 248, .06) 50%, transparent 70%);
+            pointer-events: none
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(129, 140, 248, .2), transparent);
+            pointer-events: none
+        }
+
+        /* ANIMATED ICON */
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--pri);
+            position: relative;
+            background: rgba(129, 140, 248, .05);
+            border: 1px solid rgba(129, 140, 248, .12)
+        }
+
+        .hero-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 23px;
+            background: conic-gradient(from 0deg, transparent, var(--pri), transparent, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            padding: 1px;
+            animation: spinBorder 6s linear infinite
+        }
+
+        @keyframes spinBorder {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .hero-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 28px;
+            border: 1px solid rgba(129, 140, 248, .05);
+            animation: iconPulse 3s ease infinite
+        }
+
+        @keyframes iconPulse {
+
+            0%,
+            100% {
+                opacity: .3;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 0;
+                transform: scale(1.12)
+            }
+        }
+
+        .hero-icon i {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 12px rgba(129, 140, 248, .5))
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -.04em;
+            color: var(--w);
+            margin-bottom: .8rem
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(90deg, #6366f1, #818cf8, #c7d2fe, #6366f1);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoShift 5s linear infinite
+        }
+
+        @keyframes holoShift {
+            0% {
+                background-position: 0% 50%
+            }
+
+            100% {
+                background-position: 300% 50%
+            }
+        }
+
+        .hero p {
+            color: var(--dim);
+            font-size: .9rem;
+            max-width: 500px;
+            margin: 0 auto
+        }
+
+        .hero .meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap
+        }
+
+        .hero .updated {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            color: var(--pri);
+            display: flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .hero .updated .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pri);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(129, 140, 248, .4)
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(129, 140, 248, 0)
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .32rem .85rem;
+            background: var(--pri-bg);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 50px;
+            font-size: .7rem;
+            color: var(--pri);
+            font-weight: 600;
+            letter-spacing: .02em
+        }
+
+        /* CONTENT */
+        .content {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+            position: relative;
+            z-index: 5
+        }
+
+        /* TOC */
+        .toc {
+            background: rgba(10, 10, 16, .8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .toc::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pri2), var(--pri), var(--pri2), transparent)
+        }
+
+        .toc::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg, transparent 60%, rgba(129, 140, 248, .03) 80%, transparent 100%);
+            animation: tocGlow 10s linear infinite
+        }
+
+        @keyframes tocGlow {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .toc h3 {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--w);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .toc h3 i {
+            color: var(--pri);
+            font-size: .75rem
+        }
+
+        .toc ol {
+            padding-left: 1.4rem;
+            position: relative;
+            z-index: 1;
+            columns: 2;
+            column-gap: 2rem
+        }
+
+        .toc li {
+            margin-bottom: .45rem;
+            break-inside: avoid
+        }
+
+        .toc a {
+            color: var(--pri3);
+            text-decoration: none;
+            font-size: .82rem;
+            transition: all .2s;
+            position: relative
+        }
+
+        .toc a:hover {
+            color: var(--w);
+            text-shadow: 0 0 12px rgba(129, 140, 248, .3)
+        }
+
+        /* SECTION CARDS */
+        .sec {
+            margin-bottom: 1.5rem;
+            padding: 1.8rem 2rem;
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(129, 140, 248, .06);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .4s, box-shadow .4s
+        }
+
+        .sec:hover {
+            border-color: rgba(129, 140, 248, .15);
+            box-shadow: 0 0 30px rgba(129, 140, 248, .04)
+        }
+
+        .sec::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pri), transparent);
+            transition: left 1s
+        }
+
+        .sec:hover::before {
+            left: 100%
+        }
+
+        .sec h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--w);
+            letter-spacing: -.02em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .sec h2 .num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .65rem;
+            color: var(--pri);
+            font-weight: 600;
+            background: var(--pri-bg);
+            padding: .25rem .55rem;
+            border-radius: 6px;
+            border: 1px solid rgba(129, 140, 248, .12);
+            position: relative;
+            min-width: 30px;
+            text-align: center
+        }
+
+        .sec h2 .num::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(129, 140, 248, .15);
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .sec:hover h2 .num::after {
+            opacity: 1
+        }
+
+        .sec h2 .ic {
+            color: var(--pri);
+            font-size: .85rem;
+            filter: drop-shadow(0 0 6px rgba(129, 140, 248, .3))
+        }
+
+        .sec p,
+        .sec li {
+            font-size: .86rem;
+            color: var(--dim);
+            line-height: 1.8
+        }
+
+        .sec ul,
+        .sec ol {
+            padding-left: 1.2rem;
+            margin: .5rem 0
+        }
+
+        .sec ul li,
+        .sec ol li {
+            margin-bottom: .3rem
+        }
+
+        .sec ul li::marker {
+            color: var(--pri)
+        }
+
+        .sec strong {
+            color: var(--txt);
+            font-weight: 600
+        }
+
+        .sec a {
+            color: var(--pri3);
+            text-decoration: none
+        }
+
+        .sec a:hover {
+            text-decoration: underline
+        }
+
+        /* HIGHLIGHT BOX */
+        .highlight {
+            background: rgba(129, 140, 248, .04);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            font-size: .84rem;
+            color: var(--txt);
+            line-height: 1.7;
+            position: relative;
+            overflow: hidden
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--pri2), var(--pri), transparent)
+        }
+
+        .highlight i {
+            color: var(--pri);
+            margin-right: .4rem
+        }
+
+        /* TIMELINE TABLE */
+        .timeline-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(129, 140, 248, .08)
+        }
+
+        .timeline-table th {
+            padding: .75rem 1rem;
+            text-align: left;
+            background: rgba(129, 140, 248, .06);
+            color: var(--w);
+            font-weight: 700;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            border-bottom: 1px solid rgba(129, 140, 248, .1)
+        }
+
+        .timeline-table td {
+            padding: .75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            font-size: .84rem;
+            color: var(--dim);
+            transition: background .3s
+        }
+
+        .timeline-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .timeline-table tbody tr:hover td {
+            background: rgba(129, 140, 248, .03)
+        }
+
+        .timeline-table td:first-child {
+            color: var(--txt);
+            font-weight: 500
+        }
+
+        /* STATUS BADGES */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            padding: .2rem .7rem;
+            border-radius: 50px;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .02em
+        }
+
+        .badge-fast {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 1px solid rgba(52, 211, 153, .15)
+        }
+
+        .badge-standard {
+            background: var(--amber-bg);
+            color: var(--amber);
+            border: 1px solid rgba(251, 191, 36, .15)
+        }
+
+        .badge-fast .dot,
+        .badge-standard .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%
+        }
+
+        .badge-fast .dot {
+            background: var(--green);
+            box-shadow: 0 0 6px rgba(52, 211, 153, .5)
+        }
+
+        .badge-standard .dot {
+            background: var(--amber);
+            box-shadow: 0 0 6px rgba(251, 191, 36, .5)
+        }
+
+        /* CORNER BRACKETS */
+        .corner-bracket {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            z-index: 2
+        }
+
+        .corner-bracket.tl {
+            top: -1px;
+            left: -1px;
+            border-top: 2px solid var(--pri);
+            border-left: 2px solid var(--pri);
+            border-radius: 3px 0 0 0
+        }
+
+        .corner-bracket.tr {
+            top: -1px;
+            right: -1px;
+            border-top: 2px solid var(--pri);
+            border-right: 2px solid var(--pri);
+            border-radius: 0 3px 0 0
+        }
+
+        .corner-bracket.bl {
+            bottom: -1px;
+            left: -1px;
+            border-bottom: 2px solid var(--pri);
+            border-left: 2px solid var(--pri);
+            border-radius: 0 0 0 3px
+        }
+
+        .corner-bracket.br {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 2px solid var(--pri);
+            border-right: 2px solid var(--pri);
+            border-radius: 0 0 3px 0
+        }
+
+        /* CONTACT BOX */
+        .contact-box {
+            background: rgba(10, 10, 16, .8);
+            border: 1px solid rgba(129, 140, 248, .08);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(129, 140, 248, .06), transparent);
+            pointer-events: none
+        }
+
+        .contact-box h4 {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--w);
+            margin-bottom: .6rem
+        }
+
+        .contact-box p {
+            font-size: .82rem;
+            color: var(--dim);
+            line-height: 1.7
+        }
+
+        .contact-box a {
+            color: var(--pri3);
+            text-decoration: none;
+            transition: color .2s
+        }
+
+        .contact-box a:hover {
+            color: var(--w);
+            text-shadow: 0 0 8px rgba(129, 140, 248, .3)
+        }
+
+        /* DATA STREAM */
+        .data-stream {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .particle {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .55rem;
+            color: var(--pri);
+            opacity: .12;
+            animation: float linear infinite
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0
+            }
+
+            10% {
+                opacity: .12
+            }
+
+            90% {
+                opacity: .12
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--brd);
+            padding: 1.8rem 2rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .foot {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem
+        }
+
+        .foot-brand {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            color: var(--w);
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .foot ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem
+        }
+
+        .foot li a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .8rem;
+            transition: color .2s
+        }
+
+        .foot li a:hover {
+            color: var(--w)
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:700px) {
+            .hero {
+                padding: 7rem 1.5rem 2rem
+            }
+
+            .content {
+                padding: 1.5rem 1rem 4rem
+            }
+
+            .sec {
+                padding: 1.4rem 1.2rem
+            }
+
+            .toc ol {
+                columns: 1
+            }
+
+            .hero h1 {
+                font-size: 2rem
+            }
+
+            .nav-r {
+                gap: 0
+            }
+
+            .nav-r a {
+                font-size: .75rem;
+                padding: .35rem .5rem
+            }
+
+            .timeline-table th,
+            .timeline-table td {
+                padding: .5rem .6rem;
+                font-size: .78rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="mesh"></canvas>
+    <div class="hex-grid"></div>
+    <div class="scan-line"></div>
+
+    <!-- DATA STREAM PARTICLES -->
+    <div class="data-stream" id="dataStream"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-in">
+            <a href="index.html" class="logo">
+                <div class="logo-m"><span>E</span></div>
+                Elixopay
+            </a>
+            <div class="nav-r">
+                <a href="about.html" data-i18n="nav.about">About</a>
+                <a href="contact.html" data-i18n="nav.contact">Contact</a>
+                <a href="https://app.elixopay.com/login.html" data-i18n="nav.login">Login</a>
+                <a href="https://app.elixopay.com/signup.html" class="nav-cta" data-i18n="nav.signup">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-icon">
+            <i class="fas fa-rotate-left"></i>
+        </div>
+        <h1 data-i18n="refund.main_title">Refund & <em>Cancellation</em> Policy</h1>
+        <p data-i18n="refund.subtitle">นโยบายการคืนเงินและยกเลิกบริการที่โปร่งใสและเป็นธรรมสำหรับทุกธุรกรรม</p>
+        <div class="meta-row">
+            <span class="updated"><span class="dot"></span> UPDATED 2026-03-04</span>
+            <span class="badge"><i class="fas fa-shield-halved"></i> BOT Compliant</span>
+            <span class="badge"><i class="fas fa-clock"></i> v1.0</span>
+        </div>
+    </section>
+
+    <main class="content">
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h3><i class="fas fa-list-ol"></i> Table of Contents</h3>
+            <ol>
+                <li><a href="#s1">Overview</a></li>
+                <li><a href="#s2">Refund Eligibility</a></li>
+                <li><a href="#s3">Refund Process</a></li>
+                <li><a href="#s4">Refund Timeline</a></li>
+                <li><a href="#s5">Partial Refunds</a></li>
+                <li><a href="#s6">Non-Refundable</a></li>
+                <li><a href="#s7">Cancellation Policy</a></li>
+                <li><a href="#s8">Chargebacks & Disputes</a></li>
+                <li><a href="#s9">Contact</a></li>
+            </ol>
+        </div>
+
+        <!-- S1: OVERVIEW -->
+        <div class="sec" id="s1">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">01</span><i class="fas fa-info-circle ic"></i> Overview</h2>
+            <p data-i18n="refund.s1.p1">Elixopay is committed to providing a fair and transparent refund process for all
+                transactions processed through our payment gateway. This policy outlines the terms and conditions under
+                which refunds and cancellations are handled.</p>
+            <div class="highlight">
+                <i class="fas fa-shield-halved"></i>
+                <span data-i18n="refund.s1.highlight">This policy applies to transactions processed through the Elixopay
+                    payment platform. Individual merchant refund policies may vary. Elixopay complies with Bank of
+                    Thailand (BOT) regulations.</span>
+            </div>
+        </div>
+
+        <!-- S2: ELIGIBILITY -->
+        <div class="sec" id="s2">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">02</span><i class="fas fa-check-circle ic"></i> Refund Eligibility</h2>
+            <p data-i18n="refund.s2.p1">A refund may be requested under the following circumstances:</p>
+            <ul>
+                <li data-i18n="refund.s2.l1"><strong>Duplicate charges</strong> — Customer was charged more than once
+                    for the same transaction</li>
+                <li data-i18n="refund.s2.l2"><strong>Unauthorized transactions</strong> — Transaction processed without
+                    the cardholder's consent</li>
+                <li data-i18n="refund.s2.l3"><strong>Service not delivered</strong> — Merchant failed to provide goods
+                    or services paid for</li>
+                <li data-i18n="refund.s2.l4"><strong>Incorrect amount</strong> — Charged amount differs from the agreed
+                    price</li>
+                <li data-i18n="refund.s2.l5"><strong>Technical errors</strong> — System error caused an incorrect charge
+                </li>
+            </ul>
+        </div>
+
+        <!-- S3: PROCESS -->
+        <div class="sec" id="s3">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">03</span><i class="fas fa-arrows-rotate ic"></i> Refund Process</h2>
+            <p data-i18n="refund.s3.p1">Refunds can be initiated through the following methods:</p>
+            <ul>
+                <li data-i18n="refund.s3.l1"><strong>Merchant Dashboard</strong> — Process full or partial refunds
+                    directly from the Elixopay Dashboard</li>
+                <li data-i18n="refund.s3.l2"><strong>API</strong> — Initiate programmatically via <code
+                        style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(129,140,248,.08);padding:.15rem .4rem;border-radius:4px;color:var(--pri3);">POST /api/checkout/payments/:id/refund</code>
+                </li>
+                <li data-i18n="refund.s3.l3"><strong>Customer Support</strong> — Contact the merchant or Elixopay
+                    support for assistance</li>
+            </ul>
+        </div>
+
+        <!-- S4: TIMELINE -->
+        <div class="sec" id="s4">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">04</span><i class="fas fa-clock ic"></i> Refund Timeline</h2>
+            <p data-i18n="refund.s4.p1">Refund processing times vary by payment method:</p>
+            <table class="timeline-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="refund.s4.th1">Payment Method</th>
+                        <th data-i18n="refund.s4.th2">Processing Time</th>
+                        <th data-i18n="refund.s4.th3">Speed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fas fa-qrcode" style="color:var(--pri);margin-right:.4rem;font-size:.75rem"></i>
+                            PromptPay / QR Code</td>
+                        <td>1 – 3 business days</td>
+                        <td><span class="status-badge badge-fast"><span class="dot"></span> Fast</span></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-credit-card"
+                                style="color:var(--pri);margin-right:.4rem;font-size:.75rem"></i> Credit / Debit Card
+                        </td>
+                        <td>5 – 14 business days</td>
+                        <td><span class="status-badge badge-standard"><span class="dot"></span> Standard</span></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-building-columns"
+                                style="color:var(--pri);margin-right:.4rem;font-size:.75rem"></i> Bank Transfer</td>
+                        <td>3 – 7 business days</td>
+                        <td><span class="status-badge badge-standard"><span class="dot"></span> Standard</span></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-wallet" style="color:var(--pri);margin-right:.4rem;font-size:.75rem"></i>
+                            E-Wallet</td>
+                        <td>1 – 2 business days</td>
+                        <td><span class="status-badge badge-fast"><span class="dot"></span> Fast</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="highlight" style="margin-top:1rem">
+                <i class="fas fa-hourglass-half"></i>
+                <span data-i18n="refund.s4.note">Processing times begin after the refund is approved. Actual time may
+                    vary depending on the issuing bank or payment provider.</span>
+            </div>
+        </div>
+
+        <!-- S5: PARTIAL REFUNDS -->
+        <div class="sec" id="s5">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">05</span><i class="fas fa-divide ic"></i> Partial Refunds</h2>
+            <p data-i18n="refund.s5.p1">Elixopay supports partial refunds. Merchants can refund a specific amount less
+                than the original transaction total.</p>
+            <ul>
+                <li data-i18n="refund.s5.l1">Refund amount cannot exceed the original transaction amount</li>
+                <li data-i18n="refund.s5.l2">Multiple partial refunds can be issued until the full amount is refunded
+                </li>
+                <li data-i18n="refund.s5.l3">Each partial refund is recorded as a separate transaction in the ledger
+                </li>
+            </ul>
+        </div>
+
+        <!-- S6: NON-REFUNDABLE -->
+        <div class="sec" id="s6">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">06</span><i class="fas fa-ban ic"></i> Non-Refundable Transactions</h2>
+            <p data-i18n="refund.s6.p1">The following transactions are generally NOT eligible for refunds:</p>
+            <ul>
+                <li data-i18n="refund.s6.l1">Transactions older than <strong>180 days</strong> from the date of payment
+                </li>
+                <li data-i18n="refund.s6.l2">Transactions flagged for <strong>fraud or suspicious activity</strong></li>
+                <li data-i18n="refund.s6.l3">Service fees and platform processing fees charged by Elixopay</li>
+                <li data-i18n="refund.s6.l4">Completed currency exchange transactions</li>
+            </ul>
+        </div>
+
+        <!-- S7: CANCELLATION -->
+        <div class="sec" id="s7">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">07</span><i class="fas fa-xmark-circle ic"></i> Cancellation Policy</h2>
+            <p data-i18n="refund.s7.p1">Merchants and customers may cancel pending transactions under the following
+                conditions:</p>
+            <ul>
+                <li data-i18n="refund.s7.l1"><strong>Pending transactions</strong> may be cancelled before they are
+                    completed or settled</li>
+                <li data-i18n="refund.s7.l2"><strong>Subscription cancellations</strong> can be processed to stop future
+                    recurring charges. Already-billed periods are not refunded unless specified by the merchant's policy
+                </li>
+                <li data-i18n="refund.s7.l3"><strong>Account closure</strong> — Remaining wallet balance will be
+                    returned to the merchant's registered bank account within 30 business days</li>
+            </ul>
+        </div>
+
+        <!-- S8: CHARGEBACKS -->
+        <div class="sec" id="s8">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">08</span><i class="fas fa-gavel ic"></i> Chargebacks & Disputes</h2>
+            <p data-i18n="refund.s8.p1">If a customer initiates a chargeback through their bank or card issuer:</p>
+            <ul>
+                <li data-i18n="refund.s8.l1">Elixopay will notify the merchant via webhook <code
+                        style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:rgba(129,140,248,.08);padding:.15rem .4rem;border-radius:4px;color:var(--pri3);">payment.dispute.created</code>
+                </li>
+                <li data-i18n="refund.s8.l2">Merchants have <strong>7 business days</strong> to submit evidence
+                    disputing the chargeback</li>
+                <li data-i18n="refund.s8.l3">A chargeback fee may apply as outlined in the merchant agreement</li>
+                <li data-i18n="refund.s8.l4">Excessive chargebacks may result in account review or suspension</li>
+            </ul>
+        </div>
+
+        <!-- S9: CONTACT -->
+        <div class="sec" id="s9">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">09</span><i class="fas fa-headset ic"></i> Contact Us</h2>
+            <p data-i18n="refund.s9.p1">For questions regarding refunds, cancellations, or disputes:</p>
+            <div class="contact-box">
+                <h4><i class="fas fa-envelope" style="color:var(--pri);margin-right:.4rem"></i> Email Support</h4>
+                <p>support@elixopay.com</p>
+            </div>
+            <div class="contact-box" style="margin-top:.8rem">
+                <h4><i class="fas fa-globe" style="color:var(--pri);margin-right:.4rem"></i> Online</h4>
+                <p><a href="https://elixopay.com/contact.html">elixopay.com/contact</a></p>
+            </div>
+            <div class="highlight" style="margin-top:1.2rem">
+                <i class="fas fa-shield-halved"></i>
+                <span data-i18n="refund.s9.highlight">Elixopay processes all refunds securely and in compliance with
+                    applicable Thai financial regulations and Bank of Thailand (BOT) guidelines.</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="foot">
+            <div class="foot-brand">
+                <div class="logo-m" style="width:20px;height:20px;border-radius:5px;font-size:.6rem"><span>E</span>
+                </div>
+                © 2026 Elixopay
+            </div>
+            <ul>
+                <li><a href="terms.html" data-i18n="footer.links.terms">Terms</a></li>
+                <li><a href="privacy.html" data-i18n="footer.links.privacy">Privacy</a></li>
+                <li><a href="refund.html" class="active" data-i18n="footer.links.refund">Refund</a></li>
+                <li><a href="contact.html" data-i18n="footer.links.contact">Contact</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- MESH CANVAS SCRIPT -->
+    <script>
+        const c = document.getElementById('mesh'), x = c.getContext('2d'); let w, h, pts = [];
+        function resize() { w = c.width = innerWidth; h = c.height = innerHeight; pts = []; for (let i = 0; i < 60; i++)pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, r: Math.random() * 1.5 + .5 }) }
+        function draw() { x.clearRect(0, 0, w, h); pts.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1; x.beginPath(); x.arc(p.x, p.y, p.r, 0, Math.PI * 2); x.fillStyle = 'rgba(129,140,248,0.4)'; x.fill() }); for (let i = 0; i < pts.length; i++)for (let j = i + 1; j < pts.length; j++) { const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y); if (d < 150) { x.beginPath(); x.moveTo(pts[i].x, pts[i].y); x.lineTo(pts[j].x, pts[j].y); x.strokeStyle = `rgba(129,140,248,${.12 * (1 - d / 150)})`; x.stroke() } } requestAnimationFrame(draw) }
+        resize(); draw(); addEventListener('resize', resize);
+    </script>
+
+    <!-- DATA STREAM PARTICLES -->
+    <script>
+        const ds = document.getElementById('dataStream'); const syms = ['⬡', '◇', '△', '○', '⊕', '⊗', '⟐', '⌬', '⏣'];
+        for (let i = 0; i < 20; i++) { const p = document.createElement('span'); p.className = 'particle'; p.textContent = syms[Math.floor(Math.random() * syms.length)]; p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = 15 + Math.random() * 20 + 's'; p.style.animationDelay = Math.random() * 15 + 's'; ds.appendChild(p) }
+    </script>
+
+    <script src="js/i18n.js?v=2"></script>
+    <script src="js/ui.js?v=2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/ui-enhancements.js?v=3"></script>
+</body>
+
+</html>

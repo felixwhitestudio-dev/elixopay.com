@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>404 - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #08090d;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        body::before {
+            content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+        .error-container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 40px 24px;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: 900;
+            letter-spacing: -4px;
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .error-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+        .error-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            max-width: 400px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+        .error-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .error-btn {
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .error-btn.primary {
+            background: #7c3aed;
+            color: white;
+            border: none;
+        }
+        .error-btn.primary:hover {
+            background: #5b21b6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124,58,237,0.3);
+        }
+        .error-btn.outline {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .error-btn.outline:hover {
+            border-color: rgba(255,255,255,0.2);
+            color: #f1f5f9;
+        }
+        .error-logo {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .error-logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 0.75rem; font-weight: 800;
+        }
+        .error-logo-text {
+            font-size: 1rem; font-weight: 700; color: #f1f5f9;
+        }
+        .error-logo-text span { color: #a78bfa; }
+    </style>
+</head>
+<body>
+    <a href="/" class="error-logo">
+        <div class="error-logo-icon">E</div>
+        <span class="error-logo-text">Elixo<span>pay</span></span>
+    </a>
+    <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-desc">ไม่พบหน้าที่คุณค้นหา อาจถูกย้ายหรือลบออกแล้ว</p>
+        <div class="error-actions">
+            <a href="/dashboard.html" class="error-btn primary"><i class="fas fa-gauge-high"></i> Go to Dashboard</a>
+            <a href="/" class="error-btn outline"><i class="fas fa-home"></i> Homepage</a>
+        </div>
+    </div>
+</body>
+</html>

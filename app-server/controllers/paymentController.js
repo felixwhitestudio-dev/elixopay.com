@@ -133,9 +133,6 @@ exports.createPayment = async (req, res, next) => {
  */
 exports.getPaymentByToken = async (req, res, next) => {
   try {
-    console.log('DEBUG: getPaymentByToken called');
-    console.log('DEBUG: URL:', req.originalUrl);
-    console.log('DEBUG: Params:', req.params);
     const { token } = req.params;
 
     const result = await pool.query(
@@ -147,8 +144,6 @@ exports.getPaymentByToken = async (req, res, next) => {
       [token]
     );
 
-    console.log('Searching for token:', token);
-    console.log('Result count:', result.rows.length);
     if (result.rows.length === 0) {
       return res.status(404).json({ success: false, error: { message: 'Payment session not found' } });
     }

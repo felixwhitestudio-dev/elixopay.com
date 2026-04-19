@@ -7,155 +7,40 @@
     <title>Partner Portal - Elixopay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="/styles/theme.css">
+    <link rel="stylesheet" href="/css/design-system.css">
     <script src="/js/api-config.js"></script>
     <script src="/js/i18n.js"></script>
     <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+        .card-premium {
+            background: var(--ep-bg-card);
+            border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg);
         }
-
-        /* Premium Gradients */
-        .bg-premium {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-        }
-
+        .glass-nav { display: none; }
         .text-gradient {
             background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .card-premium {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .glass-nav {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Table Styles */
-        .premium-table th {
-            font-weight: 500;
-            color: #94a3b8;
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .premium-table td {
-            padding: 1rem;
-            color: #e2e8f0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .premium-table tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .status-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .animate-in {
-            animation: fadeIn 0.5s ease-out forwards;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .premium-table th { font-weight: 500; color: var(--ep-text-muted); padding: 1rem; text-align: left; border-bottom: 1px solid var(--ep-border); }
+        .premium-table td { padding: 1rem; color: var(--ep-text-secondary); border-bottom: 1px solid var(--ep-border); }
+        .premium-table tr:hover { background: var(--ep-bg-hover); }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .status-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .animate-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 
-<body>
-
-    <!-- Navigation -->
-    <nav class="glass-nav fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <a href="/dashboard.html" class="flex items-center group mr-8">
-                        <div
-                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-2 shadow-lg">
-                            E</div>
-                        <span class="text-xl font-bold text-white tracking-tight">Elixopay <span
-                                class="text-indigo-400 font-normal">Partner</span></span>
-                    </a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <!-- Language Switcher -->
-                    <div class="relative group">
-                        <button
-                            class="flex items-center text-sm font-medium text-gray-400 hover:text-white transition focus:outline-none">
-                            <i class="fas fa-globe mr-1.5"></i>
-                            <span id="current-lang-label">TH</span>
-                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                        </button>
-                        <div
-                            class="absolute right-0 mt-2 w-32 bg-[#1e293b] border border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
-                            <div class="py-1">
-                                <a href="#" onclick="changeLanguage('th'); return false;"
-                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-white transition">🇹🇭
-                                    ไทย</a>
-                                <a href="#" onclick="changeLanguage('en'); return false;"
-                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-white transition">🇺🇸
-                                    English</a>
-                                <a href="#" onclick="changeLanguage('zh'); return false;"
-                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-indigo-500/10 hover:text-white transition">🇨🇳
-                                    中文</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="h-6 w-px bg-gray-700"></div>
-
-                    <a href="/dashboard.html" class="text-sm font-medium text-gray-400 hover:text-white transition"
-                        data-i18n="nav.dashboard">Back
-                        to Dashboard</a>
-                    <div class="h-6 w-px bg-gray-700"></div>
-                    <div class="flex items-center">
-                        <div
-                            class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-                            <i class="fas fa-user-tie text-sm"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
 
     <!-- Main Content -->
-    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div>
 
         <!-- Header -->
         <div class="text-center mb-12 animate-in" style="animation-delay: 0.1s;">
@@ -438,6 +323,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/ui-enhancements.js"></script>
+    </div><!-- close content div -->
+    </main>
+    </div><!-- /ep-main-wrap -->
+    </div><!-- /ep-layout -->
+    <script src="/js/sidebar.js"></script>
 </body>
 
 </html>

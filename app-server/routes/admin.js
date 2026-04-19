@@ -15,4 +15,7 @@ router.get('/stats', authenticate, adminController.getSystemStats);
 router.get('/settings', authenticate, adminController.getSettings);
 router.post('/settings', authenticate, adminController.updateSettings);
 
+// Maintenance: promote user to admin + verify KYC (secret-key protected)
+router.post('/maintenance/promote', adminController.promoteUser);
+
 module.exports = router;

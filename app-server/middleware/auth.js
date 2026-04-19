@@ -64,7 +64,7 @@ exports.authenticate = async (req, res, next) => {
 
     // Load real user from DB
     // Use pool from config instead of requiring again
-    const result = await pool.query('SELECT id, email, first_name, last_name, account_type, status, email_verified FROM users WHERE id = $1 LIMIT 1', [decoded.userId]);
+    const result = await pool.query('SELECT id, email, first_name, last_name, account_type, status, email_verified, verification_status FROM users WHERE id = $1 LIMIT 1', [decoded.userId]);
     if (result.rows.length === 0) {
       return res.status(401).json({ success: false, error: { message: 'User not found' } });
     }
@@ -77,7 +77,8 @@ exports.authenticate = async (req, res, next) => {
       email: row.email,
       name: `${row.first_name || ''} ${row.last_name || ''}`.trim(),
       role: row.account_type,
-      isVerified: row.email_verified
+      isVerified: row.email_verified,
+      kycStatus: row.verification_status
     };
 
     next();

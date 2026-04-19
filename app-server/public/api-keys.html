@@ -7,111 +7,29 @@
 	<title>Developer API - Elixopay</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="styles/dashboard.css">
+	<link rel="stylesheet" href="/css/design-system.css">
 
 	<script src="/js/api-config.js"></script>
 	<script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
 
 	<style>
-		body {
-			font-family: 'Outfit', sans-serif;
-			background-color: #0f1219;
-			color: #e2e8f0;
-		}
-
 		.glass-panel {
-			background: rgba(30, 41, 59, 0.7);
-			backdrop-filter: blur(12px);
-			border: 1px solid rgba(255, 255, 255, 0.05);
+			background: var(--ep-bg-card);
+			border: 1px solid var(--ep-border);
+			border-radius: var(--ep-radius-lg);
 		}
-
 		.glass-panel-light {
-			background: rgba(255, 255, 255, 0.03);
-			border: 1px solid rgba(255, 255, 255, 0.05);
+			background: var(--ep-bg-elevated);
+			border: 1px solid var(--ep-border);
 		}
-
-		.blur-circle {
-			position: fixed;
-			border-radius: 50%;
-			filter: blur(120px);
-			z-index: -1;
-			opacity: 0.4;
-		}
-
-		.blur-circle-1 {
-			top: -10%;
-			left: -10%;
-			width: 50vw;
-			height: 50vw;
-			background: rgba(99, 102, 241, 0.15);
-		}
-
-		/* Indigo */
-		.blur-circle-2 {
-			bottom: -20%;
-			right: -10%;
-			width: 60vw;
-			height: 60vw;
-			background: rgba(168, 85, 247, 0.1);
-		}
-
-		/* Purple */
+		.blur-circle { display: none; }
 	</style>
 </head>
 
-<body class="min-h-screen relative overflow-x-hidden selection:bg-indigo-500/30">
-	<div class="blur-circle blur-circle-1"></div>
-	<div class="blur-circle blur-circle-2"></div>
-
-	<!-- Navigation -->
-	<nav class="sticky top-0 z-50 glass-panel border-b border-white/5">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex items-center justify-between h-16">
-				<!-- Logo & Brand -->
-				<div class="flex items-center shrink-0">
-					<a href="dashboard.html" class="flex items-center group">
-						<div
-							class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mr-3 shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-300">
-							<span class="text-white font-bold text-lg leading-none">E</span>
-						</div>
-						<span class="font-bold text-xl tracking-tight text-white">Elixo<span
-								class="text-indigo-400">pay</span></span>
-					</a>
-				</div>
-
-				<!-- Desktop Menu -->
-				<div class="hidden md:flex items-center space-x-8">
-					<a href="dashboard.html"
-						class="text-sm font-medium text-slate-400 hover:text-white transition">Dashboard</a>
-					<a href="billing.html"
-						class="text-sm font-medium text-slate-400 hover:text-white transition">Billing</a>
-					<a href="api-keys.html" class="text-sm font-medium text-indigo-400 relative">
-						Developer API
-						<span class="absolute -bottom-6 left-0 right-0 h-0.5 bg-indigo-500 rounded-t-full"></span>
-					</a>
-					<a href="https://www.elixopay.com/apidocs.html"
-						class="text-sm font-medium text-slate-400 hover:text-white transition">Docs</a>
-				</div>
-
-				<!-- User Profile -->
-				<div class="flex items-center">
-					<div class="flex items-center space-x-3 pl-6 border-l border-white/10">
-						<div class="text-right hidden sm:block">
-							<p class="text-sm font-medium text-white" id="nav-user-name">Loading...</p>
-							<p class="text-xs text-slate-400" id="nav-user-email">...</p>
-						</div>
-						<div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 relative cursor-pointer hover:border-slate-500 transition"
-							onclick="toggleDropdown()">
-							<i class="fas fa-user"></i>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</nav>
-
-	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+<body class="ep-body">
+	<div class="ep-layout">
+	<div class="ep-main-wrap">
+	<main class="ep-content">
 		<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
 			<div>
 				<h1 class="text-3xl font-bold text-white mb-2">Developer Resources</h1>
@@ -576,6 +494,10 @@
 			window.location.href = '/login.html';
 		}
 	</script>
+	</main>
+	</div><!-- /ep-main-wrap -->
+	</div><!-- /ep-layout -->
+	<script src="/js/sidebar.js"></script>
 </body>
 
 </html>

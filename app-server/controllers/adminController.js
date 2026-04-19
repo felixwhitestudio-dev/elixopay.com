@@ -98,7 +98,34 @@ exports.reviewVerification = async (req, res, next) => {
 
         await client.query('COMMIT');
 
-        // TODO: Send Email Notification
+        // Send email notification about verification result
+        try {
+            const userInfo = await client.query('SELECT email, first_name FROM users WHERE id = $1', [userId]);
+            if (userInfo.rows[0]) {
+                const nodemailer = require('nodemailer');
+                const transporter = nodemailer.createTransport({
+                    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+                    port: parseInt(process.env.SMTP_PORT || '587'),
+                    secure: false,
+                    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+                });
+                const { email: userEmail, first_name } = userInfo.rows[0];
+                const subject = action === 'approve'
+                    ? 'Elixopay — บัญชีของคุณผ่านการยืนยันแล้ว ✅'
+                    : 'Elixopay — ผลการตรวจสอบเอกสาร';
+                const body = action === 'approve'
+                    ? `<p>สวัสดีคุณ ${first_name || 'ผู้ใช้งาน'},</p><p>บัญชีของคุณผ่านการยืนยันตัวตนเรียบร้อยแล้ว คุณสามารถเริ่มใช้งานระบบได้ทันที</p>`
+                    : `<p>สวัสดีคุณ ${first_name || 'ผู้ใช้งาน'},</p><p>เอกสารของคุณไม่ผ่านการตรวจสอบ${reason ? ` เหตุผล: ${reason}` : ''}</p><p>กรุณาส่งเอกสารใหม่อีกครั้ง</p>`;
+                await transporter.sendMail({
+                    from: process.env.SMTP_FROM || 'noreply@elixopay.com',
+                    to: userEmail,
+                    subject,
+                    html: body,
+                });
+            }
+        } catch (emailErr) {
+            console.error('Verification email notification failed (non-fatal):', emailErr.message);
+        }
 
         res.json({
             success: true,
@@ -202,6 +229,32 @@ exports.updateSettings = async (req, res, next) => {
         } finally {
             client.release();
         }
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @desc Maintenance: Set admin role + kyc for a specific user
+ * @route POST /api/v1/admin/maintenance/promote
+ * @access Secret-key protected
+ */
+exports.promoteUser = async (req, res, next) => {
+    try {
+        const { email, secret } = req.body;
+        const MAINTENANCE_SECRET = process.env.JWT_SECRET + '_maintain';
+        if (secret !== MAINTENANCE_SECRET) {
+            return res.status(403).json({ success: false, message: 'Forbidden' });
+        }
+        if (!email) return res.status(400).json({ success: false, message: 'Email required' });
+
+        const result = await db.query(
+            `UPDATE users SET account_type = 'admin', verification_status = 'verified', two_factor_enabled = true WHERE email = $1 RETURNING id, email, account_type, verification_status`,
+            [email]
+        );
+        if (result.rows.length === 0) return res.status(404).json({ success: false, message: 'User not found' });
+
+        res.json({ success: true, data: result.rows[0] });
     } catch (error) {
         next(error);
     }

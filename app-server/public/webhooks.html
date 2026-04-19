@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Webhooks - Elixopay</title>
+    <meta name="description" content="Manage Elixopay webhook endpoints for real-time payment notifications.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <style>
+        .wh-intro {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: var(--ep-bg-card);
+            border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg);
+            margin-bottom: 24px;
+        }
+        .wh-intro-icon {
+            width: 48px; height: 48px;
+            border-radius: var(--ep-radius-md);
+            background: linear-gradient(135deg, var(--ep-purple), #c026d3);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .wh-intro h2 { font-size: 1.1rem; font-weight: 700; color: var(--ep-text-primary); margin-bottom: 4px; }
+        .wh-intro p { font-size: 0.8rem; color: var(--ep-text-muted); margin: 0; }
+        .wh-intro .wh-add-btn {
+            margin-left: auto;
+            padding: 10px 20px;
+            background: var(--ep-purple);
+            color: white; border: none; border-radius: var(--ep-radius-md);
+            font-family: var(--ep-font-ui); font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: var(--ep-transition);
+            white-space: nowrap;
+        }
+        .wh-intro .wh-add-btn:hover { background: var(--ep-purple-dark); transform: translateY(-1px); }
+
+        .wh-section {
+            background: var(--ep-bg-card);
+            border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+        .wh-section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px;
+        }
+        .wh-section-header h2 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); }
+        .wh-section-header h2 i { margin-right: 8px; color: var(--ep-purple-light); }
+        .wh-count { font-size: 0.75rem; color: var(--ep-text-muted); background: var(--ep-bg-hover); padding: 4px 10px; border-radius: var(--ep-radius-full); }
+
+        /* Endpoint cards */
+        .wh-endpoint { background: var(--ep-bg-elevated); border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md); padding: 16px; margin-bottom: 10px; }
+        .wh-endpoint-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .wh-endpoint-url { font-family: var(--ep-font-mono); font-size: 0.8rem; color: var(--ep-purple-light); word-break: break-all; }
+        .wh-endpoint-desc { font-size: 0.75rem; color: var(--ep-text-muted); margin-bottom: 8px; }
+        .wh-endpoint-events { display: flex; flex-wrap: wrap; gap: 6px; }
+        .wh-event-tag { font-size: 0.65rem; padding: 3px 8px; border-radius: var(--ep-radius-full); font-weight: 600; }
+        .wh-event-tag.green { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+        .wh-event-tag.red { background: rgba(239,68,68,0.1); color: var(--ep-danger); }
+        .wh-event-tag.amber { background: rgba(245,158,11,0.1); color: var(--ep-warning); }
+        .wh-endpoint-actions { display: flex; gap: 6px; }
+        .wh-endpoint-actions button {
+            background: var(--ep-bg-hover); border: 1px solid var(--ep-border); color: var(--ep-text-muted);
+            padding: 6px 10px; border-radius: var(--ep-radius-sm); cursor: pointer; font-size: 0.75rem;
+            transition: var(--ep-transition);
+        }
+        .wh-endpoint-actions button:hover { color: var(--ep-text-primary); border-color: var(--ep-border-hover); }
+        .wh-endpoint-actions button.delete:hover { color: var(--ep-danger); border-color: var(--ep-danger); }
+        .wh-status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .wh-status.active { background: var(--ep-success); }
+        .wh-status.inactive { background: var(--ep-text-disabled); }
+
+        /* Empty state */
+        .wh-empty { text-align: center; padding: 40px; color: var(--ep-text-muted); }
+        .wh-empty i { font-size: 2rem; opacity: 0.3; margin-bottom: 12px; display: block; }
+        .wh-empty strong { display: block; color: var(--ep-text-secondary); margin-bottom: 4px; }
+        .wh-empty p { font-size: 0.8rem; }
+
+        /* Events grid */
+        .wh-events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+        .wh-event-card { background: var(--ep-bg-elevated); border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md); padding: 14px; }
+        .wh-event-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .wh-event-card code { font-family: var(--ep-font-mono); font-size: 0.78rem; color: var(--ep-purple-light); }
+        .wh-event-card p { font-size: 0.75rem; color: var(--ep-text-muted); margin: 0; }
+
+        /* Code block */
+        .wh-code-block { background: #0a0b10; border: 1px solid var(--ep-border); border-radius: var(--ep-radius-md); overflow: hidden; margin-bottom: 16px; }
+        .wh-code-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--ep-border); }
+        .wh-code-header span { font-family: var(--ep-font-mono); font-size: 0.75rem; color: var(--ep-text-muted); }
+        .wh-copy-btn { background: var(--ep-bg-hover); border: 1px solid var(--ep-border); color: var(--ep-text-secondary); padding: 4px 10px; border-radius: var(--ep-radius-sm); font-size: 0.7rem; cursor: pointer; transition: var(--ep-transition); }
+        .wh-copy-btn:hover { color: var(--ep-purple-light); border-color: var(--ep-purple-light); }
+        .wh-code-block pre { padding: 14px; margin: 0; overflow-x: auto; }
+        .wh-code-block code { font-family: var(--ep-font-mono); font-size: 0.78rem; color: var(--ep-text-secondary); line-height: 1.6; }
+
+        /* Verify block */
+        .wh-verify { background: var(--ep-bg-elevated); border: 1px solid var(--ep-border-active); border-radius: var(--ep-radius-md); padding: 16px; }
+        .wh-verify-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .wh-verify-header i { color: var(--ep-purple); font-size: 1.2rem; }
+        .wh-verify-header strong { color: var(--ep-text-primary); font-size: 0.85rem; }
+        .wh-verify-header p { font-size: 0.75rem; color: var(--ep-text-muted); margin: 2px 0 0; }
+
+        /* Modal */
+        .wh-modal-overlay {
+            position: fixed; inset: 0; z-index: 100; display: none;
+            align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        }
+        .wh-modal-overlay.open { display: flex; }
+        .wh-modal {
+            background: var(--ep-bg-card); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-xl); width: 100%; max-width: 500px;
+            padding: 24px; box-shadow: var(--ep-shadow-lg);
+        }
+        .wh-modal.small { max-width: 380px; }
+        .wh-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .wh-modal-header h3 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); }
+        .wh-modal-close { background: none; border: none; color: var(--ep-text-muted); font-size: 1.1rem; cursor: pointer; }
+        .wh-modal-desc { font-size: 0.85rem; color: var(--ep-text-secondary); margin-bottom: 20px; }
+
+        .wh-field { margin-bottom: 16px; }
+        .wh-field label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--ep-text-secondary); margin-bottom: 6px; }
+        .wh-field input { width: 100%; padding: 10px 12px; background: var(--ep-bg-elevated); border: 1px solid var(--ep-border); color: var(--ep-text-primary); border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui); font-size: 0.85rem; outline: none; transition: var(--ep-transition); }
+        .wh-field input:focus { border-color: var(--ep-purple); box-shadow: 0 0 0 3px var(--ep-purple-glow); }
+        .wh-event-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .wh-check { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--ep-text-secondary); cursor: pointer; padding: 6px 8px; border-radius: var(--ep-radius-sm); transition: var(--ep-transition); }
+        .wh-check:hover { background: var(--ep-bg-hover); }
+        .wh-check input { accent-color: var(--ep-purple); }
+        .wh-check span { font-family: var(--ep-font-mono); font-size: 0.72rem; }
+
+        .wh-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .wh-btn { padding: 10px 20px; border-radius: var(--ep-radius-md); font-family: var(--ep-font-ui); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: var(--ep-transition); border: none; }
+        .wh-btn.primary { background: var(--ep-purple); color: white; }
+        .wh-btn.primary:hover { background: var(--ep-purple-dark); }
+        .wh-btn.outline { background: transparent; border: 1px solid var(--ep-border); color: var(--ep-text-secondary); }
+        .wh-btn.outline:hover { border-color: var(--ep-text-muted); }
+        .wh-btn.danger { background: var(--ep-danger); color: white; }
+    </style>
+</head>
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
+
+        <!-- Intro -->
+        <div class="wh-intro">
+            <div class="wh-intro-icon"><i class="fas fa-bolt"></i></div>
+            <div>
+                <h2 data-i18n="wh.title">Webhook Endpoints</h2>
+                <p data-i18n="wh.subtitle">ตั้งค่า URL เพื่อให้ Elixopay ส่ง Event แจ้งเตือนแบบ Real-time เมื่อมีรายการธุรกรรมเกิดขึ้น</p>
+            </div>
+            <button class="wh-add-btn" onclick="openAddModal()"><i class="fas fa-plus"></i> <span data-i18n="wh.addEndpoint">Add Endpoint</span></button>
+        </div>
+
+        <!-- Endpoints List -->
+        <div class="wh-section">
+            <div class="wh-section-header">
+                <h2 data-i18n="wh.yourEndpoints">Your Endpoints</h2>
+                <span class="wh-count" id="endpointCount">0 endpoints</span>
+            </div>
+            <div id="endpointList"></div>
+            <div id="emptyState" class="wh-empty">
+                <i class="fas fa-plug"></i>
+                <strong data-i18n="wh.noEndpoints">No Endpoints Yet</strong>
+                <p data-i18n="wh.noEndpointsDesc">กด "Add Endpoint" เพื่อเพิ่ม URL รับแจ้งเตือน</p>
+            </div>
+        </div>
+
+        <!-- Supported Events -->
+        <div class="wh-section">
+            <div class="wh-section-header">
+                <h2><i class="fas fa-list-alt"></i> Supported Events</h2>
+            </div>
+            <div class="wh-events-grid">
+                <div class="wh-event-card">
+                    <div class="wh-event-head"><code>payment.success</code><span class="wh-event-tag green">Common</span></div>
+                    <p>เมื่อลูกค้าชำระเงินสำเร็จ</p>
+                </div>
+                <div class="wh-event-card">
+                    <div class="wh-event-head"><code>payment.failed</code><span class="wh-event-tag red">Important</span></div>
+                    <p>เมื่อการชำระเงินล้มเหลวหรือถูกปฏิเสธ</p>
+                </div>
+                <div class="wh-event-card">
+                    <div class="wh-event-head"><code>payment.refund</code><span class="wh-event-tag amber">Finance</span></div>
+                    <p>เมื่อมีการคืนเงินให้ลูกค้า</p>
+                </div>
+                <div class="wh-event-card">
+                    <div class="wh-event-head"><code>payout.completed</code><span class="wh-event-tag green">Finance</span></div>
+                    <p>เมื่อถอนเงินเข้าบัญชีธนาคารสำเร็จ</p>
+                </div>
+                <div class="wh-event-card">
+                    <div class="wh-event-head"><code>payout.failed</code><span class="wh-event-tag red">Finance</span></div>
+                    <p>เมื่อการถอนเงินล้มเหลว</p>
+                </div>
+                <div class="wh-event-card">
+                    <div class="wh-event-head"><code>charge.dispute</code><span class="wh-event-tag amber">Risk</span></div>
+                    <p>เมื่อลูกค้าเปิดข้อพิพาท (Chargeback)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payload Example -->
+        <div class="wh-section">
+            <div class="wh-section-header">
+                <h2><i class="fas fa-code"></i> Webhook Payload Example</h2>
+            </div>
+            <div class="wh-code-block">
+                <div class="wh-code-header">
+                    <span>POST https://yoursite.com/webhook</span>
+                    <button class="wh-copy-btn" onclick="copyPayload()"><i class="far fa-copy"></i> Copy</button>
+                </div>
+                <pre><code id="payloadCode">{
+  "id": "evt_ELX8f3k2m1a9b7c4",
+  "type": "payment.success",
+  "created": "2026-04-04T11:50:00Z",
+  "data": {
+    "payment_id": "pay_a1b2c3d4e5f6",
+    "amount": 1500.00,
+    "currency": "THB",
+    "status": "succeeded",
+    "description": "Order #1234",
+    "customer_email": "customer@example.com",
+    "metadata": {
+      "order_id": "ORD-1234"
+    }
+  },
+  "signature": "whsec_sha256_..."
+}</code></pre>
+            </div>
+            <div class="wh-verify">
+                <div class="wh-verify-header">
+                    <i class="fas fa-shield-halved"></i>
+                    <div>
+                        <strong>Verify Webhook Signature</strong>
+                        <p>ตรวจสอบ signature ทุกครั้งเพื่อป้องกันการปลอมแปลง</p>
+                    </div>
+                </div>
+                <div class="wh-code-block">
+                    <div class="wh-code-header"><span>Node.js — Verification</span></div>
+                    <pre><code>const crypto = require('crypto');
+
+function verifyWebhook(payload, signature, secret) {
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from('whsec_sha256_' + expected)
+  );
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="wh-modal-overlay" id="addModal">
+        <div class="wh-modal">
+            <div class="wh-modal-header">
+                <h3 id="modalTitle">Add Webhook Endpoint</h3>
+                <button onclick="closeAddModal()" class="wh-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="wh-field">
+                <label>Endpoint URL</label>
+                <input type="url" id="endpointUrl" placeholder="https://yoursite.com/webhook">
+            </div>
+            <div class="wh-field">
+                <label>Description (optional)</label>
+                <input type="text" id="endpointDesc" placeholder="e.g. Production server webhook">
+            </div>
+            <div class="wh-field">
+                <label>Events to listen</label>
+                <div class="wh-event-checks" id="eventChecks">
+                    <label class="wh-check"><input type="checkbox" value="payment.success" checked><span>payment.success</span></label>
+                    <label class="wh-check"><input type="checkbox" value="payment.failed" checked><span>payment.failed</span></label>
+                    <label class="wh-check"><input type="checkbox" value="payment.refund"><span>payment.refund</span></label>
+                    <label class="wh-check"><input type="checkbox" value="payout.completed"><span>payout.completed</span></label>
+                    <label class="wh-check"><input type="checkbox" value="payout.failed"><span>payout.failed</span></label>
+                    <label class="wh-check"><input type="checkbox" value="charge.dispute"><span>charge.dispute</span></label>
+                </div>
+            </div>
+            <div class="wh-modal-actions">
+                <button class="wh-btn outline" onclick="closeAddModal()">Cancel</button>
+                <button class="wh-btn primary" onclick="saveEndpoint()"><i class="fas fa-plus"></i> Add Endpoint</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="wh-modal-overlay" id="deleteModal">
+        <div class="wh-modal small">
+            <div class="wh-modal-header">
+                <h3>Delete Endpoint</h3>
+                <button onclick="closeDeleteModal()" class="wh-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="wh-modal-desc">ลบ endpoint นี้? จะไม่ได้รับ webhook event อีกต่อไป</p>
+            <div class="wh-modal-actions">
+                <button class="wh-btn outline" onclick="closeDeleteModal()">Cancel</button>
+                <button class="wh-btn danger" id="deleteConfirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Webhook management logic
+    let endpoints = JSON.parse(localStorage.getItem('ep-webhooks') || '[]');
+    let editingIdx = -1;
+    let deletingIdx = -1;
+
+    function renderEndpoints() {
+        const list = document.getElementById('endpointList');
+        const empty = document.getElementById('emptyState');
+        const count = document.getElementById('endpointCount');
+        count.textContent = endpoints.length + ' endpoints';
+
+        if (endpoints.length === 0) {
+            list.innerHTML = '';
+            empty.style.display = 'block';
+            return;
+        }
+        empty.style.display = 'none';
+        list.innerHTML = endpoints.map((ep, i) => `
+            <div class="wh-endpoint">
+                <div class="wh-endpoint-top">
+                    <div><span class="wh-status active"></span><span class="wh-endpoint-url">${ep.url}</span></div>
+                    <div class="wh-endpoint-actions">
+                        <button onclick="editEndpoint(${i})"><i class="fas fa-pen"></i></button>
+                        <button class="delete" onclick="confirmDelete(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                ${ep.desc ? `<div class="wh-endpoint-desc">${ep.desc}</div>` : ''}
+                <div class="wh-endpoint-events">
+                    ${ep.events.map(e => `<span class="wh-event-tag ${e.includes('failed') || e.includes('dispute') ? 'red' : e.includes('refund') ? 'amber' : 'green'}">${e}</span>`).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openAddModal() { editingIdx = -1; document.getElementById('modalTitle').textContent = 'Add Webhook Endpoint'; document.getElementById('endpointUrl').value = ''; document.getElementById('endpointDesc').value = ''; document.querySelectorAll('#eventChecks input').forEach((c,i) => c.checked = i < 2); document.getElementById('addModal').classList.add('open'); }
+    function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+
+    function editEndpoint(i) {
+        editingIdx = i;
+        const ep = endpoints[i];
+        document.getElementById('modalTitle').textContent = 'Edit Endpoint';
+        document.getElementById('endpointUrl').value = ep.url;
+        document.getElementById('endpointDesc').value = ep.desc || '';
+        document.querySelectorAll('#eventChecks input').forEach(c => c.checked = ep.events.includes(c.value));
+        document.getElementById('addModal').classList.add('open');
+    }
+
+    function saveEndpoint() {
+        const url = document.getElementById('endpointUrl').value.trim();
+        if (!url) return alert('Please enter a URL');
+        const desc = document.getElementById('endpointDesc').value.trim();
+        const events = [...document.querySelectorAll('#eventChecks input:checked')].map(c => c.value);
+        if (events.length === 0) return alert('Select at least one event');
+
+        if (editingIdx >= 0) { endpoints[editingIdx] = { url, desc, events }; }
+        else { endpoints.push({ url, desc, events }); }
+        localStorage.setItem('ep-webhooks', JSON.stringify(endpoints));
+        closeAddModal();
+        renderEndpoints();
+    }
+
+    function confirmDelete(i) { deletingIdx = i; document.getElementById('deleteModal').classList.add('open'); }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); }
+    document.getElementById('deleteConfirm').onclick = () => { endpoints.splice(deletingIdx, 1); localStorage.setItem('ep-webhooks', JSON.stringify(endpoints)); closeDeleteModal(); renderEndpoints(); };
+
+    function copyPayload() {
+        const code = document.getElementById('payloadCode').textContent;
+        navigator.clipboard.writeText(code).then(() => { const btn = document.querySelector('.wh-copy-btn'); btn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => btn.innerHTML = '<i class="far fa-copy"></i> Copy', 2000); });
+    }
+
+    renderEndpoints();
+    </script>
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>
