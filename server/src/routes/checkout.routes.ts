@@ -16,6 +16,6 @@ router.post('/payments/:id/refund', verifyIdempotency, checkoutController.refund
 
 // Public Checkout UI Routes
 router.get('/:id', checkoutController.getCheckoutDetails);
-router.post('/:id/mock-pay', checkoutController.mockPaymentCompletion);
+router.post('/:id/simulate-pay', checkoutController.simulatePaymentCompletion);
 
 export default router;

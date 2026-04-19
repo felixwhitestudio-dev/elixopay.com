@@ -2,11 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -57,6 +58,8 @@ model User {
   webhooks        WebhookEndpoint[]
   customers       Customer[]
   products        Product[]
+  gatewayConfigs  MerchantGatewayConfig[]
+  notifications   Notification[]
 }
 
 model BankAccountChangeRequest {
@@ -96,7 +99,12 @@ model Transaction {
   idempotencyKey String?  @unique // Critical for stability
   metadata       String?  // JSON string
   
-  // New Tracking Fields for Refunds
+  // Payment Orchestrator Fields
+  provider        String?  // 'kbank', 'omise', 'bbl', 'mock' — which gateway processed this
+  providerChargeId String? // Charge/Transaction ID from the gateway
+  paymentMethod   String?  // 'qr', 'card', 'bank_transfer', 'wallet'
+
+  // Tracking Fields for Refunds
   refundedAmount Decimal  @default(0.00) // Tracks how much has been refunded
   parentId       Int?     // Links a REFUND transaction to its original PAYMENT
   parent         Transaction?  @relation("TransactionRefunds", fields: [parentId], references: [id])
@@ -230,4 +238,29 @@ model Invoice {
   dueDate         DateTime
   paidAt          DateTime?
   createdAt       DateTime @default(now())
+}
+
+model MerchantGatewayConfig {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  provider    String   // 'kbank', 'omise', 'bbl'
+  isActive    Boolean  @default(true)
+  config      String   // Encrypted JSON: { clientId, clientSecret, ... }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, provider])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // payment, kyc, payout, system, security
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  metadata  String?  // JSON: { transactionId, amount, etc. }
+  createdAt DateTime @default(now())
 }

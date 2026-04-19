@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Elixopay Use Cases - โซลูชันการชำระเงินสำหรับทุกธุรกิจ">
+    <title>Use Cases - Elixopay Enterprise</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stripe: {
+                            50: '#f8fbfc',
+                            100: '#eefcfd',
+                            600: '#635bff',
+                            700: '#4b45cf',
+                        },
+                        glass: {
+                            surface: 'rgba(255, 255, 255, 0.65)',
+                            border: 'rgba(255, 255, 255, 0.5)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="styles/theme.css?v=2">
+    <style>
+        /* Copied from index.html for consistency */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        body nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        nav .container {
+            width: 100%;
+            margin: 0;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            color: #FFFFFF;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-color);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+            background: var(--primary-color);
+        }
+
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+            background: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-outline:hover {
+            border-color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+        }
+
+        /* Hero styling adapted from index.html */
+        .hero {
+            padding: 10rem 2rem 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--primary-color);
+            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                var(--gradient-scb);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 1000px;
+            /* Larger orbs */
+            height: 1000px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+            /* Soften edges */
+            animation: orbFloat 10s infinite ease-in-out alternate;
+        }
+
+        .hero::before {
+            top: -30%;
+            right: -20%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(15, 23, 42, 0) 70%);
+        }
+
+        .hero::after {
+            bottom: -30%;
+            left: -20%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(30px, 50px);
+            }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Layout Grid */
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 992px) {
+            .hero-layout {
+                grid-template-columns: 1.1fr 0.9fr;
+                text-align: left;
+            }
+
+            .hero h1,
+            .hero p {
+                text-align: left;
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+
+        /* Copied & Adapted Dashboard Mockup Styles */
+        .dashboard-mockup {
+            position: relative;
+            background: rgba(46, 16, 101, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 20px;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            overflow: visible;
+            width: 100%;
+            perspective: 1000px;
+            transition: transform 0.4s ease;
+        }
+
+        .dashboard-mockup:hover {
+            transform: translateY(-5px) rotateX(2deg);
+        }
+
+        .mockup-header {
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .control {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .control.red {
+            background: #ef4444;
+        }
+
+        .control.yellow {
+            background: #f59e0b;
+        }
+
+        .control.green {
+            background: #10b981;
+        }
+
+        .url-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        /* Flow Diagram Styles */
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .flow-line-connector {
+            flex-grow: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .flow-line-connector::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40%;
+            height: 100%;
+            background: var(--gradient-1);
+            animation: flowMove 2s infinite linear;
+        }
+
+        @keyframes flowMove {
+            0% {
+                left: -40%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .flow-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .node-circle {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+        }
+
+        .flow-node.active .node-circle {
+            background: var(--gradient-1);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .node-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 1. Add Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1,
+        .hero p {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .hero p {
+            animation-delay: 0.2s;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #FFFFFF;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* Premium Gradient Text */
+            background: linear-gradient(135deg, #FFFFFF 0%, #E0E7FF 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Features/Use Cases Grid */
+        .features {
+            padding: 6rem 2rem;
+            background: var(--dark-bg);
+            /* Match body bg for seamless look */
+            position: relative;
+            overflow: hidden;
+            /* Contain glows */
+        }
+
+        /* Grid background effect */
+        .features::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* Compact cards */
+            gap: 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 2. Enhanced Feature Cards (Glassmorphism + Gradient Borders) */
+        .feature-card {
+            background: rgba(46, 16, 101, 0.4);
+            /* Deep Purple Glass */
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(46, 16, 101, 0.6);
+            border-color: rgba(139, 92, 246, 0.5);
+            /* Violet Border */
+            box-shadow:
+                0 20px 50px -10px rgba(0, 0, 0, 0.5),
+                0 0 15px rgba(139, 92, 246, 0.3);
+            /* Glow */
+        }
+
+        /* 3. Solid Gradient Icons by Default */
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            /* Default Gradient if not overridden inline */
+            background: var(--gradient-1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: #ffffff;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .feature-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            color: rgba(255, 255, 255, 0.6);
+            /* Muted subtitle */
+            font-weight: 500;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.5rem;
+        }
+
+        .feature-card li {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .feature-card li i {
+            color: #10b981;
+            /* Green checkmark */
+            font-size: 1.1rem;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding-top: 0.5rem;
+        }
+
+        .stat-mini {
+            text-align: center;
+            position: relative;
+        }
+
+        /* Divider between stats */
+        .stat-mini:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -0.5rem;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-mini-val {
+            font-size: 1.25rem;
+            /* Larger stats */
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-card:hover .stat-mini-val {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Shimmer Border Effect */
+        @keyframes shimmerBorder {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            /* Standard property */
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Ambient Glows */
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+        }
+
+        .ambient-1 {
+            top: 10%;
+            right: -10%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+        }
+
+        .ambient-2 {
+            bottom: 10%;
+            left: -10%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        }
+
+        /* Scroll Animation */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Shimmer Border Effect */
+        @keyframes shimmerBorder {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-mini-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            /* Needed for ::before */
+            border-top: none;
+            /* Remove simple border */
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #D946EF, transparent);
+            /* "Beautiful" accent line */
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-links h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-link-v2 {
+            display: block;
+            margin-bottom: 0.85rem;
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-link-v2:hover {
+            color: var(--accent-color);
+            transform: translateX(3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+        }
+
+        /* Language & Theme Toggle */
+        .lang-select {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-select option {
+            background: #2E1065;
+            color: white;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .nav-links.show {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                background: rgba(15, 23, 42, 0.95);
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .mobile-menu-btn {
+                display: block !important;
+            }
+
+            .flow-diagram {
+                transform: scale(0.7);
+                transform-origin: left center;
+                width: 140%;
+            }
+
+            .hero-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg width="40" height="40" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="136" height="136" rx="28" fill="url(#purpleGrad)" />
+                    <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800"
+                        fill="white" text-anchor="middle">E</text>
+                </svg>
+                <span>Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <!-- <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li> -->
+                <li><a href="usecases.html" class="active" data-i18n="nav.usecases">Use Cases</a></li>
+                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="https://app.elixopay.com/login.html" class="btn btn-outline"
+                        data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary"
+                        data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
+                <!-- Theme Toggle Removed -->
+            </ul>
+            <button class="mobile-menu-btn" style="color: white;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="bg-noise"></div>
+        <div class="hero-grid-overlay"></div>
+        <div class="hero-bg-grid"
+            style="position: absolute; inset: 0; background-image: var(--bg-grid); background-size: var(--bg-grid-size); opacity: 0.1; pointer-events: none;">
+        </div>
+
+        <div class="container relative z-10">
+            <div class="hero-layout">
+                <!-- Left: Text -->
+                <div class="hero-text">
+                    <h1 data-i18n="usecases.title">Real-World Use Cases</h1>
+                    <p data-i18n="usecases.hero.desc">See how Elixopay powers businesses across Southeast Asia with
+                        secure,
+                        scalable payment solutions.</p>
+                </div>
+
+                <!-- Right: Visual (Dashboard Mockup) -->
+                <div class="hero-visual">
+                    <div class="dashboard-mockup">
+                        <!-- Mockup Header -->
+                        <div class="mockup-header">
+                            <div class="window-controls">
+                                <div class="control red"></div>
+                                <div class="control yellow"></div>
+                                <div class="control green"></div>
+                            </div>
+                            <div class="url-bar">elixopay.com/solutions</div>
+                        </div>
+
+                        <!-- Mockup Content -->
+                        <div class="mockup-content p-6">
+                            <!-- Stats Row -->
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="glass-panel p-4 rounded-xl relative overflow-hidden"
+                                    style="border-radius: 0 0 0 20px;">
+                                    <div class="text-xs text-blue-200 mb-1" data-i18n="dashboard.usecases.successRate">
+                                        Success Rate</div>
+                                    <div class="text-2xl font-bold text-white">99.98%</div>
+                                    <div class="text-[10px] text-green-400 mt-1 flex items-center gap-1">
+                                        <i class="fas fa-arrow-up"></i> <span
+                                            data-i18n="dashboard.usecases.bestInClass">Best in class</span>
+                                    </div>
+                                </div>
+                                <div class="glass-panel p-4 rounded-xl relative overflow-hidden"
+                                    style="border-radius: 0 0 20px 0;">
+                                    <div class="text-xs text-blue-200 mb-1" data-i18n="dashboard.usecases.latency">Avg.
+                                        Latency</div>
+                                    <div class="text-2xl font-bold text-white">&lt; 900ms</div>
+                                    <div class="text-[10px] text-green-400 mt-1 flex items-center gap-1">
+                                        <i class="fas fa-bolt"></i> <span
+                                            data-i18n="dashboard.usecases.lightningFast">Lightning fast</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Flow Visualization -->
+                            <div class="bg-black/20 rounded-xl p-4 border border-white/5">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xs font-semibold text-white/80"
+                                        data-i18n="dashboard.usecases.transactionFlow">Transaction Flow</span>
+                                    <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full"
+                                        data-i18n="dashboard.usecases.active">Active</span>
+                                </div>
+
+                                <div class="flow-diagram">
+                                    <div class="flow-node">
+                                        <div class="node-circle"><i class="fas fa-user"></i></div>
+                                        <span class="node-label" data-i18n="dashboard.usecases.user">User</span>
+                                    </div>
+                                    <div class="flow-line-connector"></div>
+                                    <div class="flow-node active">
+                                        <div class="node-circle"><i class="fas fa-shield-alt"></i></div>
+                                        <span class="node-label" data-i18n="dashboard.usecases.gateway">Elixopay</span>
+                                    </div>
+                                    <div class="flow-line-connector"></div>
+                                    <div class="flow-node">
+                                        <div class="node-circle"><i class="fas fa-university"></i></div>
+                                        <span class="node-label" data-i18n="dashboard.usecases.bank">Bank</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <section class="features">
+        <div class="ambient-glow ambient-1"></div>
+        <div class="ambient-glow ambient-2"></div>
+
+        <div class="features-grid">
+
+            <!-- E-commerce -->
+            <div class="feature-card reveal-on-scroll">
+                <div class="feature-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3 data-i18n="usecases.ecom.title">E-commerce</h3>
+                <h4 data-i18n="usecases.ecom.h3">ร้านค้าออนไลน์</h4>
+                <p data-i18n="usecases.ecom.desc">เหมาะสำหรับร้านค้าออนไลน์ที่ต้องการระบบชำระเงินที่รวดเร็วและปลอดภัย
+                    รองรับการชำระเงินแบบครั้งเดียว, ผ่อนชำระ และ Subscription</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.ecom.f1">รองรับหลายช่องทาง</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span
+                            data-i18n="usecases.ecom.f2">ระบบจัดการคำสั่งซื้อ</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.ecom.f3">Refund และ
+                            Chargeback</span></li>
+                </ul>
+                <div class="card-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">+45%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.ecom.stat1">Conversion</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">-30%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.ecom.stat2">Abandonment</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">99.9%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.ecom.stat3">Success</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SaaS -->
+            <div class="feature-card reveal-on-scroll">
+                <div class="feature-icon"
+                    style="background: var(--gradient-2); box-shadow: 0 8px 16px rgba(6, 182, 212, 0.3);"><i
+                        class="fas fa-cloud"></i></div>
+                <h3 data-i18n="usecases.saas.title">SaaS Platforms</h3>
+                <h4 data-i18n="usecases.saas.h3">แพลตฟอร์ม SaaS</h4>
+                <p data-i18n="usecases.saas.desc">เหมาะสำหรับบริษัท SaaS ที่ต้องการระบบจัดการ Subscription และ Recurring
+                    Payment ที่ซับซ้อน พร้อมการจัดการ Trial และ Upgrade</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.saas.f1">Recurring Billing</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.saas.f2">Subscription
+                            Management</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.saas.f3">Prorated Upgrades</span>
+                    </li>
+                </ul>
+                <div class="card-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">+60%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.saas.stat1">Retention</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">-50%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.saas.stat2">Manual Work</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">24/7</div>
+                        <div class="stat-mini-label" data-i18n="usecases.saas.stat3">Billing</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketplace -->
+            <div class="feature-card reveal-on-scroll">
+                <div class="feature-icon"
+                    style="background: var(--gradient-3); box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);"><i
+                        class="fas fa-store"></i></div>
+                <h3 data-i18n="usecases.market.title">Marketplace</h3>
+                <h4 data-i18n="usecases.market.h3">ตลาดออนไลน์</h4>
+                <p data-i18n="usecases.market.desc">เหมาะสำหรับแพลตฟอร์ม Marketplace
+                    ที่ต้องการระบบแบ่งเงินระหว่างผู้ขายหลายราย พร้อมระบบ Commission และ Payout</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.market.f1">Multi-Level
+                            Agency</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.market.f2">Split Payment</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.market.f3">Commission Calc</span>
+                    </li>
+                </ul>
+                <div class="card-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">100%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.market.stat1">Automated</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Real-time</div>
+                        <div class="stat-mini-label" data-i18n="usecases.market.stat2">Settlement</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Multi</div>
+                        <div class="stat-mini-label" data-i18n="usecases.market.stat3">Sellers</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Delivery -->
+            <div class="feature-card reveal-on-scroll">
+                <div class="feature-icon"
+                    style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3 data-i18n="usecases.food.title">Food Delivery</h3>
+                <h4 data-i18n="usecases.food.h3">แพลตฟอร์มสั่งอาหาร</h4>
+                <p data-i18n="usecases.food.desc">
+                    เหมาะสำหรับแอปสั่งอาหารที่ต้องการความรวดเร็วในการประมวลผลและการแบ่งเงินระหว่างร้านค้า ไรเดอร์
+                    และแพลตฟอร์ม</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.food.f1">Fast Processing</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.food.f2">3-Way Split</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.food.f3">Rider Tips</span></li>
+                </ul>
+                <div class="card-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">&lt; 1s</div>
+                        <div class="stat-mini-label" data-i18n="usecases.food.stat1">Time</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Auto</div>
+                        <div class="stat-mini-label" data-i18n="usecases.food.stat2">Split</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">24/7</div>
+                        <div class="stat-mini-label" data-i18n="usecases.food.stat3">Ready</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Learning -->
+            <div class="feature-card reveal-on-scroll">
+                <div class="feature-icon"
+                    style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 data-i18n="usecases.learn.title">Online Learning</h3>
+                <h4 data-i18n="usecases.learn.h3">คอร์สออนไลน์</h4>
+                <p data-i18n="usecases.learn.desc">
+                    เหมาะสำหรับแพลตฟอร์มการเรียนออนไลน์ที่ต้องการระบบชำระเงินแบบครั้งเดียวหรือ Subscription
+                    พร้อมระบบแบ่งรายได้กับผู้สอน</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.learn.f1">Subscriptions</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.learn.f2">Revenue Share</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.learn.f3">Coupons</span></li>
+                </ul>
+                <div class="card-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">+40%</div>
+                        <div class="stat-mini-label" data-i18n="usecases.learn.stat1">Sales</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Auto</div>
+                        <div class="stat-mini-label" data-i18n="usecases.learn.stat2">Payout</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Easy</div>
+                        <div class="stat-mini-label" data-i18n="usecases.learn.stat3">Integration</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agency -->
+            <div class="feature-card reveal-on-scroll">
+                <div class="feature-icon"
+                    style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); box-shadow: 0 8px 16px rgba(236, 72, 153, 0.3);">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3 data-i18n="usecases.agency.title">Multi-Level Agency</h3>
+                <h4 data-i18n="usecases.agency.h3">ระบบตัวแทน</h4>
+                <p data-i18n="usecases.agency.desc">เหมาะสำหรับธุรกิจที่มีโครงสร้างตัวแทนหลายระดับ สามารถจัดการ
+                    Commission และ Sub-agency ได้อย่างมีประสิทธิภาพ</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.agency.f1">Multi-Level</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.agency.f2">Commission Rules</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="usecases.agency.f3">Real-time
+                            Reports</span></li>
+                </ul>
+                <div class="card-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">∞</div>
+                        <div class="stat-mini-label" data-i18n="usecases.agency.stat1">Levels</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Auto</div>
+                        <div class="stat-mini-label" data-i18n="usecases.agency.stat2">Commission</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val">Live</div>
+                        <div class="stat-mini-label" data-i18n="usecases.agency.stat3">Reports</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Solution (CTA to fill empty space) -->
+            <div class="feature-card reveal-on-scroll"
+                style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.4) 0%, rgba(124, 58, 237, 0.4) 100%); border: 1px solid rgba(139, 92, 246, 0.5); box-shadow: 0 20px 50px -10px rgba(124, 58, 237, 0.3);">
+                <div class="feature-icon"
+                    style="background: #ffffff; color: #7C3AED; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3 data-i18n="usecases.custom.title">Custom Solution</h3>
+                <h4 data-i18n="usecases.custom.h3">โซลูชันเฉพาะทาง</h4>
+                <p data-i18n="usecases.custom.desc" style="color: white; font-weight: 500;">
+                    มีโมเดลธุรกิจที่แตกต่าง? เราพร้อมสร้างระบบชำระเงินที่ตอบโจทย์เฉพาะธุรกิจคุณ
+                    ไม่ว่าจะเป็นรูปแบบไหน
+                </p>
+
+                <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; margin: 2rem 0;">
+                    <a href="contact.html" class="btn btn-primary"
+                        style="width: 100%; text-align: center; background: white; color: #7C3AED; border: none;">
+                        <span data-i18n="usecases.custom.cta">ปรึกษาผู้เชี่ยวชาญ</span> <i
+                            class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <div class="card-stats" style="border-top: 1px solid rgba(255,255,255,0.2);">
+                    <div class="stat-mini">
+                        <div class="stat-mini-val"
+                            style="color: white; background: none; -webkit-text-fill-color: white;">API</div>
+                        <div class="stat-mini-label" style="color: rgba(255,255,255,0.8);">Flexible</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val"
+                            style="color: white; background: none; -webkit-text-fill-color: white;">24h</div>
+                        <div class="stat-mini-label" style="color: rgba(255,255,255,0.8);">Support</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-val"
+                            style="color: white; background: none; -webkit-text-fill-color: white;">100%</div>
+                        <div class="stat-mini-label" style="color: rgba(255,255,255,0.8);">Secure</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <footer
+        style="background-color: var(--primary-dark); padding: 4rem 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <div class="footer-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem;">
+
+                <!-- Brand Column -->
+                <div class="footer-col">
+                    <div class="footer-logo"
+                        style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                        <span style="font-size: 1.5rem; font-weight: 800; color: white;">Elixopay</span>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;"
+                        data-i18n="footer.tagline">
+                        ระบบโครงสร้างพื้นฐานทางการเงินสำหรับอินเทอร์เน็ต
+                        ช่วยให้ธุรกิจทุกขนาดรับชำระเงินและจัดการธุรกิจออนไลน์ได้ง่ายขึ้น
+                    </p>
+                    <div class="social-links" style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: rgba(255,255,255,0.6); transition: color 0.3s;"><i
+                                class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" style="color: rgba(255,255,255,0.6); transition: color 0.3s;"><i
+                                class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" style="color: rgba(255,255,255,0.6); transition: color 0.3s;"><i
+                                class="fab fa-github fa-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Product Column -->
+                <div class="footer-col">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;"
+                        data-i18n="footer.products">
+                        ผลิตภัณฑ์</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <!-- Pricing link removed -->
+                        <li style="margin-bottom: 0.85rem;">
+                            <a href="apidocs.html" class="footer-link-v2" data-i18n="footer.links.docs">เอกสาร</a>
+                        </li>
+                        <li style="margin-bottom: 0.85rem;">
+                            <a href="usecases.html" class="footer-link-v2"
+                                data-i18n="footer.links.usecases">กรณีการใช้งาน</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Company Column -->
+                <div class="footer-col">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;"
+                        data-i18n="footer.company">
+                        บริษัท</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.85rem;">
+                            <a href="about.html" class="footer-link-v2" data-i18n="footer.links.about">เกี่ยวกับเรา</a>
+                        </li>
+                        <li style="margin-bottom: 0.85rem;">
+                            <a href="#" class="footer-link-v2" data-i18n="footer.links.security">ความปลอดภัย</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-col">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;"
+                        data-i18n="footer.help">
+                        ช่วยเหลือ</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.85rem;">
+                            <a href="contact.html" class="footer-link-v2" data-i18n="footer.links.contact">ติดต่อเรา</a>
+                        </li>
+                        <li style="margin-bottom: 0.85rem;">
+                            <a href="help.html" class="footer-link-v2" data-i18n="footer.links.help">ศูนย์ช่วยเหลือ</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom"
+                style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: rgba(255,255,255,0.4); font-size: 0.9rem;"
+                data-i18n="footer.rights">
+                &copy; 2026 Elixopay. สงวนลิขสิทธิ์.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js?v=2"></script>
+    <script src="js/ui.js?v=2"></script>
+    <!-- Scripts -->
+    <!-- Scripts -->
+    <script>
+        // Language Selector Logic
+        const langSelect = document.getElementById('langSelect');
+        const availableLangs = ['th', 'en', 'zh'];
+
+        // SimpleScroll Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        // Stagger delay based on index if possible, or just add class
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-on-scroll').forEach((el, i) => {
+                el.style.transitionDelay = `${(i % 3) * 100}ms`; // CSS variable delay
+                observer.observe(el);
+            });
+        });
+
+        // Simple mobile menu toggle
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', () => {
+            const nav = document.querySelector('.nav-links');
+            if (nav.style.display === 'flex') {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '70px';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.background = 'var(--dark-card)';
+                nav.style.padding = '1rem';
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/ui-enhancements.js"></script>
+</body>
+
+</html>

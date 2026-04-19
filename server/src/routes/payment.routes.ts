@@ -12,6 +12,7 @@ router.use(protect);
 // Read-only Routes
 router.get('/', paymentController.getPayments);
 router.get('/stats', paymentController.getPaymentStats);
+router.get('/export/csv', paymentController.exportPaymentsCSV);
 
 // Write/Action Routes (Need KYC + Idempotency)
 router.post('/:id/refund', requireKyc, verifyIdempotency, paymentController.refundPayment);

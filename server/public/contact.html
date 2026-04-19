@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ติดต่อ Elixopay - ทีมสนับสนุนของเราพร้อมให้บริการ 24/7">
+    <title data-i18n="contact.title">ติดต่อเรา - Elixopay</title>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/theme.css">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --success: #10b981;
+            --dark-bg: #080c18;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Animated background ── */
+        .bg-scene {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-scene::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 30%;
+            width: 70vw;
+            height: 70vw;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 65%);
+            animation: drift1 18s ease-in-out infinite;
+        }
+
+        .bg-scene::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 65%);
+            animation: drift2 22s ease-in-out infinite;
+        }
+
+        .bg-accent {
+            position: absolute;
+            bottom: 20%;
+            left: -5%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 65%);
+            animation: drift3 14s ease-in-out infinite;
+        }
+
+        @keyframes drift1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(-40px, 30px)
+            }
+        }
+
+        @keyframes drift2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(30px, -40px)
+            }
+        }
+
+        @keyframes drift3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(20px, 25px)
+            }
+        }
+
+        /* Grid overlay */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(8, 12, 24, 0.97);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(8, 12, 24, 0.97) !important;
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: none !important;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .btn-nav-outline {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            color: var(--text-primary) !important;
+            font-size: 0.85rem !important;
+            transition: all 0.2s !important;
+        }
+
+        .btn-nav-outline:hover {
+            border-color: var(--primary) !important;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-nav-primary {
+            background: var(--primary);
+            color: white !important;
+            padding: 0.5rem 1.3rem;
+            border-radius: 8px;
+            font-size: 0.85rem !important;
+            font-weight: 700 !important;
+            text-decoration: none;
+            transition: all 0.2s !important;
+        }
+
+        .btn-nav-primary:hover {
+            background: #4f46e5 !important;
+            transform: translateY(-1px);
+        }
+
+        .lang-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            padding: 9rem 2rem 5rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 99px;
+            padding: 6px 18px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ── Main grid ── */
+        .contact-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        /* ── Info sidebar ── */
+        .info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 1.75rem;
+            backdrop-filter: blur(12px);
+            transition: border-color 0.25s, transform 0.25s;
+        }
+
+        .info-card:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+            transform: translateX(4px);
+        }
+
+        .ic-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .ic-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .ic-icon.purple {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+        }
+
+        .ic-icon.green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .ic-icon.pink {
+            background: rgba(236, 72, 153, 0.2);
+            color: #f472b6;
+        }
+
+        .ic-title {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .ic-desc {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        .ic-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 0.7rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+
+        .ic-link:hover {
+            gap: 10px;
+        }
+
+        .uptime-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #34d399;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34d399;
+            flex-shrink: 0;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+            }
+        }
+
+        /* ── Form card ── */
+        .form-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.75rem;
+            backdrop-filter: blur(16px);
+        }
+
+        .form-card h2 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-card .subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .fg {
+            margin-bottom: 1.25rem;
+        }
+
+        .fg label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .fg input,
+        .fg textarea,
+        .fg select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.85rem 1.1rem;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+        }
+
+        .fg input::placeholder,
+        .fg textarea::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .fg select option {
+            background: #111827;
+        }
+
+        .fg input:focus,
+        .fg textarea:focus,
+        .fg select:focus {
+            border-color: rgba(99, 102, 241, 0.6);
+            background: rgba(99, 102, 241, 0.06);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .fg textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s;
+            box-shadow: 0 4px 24px rgba(99, 102, 241, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.45);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ── Footer ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--card-border);
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-brand p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .footer-col h5 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .footer-col a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 900px) {
+            .contact-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .nav-links.show {
+                display: flex !important;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                background: rgba(15, 23, 42, 0.98);
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .form-card {
+                padding: 1.75rem;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Animated background -->
+    <div class="bg-scene">
+        <div class="bg-accent"></div>
+    </div>
+    <div class="bg-grid"></div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-mark">E</div>
+                Elixopay
+            </a>
+            <button class="mobile-menu-btn" style="color: var(--text-primary);"><i class="fas fa-bars"></i></button>
+            <ul class="nav-links">
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <li><a href="usecases.html" data-i18n="nav.usecases">Use Cases</a></li>
+                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="https://app.elixopay.com/login.html" class="btn-nav-outline"
+                        data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="https://app.elixopay.com/signup.html" class="btn-nav-primary"
+                        data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <script>
+        document.querySelector(".mobile-menu-btn").addEventListener("click", function() {
+            document.querySelector(".nav-links").classList.toggle("show");
+        });
+    </script>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <i class="fas fa-headset"></i>
+            <span data-i18n="contact.info.hours.badge">Support 24/7 Online</span>
+        </div>
+        <h1 data-i18n="contact.title">ติดต่อเรา</h1>
+        <p data-i18n="contact.hero.desc">มีคำถามหรือต้องการความช่วยเหลือ? ทีมของเราพร้อมให้บริการตลอด 24/7</p>
+    </section>
+
+    <!-- Main content -->
+    <div class="contact-wrap">
+
+        <!-- Info sidebar -->
+        <div class="info-col">
+
+            <!-- Email -->
+            <div class="info-card">
+                <div class="ic-header">
+                    <div class="ic-icon purple"><i class="fas fa-envelope"></i></div>
+                    <div class="ic-title" data-i18n="contact.info.email">อีเมล</div>
+                </div>
+                <div class="ic-desc" data-i18n="contact.info.email.desc">ส่งอีเมลถึงเราได้ตลอดเวลา</div>
+                <a href="mailto:support@elixopay.com" class="ic-link">
+                    support@elixopay.com <i class="fas fa-arrow-right" style="font-size:0.75rem;"></i>
+                </a>
+            </div>
+
+            <!-- Hours -->
+            <div class="info-card">
+                <div class="ic-header">
+                    <div class="ic-icon green"><i class="fas fa-clock"></i></div>
+                    <div class="ic-title" data-i18n="contact.info.hours">เวลาให้บริการ</div>
+                </div>
+                <div class="ic-desc">
+                    <span data-i18n="contact.info.hours.line1">ทีมซัพพอร์ตพร้อมให้บริการคุณตลอด 24 ชั่วโมง</span><br>
+                    <span data-i18n="contact.info.hours.line2">ตอบกลับภายใน 1 ชั่วโมง</span>
+                </div>
+                <div class="uptime-row" style="margin-top:0.9rem;">
+                    <span class="pulse-dot"></span>
+                    <span data-i18n="contact.info.hours.badge">Support 24/7 Online</span>
+                </div>
+            </div>
+
+            <!-- Response time promise -->
+            <div class="info-card">
+                <div class="ic-header">
+                    <div class="ic-icon pink"><i class="fas fa-bolt"></i></div>
+                    <div class="ic-title">ตอบไวแน่นอน</div>
+                </div>
+                <div class="ic-desc">เราตอบกลับทุกข้อความ ไม่มีเรื่องใดถูกละเลย ลูกค้าคือสิ่งสำคัญที่สุดของเรา</div>
+                <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;justify-content:center;">
+                    <div
+                        style="text-align:center;flex:1;background:rgba(255,255,255,0.04);border-radius:10px;padding:0.75rem 0.5rem;">
+                        <div style="font-size:1.4rem;font-weight:800;color:#f472b6;">&lt;1h</div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);">ตอบกลับเฉลี่ย</div>
+                    </div>
+                    <div
+                        style="text-align:center;flex:1;background:rgba(255,255,255,0.04);border-radius:10px;padding:0.75rem 0.5rem;">
+                        <div style="font-size:1.4rem;font-weight:800;color:#818cf8;">24/7</div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);">ให้บริการ</div>
+                    </div>
+                    <div
+                        style="text-align:center;flex:1;background:rgba(255,255,255,0.04);border-radius:10px;padding:0.75rem 0.5rem;">
+                        <div style="font-size:1.4rem;font-weight:800;color:#34d399;">99%</div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);">ความพึงพอใจ</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Contact form -->
+        <div class="form-card">
+            <h2 data-i18n="contact.form.title">ส่งข้อความถึงเรา</h2>
+            <p class="subtitle">กรอกแบบฟอร์มด้านล่าง แล้วเราจะติดต่อกลับโดยเร็วที่สุด</p>
+
+            <form id="contactForm">
+                <div class="form-row">
+                    <div class="fg">
+                        <label data-i18n="contact.form.name">ชื่อ - นามสกุล *</label>
+                        <input type="text" id="name" name="name" required data-i18n="[placeholder]contact.form.name.ph"
+                            placeholder="กรอกชื่อของคุณ">
+                    </div>
+                    <div class="fg">
+                        <label data-i18n="contact.form.email">อีเมล *</label>
+                        <input type="email" id="email" name="email" required
+                            data-i18n="[placeholder]contact.form.email.ph" placeholder="your@email.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="fg">
+                        <label data-i18n="contact.form.phone">เบอร์โทรศัพท์</label>
+                        <input type="tel" id="phone" name="phone" data-i18n="[placeholder]contact.form.phone.ph"
+                            placeholder="08X-XXX-XXXX">
+                    </div>
+                    <div class="fg">
+                        <label data-i18n="contact.form.subject">หัวข้อ *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="" data-i18n="contact.form.subject.placeholder">เลือกหัวข้อ</option>
+                            <option value="sales" data-i18n="contact.form.subject.sales">สอบถามข้อมูลการขาย</option>
+                            <option value="support" data-i18n="contact.form.subject.support">ขอความช่วยเหลือทางเทคนิค
+                            </option>
+                            <option value="partnership" data-i18n="contact.form.subject.partnership">
+                                ความร่วมมือทางธุรกิจ</option>
+                            <option value="billing" data-i18n="contact.form.subject.billing">
+                                เรื่องเกี่ยวกับการเรียกเก็บเงิน</option>
+                            <option value="other" data-i18n="contact.form.subject.other">อื่นๆ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="fg">
+                    <label data-i18n="contact.form.message">ข้อความ *</label>
+                    <textarea id="message" name="message" required data-i18n="[placeholder]contact.form.message.ph"
+                        placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span data-i18n="contact.form.submit">ส่งข้อความ</span>
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">
+                    <div class="logo-mark" style="width:32px;height:32px;font-size:0.8rem;">E</div>
+                    <span style="font-weight:800;font-size:1.1rem;">Elixopay</span>
+                </div>
+                <p data-i18n="footer.tagline">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่</p>
+            </div>
+            <div class="footer-col">
+                <h5 data-i18n="footer.products">ผลิตภัณฑ์</h5>
+                <ul>
+                    <li><a href="apidocs.html" data-i18n="footer.links.docs">เอกสาร API</a></li>
+                    <li><a href="usecases.html" data-i18n="footer.links.usecases">Use Cases</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 data-i18n="footer.company">บริษัท</h5>
+                <ul>
+                    <li><a href="about.html" data-i18n="footer.links.about">เกี่ยวกับเรา</a></li>
+                    <li><a href="contact.html" data-i18n="footer.links.contact">ติดต่อเรา</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 data-i18n="footer.help">ช่วยเหลือ</h5>
+                <ul>
+                    <li><a href="help.html" data-i18n="footer.links.help">ศูนย์ช่วยเหลือ</a></li>
+                    <li><a href="security.html" data-i18n="footer.links.security">ความปลอดภัย</a></li>
+                    <li><a href="privacy.html" data-i18n="footer.links.privacy">นโยบายฯ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p data-i18n="footer.rights">© 2026 Elixopay. สงวนลิขสิทธิ์ | สร้างด้วย ❤️ โดยทีม Elixopay</p>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js?v=2"></script>
+    <script src="js/ui.js?v=2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/ui-enhancements.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const msg = window.ElixopayI18n
+                ? window.ElixopayI18n.t('contact.alert.success')
+                : 'ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด';
+
+            if (window.Swal) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '✅ ส่งสำเร็จแล้ว!',
+                    text: msg,
+                    background: '#1e1b4b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#6366f1',
+                    confirmButtonText: 'ตกลง'
+                });
+            } else {
+                alert(msg);
+            }
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>

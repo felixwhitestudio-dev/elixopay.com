@@ -82,7 +82,11 @@ export class WebhookService {
 
     /**
      * Send the actual HTTP request to the merchant's server securely
+     * Includes retry with exponential backoff (3 attempts)
      */
+    private static readonly MAX_RETRIES = 3;
+    private static readonly RETRY_DELAYS = [0, 2000, 4000]; // 0s, 2s, 4s
+
     private static async sendToEndpoint(url: string, secret: string, eventType: string, data: any) {
         const payload = JSON.stringify({
             event: eventType,
@@ -93,19 +97,38 @@ export class WebhookService {
         // Sign the payload using HMAC SHA-256 so the merchant can verify it came from us
         const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
 
-        try {
-            await axios.post(url, payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Elixopay-Signature': signature,
-                    'Elixopay-Event': eventType
-                },
-                timeout: 5000 // 5 seconds max
-            });
-            logger.info(`[Webhook] Successfully dispatched ${eventType} to ${url}`);
-        } catch (error: any) {
-            logger.error(`[Webhook] Failed to dispatch ${eventType} to ${url}: ${error.message}`);
-            // In a production environment, we should queue failed webhooks for automatic retries
+        for (let attempt = 0; attempt < this.MAX_RETRIES; attempt++) {
+            try {
+                // Wait before retry (exponential backoff)
+                if (attempt > 0) {
+                    await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAYS[attempt]));
+                    logger.info(`[Webhook] Retry attempt ${attempt + 1}/${this.MAX_RETRIES} for ${eventType} to ${url}`);
+                }
+
+                const response = await axios.post(url, payload, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Elixopay-Signature': signature,
+                        'Elixopay-Event': eventType,
+                        'Elixopay-Delivery-Attempt': String(attempt + 1),
+                    },
+                    timeout: 10000, // 10 seconds
+                    validateStatus: (status) => status >= 200 && status < 300,
+                });
+
+                logger.info(`[Webhook] ✅ Delivered ${eventType} to ${url} (attempt ${attempt + 1})`);
+                return; // Success — exit
+
+            } catch (error: any) {
+                const status = error.response?.status || 'NETWORK_ERROR';
+                logger.warn(`[Webhook] ❌ Attempt ${attempt + 1}/${this.MAX_RETRIES} failed for ${eventType} to ${url}: ${status} — ${error.message}`);
+
+                if (attempt === this.MAX_RETRIES - 1) {
+                    logger.error(`[Webhook] 🚨 All ${this.MAX_RETRIES} retries exhausted for ${eventType} to ${url}. Event dropped.`);
+                    // Future: store failed deliveries in a dead-letter queue for manual replay
+                }
+            }
         }
     }
 }
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ยืนยันอีเมล - Elixopay</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #635BFF 0%, #7A73FF 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(99, 91, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
+        <!-- Logo -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold gradient-text">Elixopay</h1>
+        </div>
+
+        <!-- Working State -->
+        <div id="loadingState">
+            <i class="fas fa-spinner fa-spin text-4xl text-purple-600 mb-4 tracking-wider"></i>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">กำลังตรวจสอบ...</h2>
+            <p class="text-gray-500 text-sm">กรุณารอสักครู่ ระบบกำลังยืนยันความถูกต้องของลิงก์</p>
+        </div>
+
+        <!-- Success State -->
+        <div id="successState" class="hidden">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-2xl text-green-600"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">ยืนยันอีเมลสำเร็จ!</h2>
+            <p class="text-gray-500 text-sm mb-6">ขอบคุณที่ยืนยันบัญชีของคุณ ตอนนี้คุณสามารถเข้าสู่ระบบเพื่อใช้งาน
+                Elixopay ได้เต็มรูปแบบแล้ว</p>
+            <a href="/login.html"
+                class="btn-primary block w-full py-3 px-4 rounded-lg text-white font-medium">เข้าสู่ระบบทันที</a>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-times text-2xl text-red-600"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2">ยืนยันไม่สำเร็จ</h2>
+            <p id="errorMessage" class="text-gray-500 text-sm mb-6">ลิงก์ที่คุณใช้หมดอายุหรือไม่ถูกต้อง
+                กรุณากลับไปที่หน้าเข้าสู่ระบบเพื่อขอรับลิงก์ใหม่</p>
+            <a href="/login.html"
+                class="block w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition">กลับสู่หน้าล็อกอิน</a>
+        </div>
+
+    </div>
+
+    <!-- API Config needed for domain resolution if any -->
+    <script src="/js/api-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            const loading = document.getElementById('loadingState');
+            const success = document.getElementById('successState');
+            const error = document.getElementById('errorState');
+            const errMsg = document.getElementById('errorMessage');
+
+            if (!token) {
+                loading.classList.add('hidden');
+                errMsg.textContent = "ไม่พบ Token ยืนยันอีเมล";
+                error.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // Ensure API_CONFIG is loaded or fallback to default
+                const baseUrl = window.API_CONFIG ? window.API_CONFIG.ENDPOINTS.auth.verifyEmail : '/api/v1/auth/verify-email';
+                const apiUrl = window.API_CONFIG && window.API_CONFIG.BASE_URL ? window.API_CONFIG.BASE_URL + baseUrl : 'http://localhost:3000' + baseUrl;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    loading.classList.add('hidden');
+                    success.classList.remove('hidden');
+                    // Save token if immediate login is preferred
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+                } else {
+                    throw new Error(data.message || 'การตรวจสอบล้มเหลว ลิงก์อาจหมดอายุ');
+                }
+            } catch (err) {
+                loading.classList.add('hidden');
+                errMsg.textContent = err.message;
+                error.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

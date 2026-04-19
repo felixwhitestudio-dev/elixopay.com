@@ -2,6 +2,7 @@ import logger from '../utils/logger';
 import cron from 'node-cron';
 import prisma from '../utils/prisma';
 import { KBankService } from '../services/kbank.service';
+import { WebhookService } from '../services/webhook.service';
 
 /**
  * Sweeps the database every day at Midnight (00:00) 
@@ -99,9 +100,16 @@ export const initCronJobs = () => {
                     }
                 });
 
-                // 5. Fire Webhook/Email to Merchant to tell them to send the QR.
-                // In a production app, we would emit an event like 'invoice.created'
-                // For now, log the action.
+                // 5. Fire Webhook to Merchant: invoice.created
+                WebhookService.dispatchEvent(sub.customer.merchantId, 'invoice.created', {
+                    invoiceId: invoice.id,
+                    subscriptionId: sub.id,
+                    transactionId: transaction.id,
+                    amount: Number(amountDue),
+                    customerName: sub.customer.name,
+                    dueDate: invoice.dueDate.toISOString(),
+                }).catch(err => logger.error(`[CRON] Webhook dispatch failed for invoice ${invoice.id}:`, err));
+
                 logger.info(`[CRON] Invoice ${invoice.id} generated for Subscription ${sub.id}. Trans ID: ${transaction.id}`);
             }
 

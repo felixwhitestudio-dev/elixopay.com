@@ -3,3 +3,15 @@ node_modules
 .env
 
 /src/generated/prisma
+
+# Build output
+dist/
+
+# Log files
+logs/
+*.log
+
+# Temp debug scripts
+tmp_*.js
+final_*.js
+test_*.js

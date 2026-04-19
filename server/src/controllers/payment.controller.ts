@@ -132,3 +132,39 @@ export const refundPayment = catchAsync(async (req: Request, res: Response, next
         message: `Refund of ฿${requestRefundAmount} processed successfully.`
     });
 });
+
+// ── CSV Export ────────────────────────────────────────
+export const exportPaymentsCSV = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore
+    const userId = req.user.id;
+    const { from, to, status, type } = req.query;
+
+    const where: any = { userId };
+    if (status) where.status = status as string;
+    if (type) where.type = type as string;
+    if (from || to) {
+        where.createdAt = {};
+        if (from) where.createdAt.gte = new Date(from as string);
+        if (to) where.createdAt.lte = new Date(to as string);
+    }
+
+    const transactions = await prisma.transaction.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: 5000,
+    });
+
+    // Build CSV
+    const header = 'ID,Reference,Type,Status,Amount(THB),Payment Method,Provider,Created At\n';
+    const rows = transactions.map(t => {
+        const date = t.createdAt.toISOString().replace('T', ' ').substring(0, 19);
+        return `${t.id},"${t.reference || ''}",${t.type},${t.status},${t.amount},${t.paymentMethod || 'N/A'},${t.provider || 'N/A'},"${date}"`;
+    }).join('\n');
+
+    const csv = '\uFEFF' + header + rows; // BOM for Excel
+    const filename = `elixopay_transactions_${new Date().toISOString().slice(0, 10)}.csv`;
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(csv);
+});

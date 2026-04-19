@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC Verification - Elixopay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/styles/index.css">
+
+    <style>
+        body {
+            font-family: 'Prompt', 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px -4px rgba(99, 102, 241, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover,
+        .upload-area.drag-over {
+            border-color: #6366f1;
+            background-color: #e0e7ff;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4 py-12">
+
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="https://www.elixopay.com/" class="inline-block">
+                <h1 class="text-3xl font-bold gradient-text pb-1">Elixopay</h1>
+            </a>
+            <h2 class="text-2xl font-bold text-gray-800 mt-4" data-i18n="kyc.title">ยืนยันตัวตน (KYC)</h2>
+            <p class="text-gray-500 text-sm mt-2 max-w-lg mx-auto" data-i18n="kyc.subtitle">
+                เพื่อปฏิบัติตามกฎหมายฟอกเงินและข้อควรระวังของธนาคารแห่งประเทศไทย
+                กรุณาอัปโหลดเอกสารยืนยันตัวตนเพื่อเปิดใช้งานระบบชำระเงิน
+            </p>
+        </div>
+
+        <!-- STEP 1: Choose Document Type -->
+        <div class="mb-6">
+            <p class="text-sm font-bold text-gray-800 mb-3"><span
+                    data-i18n="kyc.type_select_title">เลือกประเภทเอกสารยืนยันตัวตน</span> <span
+                    class="text-red-500">*</span></p>
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" id="btn-id-card" onclick="selectDocType('id_card')"
+                    class="doc-type-btn flex flex-col items-center p-4 rounded-xl border-2 border-indigo-500 bg-indigo-50 text-indigo-700 font-semibold transition-all">
+                    <i class="fas fa-id-card text-3xl mb-2"></i>
+                    <span class="text-sm" data-i18n="kyc.type_id_card">บัตรประชาชน</span>
+                    <span class="text-xs font-normal text-indigo-500 mt-0.5"
+                        data-i18n="kyc.type_id_desc">ต้องถ่ายทั้งด้านหน้า-หลัง</span>
+                </button>
+                <button type="button" id="btn-passport" onclick="selectDocType('passport')"
+                    class="doc-type-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-500 font-semibold transition-all hover:border-indigo-300">
+                    <i class="fas fa-passport text-3xl mb-2"></i>
+                    <span class="text-sm" data-i18n="kyc.type_passport">หนังสือเดินทาง</span>
+                    <span class="text-xs font-normal mt-0.5" data-i18n="kyc.type_passport_desc">หน้าที่มีรูปคุณ</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- KYC Status Overlay (shown when pending or verified) -->
+        <div id="kyc-status-overlay" class="hidden text-center py-10">
+            <div id="status-icon"
+                class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4"></div>
+            <h3 id="status-title" class="text-xl font-bold text-gray-800 mb-2"></h3>
+            <p id="status-desc" class="text-sm text-gray-500 mb-6 max-w-sm mx-auto"></p>
+            <button onclick="window.location.href='/dashboard.html'"
+                class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition">
+                <i class="fas fa-home mr-2"></i>กลับสู่แดชบอร์ด
+            </button>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between relative">
+                <!-- Line -->
+                <div class="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 z-0"></div>
+                <div id="progress-line"
+                    class="absolute top-4 left-0 h-0.5 bg-indigo-500 z-0 transition-all duration-500" style="width:0%">
+                </div>
+                <!-- Steps -->
+                <div class="step-item z-10 flex flex-col items-center" data-step="1">
+                    <div
+                        class="step-circle w-8 h-8 rounded-full border-2 border-indigo-500 bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">
+                        1</div>
+                    <span class="text-xs mt-1 font-medium text-indigo-600" data-i18n="kyc.step1">เอกสาร ID</span>
+                </div>
+                <div class="step-item z-10 flex flex-col items-center" data-step="2">
+                    <div
+                        class="step-circle w-8 h-8 rounded-full border-2 border-gray-300 bg-white text-gray-400 flex items-center justify-center text-xs font-bold">
+                        2</div>
+                    <span class="text-xs mt-1 font-medium text-gray-400" data-i18n="kyc.step2">Selfie</span>
+                </div>
+                <div class="step-item z-10 flex flex-col items-center" data-step="3">
+                    <div
+                        class="step-circle w-8 h-8 rounded-full border-2 border-gray-300 bg-white text-gray-400 flex items-center justify-center text-xs font-bold">
+                        3</div>
+                    <span class="text-xs mt-1 font-medium text-gray-400" data-i18n="kyc.step3">บัญชีธนาคาร</span>
+                </div>
+                <div class="step-item z-10 flex flex-col items-center" data-step="4">
+                    <div
+                        class="step-circle w-8 h-8 rounded-full border-2 border-gray-300 bg-white text-gray-400 flex items-center justify-center text-xs font-bold">
+                        4</div>
+                    <span class="text-xs mt-1 font-medium text-gray-400" data-i18n="kyc.step4">ส่งเอกสาร</span>
+                </div>
+            </div>
+        </div>
+
+        <form id="kycForm" class="space-y-6" onsubmit="handleKYCSubmit(event)">
+
+            <!-- Rejected Notice (shown after admin rejection with reason) -->
+            <div id="rejected-notice" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 flex items-start">
+                <i class="fas fa-times-circle text-red-500 text-xl mt-0.5 mr-3 flex-shrink-0"></i>
+                <div>
+                    <p class="text-sm font-bold text-red-700 mb-0.5" data-i18n="kyc.rejected_title">เอกสาร KYC
+                        ของคุณไม่ผ่านการตรวจสอบ</p>
+                    <p id="rejected-reason-text" class="text-xs text-red-600" data-i18n="kyc.rejected_desc">
+                        กรุณาตรวจสอบและอัปโหลดเอกสารใหม่</p>
+                    <p class="text-xs text-red-500 mt-1" data-i18n="kyc.rejected_tip">💡
+                        กรุณาแก้ไขตามเหตุผลที่แจ้งและส่งใหม่อีกครั้ง</p>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800 flex items-start">
+                <i class="fas fa-shield-alt mt-1 mr-3 text-blue-500 text-lg"></i>
+                <span data-i18n="kyc.notice">เอกสารทั้งหมดของคุณจะถูกเข้ารหัสระดับเดียวกับธนาคาร (Bank-grade Encryption)
+                    และจัดเก็บอย่างปลอดภัยบนเซิร์ฟเวอร์ และจำกัดสิทธิ์การเข้าถึงเฉพาะเจ้าหน้าที่ตรวจสอบเท่านั้น</span>
+            </div>
+
+            <!-- === ID CARD SECTION (front + back) === -->
+            <div id="section-id-card">
+                <label class="block text-sm font-bold text-gray-800 mb-1">
+                    <span data-i18n="kyc.id_card_front_title">1. บัตรประชาชน — ด้านหน้า</span> <span
+                        class="text-red-500">*</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-2" data-i18n="kyc.id_card_front_desc">ต้องเห็นเลข 13 หลัก
+                    ชื่อ-นามสกุล และรูปถ่าย ชัดเจน</p>
+                <div class="upload-area rounded-xl p-5 text-center cursor-pointer relative" id="dropzone-id-front">
+                    <input type="file" id="idCardFront" name="idCardFront" accept=".jpg,.jpeg,.png"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onchange="handleFileSelectWithPreview('idCardFront','preview-id-front','icon-id-front','thumb-id-front')">
+                    <div id="icon-id-front" class="text-indigo-400 mb-2">
+                        <i class="fas fa-id-card text-3xl"></i>
+                    </div>
+                    <img id="thumb-id-front"
+                        class="hidden mx-auto mb-2 rounded-lg max-h-32 object-contain border border-gray-200 shadow"
+                        src="" alt="preview front" />
+                    <div id="preview-id-front" class="text-sm text-gray-600 font-medium" data-i18n="kyc.upload_front">
+                        ถ่ายรูป / เลือกไฟล์ ด้านหน้าบัตร
+                    </div>
+                </div>
+
+                <!-- ID Card validation warning -->
+                <div id="warning-id-front"
+                    class="hidden mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-700 flex items-start">
+                    <i class="fas fa-exclamation-triangle mr-2 mt-0.5 flex-shrink-0 text-amber-500"></i>
+                    <span id="warning-id-front-msg"></span>
+                </div>
+
+                <label class="block text-sm font-bold text-gray-800 mb-1 mt-4">
+                    <span data-i18n="kyc.id_card_back_title">1. บัตรประชาชน — ด้านหลัง</span> <span
+                        class="text-red-500">*</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-2" data-i18n="kyc.id_card_back_desc">ด้านที่มีบาร์โค้ดและที่อยู่</p>
+                <div class="upload-area rounded-xl p-5 text-center cursor-pointer relative" id="dropzone-id-back">
+                    <input type="file" id="idCardBack" name="idCardBack" accept=".jpg,.jpeg,.png"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onchange="handleFileSelectWithPreview('idCardBack','preview-id-back','icon-id-back','thumb-id-back')">
+                    <div id="icon-id-back" class="text-indigo-400 mb-2">
+                        <i class="fas fa-id-card text-3xl" style="transform:scaleX(-1)"></i>
+                    </div>
+                    <img id="thumb-id-back"
+                        class="hidden mx-auto mb-2 rounded-lg max-h-32 object-contain border border-gray-200 shadow"
+                        src="" alt="preview back" />
+                    <div id="preview-id-back" class="text-sm text-gray-600 font-medium" data-i18n="kyc.upload_back">
+                        ถ่ายรูป / เลือกไฟล์ ด้านหลังบัตร
+                    </div>
+                </div>
+            </div>
+
+            <!-- === PASSPORT SECTION === -->
+            <div id="section-passport" class="hidden">
+                <label class="block text-sm font-bold text-gray-800 mb-1">
+                    <span data-i18n="kyc.passport_title">1. หนังสือเดินทาง</span> <span class="text-red-500">*</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-2" data-i18n="kyc.passport_desc">ถ่ายหน้าที่มีรูปถ่ายและข้อมูลส่วนตัว
+                    ชัดเจน ไม่มีแฟลช (รองรับ JPG,
+                    PNG ขนาดไม่เกิน 5MB)</p>
+                <div class="upload-area rounded-xl p-5 text-center cursor-pointer relative" id="dropzone-passport">
+                    <input type="file" id="passportDoc" name="passportDoc" accept=".jpg,.jpeg,.png"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onchange="handleFileSelectWithPreview('passportDoc','preview-passport','icon-passport','thumb-passport')">
+                    <div id="icon-passport" class="text-indigo-400 mb-2">
+                        <i class="fas fa-passport text-3xl"></i>
+                    </div>
+                    <img id="thumb-passport"
+                        class="hidden mx-auto mb-2 rounded-lg max-h-32 object-contain border border-gray-200 shadow"
+                        src="" alt="preview passport" />
+                    <div id="preview-passport" class="text-sm text-gray-600 font-medium"
+                        data-i18n="kyc.upload_passport">
+                        ถ่ายรูป / เลือกไฟล์ หนังสือเดินทาง
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Statement / Company Cert -->
+            <div>
+                <label class="block text-sm font-bold text-gray-800 mb-1 mt-2">
+                    <span data-i18n="kyc.statementLabel">3. สมุดบัญชีธนาคาร / เอกสารรับรองบริษัท</span> <span
+                        class="text-red-500">*</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-2" data-i18n="kyc.statementDesc">
+                    หน้าสมุดบัญชีที่มีชื่อตรงกับชื่อผู้สมัคร หรือ หนังสือรับรองบริษัทอายุไม่เกิน 6 เดือน (รองรับ JPG,
+                    PNG, PDF ขนาดไม่เกิน 5MB)</p>
+                <div class="upload-area rounded-xl p-5 text-center cursor-pointer relative" id="dropzone-doc">
+                    <input type="file" id="statementDoc" name="statementDoc" accept=".jpg,.jpeg,.png,.pdf"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required
+                        onchange="handleFileSelectWithPreview('statementDoc','preview-doc','icon-doc','thumb-doc')">
+                    <div id="icon-doc" class="text-indigo-400 mb-2">
+                        <i class="fas fa-file-invoice text-3xl"></i>
+                    </div>
+                    <img id="thumb-doc"
+                        class="hidden mx-auto mb-2 rounded-lg max-h-28 object-contain border border-gray-200 shadow"
+                        src="" alt="preview doc" />
+                    <div id="preview-doc" class="text-sm text-gray-600 font-medium" data-i18n="kyc.upload_statement">
+                        ลากวางไฟล์ที่นี่ หรือ กดเพื่อเลือกไฟล์
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Selfie with Document (BOT required) -->
+            <div class="border-t border-gray-100 pt-5">
+                <h3 class="text-sm font-bold text-gray-800 mb-1"><span data-i18n="kyc.selfie_title">2. รูปถ่าย Selfie
+                        คู่กับเอกสาร</span> <span class="text-red-500">*</span></h3>
+                <p class="text-xs text-gray-500 mb-3" data-i18n="kyc.selfie_desc">ถ่ายรูปหน้าตรง
+                    พร้อมถือบัตรประชาชน/หนังสือเดินทาง
+                    ให้เห็นทั้งหน้าและเลขบัตรชัดเจน — กำหนดโดย BOT</p>
+
+                <!-- Example tips -->
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <div class="rounded-xl bg-green-50 border border-green-200 p-2 text-center">
+                        <div class="text-2xl mb-1">✅</div>
+                        <p class="text-xs text-green-700 font-medium" data-i18n="kyc.selfie_tip1_title">หน้าตรง แสงดี
+                        </p>
+                        <p class="text-xs text-green-600" data-i18n="kyc.selfie_tip1_desc">เห็นหน้า + บัตรชัด</p>
+                    </div>
+                    <div class="rounded-xl bg-red-50 border border-red-200 p-2 text-center">
+                        <div class="text-2xl mb-1">❌</div>
+                        <p class="text-xs text-red-700 font-medium" data-i18n="kyc.selfie_tip2_title">ใส่แมสก์/แว่น</p>
+                        <p class="text-xs text-red-600" data-i18n="kyc.selfie_tip2_desc">ปิดบังใบหน้า</p>
+                    </div>
+                    <div class="rounded-xl bg-red-50 border border-red-200 p-2 text-center">
+                        <div class="text-2xl mb-1">❌</div>
+                        <p class="text-xs text-red-700 font-medium" data-i18n="kyc.selfie_tip3_title">แสงมืดเกิน</p>
+                        <p class="text-xs text-red-600" data-i18n="kyc.selfie_tip3_desc">เห็นรายละเอียดไม่ชัด</p>
+                    </div>
+                </div>
+
+                <div class="upload-area rounded-xl p-5 text-center cursor-pointer relative" id="dropzone-selfie">
+                    <input type="file" id="selfieDoc" name="selfieDoc" accept=".jpg,.jpeg,.png"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onchange="handleFileSelectWithPreview('selfieDoc','preview-selfie','icon-selfie','thumb-selfie')">
+                    <div id="icon-selfie" class="text-indigo-400 mb-2">
+                        <i class="fas fa-camera text-3xl"></i>
+                    </div>
+                    <img id="thumb-selfie"
+                        class="hidden mx-auto mb-2 rounded-lg max-h-32 object-contain border border-gray-200 shadow"
+                        src="" alt="selfie preview" />
+                    <div id="preview-selfie" class="text-sm text-gray-600 font-medium" data-i18n="kyc.upload_selfie">
+                        ถ่ายรูป / เลือกไฟล์ Selfie + บัตร
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1" data-i18n="kyc.upload_limits">JPG, PNG ขนาดไม่เกิน 5MB</p>
+                </div>
+            </div>
+
+            <!-- Section 4: Bank Account (BOT Compliance) -->
+            <div class="border-t border-gray-100 pt-5">
+                <h3 class="text-sm font-bold text-gray-800 mb-1"><span data-i18n="kyc.bank_title">4.
+                        บัญชีธนาคารสำหรับรับเงิน</span> <span class="text-red-500">*</span></h3>
+                <p class="text-xs text-gray-500 mb-4" data-i18n="kyc.bank_desc">ชื่อบัญชีต้องตรงกับชื่อในบัตรประชาชน /
+                    หนังสือเดินทาง — บัญชีจะถูกล็อกหลังจากได้รับการอนุมัติ KYC และต้องส่งคำร้องหากต้องการเปลี่ยน</p>
+                <div
+                    class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-700 flex items-start mb-4">
+                    <i class="fas fa-lock mt-0.5 mr-2 flex-shrink-0 text-amber-500"></i>
+                    <span data-i18n="kyc.bank_notice">ข้อมูลบัญชีธนาคารถูกเก็บรักษาตามมาตรฐานของธนาคารแห่งประเทศไทย
+                        (BOT)
+                        และไม่สามารถแก้ไขเองได้หลังการยืนยัน</span>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1"
+                            data-i18n="kyc.bank_label_bank">ธนาคาร</label>
+                        <select id="bankName" name="bankName" required
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none bg-white">
+                            <option value="" data-i18n="kyc.bank_select">-- เลือกธนาคาร --</option>
+                            <option value="KBANK">ธนาคารกสิกรไทย (KBank)</option>
+                            <option value="SCB">ธนาคารไทยพาณิชย์ (SCB)</option>
+                            <option value="BBL">ธนาคารกรุงเทพ (BBL)</option>
+                            <option value="KTB">ธนาคารกรุงไทย (KTB)</option>
+                            <option value="BAY">ธนาคารกรุงศรีอยุธยา (BAY)</option>
+                            <option value="TTB">ธนาคารทีทีบี (TTB)</option>
+                            <option value="TISCO">ธนาคารทิสโก้ (TISCO)</option>
+                            <option value="CIMB">ธนาคารซีไอเอ็มบีไทย (CIMB)</option>
+                            <option value="UOBT">ธนาคารยูโอบี (UOB)</option>
+                            <option value="GSB">ธนาคารออมสิน (GSB)</option>
+                            <option value="BAAC">ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร (BAAC)</option>
+                            <option value="GHB">ธนาคารอาคารสงเคราะห์ (GHB)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1"
+                            data-i18n="kyc.bank_label_acc_no">เลขบัญชีธนาคาร</label>
+                        <input type="text" id="bankAccountNumber" name="bankAccountNumber" required
+                            placeholder="เช่น 123-4-56789-0" inputmode="numeric"
+                            data-i18n="[placeholder]kyc.bank_ph_acc_no"
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1"
+                            data-i18n="kyc.bank_label_acc_name">ชื่อเจ้าของบัญชี (ภาษาไทย/อังกฤษตามสมุดบัญชี)</label>
+                        <input type="text" id="bankAccountName" name="bankAccountName" required
+                            placeholder="เช่น นาย สมชาย ใจดี / Somchai Jaidee"
+                            data-i18n="[placeholder]kyc.bank_ph_acc_name"
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="form-error"
+                class="hidden bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600 transition-all">
+                <i class="fas fa-exclamation-circle mr-1 text-red-500"></i>
+                <span id="form-error-message"></span>
+            </div>
+
+            <!-- PDPA Consent & Declaration (BOT Required) -->
+            <div class="border-t border-gray-100 pt-5 space-y-3">
+                <h3 class="text-sm font-bold text-gray-800 mb-3" data-i18n="kyc.consent_title">
+                    การยินยอมและการรับรองความถูกต้อง</h3>
+
+                <!-- PDPA Consent -->
+                <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" id="chk-pdpa" required
+                        class="mt-0.5 w-4 h-4 text-indigo-600 border-gray-300 rounded accent-indigo-600 flex-shrink-0"
+                        onchange="updateSubmitState()">
+                    <span class="text-xs text-gray-600 leading-relaxed">
+                        <span data-i18n="kyc.pdpa_text">ข้าพเจ้ายินยอมให้ Elixopay เก็บรวบรวม ใช้
+                            และเปิดเผยข้อมูลส่วนบุคคล (รวมถึงสำเนาเอกสารและข้อมูลทางการเงิน)
+                            เพื่อวัตถุประสงค์ในการยืนยันตัวตน ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
+                            และนำส่งแก่หน่วยงานกำกับดูแล เช่น ธนาคารแห่งประเทศไทย (BOT) ตามที่กฎหมายกำหนด — </span><a
+                            href="/privacy.html" target="_blank" class="text-indigo-600 underline hover:text-indigo-800"
+                            data-i18n="kyc.pdpa_link">นโยบายความเป็นส่วนตัว</a>
+                    </span>
+                </label>
+
+                <!-- Declaration of Accuracy -->
+                <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" id="chk-declaration" required
+                        class="mt-0.5 w-4 h-4 text-indigo-600 border-gray-300 rounded accent-indigo-600 flex-shrink-0"
+                        onchange="updateSubmitState()">
+                    <span class="text-xs text-gray-600 leading-relaxed" data-i18n="kyc.declare_text">
+                        ข้าพเจ้าขอรับรองว่าข้อมูลและเอกสารทั้งหมดที่ส่งมาเป็นข้อมูลจริงของตนเอง ถูกต้อง และครบถ้วน
+                        และข้าพเจ้าทราบว่าการให้ข้อมูลเท็จอาจมีความผิดตามกฎหมาย
+                    </span>
+                </label>
+            </div>
+
+            <!-- Success Message -->
+            <div id="form-success"
+                class="hidden bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800 flex items-center transition-all">
+                <i class="fas fa-check-circle text-2xl text-green-500 mr-3"></i>
+                <div>
+                    <strong data-i18n="kyc.success_msg">อัปโหลดเอกสารสำเร็จ! ระบบกำลังทำการตรวจสอบ</strong>
+                </div>
+            </div>
+
+            <button type="submit" id="submit-btn" disabled
+                class="btn-primary w-full text-white py-3.5 px-4 rounded-xl font-bold text-base flex items-center justify-center mt-6 opacity-50 cursor-not-allowed transition-all">
+                <i class="fas fa-cloud-upload-alt mr-2" id="submit-icon"></i>
+                <span id="submit-btn-text" data-i18n="kyc.submit_btn">ส่งมอบเอกสารยืนยันตัวตน</span>
+                <div id="submit-spinner" class="spinner hidden ml-3"></div>
+            </button>
+            <p id="submit-hint" class="text-center text-xs text-gray-400 mt-2">
+                กรุณาทำเครื่องหมายในช่องยินยอมทั้งสองก่อนส่งเอกสาร</p>
+        </form>
+
+        <div class="mt-8 text-center pt-6 border-t border-gray-100">
+            <button onclick="window.location.href='/dashboard.html'"
+                class="text-sm text-gray-500 hover:text-gray-800 font-medium transition flex items-center justify-center mx-auto">
+                <i class="fas fa-arrow-left mr-2"></i> <span data-i18n="kyc.btn_home">กลับสู่แดชบอร์ด</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script>
+        // ----- DOCUMENT TYPE STATE -----
+        let selectedDocType = 'id_card'; // default
+
+        function selectDocType(type) {
+            selectedDocType = type;
+
+            const btnIdCard = document.getElementById('btn-id-card');
+            const btnPassport = document.getElementById('btn-passport');
+            const sectionIdCard = document.getElementById('section-id-card');
+            const sectionPassport = document.getElementById('section-passport');
+
+            if (type === 'id_card') {
+                btnIdCard.className = 'doc-type-btn flex flex-col items-center p-4 rounded-xl border-2 border-indigo-500 bg-indigo-50 text-indigo-700 font-semibold transition-all';
+                btnPassport.className = 'doc-type-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-500 font-semibold transition-all hover:border-indigo-300';
+                sectionIdCard.classList.remove('hidden');
+                sectionPassport.classList.add('hidden');
+            } else {
+                btnPassport.className = 'doc-type-btn flex flex-col items-center p-4 rounded-xl border-2 border-indigo-500 bg-indigo-50 text-indigo-700 font-semibold transition-all';
+                btnIdCard.className = 'doc-type-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-500 font-semibold transition-all hover:border-indigo-300';
+                sectionPassport.classList.remove('hidden');
+                sectionIdCard.classList.add('hidden');
+            }
+        }
+
+        // ----- CHECK AUTH + KYC STATUS GATING -----
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token && window.API_CONFIG && !window.API_CONFIG.IS_DEMO) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Wire progress bar to file inputs
+            ['idCardFront', 'idCardBack', 'passportDoc', 'selfieDoc', 'statementDoc'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', updateProgress);
+            });
+
+            // --- Fetch live KYC status from API ---
+            try {
+                const res = await apiFetch('/api/v1/auth/me');
+                if (!res || !res.ok) return;
+                const data = await res.json();
+                const user = data.data?.user || data.user;
+                if (!user) return;
+
+                const status = user.kycStatus;
+
+                if (status === 'pending') {
+                    showKycStatusPage('pending', null);
+                } else if (status === 'verified') {
+                    showKycStatusPage('verified', null);
+                } else if (status === 'rejected') {
+                    // Show form, but also show rejection reason notice at top
+                    const banner = document.getElementById('rejected-notice');
+                    const reasonEl = document.getElementById('rejected-reason-text');
+                    if (banner) banner.classList.remove('hidden');
+                    if (reasonEl && user.kycRejectionReason) {
+                        reasonEl.textContent = `เหตุผล: ${user.kycRejectionReason}`;
+                    }
+                }
+            } catch (e) {
+                console.warn('KYC status fetch error:', e.message);
+            }
+        });
+
+        // Show a status-only page instead of the form
+        function showKycStatusPage(status, reason) {
+            const form = document.getElementById('kycForm');
+            const container = document.getElementById('kyc-status-overlay');
+            const iconEl = document.getElementById('status-icon');
+            const titleEl = document.getElementById('status-title');
+            const descEl = document.getElementById('status-desc');
+
+            if (!container || !form) return;
+            form.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            if (status === 'pending') {
+                iconEl.className = 'w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 mx-auto mb-4';
+                iconEl.innerHTML = '<i class="fas fa-hourglass-half text-3xl animate-pulse"></i>';
+                titleEl.textContent = 'อยู่ระหว่างการตรวจสอบ';
+                descEl.textContent = 'เจ้าหน้าที่ได้รับเอกสารของคุณแล้ว กำลังดำเนินการตรวจสอบภายใน 1-2 วันทำการ คุณจะได้รับแจ้งผลทาง Email';
+            } else if (status === 'verified') {
+                iconEl.className = 'w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-500 mx-auto mb-4';
+                iconEl.innerHTML = '<i class="fas fa-check-circle text-3xl"></i>';
+                titleEl.textContent = 'ยืนยันตัวตนสำเร็จแล้ว ✅';
+                descEl.textContent = 'KYC ของคุณได้รับการอนุมัติแล้ว คุณสามารถใช้งานระบบได้เต็มรูปแบบ';
+            }
+        }
+
+        // ----- PROGRESS BAR -----
+        function updateProgress() {
+            const idOk = selectedDocType === 'id_card'
+                ? (document.getElementById('idCardFront').files.length > 0 && document.getElementById('idCardBack').files.length > 0)
+                : document.getElementById('passportDoc').files.length > 0;
+            const selfieOk = document.getElementById('selfieDoc').files.length > 0;
+            const statementOk = document.getElementById('statementDoc').files.length > 0;
+            const bankOk = document.getElementById('bankAccountNumber')?.value.trim().length > 0;
+
+            let step = 1;
+            if (idOk) step = 2;
+            if (idOk && selfieOk && statementOk) step = 3;
+            if (idOk && selfieOk && statementOk && bankOk) step = 4;
+
+            // Update circles
+            document.querySelectorAll('.step-circle').forEach((circle, i) => {
+                const s = i + 1;
+                if (s < step) {
+                    circle.className = 'step-circle w-8 h-8 rounded-full border-2 border-green-500 bg-green-500 text-white flex items-center justify-center text-xs font-bold';
+                    circle.innerHTML = '<i class="fas fa-check text-xs"></i>';
+                } else if (s === step) {
+                    circle.className = 'step-circle w-8 h-8 rounded-full border-2 border-indigo-500 bg-indigo-500 text-white flex items-center justify-center text-xs font-bold';
+                    circle.textContent = s;
+                } else {
+                    circle.className = 'step-circle w-8 h-8 rounded-full border-2 border-gray-300 bg-white text-gray-400 flex items-center justify-center text-xs font-bold';
+                    circle.textContent = s;
+                }
+            });
+
+            // Update step labels
+            document.querySelectorAll('.step-item span').forEach((label, i) => {
+                const s = i + 1;
+                label.className = s <= step
+                    ? 'text-xs mt-1 font-medium text-indigo-600'
+                    : 'text-xs mt-1 font-medium text-gray-400';
+            });
+
+            // Progress line (3 gaps between 4 steps → each gap = 33.33%)
+            const pct = Math.min(((step - 1) / 3) * 100, 100);
+            document.getElementById('progress-line').style.width = pct + '%';
+        }
+
+        // ----- SUBMIT BUTTON STATE -----
+        function updateSubmitState() {
+            const pdpa = document.getElementById('chk-pdpa').checked;
+            const decl = document.getElementById('chk-declaration').checked;
+
+            // Check if required files are selected
+            const statementOk = document.getElementById('statementDoc').files.length > 0;
+            const selfieOk = document.getElementById('selfieDoc').files.length > 0;
+            const idOk = selectedDocType === 'id_card'
+                ? (document.getElementById('idCardFront').files.length > 0 && document.getElementById('idCardBack').files.length > 0)
+                : document.getElementById('passportDoc').files.length > 0;
+
+            // Note: Bank fields are required via HTML5 'required' attribute, so we just check checkboxes + files for initial enablement
+            // to allow HTML5 validation to trigger.
+            // If the user hasn't selected files, keep it disabled.
+            const allFilesSelected = statementOk && selfieOk && idOk;
+
+            const btn = document.getElementById('submit-btn');
+            const hint = document.getElementById('submit-hint');
+            if (pdpa && decl && allFilesSelected) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                if (hint) hint.classList.add('hidden');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                if (hint) hint.classList.remove('hidden');
+
+                // Update hint dynamically
+                if (pdpa && decl && !allFilesSelected) {
+                    hint.textContent = "กรุณาอัปโหลดเอกสารให้ครบทุกช่องก่อน";
+                } else {
+                    hint.textContent = "กรุณาทำเครื่องหมายในช่องยินยอมทั้งสองก่อนส่งเอกสาร";
+                }
+            }
+        }
+
+        // ----- FILE SELECT WITH PREVIEW THUMBNAIL -----
+        function handleFileSelectWithPreview(inputId, previewId, iconId, thumbId) {
+            const fileInput = document.getElementById(inputId);
+            const previewLabel = document.getElementById(previewId);
+            const icon = document.getElementById(iconId);
+            const thumb = thumbId ? document.getElementById(thumbId) : null;
+
+            if (!fileInput.files || fileInput.files.length === 0) return;
+            const file = fileInput.files[0];
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('ขนาดไฟล์เกิน 5MB กรุณาเลือกไฟล์ที่เล็กลง');
+                fileInput.value = '';
+                return;
+            }
+
+            const sizeStr = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+            previewLabel.innerHTML = `<span class="text-indigo-700 font-bold">${file.name}</span> <span class="text-xs text-gray-500 block mt-0.5">${sizeStr}</span>`;
+            icon.innerHTML = '<i class="fas fa-check-circle text-2xl text-green-500"></i>';
+            fileInput.parentElement.classList.add('border-green-400', 'bg-green-50');
+            fileInput.parentElement.classList.remove('border-gray-300');
+
+            // Show thumbnail preview for images
+            if (thumb && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    thumb.src = e.target.result;
+                    thumb.classList.remove('hidden');
+
+                    // Perform basic image validation (runs AFTER image loads)
+                    if (inputId === 'idCardFront') {
+                        validateIdCardImage(e.target.result);
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else if (thumb) {
+                thumb.classList.add('hidden');
+            }
+        }
+
+        // ----- BASIC ID CARD VALIDATION -----
+        // Uses aspect ratio and brightness as a heuristic proxy.
+        // A Thai ID card is about 85.6mm x 54mm → ratio ≈ 1.585
+        function validateIdCardImage(dataUrl) {
+            const warningBox = document.getElementById('warning-id-front');
+            const warningMsg = document.getElementById('warning-id-front-msg');
+            if (!warningBox || !warningMsg) return;
+
+            const img = new Image();
+            img.onload = function () {
+                const ratio = img.width / img.height;
+                const warnings = [];
+
+                // Check aspect ratio (ID card range: 1.3 to 1.9)
+                if (ratio < 1.2 || ratio > 2.2) {
+                    warnings.push('รูปที่อัปโหลดอาจไม่ใช่บัตรประชาชน (สัดส่วนรูปไม่ตรงกับบัตร)');
+                }
+
+                // If image is very small, warn
+                if (img.width < 300 || img.height < 150) {
+                    warnings.push('รูปถ่ายมีขนาดเล็กเกินไป เจ้าหน้าที่อาจอ่านข้อมูลไม่ออก กรุณาถ่ายใหม่ด้วยความละเอียดสูงกว่านี้');
+                }
+
+                if (warnings.length > 0) {
+                    warningMsg.textContent = warnings.join(' / ');
+                    warningBox.classList.remove('hidden');
+                } else {
+                    warningBox.classList.add('hidden');
+                }
+            };
+            img.src = dataUrl;
+        }
+
+        // ----- FORM SUBMISSION -----
+        async function handleKYCSubmit(e) {
+            e.preventDefault();
+
+            const statementDoc = document.getElementById('statementDoc').files[0];
+            const btn = document.getElementById('submit-btn');
+            const spinner = document.getElementById('submit-spinner');
+            const icon = document.getElementById('submit-icon');
+            const btnText = document.getElementById('submit-btn-text');
+            const errorBox = document.getElementById('form-error');
+            const errorMsg = document.getElementById('form-error-message');
+            const successBox = document.getElementById('form-success');
+
+            // Validate based on doc type
+            if (selectedDocType === 'id_card') {
+                const front = document.getElementById('idCardFront').files[0];
+                const back = document.getElementById('idCardBack').files[0];
+                if (!front || !back) {
+                    errorMsg.textContent = 'กรุณาอัปโหลดบัตรประชาชนทั้งด้านหน้าและด้านหลังให้ครบถ้วน';
+                    errorBox.classList.remove('hidden');
+                    return;
+                }
+            } else {
+                const passport = document.getElementById('passportDoc').files[0];
+                if (!passport) {
+                    errorMsg.textContent = 'กรุณาอัปโหลดรูปหนังสือเดินทาง';
+                    errorBox.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            if (!statementDoc) {
+                errorMsg.textContent = 'กรุณาอัปโหลดสมุดบัญชีธนาคาร / เอกสารรับรองบริษัท';
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            btn.disabled = true;
+            icon.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            btnText.textContent = 'กำลังอัปโหลด...';
+
+            try {
+                // Validate bank fields
+                const bankName = document.getElementById('bankName').value;
+                const bankAccountNumber = document.getElementById('bankAccountNumber').value.trim();
+                const bankAccountName = document.getElementById('bankAccountName').value.trim();
+
+                if (!bankName || !bankAccountNumber || !bankAccountName) {
+                    errorMsg.textContent = 'กรุณากรอกข้อมูลบัญชีธนาคารให้ครบถ้วน';
+                    errorBox.classList.remove('hidden');
+                    btn.disabled = false;
+                    icon.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    btnText.textContent = 'ส่งเอกสารยืนยันตัวตน';
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('docType', selectedDocType);
+                formData.append('statement', statementDoc);
+                formData.append('bankName', bankName);
+                formData.append('bankAccountNumber', bankAccountNumber);
+                formData.append('bankAccountName', bankAccountName);
+
+                // Selfie
+                const selfieFile = document.getElementById('selfieDoc').files[0];
+                if (!selfieFile) throw new Error('กรุณาถ่ายรูป Selfie คู่กับบัตรประชาชน / หนังสือเดินทาง');
+                formData.append('selfie', selfieFile);
+
+                if (selectedDocType === 'id_card') {
+                    formData.append('idCardFront', document.getElementById('idCardFront').files[0]);
+                    formData.append('idCardBack', document.getElementById('idCardBack').files[0]);
+                } else {
+                    formData.append('idCard', document.getElementById('passportDoc').files[0]);
+                }
+
+                const response = await apiFetch('/api/v1/kyc/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        const errData = await response.json();
+                        throw new Error(errData.message || 'การอัปโหลดล้มเหลว กรุณาลองใหม่');
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Non-JSON Error Response:', errorText);
+                        throw new Error(`เซิร์ฟเวอร์ตอบกลับผิดพลาด (HTTP ${response.status}): ${response.statusText}`);
+                    }
+                }
+
+                successBox.classList.remove('hidden');
+                btn.className = "w-full text-indigo-700 bg-indigo-100 hover:bg-indigo-200 py-3.5 px-4 rounded-xl font-bold text-base flex items-center justify-center mt-6 transition";
+                icon.className = "fas fa-home mr-2 text-indigo-700";
+                icon.classList.remove('hidden');
+                btnText.textContent = 'กลับสู่แดชบอร์ด';
+
+                document.getElementById('kycForm').onsubmit = function (ev) {
+                    ev.preventDefault();
+                    window.location.href = '/dashboard.html';
+                };
+
+                let user = JSON.parse(localStorage.getItem('user') || '{}');
+                user.kycStatus = 'pending';
+                localStorage.setItem('user', JSON.stringify(user));
+
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = err.message || 'การอัปโหลดล้มเหลว กรุณาลองใหม่';
+                errorBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>

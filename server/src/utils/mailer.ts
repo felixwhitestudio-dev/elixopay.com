@@ -237,3 +237,75 @@ export async function sendPayoutRejectedEmail(to: string, firstName: string, amo
     });
     logger.info('[Mailer] Payout Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
+
+// ── Settlement Notification ──────────────────────────────
+export async function sendSettlementEmail(to: string, firstName: string, amount: number, bankName: string) {
+    const transport = await getTransporter();
+    const info = await transport.sendMail({
+        from: FROM,
+        to,
+        subject: '💰 เงินโอนเข้าบัญชีเรียบร้อยแล้ว — Elixopay',
+        html: `
+        <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#f8fafc; border-radius:12px;">
+            <h1 style="color:#4f46e5; font-size:24px; margin-bottom:8px;">Elixopay</h1>
+            <h2 style="font-size:18px; color:#1e293b;">Settlement สำเร็จ 💰</h2>
+            <p style="color:#475569;">สวัสดีคุณ <strong>${firstName}</strong>,</p>
+            <p style="color:#475569;">ยอดเงินจำนวน <strong style="color:#059669;">฿ ${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> ได้ถูกโอนเข้าบัญชี <strong>${bankName}</strong> ของคุณเรียบร้อยแล้ว</p>
+            <a href="${process.env.APP_URL || 'http://localhost:8080'}/dashboard.html"
+               style="display:inline-block; margin-top:16px; padding:12px 24px; background:#4f46e5; color:white; border-radius:8px; text-decoration:none; font-weight:bold;">
+               ดูรายละเอียดใน Dashboard →
+            </a>
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
+            <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
+        </div>`,
+    });
+    logger.info('[Mailer] Settlement email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+}
+
+// ── Refund Notification ──────────────────────────────────
+export async function sendRefundNotificationEmail(to: string, firstName: string, amount: number, transactionId: string) {
+    const transport = await getTransporter();
+    const info = await transport.sendMail({
+        from: FROM,
+        to,
+        subject: '🔄 คำขอคืนเงินของคุณได้ดำเนินการแล้ว — Elixopay',
+        html: `
+        <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#f8fafc; border-radius:12px;">
+            <h1 style="color:#4f46e5; font-size:24px; margin-bottom:8px;">Elixopay</h1>
+            <h2 style="font-size:18px; color:#1e293b;">คืนเงินสำเร็จ 🔄</h2>
+            <p style="color:#475569;">สวัสดีคุณ <strong>${firstName}</strong>,</p>
+            <p style="color:#475569;">การคืนเงินจำนวน <strong>฿ ${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> สำหรับรายการ <strong>${transactionId}</strong> ได้ดำเนินการเรียบร้อยแล้ว</p>
+            <p style="color:#475569;">เงินจะคืนเข้าช่องทางเดิมที่ชำระภายใน 5-14 วันทำการ</p>
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
+            <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
+        </div>`,
+    });
+    logger.info('[Mailer] Refund notification email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+}
+
+// ── Suspicious Activity Alert ────────────────────────────
+export async function sendSuspiciousActivityEmail(merchantEmail: string, merchantName: string, details: string) {
+    const transport = await getTransporter();
+    const adminEmail = process.env.ADMIN_EMAIL || 'support@elixopay.com';
+    const info = await transport.sendMail({
+        from: FROM,
+        to: adminEmail,
+        subject: '⚠️ แจ้งเตือนรายการผิดปกติ — Elixopay',
+        html: `
+        <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#fef2f2; border-radius:12px;">
+            <h1 style="color:#dc2626; font-size:24px; margin-bottom:8px;">⚠️ Elixopay Alert</h1>
+            <h2 style="font-size:18px; color:#1e293b;">ตรวจพบรายการที่ต้องตรวจสอบ</h2>
+            <p style="color:#475569;">ร้านค้า: <strong>${merchantName}</strong> (${merchantEmail})</p>
+            <div style="background:white; border-left:4px solid #dc2626; padding:12px 16px; border-radius:4px; margin:16px 0;">
+                <p style="color:#dc2626; margin:0;">${details}</p>
+            </div>
+            <a href="${process.env.APP_URL || 'http://localhost:8080'}/admin/dashboard.html"
+               style="display:inline-block; margin-top:16px; padding:12px 24px; background:#dc2626; color:white; border-radius:8px; text-decoration:none; font-weight:bold;">
+               ตรวจสอบใน Admin Panel →
+            </a>
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
+            <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ</p>
+        </div>`,
+    });
+    logger.info('[Mailer] Suspicious activity email sent to', adminEmail, nodemailer.getTestMessageUrl(info) || '');
+}

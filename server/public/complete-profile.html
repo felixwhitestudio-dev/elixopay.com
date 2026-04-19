@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Profile - Elixopay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/styles/index.css">
+
+    <style>
+        body {
+            font-family: 'Prompt', 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px -4px rgba(99, 102, 241, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .input-field {
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="https://www.elixopay.com/" class="inline-block">
+                <h1 class="text-3xl font-bold gradient-text pb-1">Elixopay</h1>
+            </a>
+            <h2 class="text-xl font-bold text-gray-800 mt-4" data-i18n="profile.title">ตั้งค่าโปรไฟล์ให้สมบูรณ์</h2>
+            <p class="text-gray-500 text-sm mt-2" data-i18n="profile.subtitle">
+                เพื่อความปลอดภัยและสอดคล้องกับมาตรฐานทางธนาคาร กรุณากรอกชื่อและนามสกุลจริงของคุณ
+            </p>
+        </div>
+
+        <form id="completeProfileForm" class="space-y-5" onsubmit="handleCompleteProfile(event)">
+
+            <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 text-sm text-blue-800 flex items-start">
+                <i class="fas fa-info-circle mt-1 mr-2 text-blue-500"></i>
+                <span data-i18n="profile.notice">ชื่อที่ระบุต้องตรงกับบัญชีธนาคารที่คุณต้องการใช้ถอนเงินในอนาคต</span>
+            </div>
+
+            <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1"
+                    data-i18n="profile.firstName">
+                    ชื่อจริง (First Name) *
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </div>
+                    <input type="text" id="firstName" name="firstName" required
+                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1"
+                        placeholder="ชื่อจริง">
+                </div>
+            </div>
+
+            <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="profile.lastName">
+                    นามสกุล (Last Name) *
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="far fa-user text-gray-400"></i>
+                    </div>
+                    <input type="text" id="lastName" name="lastName" required
+                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1"
+                        placeholder="นามสกุล">
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="form-error" class="hidden bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+                <i class="fas fa-exclamation-circle mr-1 text-red-500"></i>
+                <span id="form-error-message"></span>
+            </div>
+
+            <button type="submit" id="submit-btn"
+                class="btn-primary w-full text-white py-3 px-4 rounded-lg font-semibold text-base flex items-center justify-center mt-6">
+                <span id="submit-btn-text" data-i18n="profile.submit">ยืนยันการเปิดบัญชี</span>
+                <div id="submit-spinner" class="spinner hidden ml-3"></div>
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <button onclick="cancelSetup()"
+                class="text-sm text-gray-500 hover:text-gray-700 font-medium pb-1 border-b border-transparent hover:border-gray-500 transition">
+                <i class="fas fa-arrow-left mr-1"></i> <span data-i18n="profile.cancel">กลับไปหน้าล็อกอิน</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tempToken = sessionStorage.getItem('tempGoogleToken');
+            if (!tempToken) {
+                // If there's no temp token, they shouldn't be here
+                window.location.href = '/login.html';
+            }
+        });
+
+        function cancelSetup() {
+            sessionStorage.removeItem('tempGoogleToken');
+            window.location.href = '/login.html';
+        }
+
+        async function handleCompleteProfile(e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const tempToken = sessionStorage.getItem('tempGoogleToken');
+
+            const btn = document.getElementById('submit-btn');
+            const spinner = document.getElementById('submit-spinner');
+            const errorBox = document.getElementById('form-error');
+            const errorMsg = document.getElementById('form-error-message');
+
+            if (!firstName || !lastName) {
+                errorMsg.textContent = 'กรุณากรอกชื่อและนามสกุลให้ครบถ้วน';
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+
+            try {
+                const baseUrl = (window.API_CONFIG && window.API_CONFIG.BASE_URL) || 'http://localhost:5001';
+                const response = await fetch(baseUrl + '/api/v1/auth/google/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tempToken, firstName, lastName })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    sessionStorage.removeItem('tempGoogleToken');
+
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('authToken', data.token);
+                    }
+                    if (data.data?.user) {
+                        localStorage.setItem('user', JSON.stringify(data.data.user));
+                    }
+
+                    window.location.href = '/dashboard.html';
+                } else {
+                    errorMsg.textContent = data.message || data.error?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+                    errorBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
+                errorBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>

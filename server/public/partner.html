@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Dashboard — Elixopay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+        
+        .header { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header h1 { font-size: 20px; font-weight: 700; }
+        .header h1 span { color: #818cf8; }
+        .header .user-info { font-size: 14px; color: #94a3b8; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .stat-card { background: linear-gradient(145deg, #1e293b 0%, #334155 100%); border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s, box-shadow 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        .stat-label { font-size: 13px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 700; }
+        .stat-value.green { color: #34d399; }
+        .stat-value.blue { color: #60a5fa; }
+        .stat-value.purple { color: #a78bfa; }
+        .stat-value.yellow { color: #fbbf24; }
+        
+        .referral-section { background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
+        .referral-section h3 { margin-bottom: 12px; font-size: 16px; }
+        .referral-row { display: flex; gap: 12px; }
+        .referral-input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 12px 16px; color: #e2e8f0; font-size: 14px; }
+        .btn { padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .btn-primary { background: #818cf8; color: white; }
+        .btn-primary:hover { background: #6366f1; transform: scale(1.02); }
+        .btn-success { background: #059669; color: white; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; flex-wrap: wrap; }
+        .tab { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; background: transparent; color: #94a3b8; border: none; transition: all 0.2s; }
+        .tab.active { background: #4f46e5; color: white; }
+        .tab:hover:not(.active) { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+        
+        .table-wrap { overflow-x: auto; border-radius: 12px; background: #1e293b; border: 1px solid rgba(255,255,255,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 14px 16px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; background: #0f172a; }
+        td { padding: 14px 16px; font-size: 14px; border-top: 1px solid rgba(255,255,255,0.05); }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .badge.active { background: rgba(52,211,153,0.15); color: #34d399; }
+        .badge.pending { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .badge.inactive { background: rgba(239,68,68,0.15); color: #ef4444; }
+        
+        .not-partner { text-align: center; padding: 80px 24px; }
+        .not-partner h2 { font-size: 28px; margin-bottom: 16px; }
+        .not-partner p { color: #94a3b8; margin-bottom: 24px; line-height: 1.6; }
+        
+        .loading { text-align: center; padding: 48px; color: #64748b; }
+        .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #818cf8; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .hidden { display: none; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        @media (max-width: 640px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-value { font-size: 22px; }
+            .referral-row { flex-direction: column; }
+            .container { padding: 16px; }
+            .header { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span>Elixopay</span> Partner</h1>
+        <div class="user-info" id="userInfo">Loading...</div>
+    </div>
+
+    <div class="container">
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>กำลังโหลดข้อมูล...</p>
+        </div>
+
+        <div id="notPartner" class="not-partner hidden">
+            <h2>🤝 สมัครเป็นพาร์ทเนอร์</h2>
+            <p>คุณยังไม่ได้เป็นพาร์ทเนอร์ของ Elixopay<br>ติดต่อทีมงานเพื่อสมัครเป็นพาร์ทเนอร์</p>
+            <a href="mailto:support@elixopay.com" class="btn btn-primary" style="text-decoration:none;display:inline-block">ติดต่อสมัครพาร์ทเนอร์</a>
+        </div>
+
+        <div id="partnerDashboard" class="hidden">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">รายได้ทั้งหมด</div>
+                    <div class="stat-value green" id="totalEarnings">฿0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">ยอดคงเหลือ</div>
+                    <div class="stat-value blue" id="balance">฿0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">รอดำเนินการ</div>
+                    <div class="stat-value yellow" id="pendingBalance">฿0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">ร้านค้าที่แนะนำ</div>
+                    <div class="stat-value purple" id="referrals">0</div>
+                </div>
+            </div>
+
+            <div class="referral-section">
+                <h3>🔗 ลิงก์แนะนำของคุณ</h3>
+                <div class="referral-row">
+                    <input type="text" class="referral-input" id="referralLink" readonly>
+                    <button class="btn btn-primary" id="copyBtn" onclick="copyReferralLink()">คัดลอก</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="network">🏪 ร้านค้า</button>
+                <button class="tab" data-tab="team">👥 ทีม</button>
+                <button class="tab" data-tab="commissions">💰 คอมมิสชั่น</button>
+                <button class="tab" data-tab="payouts">🏦 ถอนเงิน</button>
+            </div>
+
+            <div class="tab-content active" id="tab-network">
+                <div class="table-wrap">
+                    <table><thead><tr><th>ชื่อร้าน</th><th>โดเมน</th><th>สถานะ</th><th>วันที่</th></tr></thead>
+                    <tbody id="networkTable"><tr><td colspan="4" class="loading">กำลังโหลด...</td></tr></tbody></table>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-team">
+                <div class="table-wrap">
+                    <table><thead><tr><th>ชื่อ</th><th>อีเมล</th><th>ตำแหน่ง</th><th>สถานะ</th></tr></thead>
+                    <tbody id="teamTable"><tr><td colspan="4" class="loading">กำลังโหลด...</td></tr></tbody></table>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-commissions">
+                <div class="table-wrap">
+                    <table><thead><tr><th>จาก</th><th>จำนวน</th><th>วันที่</th></tr></thead>
+                    <tbody id="commissionTable"><tr><td colspan="3" class="loading">กำลังโหลด...</td></tr></tbody></table>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-payouts">
+                <div class="table-wrap">
+                    <table><thead><tr><th>จำนวนเงิน</th><th>วิธีการ</th><th>สถานะ</th><th>วันที่</th></tr></thead>
+                    <tbody id="payoutTable"><tr><td colspan="4" class="loading">กำลังโหลด...</td></tr></tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api/v1';
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+        const fmt = (n) => '\u0E3F' + Number(n || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+        const fmtDate = (d) => d ? new Date(d).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+        const mkBadge = (s) => '<span class="badge ' + (s === 'active' || s === 'COMPLETED' ? 'active' : s === 'PENDING' ? 'pending' : 'inactive') + '">' + s + '</span>';
+
+        async function fetchAPI(path) {
+            try {
+                const res = await fetch(API_BASE + path, { headers: headers });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return await res.json();
+            } catch (err) { console.error('API Error (' + path + '):', err); return null; }
+        }
+
+        async function init() {
+            const statsRes = await fetchAPI('/partners/stats');
+            document.getElementById('loadingState').classList.add('hidden');
+            if (!statsRes || !statsRes.data || !statsRes.data.isPartner) {
+                document.getElementById('notPartner').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('partnerDashboard').classList.remove('hidden');
+            var s = statsRes.data.stats;
+            document.getElementById('totalEarnings').textContent = fmt(s.totalEarnings);
+            document.getElementById('balance').textContent = fmt(s.balance);
+            document.getElementById('pendingBalance').textContent = fmt(s.pendingBalance);
+            document.getElementById('referrals').textContent = s.referrals;
+
+            var user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('userInfo').textContent = user.email || '';
+            document.getElementById('referralLink').value = window.location.origin + '/register.html?ref=' + (user.invite_code || user.id || '');
+
+            loadNetwork(); loadTeam(); loadCommissions(); loadPayouts();
+        }
+
+        async function loadNetwork() {
+            var res = await fetchAPI('/partners/network');
+            var el = document.getElementById('networkTable');
+            if (!res || !res.data || !res.data.length) { el.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#64748b;padding:32px">ยังไม่มีร้านค้าในเครือข่าย</td></tr>'; return; }
+            el.innerHTML = res.data.map(function(m) { return '<tr><td>' + (m.name||'-') + '</td><td>' + (m.domain||'-') + '</td><td>' + mkBadge(m.status) + '</td><td>' + fmtDate(m.created_at) + '</td></tr>'; }).join('');
+        }
+
+        async function loadTeam() {
+            var res = await fetchAPI('/partners/team');
+            var el = document.getElementById('teamTable');
+            if (!res || !res.data || !res.data.length) { el.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#64748b;padding:32px">ยังไม่มีสมาชิกในทีม</td></tr>'; return; }
+            el.innerHTML = res.data.map(function(m) { return '<tr><td>' + (m.first_name||'') + ' ' + (m.last_name||'') + '</td><td>' + m.email + '</td><td>' + m.account_type + '</td><td>' + mkBadge(m.status) + '</td></tr>'; }).join('');
+        }
+
+        async function loadCommissions() {
+            var res = await fetchAPI('/partners/commissions');
+            var el = document.getElementById('commissionTable');
+            if (!res || !res.data || !res.data.length) { el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#64748b;padding:32px">ยังไม่มีค่าคอมมิสชั่น</td></tr>'; return; }
+            el.innerHTML = res.data.map(function(c) { return '<tr><td>' + (c.first_name||'') + ' ' + (c.last_name||'') + '</td><td style="color:#34d399;font-weight:600">' + fmt(c.amount) + '</td><td>' + fmtDate(c.created_at) + '</td></tr>'; }).join('');
+        }
+
+        async function loadPayouts() {
+            var res = await fetchAPI('/partners/payouts');
+            var el = document.getElementById('payoutTable');
+            if (!res || !res.data || !res.data.length) { el.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#64748b;padding:32px">ยังไม่มีประวัติการถอน</td></tr>'; return; }
+            el.innerHTML = res.data.map(function(p) { return '<tr><td style="font-weight:600">' + fmt(p.amount) + '</td><td>' + (p.method||'BANK_TRANSFER') + '</td><td>' + mkBadge(p.status) + '</td><td>' + fmtDate(p.created_at) + '</td></tr>'; }).join('');
+        }
+
+        function copyReferralLink() {
+            var input = document.getElementById('referralLink');
+            navigator.clipboard.writeText(input.value).then(function() {
+                var btn = document.getElementById('copyBtn');
+                btn.textContent = 'คัดลอกแล้ว ✅';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-success');
+                setTimeout(function() { btn.textContent = 'คัดลอก'; btn.classList.remove('btn-success'); btn.classList.add('btn-primary'); }, 2000);
+            });
+        }
+
+        document.querySelectorAll('.tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+                document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        init();
+    </script>
+</body>
+</html>

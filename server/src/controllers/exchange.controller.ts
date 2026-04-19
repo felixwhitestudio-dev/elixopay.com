@@ -2,6 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import * as exchangeService from '../services/exchange.service';
+import { getActiveCurrencies } from '../config/currencies';
+
+export const getCurrencies = catchAsync(async (req: Request, res: Response) => {
+    res.status(200).json({
+        success: true,
+        data: { currencies: getActiveCurrencies() },
+    });
+});
 
 export const getRate = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const rates = await exchangeService.getRate();

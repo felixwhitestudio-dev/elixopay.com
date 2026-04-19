@@ -4,7 +4,9 @@ import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import { ApiKeyService } from '../services/apikey.service';
 import prisma from '../utils/prisma';
-import { KBankService } from '../services/kbank.service';
+import { WebhookService } from '../services/webhook.service';
+import { orchestrator } from '../services/orchestrator.service';
+import { PaymentMethod } from '../providers/PaymentProvider';
 
 /**
  * Public Endpoint for Merchants to create a payment request.
@@ -28,59 +30,90 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
     }
 
     const { user, mode } = authData;
-    const { amount, currency, referenceId, description, returnUrl } = req.body;
+    const { amount, currency, referenceId, description, returnUrl, method: requestedMethod, provider: preferredProvider } = req.body;
 
     if (!amount || amount <= 0) {
         return next(new AppError('Invalid amount', 400));
     }
 
-    // 3. Create a pending Transaction record
-    // We use the merchant's internal ID to track it, but label it as a deposit from their customer
+    // Determine payment method (default to 'qr' for backward compatibility)
+    const method: PaymentMethod = requestedMethod || 'qr';
+    const validMethods: PaymentMethod[] = ['qr', 'card', 'bank_transfer', 'wallet'];
+    if (!validMethods.includes(method)) {
+        return next(new AppError(`Invalid payment method: '${method}'. Valid methods: ${validMethods.join(', ')}`, 400));
+    }
+
+    const isTestMode = mode === 'test';
+
+    // 3. Create charge through Payment Orchestrator
+    let chargeResult;
+    try {
+        chargeResult = await orchestrator.createCharge(
+            {
+                amount,
+                currency: currency || 'THB',
+                method,
+                description: description || 'API Checkout',
+                returnUrl,
+                token: req.body.token,       // For card payments (Omise token)
+                orderId: referenceId || `ORD-${Date.now()}`,
+                metadata: { referenceId },
+            },
+            {
+                isTestMode,
+                preferredProvider,
+            }
+        );
+    } catch (err: any) {
+        logger.error('[Checkout] Orchestrator charge failed:', err.message);
+        return next(new AppError(`Payment creation failed: ${err.message}`, 502));
+    }
+
+    // 4. Create a pending Transaction record with provider info
     const transaction = await prisma.transaction.create({
         data: {
             userId: user.id,
             amount: amount,
-            type: 'DEPOSIT', // Money coming IN to the merchant's wallet
-            status: 'PENDING',
+            type: 'DEPOSIT',
+            status: chargeResult.result.status === 'completed' ? 'COMPLETED' : 'PENDING',
             reference: referenceId || `API-${Date.now()}`,
+            provider: chargeResult.provider,
+            providerChargeId: chargeResult.result.providerChargeId,
+            paymentMethod: method,
             metadata: JSON.stringify({
                 description: description || 'API Checkout',
                 returnUrl: returnUrl,
-                mode: mode // track if this was a test or live transaction
-            })
+                mode: mode,
+            }),
         }
     });
 
-    // 4. Generate Payment Method (e.g., PromptPay QR via KBank)
-    // Note: If mode === 'test', we could bypass calling the real KBank API and return a mock QR.
-    // For now, we will call KBank service, which handles its own testing logic or connects to sandbox.
-    let qrImage = '';
-    try {
-        const qrResponse = await KBankService.generateQR(amount, `K${Date.now()}`); // Simplified ref
-        qrImage = qrResponse.qrCode; // Not qrImage
-    } catch (err) {
-        logger.warn('Failed to generate real KBank QR, using fallback for API:', err);
-        // Fallback or Test mock QR
-        qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=PROMPTPAY-DEMO-${amount}`;
+    // 5. Return checkout details to the merchant
+    const responseData: Record<string, any> = {
+        id: transaction.id,
+        amount,
+        currency: currency || 'THB',
+        status: transaction.status.toLowerCase(),
+        method,
+        provider: chargeResult.provider,
+        checkoutUrl: `${process.env.APP_URL || 'http://localhost:8080'}/checkout.html?ref=${transaction.id}`,
+        expiresAt: new Date(Date.now() + 15 * 60000).toISOString(),
+    };
+
+    // Add method-specific fields
+    if (chargeResult.result.qrCode) {
+        responseData.qrCodeBase64 = chargeResult.result.qrCode;
+    }
+    if (chargeResult.result.redirectUrl) {
+        responseData.redirectUrl = chargeResult.result.redirectUrl;
+    }
+    if (chargeResult.result.authorizeUri) {
+        responseData.authorizeUri = chargeResult.result.authorizeUri;
     }
 
-    // 5. Return checkout details to the merchant
-    // In a real full-stack app, we might return a URL to our hosted checkout page.
-    // Here we return the raw data so the merchant can render the QR themselves, 
-    // OR we return a link to a generated checkout page `https://elixopay.com/checkout?id=...`
-
-    // For simplicity, we return the direct QR data and a mock checkout URL.
     res.status(200).json({
         success: true,
-        data: {
-            id: transaction.id,
-            amount,
-            currency: currency || 'THB',
-            status: 'PENDING',
-            qrCodeBase64: qrImage,
-            checkoutUrl: `${process.env.APP_URL || 'http://localhost:8080'}/checkout.html?ref=${transaction.id}`,
-            expiresAt: new Date(Date.now() + 15 * 60000).toISOString() // 15 mins expiry
-        }
+        data: responseData,
     });
 });
 
@@ -143,6 +176,8 @@ export const getPaymentStatus = catchAsync(async (req: Request, res: Response, n
             amount: transaction.amount,
             currency: 'THB',
             status: transaction.status.toLowerCase(),
+            method: transaction.paymentMethod || 'qr',
+            provider: transaction.provider || 'unknown',
             description,
             reference_id: transaction.reference,
             paid_at: transaction.status === 'COMPLETED' ? transaction.updatedAt : null,
@@ -185,12 +220,26 @@ export const getCheckoutDetails = catchAsync(async (req: Request, res: Response,
         }
     } catch (e) { }
 
-    // Regenerate QR for display (In production, we'd store the QR reference or regenerate it)
+    // Regenerate QR for display using orchestrator
     let qrImage = '';
     if (transaction.status === 'PENDING') {
         try {
-            const qrResponse = await KBankService.generateQR(Number(transaction.amount), `K${Date.now()}`);
-            qrImage = qrResponse.qrCode;
+            const provider = transaction.provider || 'kbank';
+            const method = (transaction.paymentMethod as PaymentMethod) || 'qr';
+            // Determine if this is test mode
+            let isTestMode = false;
+            try {
+                if (transaction.metadata) {
+                    const meta = JSON.parse(transaction.metadata);
+                    isTestMode = meta.mode === 'test';
+                }
+            } catch (e) { }
+
+            const chargeResult = await orchestrator.createCharge(
+                { amount: Number(transaction.amount), currency: 'THB', method, orderId: `K${Date.now()}` },
+                { isTestMode, preferredProvider: provider }
+            );
+            qrImage = chargeResult.result.qrCode || '';
         } catch (err) {
             qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=PROMPTPAY-DEMO-${transaction.amount}`;
         }
@@ -211,9 +260,10 @@ export const getCheckoutDetails = catchAsync(async (req: Request, res: Response,
 });
 
 /**
- * Dev/Mock Endpoint to simulate a successful payment from the customer.
+ * Test Mode Endpoint to simulate a successful payment from the customer.
+ * Only works with test mode transactions.
  */
-export const mockPaymentCompletion = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const simulatePaymentCompletion = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     await prisma.$transaction(async (tx) => {
@@ -257,6 +307,18 @@ export const mockPaymentCompletion = catchAsync(async (req: Request, res: Respon
             data: updateData
         });
     });
+
+    // Dispatch webhook: payment.success
+    const completedTx = await prisma.transaction.findUnique({ where: { id: Number(id) } });
+    if (completedTx) {
+        WebhookService.dispatchEvent(completedTx.userId, 'payment.success', {
+            id: completedTx.id,
+            amount: completedTx.amount,
+            status: 'COMPLETED',
+            reference: completedTx.reference,
+            completedAt: new Date().toISOString(),
+        }).catch(err => logger.error('[Webhook] Dispatch failed for payment.success:', err));
+    }
 
     res.status(200).json({
         success: true,
@@ -376,6 +438,14 @@ export const refundPayment = catchAsync(async (req: Request, res: Response, next
 
         return refundTx;
     });
+
+    // Dispatch webhook: payment.refunded
+    WebhookService.dispatchEvent(user.id, 'payment.refunded', {
+        id: refundResult.id,
+        originalTransactionId: refundResult.parentId,
+        refundedAmount: refundResult.amount,
+        status: 'COMPLETED',
+    }).catch(err => logger.error('[Webhook] Dispatch failed for payment.refunded:', err));
 
     res.status(200).json({
         success: true,
