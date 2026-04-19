@@ -22,11 +22,11 @@
           <span class="ep-sidebar-label">Overview</span>
           <a href="/admin-dashboard.html" class="ep-sidebar-link" data-page="admin-dashboard">
             <i class="fas fa-gauge-high"></i>
-            <span>Dashboard</span>
+            <span data-i18n="admin.sidebar.dashboard">Dashboard</span>
           </a>
           <a href="/admin-pending.html" class="ep-sidebar-link" data-page="admin-pending">
             <i class="fas fa-user-clock"></i>
-            <span>KYC Applications</span>
+            <span data-i18n="admin.pending.title">KYC Applications</span>
           </a>
         </div>
 
@@ -35,11 +35,11 @@
           <span class="ep-sidebar-label">Finance</span>
           <a href="/admin-payouts.html" class="ep-sidebar-link" data-page="admin-payouts">
             <i class="fas fa-money-bill-transfer"></i>
-            <span>Payouts</span>
+            <span data-i18n="admin.sidebar.payouts">Payouts</span>
           </a>
           <a href="/admin-liquidity.html" class="ep-sidebar-link" data-page="admin-liquidity">
             <i class="fas fa-vault"></i>
-            <span>Liquidity</span>
+            <span data-i18n="admin.sidebar.liquidity">Liquidity</span>
           </a>
         </div>
 
@@ -48,7 +48,7 @@
           <span class="ep-sidebar-label">Quick Links</span>
           <a href="/dashboard.html" class="ep-sidebar-link">
             <i class="fas fa-arrow-left"></i>
-            <span>Merchant View</span>
+            <span data-i18n="admin.sidebar.goHome">Merchant View</span>
           </a>
         </div>
       </nav>

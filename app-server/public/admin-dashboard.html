@@ -44,37 +44,37 @@
     <!-- Dashboard Overview -->
     <div id="view-dashboard" class="tab-view">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h1>Admin Overview</h1>
+        <h1 data-i18n="admin.overview.title">Admin Overview</h1>
         <button onclick="fetchDashboardStats()" class="btn btn-primary"
           style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #e2e8f0; color: #334155; cursor: pointer; font-weight: 600;"><i
-            class="fas fa-sync-alt"></i> Refresh</button>
+            class="fas fa-sync-alt"></i> <span data-i18n="admin.common.refresh">Refresh</span></button>
       </div>
 
       <div class="dashboard-grid">
         <div class="stat-card">
-          <span class="stat-card-title">Total Users</span>
+          <span class="stat-card-title" data-i18n="admin.dashboard.total_users">Total Users</span>
           <span class="stat-card-value" id="stat-total-users">--</span>
-          <span class="stat-card-subtitle">Registered Accounts</span>
+          <span class="stat-card-subtitle" data-i18n="admin.stat.registeredAccounts">Registered Accounts</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #f59e0b;">
-          <span class="stat-card-title">Pending KYC</span>
+          <span class="stat-card-title" data-i18n="admin.dashboard.pending_kyc">Pending KYC</span>
           <span class="stat-card-value" id="stat-pending-kyc">--</span>
-          <span class="stat-card-subtitle">Awaiting Verification</span>
+          <span class="stat-card-subtitle" data-i18n="admin.stat.awaitingVerification">Awaiting Verification</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #10b981;">
-          <span class="stat-card-title">System USDT</span>
+          <span class="stat-card-title" data-i18n="admin.stat.systemUsdt">System USDT</span>
           <span class="stat-card-value" id="stat-usdt-balance">--</span>
-          <span class="stat-card-subtitle">Liquidity Pool</span>
+          <span class="stat-card-subtitle" data-i18n="admin.stat.liquidityPool">Liquidity Pool</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #3b82f6;">
-          <span class="stat-card-title">Total Withdrawals</span>
+          <span class="stat-card-title" data-i18n="admin.stat.totalWithdrawals">Total Withdrawals</span>
           <span class="stat-card-value" id="stat-withdrawals">--</span>
-          <span class="stat-card-subtitle">Completed Volume (THB)</span>
+          <span class="stat-card-subtitle" data-i18n="admin.stat.completedVolume">Completed Volume (THB)</span>
         </div>
       </div>
 
       <div class="chart-container">
-        <h3 style="margin-top: 0; color: #334155; font-size: 1.1rem; margin-bottom: 1rem;">New Users (Last 7 Days)</h3>
+        <h3 style="margin-top: 0; color: #334155; font-size: 1.1rem; margin-bottom: 1rem;" data-i18n="admin.chart.newUsers">New Users (Last 7 Days)</h3>
         <canvas id="userSignupsChart" height="80"></canvas>
       </div>
     </div>
@@ -82,19 +82,19 @@
     <!-- Verification Queue -->
     <div id="view-verifications" class="tab-view" style="display:none;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h1 style="margin:0;">Pending Verifications</h1>
+        <h1 style="margin:0;" data-i18n="admin.verification.title">Pending Verifications</h1>
         <button onclick="exportTableToCSV('verification-table-id', 'Pending_Verifications')" class="btn btn-primary"
           style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #e2e8f0; color: #334155; cursor: pointer; font-weight: 600;"><i
-            class="fas fa-file-csv"></i> Export CSV</button>
+            class="fas fa-file-csv"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span></button>
       </div>
       <table id="verification-table-id" class="verification-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>User</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th data-i18n="admin.common.date">Date</th>
+            <th data-i18n="admin.common.user">User</th>
+            <th data-i18n="admin.common.email">Email</th>
+            <th data-i18n="admin.common.status">Status</th>
+            <th data-i18n="admin.common.action">Action</th>
           </tr>
         </thead>
         <tbody id="verification-list">
@@ -106,25 +106,25 @@
     <!-- Bank Account Change Requests -->
     <div id="view-bank-requests" class="tab-view" style="display:none;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h1 style="margin:0;">Bank Account Change Requests</h1>
+        <h1 style="margin:0;" data-i18n="admin.bank.title">Bank Account Change Requests</h1>
         <button onclick="exportTableToCSV('bank-requests-table-id', 'Bank_Requests')" class="btn btn-primary"
           style="padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #e2e8f0; color: #334155; cursor: pointer; font-weight: 600;"><i
-            class="fas fa-file-csv"></i> Export CSV</button>
+            class="fas fa-file-csv"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span></button>
       </div>
       <table id="bank-requests-table-id" class="verification-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>User</th>
-            <th>Current Account</th>
-            <th>Requested Account</th>
-            <th>Reason</th>
-            <th>Action</th>
+            <th data-i18n="admin.common.date">Date</th>
+            <th data-i18n="admin.common.user">User</th>
+            <th data-i18n="admin.bank.currentAccount">Current Account</th>
+            <th data-i18n="admin.bank.requestedAccount">Requested Account</th>
+            <th data-i18n="admin.bank.reason">Reason</th>
+            <th data-i18n="admin.common.action">Action</th>
           </tr>
         </thead>
         <tbody id="bank-request-list">
           <tr>
-            <td colspan="6" style="text-align:center; padding:2rem;">Loading...</td>
+            <td colspan="6" style="text-align:center; padding:2rem;" data-i18n="admin.common.loading">Loading...</td>
           </tr>
         </tbody>
       </table>
@@ -135,17 +135,17 @@
   <div id="reviewModal" class="modal">
     <div class="modal-content">
       <div style="display:flex; justify-content:space-between;">
-        <h2>Review Application</h2>
+        <h2 data-i18n="admin.review.title">Review Application</h2>
         <button onclick="closeReviewModal()" style="border:none; background:none; font-size:1.5rem;">&times;</button>
       </div>
-      <div id="review-content">Loading...</div>
+      <div id="review-content" data-i18n="admin.common.loading">Loading...</div>
       <div style="margin-top:2rem; display:flex; gap:1rem;">
         <button onclick="submitReview('approve')" class="btn btn-primary"
-          style="flex:1; background:#16a34a;">Approve</button>
+          style="flex:1; background:#16a34a;" data-i18n="admin.review.approve">Approve</button>
         <button onclick="submitReview('reject')" class="btn btn-primary"
-          style="flex:1; background:#dc2626;">Reject</button>
+          style="flex:1; background:#dc2626;" data-i18n="admin.review.reject">Reject</button>
       </div>
-      <textarea id="reject-reason" placeholder="Reason for rejection (required if rejecting)"
+      <textarea id="reject-reason" data-i18n="[placeholder]admin.review.rejectReasonPh" placeholder="Reason for rejection (required if rejecting)"
         style="width:100%; margin-top:1rem; padding:0.5rem; border:1px solid #ddd;"></textarea>
     </div>
   </div>
@@ -265,7 +265,7 @@
                         <td>${user.firstName || ''} ${user.lastName || ''}</td>
                         <td>${user.email}</td>
                         <td><span class="status-badge status-pending">${user.kycStatus}</span></td>
-                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;" class="btn btn-primary">Review</button></td>
+                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;" class="btn btn-primary" data-i18n="transfer.step2.review">Review</button></td>
                     `;
           tbody.appendChild(tr);
         });
@@ -508,6 +508,7 @@
   </div><!-- /ep-main-wrap -->
   </div><!-- /ep-layout -->
   <script src="/js/admin-sidebar.js"></script>
+    <script src="js/i18n.js"></script>
 </body>
 
 </html>
