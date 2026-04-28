@@ -854,30 +854,80 @@
     </footer>
 
     <script src="js/i18n.js?v=2"></script>
-    <script src="js/ui.js?v=2"></script>
+    <script src="js/ui.js?v=3"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/ui-enhancements.js?v=5"></script>
+    <script src="js/api-config.js"></script>
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function (e) {
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const msg = window.ElixopayI18n
-                ? window.ElixopayI18n.t('contact.alert.success')
-                : 'ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด';
 
-            if (window.Swal) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '✅ ส่งสำเร็จแล้ว!',
-                    text: msg,
-                    background: '#1e1b4b',
-                    color: '#f1f5f9',
-                    confirmButtonColor: '#6366f1',
-                    confirmButtonText: 'ตกลง'
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>กำลังส่ง...</span>';
+
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value.trim(),
+            };
+
+            try {
+                const apiBase = window.API_CONFIG ? window.API_CONFIG.BASE_URL : 'https://api.elixopay.com';
+                const response = await fetch(apiBase + '/api/v1/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
                 });
-            } else {
-                alert(msg);
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    const msg = window.ElixopayI18n
+                        ? window.ElixopayI18n.t('contact.alert.success')
+                        : 'ขอบคุณที่ติดต่อเรา! เราจะติดต่อกลับโดยเร็วที่สุด';
+
+                    if (window.Swal) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '✅ ส่งสำเร็จแล้ว!',
+                            text: msg,
+                            background: '#1e1b4b',
+                            color: '#f1f5f9',
+                            confirmButtonColor: '#6366f1',
+                            confirmButtonText: 'ตกลง'
+                        });
+                    } else {
+                        alert(msg);
+                    }
+                    this.reset();
+                } else {
+                    throw new Error(result.message || 'Failed to submit');
+                }
+            } catch (err) {
+                const errMsg = err.message || 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '❌ เกิดข้อผิดพลาด',
+                        text: errMsg,
+                        background: '#1e1b4b',
+                        color: '#f1f5f9',
+                        confirmButtonColor: '#6366f1',
+                        confirmButtonText: 'ตกลง'
+                    });
+                } else {
+                    alert(errMsg);
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
             }
-            this.reset();
         });
     </script>
 </body>

@@ -26,6 +26,7 @@ import hierarchyRouter from './routes/hierarchy.routes';
 import refundRouter from './routes/refund.routes';
 import sandboxRouter from './routes/sandbox.routes';
 import notificationRouter from './routes/notification.routes';
+import contactRouter from './routes/contact.routes';
 import path from 'path';
 
 const app = express();
@@ -177,6 +178,7 @@ app.use('/api/v1/hierarchy', hierarchyRouter);
 app.use('/api/v1/refund', merchantLimiter, refundRouter);
 app.use('/api/v1/sandbox', sandboxRouter);
 app.use('/api/v1/notifications', notificationRouter);
+app.use('/api/v1/contact', contactRouter);
 
 // Serve static files (KYC documents)
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));

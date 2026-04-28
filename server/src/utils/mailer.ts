@@ -309,3 +309,78 @@ export async function sendSuspiciousActivityEmail(merchantEmail: string, merchan
     });
     logger.info('[Mailer] Suspicious activity email sent to', adminEmail, nodemailer.getTestMessageUrl(info) || '');
 }
+
+// ── Contact Form — Admin Notification ────────────────────
+interface ContactFormData {
+    name: string;
+    email: string;
+    phone: string;
+    subject: string;
+    message: string;
+}
+
+export async function sendContactFormEmail(data: ContactFormData) {
+    const transport = await getTransporter();
+    const adminEmail = process.env.ADMIN_EMAIL || 'support@elixopay.com';
+    const info = await transport.sendMail({
+        from: FROM,
+        to: adminEmail,
+        replyTo: data.email,
+        subject: `📩 Contact Form: ${data.subject} — จาก ${data.name}`,
+        html: `
+        <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#f8fafc; border-radius:12px;">
+            <h1 style="color:#4f46e5; font-size:24px; margin-bottom:8px;">Elixopay</h1>
+            <h2 style="font-size:18px; color:#1e293b;">📩 New Contact Form Submission</h2>
+            <table style="width:100%; border-collapse:collapse; margin:16px 0;">
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:10px 12px; color:#64748b; font-weight:600; width:120px;">ชื่อ</td>
+                    <td style="padding:10px 12px; color:#1e293b;">${data.name}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:10px 12px; color:#64748b; font-weight:600;">อีเมล</td>
+                    <td style="padding:10px 12px; color:#1e293b;"><a href="mailto:${data.email}" style="color:#4f46e5;">${data.email}</a></td>
+                </tr>
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:10px 12px; color:#64748b; font-weight:600;">โทรศัพท์</td>
+                    <td style="padding:10px 12px; color:#1e293b;">${data.phone}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:10px 12px; color:#64748b; font-weight:600;">หัวข้อ</td>
+                    <td style="padding:10px 12px; color:#1e293b;">${data.subject}</td>
+                </tr>
+            </table>
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin:16px 0;">
+                <p style="color:#64748b; font-size:12px; font-weight:600; margin:0 0 8px;">ข้อความ:</p>
+                <p style="color:#1e293b; margin:0; white-space:pre-wrap; line-height:1.6;">${data.message}</p>
+            </div>
+            <p style="color:#64748b; font-size:13px;">💡 ตอบกลับอีเมลนี้เพื่อติดต่อลูกค้าโดยตรง (Reply-To: ${data.email})</p>
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
+            <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — Contact Form Notification</p>
+        </div>`,
+    });
+    logger.info('[Mailer] Contact form notification sent to', adminEmail, nodemailer.getTestMessageUrl(info) || '');
+}
+
+// ── Contact Form — Auto-Reply to Customer ────────────────
+export async function sendContactAutoReply(data: { name: string; email: string }) {
+    const transport = await getTransporter();
+    const info = await transport.sendMail({
+        from: FROM,
+        to: data.email,
+        subject: '✅ เราได้รับข้อความของคุณแล้ว — Elixopay',
+        html: `
+        <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#f8fafc; border-radius:12px;">
+            <h1 style="color:#4f46e5; font-size:24px; margin-bottom:8px;">Elixopay</h1>
+            <h2 style="font-size:18px; color:#1e293b;">ขอบคุณที่ติดต่อเรา ✅</h2>
+            <p style="color:#475569;">สวัสดีคุณ <strong>${data.name}</strong>,</p>
+            <p style="color:#475569;">เราได้รับข้อความของคุณเรียบร้อยแล้ว ทีมงานของเราจะตรวจสอบและติดต่อกลับภายใน <strong>1 ชั่วโมง</strong></p>
+            <div style="background:#eff6ff; border-left:4px solid #4f46e5; padding:12px 16px; border-radius:4px; margin:16px 0;">
+                <p style="color:#4f46e5; margin:0; font-weight:600;">📞 ต้องการความช่วยเหลือเร่งด่วน?</p>
+                <p style="color:#475569; margin:4px 0 0;">ส่งอีเมลถึงเราโดยตรงที่ <a href="mailto:support@elixopay.com" style="color:#4f46e5;">support@elixopay.com</a></p>
+            </div>
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
+            <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
+        </div>`,
+    });
+    logger.info('[Mailer] Contact auto-reply sent to', data.email, nodemailer.getTestMessageUrl(info) || '');
+}
