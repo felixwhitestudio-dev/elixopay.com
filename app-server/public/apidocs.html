@@ -1224,7 +1224,7 @@
               <h2 data-i18n="docs.refunds.title">การคืนเงิน (Refunds)</h2>
               <p data-i18n="docs.refunds.desc">
                 ใช้ Endpoint นี้เพื่อทำการคืนเงิน (Refund) ให้กับลูกค้า หลังจากที่ชำระเงินสำเร็จ (Completed)
-                สามารถระบุจำนวนเงินคืนบางส่วน หรือคืนเต็มจำนวนก็ได้ ยอดเงินจะถูกหักจากกระเป๋าเงิน (Wallet) ของคุณ
+                สามารถระบุจำนวนเงินคืนบางส่วน หรือคืนเต็มจำนวนก็ได้ ยอดเงินจะถูกหักจากยอดคงเหลือร้านค้า (Merchant Balance) ของคุณ
               </p>
 
               <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/payments/:id/refund
@@ -1670,7 +1670,7 @@
             <div class="api-prose">
               <h2 data-i18n="docs.payouts.title">สร้างการถอนเงิน (Payouts)</h2>
               <p data-i18n="docs.payouts.desc">
-                ใช้ Endpoint นี้เพื่อสร้างคำสั่งถอนเงินออกจากกระเป๋าเงิน (Wallet)
+                ใช้ Endpoint นี้เพื่อสร้างคำสั่งถอนยอดรายรับออกจากยอดคงเหลือร้านค้า (Merchant Balance)
                 ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณผูกไว้ในระบบ
               </p>
 
@@ -2166,7 +2166,7 @@
   </style>
 
   <script src="js/i18n.js?v=3"></script>
-  <script src="js/ui.js?v=2"></script>
+  <script src="js/ui.js?v=3"></script>
   <script src="js/hero-animation.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

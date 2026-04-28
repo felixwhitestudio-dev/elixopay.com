@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Elixopay AML/KYC Compliance Policy - นโยบายป้องกันการฟอกเงินและการรู้จักลูกค้า">
+    <title>AML/KYC Compliance — Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --pri: #6366f1; --pri-light: #818cf8; --bg: #0a0e1a; --card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08); --text: #e2e8f0; --muted: #94a3b8; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+
+        nav { position:fixed; top:0; width:100%; background:rgba(8,12,24,0.97); backdrop-filter:blur(20px); z-index:1000; border-bottom:1px solid var(--border); }
+        nav .container { max-width:1200px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+        .logo { display:flex; align-items:center; gap:.6rem; font-size:1.3rem; font-weight:800; color:white; text-decoration:none; }
+        .logo-mark { width:36px; height:36px; background:linear-gradient(135deg,#6366f1,#a855f7); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:.9rem; color:white; font-weight:800; }
+        .nav-links { display:flex; list-style:none; gap:2rem; align-items:center; }
+        .nav-links a { color:rgba(255,255,255,.8); text-decoration:none; font-weight:500; font-size:.9rem; transition:color .2s; }
+        .nav-links a:hover { color:#fff; }
+        .btn-nav { border:1px solid rgba(255,255,255,.15); padding:.5rem 1.2rem; border-radius:8px; font-size:.85rem; }
+        .btn-nav-primary { background:var(--pri); color:white; padding:.5rem 1.3rem; border-radius:8px; font-size:.85rem; font-weight:700; }
+        .mobile-menu-btn { display:none; background:none; border:none; font-size:1.5rem; cursor:pointer; color:white; }
+        .lang-select { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:white; border-radius:6px; padding:.3rem .6rem; font-size:.8rem; }
+
+        .hero { padding:9rem 2rem 4rem; text-align:center; position:relative; }
+        .hero h1 { font-size:clamp(2rem,4vw,3.2rem); font-weight:900; background:linear-gradient(135deg,#fff 30%,#a5b4fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:1rem; }
+        .hero p { color:var(--muted); max-width:600px; margin:0 auto; font-size:1.05rem; }
+
+        .content { max-width:900px; margin:0 auto; padding:0 2rem 5rem; }
+        .section { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:2.5rem; margin-bottom:2rem; backdrop-filter:blur(12px); }
+        .section h2 { font-size:1.4rem; font-weight:800; color:white; margin-bottom:1.25rem; display:flex; align-items:center; gap:.75rem; }
+        .section h2 i { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+        .section h3 { font-size:1.05rem; font-weight:700; color:white; margin:1.5rem 0 .75rem; }
+        .section p, .section li { color:var(--muted); font-size:.92rem; line-height:1.7; }
+        .section ul { padding-left:1.25rem; }
+        .section li { margin-bottom:.5rem; }
+
+        .prohibited { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-top:1rem; }
+        .prohibited-item { background:rgba(239,68,68,.06); border:1px solid rgba(239,68,68,.15); border-radius:12px; padding:1rem 1.25rem; display:flex; align-items:center; gap:.75rem; font-size:.88rem; color:#fca5a5; font-weight:600; }
+        .prohibited-item i { color:#ef4444; font-size:.85rem; }
+
+        .company-info { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.25rem; margin-top:1rem; }
+        .info-item { background:rgba(99,102,241,.06); border:1px solid rgba(99,102,241,.15); border-radius:12px; padding:1.25rem; }
+        .info-item .label { font-size:.72rem; font-weight:700; color:var(--pri-light); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.35rem; }
+        .info-item .value { font-size:.9rem; font-weight:600; color:white; }
+
+        .highlight-box { background:rgba(16,185,129,.06); border:1px solid rgba(16,185,129,.2); border-radius:12px; padding:1.25rem; margin:1rem 0; }
+        .highlight-box p { color:#34d399; font-weight:600; font-size:.9rem; margin:0; }
+
+        .flow-diagram { display:flex; align-items:center; justify-content:center; gap:.5rem; flex-wrap:wrap; margin:1.5rem 0; }
+        .flow-step { background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.25); border-radius:12px; padding:.75rem 1.25rem; text-align:center; }
+        .flow-step .icon { font-size:1.5rem; margin-bottom:.25rem; }
+        .flow-step .text { font-size:.78rem; font-weight:600; color:white; }
+        .flow-arrow { color:var(--pri-light); font-size:1.2rem; }
+
+        footer { background:rgba(0,0,0,.3); border-top:1px solid var(--border); padding:2.5rem 2rem; text-align:center; }
+        footer p { color:var(--muted); font-size:.82rem; }
+        footer a { color:var(--pri-light); text-decoration:none; }
+
+        @media(max-width:768px) {
+            .mobile-menu-btn { display:block; }
+            .nav-links { display:none; width:100%; margin-top:1rem; }
+            .nav-links.show { display:flex!important; flex-direction:column; gap:1rem; padding:1rem; background:rgba(15,23,42,.98); border-radius:12px; border:1px solid var(--border); }
+            .prohibited { grid-template-columns:1fr; }
+            .company-info { grid-template-columns:1fr; }
+            .flow-diagram { flex-direction:column; }
+            .flow-arrow { transform:rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="container">
+        <a href="index.html" class="logo"><div class="logo-mark">E</div>Elixopay</a>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <ul class="nav-links">
+            <li><a href="about.html">เกี่ยวกับเรา</a></li>
+            <li><a href="usecases.html">Use Cases</a></li>
+            <li><a href="apidocs.html">เอกสาร</a></li>
+            <li><a href="contact.html">ติดต่อ</a></li>
+            <li><a href="https://app.elixopay.com/login.html" class="btn-nav">เข้าสู่ระบบ</a></li>
+            <li><a href="https://app.elixopay.com/signup.html" class="btn-nav-primary">ลงทะเบียน</a></li>
+            <li><select class="lang-select" aria-label="Language"><option value="th">TH</option><option value="en">EN</option><option value="zh">中文</option></select></li>
+        </ul>
+    </div>
+</nav>
+<script>document.querySelector(".mobile-menu-btn").addEventListener("click",function(){document.querySelector(".nav-links").classList.toggle("show")});</script>
+
+<section class="hero">
+    <h1><i class="fas fa-shield-alt" style="margin-right:.5rem;"></i> Compliance & AML/KYC Policy</h1>
+    <p>Elixopay ดำเนินธุรกิจภายใต้กฎหมายและระเบียบข้อบังคับที่เกี่ยวข้องกับการป้องกันการฟอกเงิน (AML) และการรู้จักลูกค้า (KYC) อย่างเคร่งครัด</p>
+</section>
+
+<div class="content">
+
+    <!-- Company Registration -->
+    <div class="section">
+        <h2><i style="background:rgba(99,102,241,.15); color:#818cf8;"><i class="fas fa-building"></i></i> ข้อมูลนิติบุคคล</h2>
+        <div class="company-info">
+            <div class="info-item">
+                <div class="label">ชื่อบริษัท</div>
+                <div class="value">บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด</div>
+            </div>
+            <div class="info-item">
+                <div class="label">เลขทะเบียนนิติบุคคล</div>
+                <div class="value">0105565039818</div>
+            </div>
+            <div class="info-item">
+                <div class="label">ที่อยู่สำนักงาน</div>
+                <div class="value">53 ซอย รามคำแหง 207 แขวงมีนบุรี เขตมีนบุรี กรุงเทพมหานคร</div>
+            </div>
+            <div class="info-item">
+                <div class="label">ประเภทธุรกิจ</div>
+                <div class="value">Merchant Payment Acquiring Service</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Business Model -->
+    <div class="section">
+        <h2><i style="background:rgba(16,185,129,.15); color:#34d399;"><i class="fas fa-store"></i></i> รูปแบบการให้บริการ (Business Model)</h2>
+        <p>Elixopay เป็น <strong style="color:white;">ระบบรับชำระเงินสำหรับร้านค้า (Merchant Acquiring Service)</strong> ที่ช่วยให้ธุรกิจสามารถรับชำระเงินจากลูกค้าผ่านช่องทางออนไลน์ได้อย่างปลอดภัย</p>
+
+        <div class="highlight-box">
+            <p>⚠️ Elixopay <strong>ไม่ได้ให้บริการโอนเงินระหว่างบุคคล (P2P Transfer)</strong> — เราให้บริการเฉพาะการรับชำระเงินจากลูกค้าของร้านค้า (Merchant) ที่ผ่านการตรวจสอบ KYC แล้วเท่านั้น</p>
+        </div>
+
+        <h3>Payment Flow — ขั้นตอนการชำระเงิน</h3>
+        <div class="flow-diagram">
+            <div class="flow-step"><div class="icon">🛒</div><div class="text">ลูกค้าสั่งซื้อสินค้า<br>บนเว็บไซต์ร้านค้า</div></div>
+            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="flow-step"><div class="icon">💳</div><div class="text">ชำระเงินผ่าน<br>Elixopay Gateway</div></div>
+            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="flow-step"><div class="icon">🏦</div><div class="text">ธนาคารอนุมัติ<br>รายการ</div></div>
+            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="flow-step"><div class="icon">✅</div><div class="text">เงินเข้าบัญชี<br>ร้านค้า (Settlement)</div></div>
+        </div>
+        <p>ร้านค้าจะได้รับเงินผ่านระบบ Settlement ตามรอบที่กำหนด (T+1 หรือ T+2) โดยไม่มีการโอนเงินระหว่างบุคคลแต่อย่างใด</p>
+    </div>
+
+    <!-- AML Policy -->
+    <div class="section">
+        <h2><i style="background:rgba(245,158,11,.15); color:#fbbf24;"><i class="fas fa-gavel"></i></i> นโยบายป้องกันการฟอกเงิน (AML Policy)</h2>
+        <p>Elixopay ดำเนินนโยบายป้องกันการฟอกเงินอย่างเข้มงวด ตามหลักการของ:</p>
+        <ul>
+            <li><strong style="color:white;">พ.ร.บ. ป้องกันและปราบปรามการฟอกเงิน พ.ศ. 2542</strong> และฉบับแก้ไขเพิ่มเติม</li>
+            <li><strong style="color:white;">พ.ร.บ. ป้องกันและปราบปรามการสนับสนุนทางการเงินแก่การก่อการร้าย พ.ศ. 2556</strong></li>
+            <li><strong style="color:white;">แนวทางของ FATF</strong> (Financial Action Task Force) ในการป้องกันการฟอกเงิน</li>
+            <li><strong style="color:white;">ระเบียบของธนาคารแห่งประเทศไทย (BOT)</strong> ว่าด้วยการรู้จักลูกค้า</li>
+        </ul>
+
+        <h3>มาตรการที่ดำเนินการ</h3>
+        <ul>
+            <li><strong style="color:white;">Customer Due Diligence (CDD)</strong> — ตรวจสอบตัวตนของ Merchant ทุกรายก่อนอนุมัติการใช้งาน</li>
+            <li><strong style="color:white;">Enhanced Due Diligence (EDD)</strong> — ตรวจสอบเพิ่มเติมสำหรับ Merchant ที่มีความเสี่ยงสูง</li>
+            <li><strong style="color:white;">Transaction Monitoring</strong> — ระบบ AI เฝ้าระวังธุรกรรมผิดปกติแบบ Real-time ตลอด 24 ชั่วโมง</li>
+            <li><strong style="color:white;">Suspicious Transaction Reporting (STR)</strong> — รายงานธุรกรรมต้องสงสัยต่อ สำนักงาน ปปง. ตามกฎหมาย</li>
+            <li><strong style="color:white;">Sanction Screening</strong> — ตรวจสอบรายชื่อบุคคลต้องห้ามจาก UN, OFAC, EU และ ปปง.</li>
+        </ul>
+    </div>
+
+    <!-- KYC Requirements -->
+    <div class="section">
+        <h2><i style="background:rgba(59,130,246,.15); color:#60a5fa;"><i class="fas fa-id-card"></i></i> ข้อกำหนด KYC สำหรับ Merchant</h2>
+        <p>Merchant ทุกรายที่สมัครใช้บริการ Elixopay จะต้องผ่านกระบวนการยืนยันตัวตน (KYC) ก่อนเปิดใช้งาน:</p>
+
+        <h3>บุคคลธรรมดา (Individual Merchant)</h3>
+        <ul>
+            <li>สำเนาบัตรประชาชน / หนังสือเดินทาง</li>
+            <li>หลักฐานที่อยู่ (ไม่เกิน 3 เดือน)</li>
+            <li>ข้อมูลเว็บไซต์ / ช่องทางการขาย</li>
+            <li>รายละเอียดสินค้าหรือบริการที่จำหน่าย</li>
+        </ul>
+
+        <h3>นิติบุคคล (Corporate Merchant)</h3>
+        <ul>
+            <li>สำเนาหนังสือรับรองบริษัท (ไม่เกิน 3 เดือน)</li>
+            <li>สำเนาบัตรประชาชนของกรรมการผู้มีอำนาจลงนาม</li>
+            <li>ข้อมูล Beneficial Owner (ผู้รับประโยชน์ที่แท้จริง) ที่ถือหุ้น 25% ขึ้นไป</li>
+            <li>หลักฐานที่อยู่สำนักงาน</li>
+            <li>ใบอนุญาตประกอบธุรกิจ (ถ้ามี)</li>
+        </ul>
+    </div>
+
+    <!-- Prohibited Business -->
+    <div class="section">
+        <h2><i style="background:rgba(239,68,68,.15); color:#f87171;"><i class="fas fa-ban"></i></i> ประเภทธุรกิจที่ไม่ให้บริการ (Prohibited Business)</h2>
+        <p>Elixopay สงวนสิทธิ์ในการปฏิเสธหรือระงับบัญชี Merchant ที่ประกอบธุรกิจต่อไปนี้:</p>
+        <div class="prohibited">
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> การพนันออนไลน์ (Online Gambling)</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> โอนเงินระหว่างบุคคล (P2P Transfer)</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> แลกเปลี่ยน Cryptocurrency</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> สินค้าผิดกฎหมาย / สินค้าเลียนแบบ</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> แชร์ลูกโซ่ / Ponzi Scheme</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> บริการทางเพศ / เนื้อหาไม่เหมาะสม</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> อาวุธ / ยาเสพติด</div>
+            <div class="prohibited-item"><i class="fas fa-times-circle"></i> กิจกรรมที่ขัดต่อกฎหมาย</div>
+        </div>
+    </div>
+
+    <!-- Transaction Monitoring -->
+    <div class="section">
+        <h2><i style="background:rgba(168,85,247,.15); color:#c084fc;"><i class="fas fa-eye"></i></i> ระบบเฝ้าระวังธุรกรรม (Transaction Monitoring)</h2>
+        <p>Elixopay ใช้ระบบ AI-Powered Transaction Monitoring เพื่อตรวจจับกิจกรรมผิดปกติ:</p>
+        <ul>
+            <li><strong style="color:white;">Real-time Fraud Detection</strong> — ตรวจจับรายการต้องสงสัยทันทีที่เกิดขึ้น</li>
+            <li><strong style="color:white;">Velocity Check</strong> — ตรวจสอบความถี่ของธุรกรรมที่ผิดปกติ</li>
+            <li><strong style="color:white;">Amount Threshold Alert</strong> — แจ้งเตือนเมื่อยอดเงินเกินเกณฑ์ที่กำหนด</li>
+            <li><strong style="color:white;">Pattern Analysis</strong> — วิเคราะห์รูปแบบธุรกรรมเพื่อตรวจจับ Structuring</li>
+            <li><strong style="color:white;">Auto-Suspension</strong> — ระงับบัญชีอัตโนมัติเมื่อพบกิจกรรมต้องสงสัย</li>
+        </ul>
+    </div>
+
+    <!-- Data Security -->
+    <div class="section">
+        <h2><i style="background:rgba(6,182,212,.15); color:#22d3ee;"><i class="fas fa-lock"></i></i> มาตรฐานความปลอดภัย</h2>
+        <ul>
+            <li><strong style="color:white;">PCI-DSS Level 1</strong> — มาตรฐานความปลอดภัยสูงสุดสำหรับการประมวลผลบัตรเครดิต</li>
+            <li><strong style="color:white;">TLS 1.3 Encryption</strong> — เข้ารหัสข้อมูลทุกการสื่อสาร</li>
+            <li><strong style="color:white;">Tokenization</strong> — ไม่เก็บข้อมูลบัตรเครดิตโดยตรง</li>
+            <li><strong style="color:white;">3D Secure 2.0</strong> — ยืนยันตัวตนผู้ชำระเงินเพิ่มเติม</li>
+            <li><strong style="color:white;">SOC 2 Type II</strong> — ตรวจสอบระบบควบคุมภายในอย่างต่อเนื่อง</li>
+        </ul>
+    </div>
+
+    <!-- Licensing -->
+    <div class="section">
+        <h2><i style="background:rgba(245,158,11,.15); color:#fbbf24;"><i class="fas fa-certificate"></i></i> สถานะใบอนุญาต</h2>
+        <p>บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด อยู่ระหว่างดำเนินการขอใบอนุญาตประกอบธุรกิจระบบการชำระเงินภายใต้การกำกับดูแลของธนาคารแห่งประเทศไทย (BOT) ปัจจุบันบริษัทดำเนินงานภายใต้กรอบกฎหมายที่เกี่ยวข้องอย่างเคร่งครัด</p>
+    </div>
+
+    <!-- Contact -->
+    <div class="section">
+        <h2><i style="background:rgba(99,102,241,.15); color:#818cf8;"><i class="fas fa-envelope"></i></i> ติดต่อฝ่าย Compliance</h2>
+        <p>หากมีข้อสงสัยเกี่ยวกับนโยบาย AML/KYC หรือต้องการรายงานกิจกรรมต้องสงสัย:</p>
+        <ul>
+            <li>อีเมล: <a href="mailto:compliance@elixopay.com" style="color:var(--pri-light);">compliance@elixopay.com</a></li>
+            <li>อีเมลทั่วไป: <a href="mailto:support@elixopay.com" style="color:var(--pri-light);">support@elixopay.com</a></li>
+        </ul>
+        <p style="margin-top:1rem; font-size:.82rem; color:rgba(148,163,184,.6);">อัปเดตล่าสุด: เมษายน 2026 | บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด เลขทะเบียน 0105565039818</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Elixopay — บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด | เลขทะเบียน 0105565039818</p>
+    <p style="margin-top:.5rem;">Elixopay เป็นระบบรับชำระเงินสำหรับร้านค้า (Merchant Acquiring) <strong>ไม่ให้บริการโอนเงินระหว่างบุคคล (P2P)</strong></p>
+    <p style="margin-top:.75rem;"><a href="privacy.html">นโยบายความเป็นส่วนตัว</a> · <a href="terms.html">ข้อกำหนด</a> · <a href="refund.html">นโยบายคืนเงิน</a> · <a href="contact.html">ติดต่อเรา</a></p>
+</footer>
+
+<script src="js/i18n.js?v=2"></script>
+<script src="js/ui.js?v=3"></script>
+</body>
+</html>
