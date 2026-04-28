@@ -211,13 +211,6 @@ function initMobileMenu() {
             navLinks.classList.toggle('show');
         });
 
-        // Also support touch events for better mobile responsiveness
-        newBtn.addEventListener('touchend', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            navLinks.classList.toggle('show');
-        });
-
         // Close menu when clicking outside
         document.addEventListener('click', function (e) {
             if (!navLinks.contains(e.target) && !newBtn.contains(e.target)) {
