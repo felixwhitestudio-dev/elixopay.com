@@ -101,6 +101,7 @@ const commissionRulesRoutes = require('./routes/commissionRules');
 const walletRoutes = require('./routes/wallet');
 const verificationRoutes = require('./routes/verification');
 const hierarchyRoutes = require('./routes/hierarchy');
+const contactRoutes = require('./routes/contact');
 
 // Mount Routes
 app.use('/api/v1/auth', authRoutes);
@@ -118,6 +119,7 @@ app.use('/api/v1/merchant-sites', merchantSiteRoutes);
 app.use('/api/v1/commission-rules', commissionRulesRoutes);
 app.use('/api/v1/verification', verificationRoutes);
 app.use('/api/v1/hierarchy', hierarchyRoutes);
+app.use('/api/v1/contact', contactRoutes);
 
 // Health Check Route
 app.get('/health', (req, res) => {
