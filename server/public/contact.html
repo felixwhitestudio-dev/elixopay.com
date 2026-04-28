@@ -878,7 +878,7 @@
             };
 
             try {
-                const apiBase = window.API_CONFIG ? window.API_CONFIG.BASE_URL : 'https://api.elixopay.com';
+                const apiBase = 'https://elixopay-com.onrender.com';
                 const response = await fetch(apiBase + '/api/v1/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
