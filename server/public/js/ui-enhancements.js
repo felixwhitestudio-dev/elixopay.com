@@ -5,19 +5,27 @@
 // ==========================================
 
 // --- 1. Toast Notification System (SweetAlert2 Wrap) ---
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    background: 'var(--dark-card, #1E293B)', // Uses CSS variables if available
-    color: 'var(--text-primary, #F8FAFC)',
-    didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
+// Wrapped in try-catch to prevent SweetAlert2 load failure from killing the entire script
+let Toast = null;
+try {
+    if (typeof Swal !== 'undefined') {
+        Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: 'var(--dark-card, #1E293B)',
+            color: 'var(--text-primary, #F8FAFC)',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
     }
-});
+} catch (e) {
+    console.warn('SweetAlert2 not available, falling back to native alerts.');
+}
 
 /**
  * Global function to show a beautiful toast instead of alert()
@@ -25,10 +33,11 @@ const Toast = Swal.mixin({
  * @param {string} icon - 'success', 'error', 'warning', 'info'
  */
 window.showToast = function (title, icon = 'info') {
-    Toast.fire({
-        icon: icon,
-        title: title
-    });
+    if (Toast) {
+        Toast.fire({ icon: icon, title: title });
+    } else {
+        console.log('[Toast]', icon, title);
+    }
 };
 
 /**
@@ -36,17 +45,19 @@ window.showToast = function (title, icon = 'info') {
  * This instantly makes all old alert() calls look professional.
  */
 const originalAlert = window.alert;
-window.alert = function (message) {
-    Swal.fire({
-        text: message,
-        icon: 'info',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#8B5CF6', // Purple Primary
-        background: 'var(--dark-card, #1E293B)',
-        color: 'var(--text-primary, #F8FAFC)',
-        backdrop: `rgba(0,0,0,0.6)`
-    });
-};
+if (typeof Swal !== 'undefined') {
+    window.alert = function (message) {
+        Swal.fire({
+            text: message,
+            icon: 'info',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#8B5CF6',
+            background: 'var(--dark-card, #1E293B)',
+            color: 'var(--text-primary, #F8FAFC)',
+            backdrop: `rgba(0,0,0,0.6)`
+        });
+    };
+}
 
 
 // --- 2. Cookie Consent Banner ---
@@ -184,11 +195,52 @@ function initCookieConsent() {
     document.head.appendChild(styleSlideDown);
 }
 
-// Run on load
+// --- 2.5. Mobile Menu Toggle (runs IMMEDIATELY, no dependencies) ---
+function initMobileMenu() {
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    if (mobileBtn && navLinks) {
+        // Remove existing listeners by cloning (defensive programming)
+        const newBtn = mobileBtn.cloneNode(true);
+        if (mobileBtn.parentNode) {
+            mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
+        }
+
+        newBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            navLinks.classList.toggle('show');
+        });
+
+        // Also support touch events for better mobile responsiveness
+        newBtn.addEventListener('touchend', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            navLinks.classList.toggle('show');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!navLinks.contains(e.target) && !newBtn.contains(e.target)) {
+                navLinks.classList.remove('show');
+            }
+        });
+    }
+}
+
+// Initialize mobile menu IMMEDIATELY (before DOMContentLoaded in case it already fired)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    // DOM already loaded, run now
+    initMobileMenu();
+}
+
+// Run other enhancements on load (wrapped in try-catch for safety)
 document.addEventListener('DOMContentLoaded', () => {
-    initCookieConsent();
-    initCopyCodeButtons();
-    initStatusIndicator();
+    try { initCookieConsent(); } catch (e) { console.warn('Cookie consent init failed:', e); }
+    try { initCopyCodeButtons(); } catch (e) { console.warn('Copy buttons init failed:', e); }
+    try { initStatusIndicator(); } catch (e) { console.warn('Status indicator init failed:', e); }
+    try { initAuthNavigation(); } catch (e) { console.warn('Auth navigation init failed:', e); }
 });
 
 
@@ -341,3 +393,60 @@ function initStatusIndicator() {
     document.body.appendChild(pill);
 }
 
+// --- 5. Global Auth Navigation Toggle ---
+function initAuthNavigation() {
+    const userStr = localStorage.getItem('user');
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+
+    if (userStr && token) {
+        try {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                // Remove login/signup wrappers
+                const loginBtn = navLinks.querySelector('a[href*="login.html"]');
+                const signupBtn = navLinks.querySelector('a[href*="signup.html"]');
+                if (loginBtn && loginBtn.parentElement && loginBtn.parentElement.tagName === 'LI') loginBtn.parentElement.remove();
+                if (signupBtn && signupBtn.parentElement && signupBtn.parentElement.tagName === 'LI' && signupBtn.parentElement !== (loginBtn && loginBtn.parentElement)) signupBtn.parentElement.remove();
+                if (loginBtn && loginBtn.parentElement && loginBtn.parentElement.tagName !== 'LI') loginBtn.remove();
+                if (signupBtn && signupBtn.parentElement && signupBtn.parentElement.tagName !== 'LI') signupBtn.remove();
+
+                const dashboardUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000/dashboard.html'
+                    : 'https://app.elixopay.com/dashboard.html';
+
+                // Dashboard Button
+                const dashboardLi = document.createElement('li');
+                dashboardLi.className = 'auth-dynamic-btn';
+                dashboardLi.innerHTML = `
+                    <a href="${dashboardUrl}" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); line-height: 1.5;">
+                        <i class="fas fa-layer-group"></i> <span data-i18n="nav.dashboard">Dashboard</span>
+                    </a>
+                `;
+
+                // Logout Button
+                const logoutLi = document.createElement('li');
+                logoutLi.className = 'auth-dynamic-btn';
+                logoutLi.innerHTML = `
+                    <a href="#" class="btn btn-outline" style="border: 1px solid rgba(239, 68, 68, 0.5); color: #ef4444; line-height: 1.5;" onclick="localStorage.removeItem('user'); localStorage.removeItem('token'); localStorage.removeItem('authToken'); window.location.reload(); return false;">
+                        <i class="fas fa-sign-out-alt"></i> <span data-i18n="nav.logout">ออกจากระบบ</span>
+                    </a>
+                `;
+
+                // Insert components avoiding the language selector
+                const langSelect = navLinks.querySelector('.lang-select');
+                if (langSelect && langSelect.parentElement && langSelect.parentElement.tagName === 'LI') {
+                    navLinks.insertBefore(dashboardLi, langSelect.parentElement);
+                    navLinks.insertBefore(logoutLi, langSelect.parentElement);
+                } else if (langSelect) {
+                    navLinks.insertBefore(dashboardLi, langSelect);
+                    navLinks.insertBefore(logoutLi, langSelect);
+                } else {
+                    navLinks.appendChild(dashboardLi);
+                    navLinks.appendChild(logoutLi);
+                }
+            }
+        } catch (e) {
+            console.error('Error handling auth navigation', e);
+        }
+    }
+}

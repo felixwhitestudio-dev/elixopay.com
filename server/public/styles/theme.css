@@ -1364,3 +1364,146 @@ body.dark .glass.btn-primary {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================
+   GLOBAL MOBILE RESPONSIVENESS (Fixes)
+   ========================================= */
+
+/* Mobile Menu Button - Default Hidden */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1001;
+  /* Above mobile menu */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  position: relative;
+}
+
+/* Global Mobile Fixes for 768px and under */
+@media (max-width: 768px) {
+
+  /* Navbar & Menu */
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-links.show {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    /* Just below navbar */
+    left: 0;
+    width: 100%;
+    background: #0f172a !important;
+    /* Use theme bg instead of white */
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 1.5rem;
+    z-index: 1000;
+    align-items: center;
+    /* Center links on mobile */
+  }
+
+  .nav-links.show a {
+    color: white !important;
+    opacity: 1 !important;
+    font-size: 1.2rem;
+  }
+
+  /* Prevent body from scrolling left/right */
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* Hero Layout Overrides */
+  .hero {
+    padding: 6rem 1rem 3rem !important;
+    /* Adjust padding */
+    min-height: auto !important;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+
+  .hero-visual {
+    order: 2 !important;
+    /* Put visual below text */
+    margin-top: 2rem !important;
+  }
+
+  .dashboard-mockup {
+    width: 100% !important;
+    /* Prevent horizontal overflow */
+    max-width: 100%;
+    transform: none !important;
+    /* Remove transforms that push it off screen */
+  }
+
+  .dashboard-mockup:hover {
+    transform: translateY(-4px) !important;
+  }
+
+  .hero-title-large {
+    font-size: 2.25rem !important;
+    /* Scale text down */
+    line-height: 1.3 !important;
+    text-align: center !important;
+  }
+
+  :lang(th) .hero-title-large {
+    font-size: 1.8rem !important;
+  }
+
+  .hero-subtitle-large {
+    font-size: 1rem !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-buttons {
+    justify-content: center !important;
+    flex-direction: column;
+    /* Stack buttons on mobile */
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Fix Trust Badges / Stats */
+  .trust-badges-hero,
+  .trust-indicators {
+    justify-content: center !important;
+    gap: 1rem !important;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr !important;
+    /* 2 columns on mobile */
+  }
+
+  .stat-number {
+    font-size: 1.8rem !important;
+  }
+}

@@ -1,46 +1,40 @@
 :root {
-  /* Premium Elixopay Fintech Palette — Unified with Dashboard */
-  --primary-color: #7C3AED;
-  /* Elixopay Brand Purple (matches dashboard --ep-purple) */
-  --primary-dark: #5B21B6;
-  /* Darker Purple for Depth */
-  --primary-light: #A78BFA;
+  /* Premium SCB Fintech Palette (Deep Royal Purple) */
+  --primary-color: #4E2A84;
+  /* Deep Royal Purple (SCB Base) */
+  --primary-dark: #240E45;
+  /* Darker Shade for Depth */
+  --primary-light: #7C3AED;
   /* Lighter Purple for Accents */
 
   --secondary-color: #6366F1;
   /* Trust Indigo/Blue */
-  --accent-color: #C026D3;
-  /* Fuchsia for highlights */
+  --accent-color: #D946EF;
+  /* Fuchsia for small highlights */
   --accent-gold: #F59E0B;
   /* Gold for Trust */
 
-  /* Surface Palette — Aligned with Dashboard */
-  --dark-bg: #0C0A14;
-  /* Deep Purple-Black (aligned with dashboard #08090d) */
-  --dark-card: #14101F;
-  /* Card surface */
-  --text-primary: #F1F5F9;
-  /* Matches dashboard --ep-text-primary */
-  --text-secondary: #94A3B8;
-  /* Matches dashboard --ep-text-secondary */
-  --border-color: rgba(255, 255, 255, 0.08);
+  /* Light/Dark Mode Bases */
+  --dark-bg: #1A0B2E;
+  /* Very Deep Purple/Black */
+  --dark-card: #2E1065;
+  --text-primary: #F8FAFC;
+  /* White/Slate-50 */
+  --text-secondary: #CBD5E1;
+  /* Slate-300 */
+  --border-color: rgba(255, 255, 255, 0.1);
 
   /* Premium Gradients */
-  --gradient-scb: linear-gradient(135deg, #1A0B2E 0%, #0C0A14 100%);
-  /* Deep brand gradient */
+  --gradient-scb: linear-gradient(135deg, #4E2A84 0%, #2E1065 100%);
+  /* Solid SCB Gradient */
   --brand-gradient: linear-gradient(135deg, #7C3AED 0%, #C026D3 100%);
-  /* CTA gradient */
-  --gradient-glow: radial-gradient(circle at center, rgba(124, 58, 237, 0.3) 0%, transparent 60%);
+  /* Brighter/Stronger for CTA */
+  --gradient-glow: radial-gradient(circle at center, rgba(124, 58, 237, 0.4) 0%, transparent 60%);
 
-  /* Utility Gradients */
-  --gradient-1: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
-  --gradient-2: linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
-  --gradient-3: linear-gradient(135deg, #8B5CF6 0%, #C026D3 100%);
-
-  /* Tech Grid Pattern */
+  /* Tech Grid Pattern - More subtle yet visible */
   --bg-grid:
-    linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   --bg-grid-size: 60px 60px;
 }
 
@@ -1368,5 +1362,148 @@ body.dark .glass.btn-primary {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================
+   GLOBAL MOBILE RESPONSIVENESS (Fixes)
+   ========================================= */
+
+/* Mobile Menu Button - Default Hidden */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1001;
+  /* Above mobile menu */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  position: relative;
+}
+
+/* Global Mobile Fixes for 768px and under */
+@media (max-width: 768px) {
+
+  /* Navbar & Menu */
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-links.show {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    /* Just below navbar */
+    left: 0;
+    width: 100%;
+    background: #0f172a !important;
+    /* Use theme bg instead of white */
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 1.5rem;
+    z-index: 1000;
+    align-items: center;
+    /* Center links on mobile */
+  }
+
+  .nav-links.show a {
+    color: white !important;
+    opacity: 1 !important;
+    font-size: 1.2rem;
+  }
+
+  /* Prevent body from scrolling left/right */
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* Hero Layout Overrides */
+  .hero {
+    padding: 6rem 1rem 3rem !important;
+    /* Adjust padding */
+    min-height: auto !important;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+
+  .hero-visual {
+    order: 2 !important;
+    /* Put visual below text */
+    margin-top: 2rem !important;
+  }
+
+  .dashboard-mockup {
+    width: 100% !important;
+    /* Prevent horizontal overflow */
+    max-width: 100%;
+    transform: none !important;
+    /* Remove transforms that push it off screen */
+  }
+
+  .dashboard-mockup:hover {
+    transform: translateY(-4px) !important;
+  }
+
+  .hero-title-large {
+    font-size: 2.25rem !important;
+    /* Scale text down */
+    line-height: 1.3 !important;
+    text-align: center !important;
+  }
+
+  :lang(th) .hero-title-large {
+    font-size: 1.8rem !important;
+  }
+
+  .hero-subtitle-large {
+    font-size: 1rem !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-buttons {
+    justify-content: center !important;
+    flex-direction: column;
+    /* Stack buttons on mobile */
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Fix Trust Badges / Stats */
+  .trust-badges-hero,
+  .trust-indicators {
+    justify-content: center !important;
+    gap: 1rem !important;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr !important;
+    /* 2 columns on mobile */
+  }
+
+  .stat-number {
+    font-size: 1.8rem !important;
   }
 }

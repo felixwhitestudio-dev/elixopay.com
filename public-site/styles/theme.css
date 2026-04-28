@@ -1374,11 +1374,17 @@ body.dark .glass.btn-primary {
   display: none;
   background: none;
   border: none;
-  color: inherit;
+  color: white;
   font-size: 1.5rem;
   cursor: pointer;
   z-index: 1001;
   /* Above mobile menu */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  position: relative;
 }
 
 /* Global Mobile Fixes for 768px and under */

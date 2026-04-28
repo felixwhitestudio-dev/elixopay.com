@@ -5,19 +5,27 @@
 // ==========================================
 
 // --- 1. Toast Notification System (SweetAlert2 Wrap) ---
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    background: 'var(--dark-card, #1E293B)', // Uses CSS variables if available
-    color: 'var(--text-primary, #F8FAFC)',
-    didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
+// Wrapped in try-catch to prevent SweetAlert2 load failure from killing the entire script
+let Toast = null;
+try {
+    if (typeof Swal !== 'undefined') {
+        Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: 'var(--dark-card, #1E293B)',
+            color: 'var(--text-primary, #F8FAFC)',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
     }
-});
+} catch (e) {
+    console.warn('SweetAlert2 not available, falling back to native alerts.');
+}
 
 /**
  * Global function to show a beautiful toast instead of alert()
@@ -25,10 +33,11 @@ const Toast = Swal.mixin({
  * @param {string} icon - 'success', 'error', 'warning', 'info'
  */
 window.showToast = function (title, icon = 'info') {
-    Toast.fire({
-        icon: icon,
-        title: title
-    });
+    if (Toast) {
+        Toast.fire({ icon: icon, title: title });
+    } else {
+        console.log('[Toast]', icon, title);
+    }
 };
 
 /**
@@ -36,17 +45,19 @@ window.showToast = function (title, icon = 'info') {
  * This instantly makes all old alert() calls look professional.
  */
 const originalAlert = window.alert;
-window.alert = function (message) {
-    Swal.fire({
-        text: message,
-        icon: 'info',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#8B5CF6', // Purple Primary
-        background: 'var(--dark-card, #1E293B)',
-        color: 'var(--text-primary, #F8FAFC)',
-        backdrop: `rgba(0,0,0,0.6)`
-    });
-};
+if (typeof Swal !== 'undefined') {
+    window.alert = function (message) {
+        Swal.fire({
+            text: message,
+            icon: 'info',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#8B5CF6',
+            background: 'var(--dark-card, #1E293B)',
+            color: 'var(--text-primary, #F8FAFC)',
+            backdrop: `rgba(0,0,0,0.6)`
+        });
+    };
+}
 
 
 // --- 2. Cookie Consent Banner ---
@@ -184,16 +195,7 @@ function initCookieConsent() {
     document.head.appendChild(styleSlideDown);
 }
 
-// Run on load
-document.addEventListener('DOMContentLoaded', () => {
-    initCookieConsent();
-    initCopyCodeButtons();
-    initStatusIndicator();
-    initAuthNavigation();
-    initMobileMenu();
-});
-
-// --- 2.5. Mobile Menu Toggle ---
+// --- 2.5. Mobile Menu Toggle (runs IMMEDIATELY, no dependencies) ---
 function initMobileMenu() {
     const mobileBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
@@ -204,12 +206,42 @@ function initMobileMenu() {
             mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
         }
 
-        newBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+        newBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
             navLinks.classList.toggle('show');
+        });
+
+        // Also support touch events for better mobile responsiveness
+        newBtn.addEventListener('touchend', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            navLinks.classList.toggle('show');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!navLinks.contains(e.target) && !newBtn.contains(e.target)) {
+                navLinks.classList.remove('show');
+            }
         });
     }
 }
+
+// Initialize mobile menu IMMEDIATELY (before DOMContentLoaded in case it already fired)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    // DOM already loaded, run now
+    initMobileMenu();
+}
+
+// Run other enhancements on load (wrapped in try-catch for safety)
+document.addEventListener('DOMContentLoaded', () => {
+    try { initCookieConsent(); } catch (e) { console.warn('Cookie consent init failed:', e); }
+    try { initCopyCodeButtons(); } catch (e) { console.warn('Copy buttons init failed:', e); }
+    try { initStatusIndicator(); } catch (e) { console.warn('Status indicator init failed:', e); }
+    try { initAuthNavigation(); } catch (e) { console.warn('Auth navigation init failed:', e); }
+});
 
 
 // --- 3. Copy Code Buttons ---
