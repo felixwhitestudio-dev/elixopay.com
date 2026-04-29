@@ -1674,7 +1674,7 @@
                 ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณผูกไว้ในระบบ
               </p>
 
-              <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/wallet/withdraw</div>
+              <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/merchant/settlement</div>
 
               <h3 data-i18n="docs.payouts.req_params.title"
                 style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ Request
@@ -1746,7 +1746,7 @@
                 <!-- cURL -->
                 <div class="code-tab-content active" data-lang="curl">
                   <div class="code-block">
-                    curl -X POST https://api.elixopay.com/api/v1/wallet/withdraw \
+                    curl -X POST https://api.elixopay.com/api/v1/merchant/settlement \
                     -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
                     -H "Content-Type: application/json" \
                     -d '{
@@ -1760,7 +1760,7 @@
                   <div class="code-block">
                     const axios = require('axios');
 
-                    axios.post('https://api.elixopay.com/api/v1/wallet/withdraw', {
+                    axios.post('https://api.elixopay.com/api/v1/merchant/settlement', {
                     amount: 500.00
                     }, {
                     headers: {
@@ -1776,7 +1776,7 @@
                   <div class="code-block">
                     import requests
 
-                    url = "https://api.elixopay.com/api/v1/wallet/withdraw"
+                    url = "https://api.elixopay.com/api/v1/merchant/settlement"
                     headers = {
                     "Authorization": "Bearer sk_live_YOUR_SECRET_KEY",
                     "Content-Type": "application/json"
@@ -1792,7 +1792,7 @@
                 <!-- PHP -->
                 <div class="code-tab-content" data-lang="php">
                   <div class="code-block">
-                    $ch = curl_init('https://api.elixopay.com/api/v1/wallet/withdraw');
+                    $ch = curl_init('https://api.elixopay.com/api/v1/merchant/settlement');
                     $payload = json_encode([
                     'amount' => 500.00
                     ]);
