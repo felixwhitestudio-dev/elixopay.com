@@ -66,6 +66,15 @@ function initCookieConsent() {
     const consent = localStorage.getItem('elixopay_cookie_consent');
     if (consent === 'accepted') return;
 
+    // Get current language
+    const lang = localStorage.getItem('elixopay_lang') || 'th';
+    const cookieText = {
+        th: { title: 'เราใช้คุกกี้', desc: 'เราใช้คุกกี้เพื่อเพิ่มประสบการณ์การใช้งาน แสดงเนื้อหาที่เหมาะสม และวิเคราะห์การเข้าชม เมื่อคลิก "ยอมรับทั้งหมด" ถือว่าคุณยินยอมให้เราใช้คุกกี้', link: 'อ่านนโยบายความเป็นส่วนตัว', accept: 'ยอมรับทั้งหมด', decline: 'ปฏิเสธ' },
+        en: { title: 'We use cookies', desc: 'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.', link: 'Read our Privacy Policy', accept: 'Accept All', decline: 'Decline' },
+        zh: { title: '我们使用Cookie', desc: '我们使用Cookie来增强您的浏览体验、提供个性化内容并分析我们的流量。点击"全部接受"即表示您同意我们使用Cookie。', link: '阅读隐私政策', accept: '全部接受', decline: '拒绝' }
+    };
+    const ct = cookieText[lang] || cookieText.th;
+
     // Create Banner Element
     const banner = document.createElement('div');
     banner.id = 'cookie-consent-banner';
@@ -73,16 +82,16 @@ function initCookieConsent() {
         <div class="cookie-content">
             <div class="cookie-icon"><i class="fa-solid fa-cookie-bite"></i></div>
             <div class="cookie-text">
-                <h4 style="margin:0 0 5px 0; font-size:1rem; font-weight:600; color:white;">We use cookies</h4>
+                <h4 style="margin:0 0 5px 0; font-size:1rem; font-weight:600; color:white;">${ct.title}</h4>
                 <p style="margin:0; font-size:0.85rem; color:#cbd5e1; line-height:1.4;">
-                    We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies. 
-                    <a href="privacy.html" style="color:#d946ef; text-decoration:none;">Read our Privacy Policy</a>.
+                    ${ct.desc} 
+                    <a href="privacy.html" style="color:#d946ef; text-decoration:none;">${ct.link}</a>.
                 </p>
             </div>
         </div>
         <div class="cookie-buttons">
-            <button id="btn-cookie-accept" class="cookie-btn cookie-btn-primary">Accept All</button>
-            <button id="btn-cookie-reject" class="cookie-btn cookie-btn-secondary">Decline</button>
+            <button id="btn-cookie-accept" class="cookie-btn cookie-btn-primary">${ct.accept}</button>
+            <button id="btn-cookie-reject" class="cookie-btn cookie-btn-secondary">${ct.decline}</button>
         </div>
     `;
 
