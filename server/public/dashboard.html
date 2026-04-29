@@ -147,6 +147,143 @@
                 transform: translateY(0);
             }
         }
+
+        /* ============================================================
+           LIGHT MODE OVERRIDES
+           When sidebar.js toggles ep-light class, convert all dark UI
+           ============================================================ */
+        body.ep-light {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8ecf8 50%, #f5f3ff 100%) !important;
+            color: #1e293b !important;
+        }
+        body.ep-light::before {
+            background: radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 40%) !important;
+        }
+
+        /* Nav bar */
+        body.ep-light nav {
+            background: rgba(255,255,255,0.85) !important;
+            border-bottom-color: #e2e8f0 !important;
+        }
+        body.ep-light nav .bg-slate-800,
+        body.ep-light nav .bg-slate-900\/70 {
+            background: rgba(255,255,255,0.85) !important;
+        }
+
+        /* Glass panels → light cards */
+        body.ep-light .glass-panel {
+            background: rgba(255,255,255,0.92) !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04) !important;
+        }
+        body.ep-light .glass-panel::before {
+            display: none !important;
+        }
+        body.ep-light .glass-panel:hover {
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+        }
+        body.ep-light .glass-panel-light {
+            background: rgba(124, 58, 237, 0.05) !important;
+            border-color: #e2e8f0 !important;
+        }
+        body.ep-light .glass-panel-light:hover {
+            background: rgba(124, 58, 237, 0.1) !important;
+        }
+
+        /* ALL text colors → dark */
+        body.ep-light .text-slate-100,
+        body.ep-light .text-slate-200,
+        body.ep-light .text-slate-300,
+        body.ep-light h1, body.ep-light h2, body.ep-light h3 {
+            color: #0f172a !important;
+        }
+        body.ep-light .text-slate-400,
+        body.ep-light .text-slate-500 {
+            color: #64748b !important;
+        }
+        body.ep-light .text-slate-600 {
+            color: #94a3b8 !important;
+        }
+        body.ep-light .text-gray-400 {
+            color: #64748b !important;
+        }
+        body.ep-light .text-gray-200 {
+            color: #334155 !important;
+        }
+
+        /* Stat card boxes - keep colored bg but lighter */
+        body.ep-light .bg-purple-900\/30 { background: rgba(124,58,237,0.08) !important; border-color: rgba(124,58,237,0.2) !important; }
+        body.ep-light .bg-orange-900\/30 { background: rgba(234,88,12,0.08) !important; border-color: rgba(234,88,12,0.2) !important; }
+        body.ep-light .bg-blue-900\/30 { background: rgba(37,99,235,0.08) !important; border-color: rgba(37,99,235,0.2) !important; }
+        body.ep-light .bg-green-900\/30 { background: rgba(22,163,74,0.08) !important; border-color: rgba(22,163,74,0.2) !important; }
+
+        /* Stat label colors - keep vibrant but darker */
+        body.ep-light .text-purple-300 { color: #7c3aed !important; }
+        body.ep-light .text-orange-300 { color: #ea580c !important; }
+        body.ep-light .text-blue-300 { color: #2563eb !important; }
+        body.ep-light .text-green-300 { color: #16a34a !important; }
+        body.ep-light .text-teal-300 { color: #0d9488 !important; }
+        body.ep-light .text-indigo-300 { color: #4f46e5 !important; }
+        body.ep-light .text-yellow-300 { color: #ca8a04 !important; }
+        body.ep-light .text-red-300 { color: #dc2626 !important; }
+
+        /* Purple gradient text stays vibrant */
+        body.ep-light .text-purple-400 { color: #7c3aed !important; }
+        body.ep-light .text-indigo-400 { color: #4f46e5 !important; }
+
+        /* Buttons */
+        body.ep-light .bg-slate-800 { background: #f1f5f9 !important; }
+        body.ep-light .bg-slate-900\/40 { background: #f1f5f9 !important; }
+        body.ep-light .bg-slate-800\/60 { background: #f1f5f9 !important; }
+
+        /* Quick action icons backgrounds */
+        body.ep-light .bg-purple-900\/50 { background: rgba(124,58,237,0.12) !important; }
+        body.ep-light .bg-teal-900\/50 { background: rgba(13,148,136,0.12) !important; }
+        body.ep-light .bg-indigo-900\/50 { background: rgba(79,70,229,0.12) !important; }
+        body.ep-light .bg-yellow-900\/50 { background: rgba(202,138,4,0.12) !important; }
+
+        /* Table dividers */
+        body.ep-light .divide-slate-700 > :not([hidden]) ~ :not([hidden]) { border-color: #e2e8f0 !important; }
+        body.ep-light .divide-slate-800 > :not([hidden]) ~ :not([hidden]) { border-color: #f1f5f9 !important; }
+        body.ep-light .border-slate-700 { border-color: #e2e8f0 !important; }
+        body.ep-light .border-slate-600 { border-color: #cbd5e1 !important; }
+
+        /* Badges */
+        body.ep-light .bg-green-900\/50 { background: rgba(22,163,74,0.1) !important; }
+        body.ep-light .text-green-300 { color: #15803d !important; }
+        body.ep-light .border-green-800 { border-color: rgba(22,163,74,0.25) !important; }
+
+        /* Notification dropdown */
+        body.ep-light .bg-slate-800 { background: #ffffff !important; }
+        body.ep-light .border-slate-700 { border-color: #e2e8f0 !important; }
+
+        /* Select/Input */
+        body.ep-light select {
+            background: #f8fafc !important;
+            color: #1e293b !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        /* Footer */
+        body.ep-light footer {
+            background: #1e1b4b !important;
+        }
+
+        /* User avatar */
+        body.ep-light .bg-gradient-to-r.from-purple-900 { background: linear-gradient(to right, #ddd6fe, #c4b5fd) !important; }
+        body.ep-light .text-purple-300 { color: #7c3aed !important; }
+
+        /* Security banner - keep dark */
+        body.ep-light .from-gray-900 {
+            background: linear-gradient(to right, #1e1b4b, #312e81) !important;
+        }
+
+        /* Scrollbar */
+        body.ep-light ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
+        body.ep-light ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.2) !important; }
     </style>
 </head>
 
