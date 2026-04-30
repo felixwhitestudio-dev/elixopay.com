@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="flex items-center text-xs text-green-400">
-                        <i class="fas fa-arrow-up mr-1"></i> <span>MRR Contributor</span>
+                        <i class="fas fa-arrow-up mr-1"></i> <span data-i18n="billing.stats.mrr_contributor">MRR Contributor</span>
                     </div>
                 </div>
 
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div class="flex items-center text-xs text-slate-400">
-                        <span>Projected this month</span>
+                        <span data-i18n="billing.stats.projected">Projected this month</span>
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     <div class="flex items-center text-xs text-slate-400">
-                        <a href="#products-section" class="hover:text-emerald-400 transition-colors">View Catalog <i
+                        <a href="#products-section" class="hover:text-emerald-400 transition-colors"><span data-i18n="billing.stats.view_catalog">View Catalog</span> <i
                                 class="fas fa-arrow-right ml-1"></i></a>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                             <tr>
                                 <td colspan="4" class="px-6 py-12 text-center text-slate-500">
                                     <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
-                                    <p>Loading catalog...</p>
+                                    <p data-i18n="billing.products.loading">Loading catalog...</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -204,7 +204,7 @@
             <div
                 class="inline-block align-bottom bg-slate-800 border border-slate-700 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
                 <div class="px-6 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80">
-                    <h3 class="text-lg font-bold text-slate-100">Create New Product</h3>
+                    <h3 class="text-lg font-bold text-slate-100" data-i18n="billing.modal.create_product">Create New Product</h3>
                     <button type="button"
                         class="text-slate-400 hover:text-slate-200 transition-colors focus:outline-none"
                         onclick="closeProductModal()"><i class="fas fa-times text-xl"></i></button>
@@ -212,13 +212,13 @@
                 <form id="create-product-form" onsubmit="submitCreateProduct(event)">
                     <div class="px-6 py-6 space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Product Name</label>
+                            <label class="block text-sm font-medium text-slate-300 mb-1" data-i18n="billing.modal.product_name">Product Name</label>
                             <input type="text" id="prod-name" required
                                 class="focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-slate-600 bg-slate-900/50 text-slate-100 rounded-xl py-2.5 px-3 outline-none transition-colors border"
                                 placeholder="e.g. Premium SaaS Plan">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Description (Optional)</label>
+                            <label class="block text-sm font-medium text-slate-300 mb-1" data-i18n="billing.modal.product_desc">Description (Optional)</label>
                             <textarea id="prod-desc" rows="3"
                                 class="focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-slate-600 bg-slate-900/50 text-slate-100 rounded-xl py-2.5 px-3 outline-none transition-colors border"
                                 placeholder="Marketing description of the product..."></textarea>
@@ -226,9 +226,9 @@
                     </div>
                     <div class="px-6 py-4 border-t border-slate-700/50 bg-slate-800/80 sm:flex sm:flex-row-reverse">
                         <button type="submit" id="btn-submit-prod"
-                            class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-base font-medium text-white hover:from-purple-500 hover:to-blue-500 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-all">Submit</button>
+                            class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-base font-medium text-white hover:from-purple-500 hover:to-blue-500 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-all" data-i18n="billing.modal.submit">Submit</button>
                         <button type="button" onclick="closeProductModal()"
-                            class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-600 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-slate-200 hover:bg-slate-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all">Cancel</button>
+                            class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-600 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-slate-200 hover:bg-slate-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all" data-i18n="billing.modal.cancel">Cancel</button>
                     </div>
                 </form>
             </div>
