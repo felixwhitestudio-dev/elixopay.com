@@ -11,13 +11,13 @@
    1. DESIGN TOKENS
    ============================================================ */
 :root {
-  /* --- Surfaces --- */
-  --ep-bg-base:       #08090d;
-  --ep-bg-card:       #0e1015;
-  --ep-bg-elevated:   #13151b;
-  --ep-bg-sidebar:    #0a0b10;
-  --ep-bg-hover:      rgba(255, 255, 255, 0.04);
-  --ep-bg-active:     rgba(124, 58, 237, 0.08);
+  /* --- Surfaces (Purple-Navy Fintech Theme) --- */
+  --ep-bg-base:       #110a22;
+  --ep-bg-card:       #1a0f30;
+  --ep-bg-elevated:   #211540;
+  --ep-bg-sidebar:    #0d0819;
+  --ep-bg-hover:      rgba(124, 58, 237, 0.06);
+  --ep-bg-active:     rgba(124, 58, 237, 0.12);
 
   /* --- Brand --- */
   --ep-purple:        #7c3aed;
@@ -39,9 +39,9 @@
   --ep-text-disabled: #475569;
 
   /* --- Borders --- */
-  --ep-border:        rgba(255, 255, 255, 0.06);
-  --ep-border-hover:  rgba(255, 255, 255, 0.12);
-  --ep-border-active: rgba(124, 58, 237, 0.3);
+  --ep-border:        rgba(124, 58, 237, 0.12);
+  --ep-border-hover:  rgba(124, 58, 237, 0.22);
+  --ep-border-active: rgba(124, 58, 237, 0.4);
 
   /* --- Typography --- */
   --ep-font-ui:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
