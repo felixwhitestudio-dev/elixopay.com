@@ -62,9 +62,9 @@
           <span class="stat-card-subtitle" data-i18n="admin.stat.awaitingVerification">Awaiting Verification</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #10b981;">
-          <span class="stat-card-title" data-i18n="admin.stat.systemUsdt">System USDT</span>
-          <span class="stat-card-value" id="stat-usdt-balance">--</span>
-          <span class="stat-card-subtitle" data-i18n="admin.stat.liquidityPool">Liquidity Pool</span>
+          <span class="stat-card-title" data-i18n="admin.stat.activeMerchants">Active Merchants</span>
+          <span class="stat-card-value" id="stat-active-merchants">--</span>
+          <span class="stat-card-subtitle" data-i18n="admin.stat.verifiedAccounts">Verified Accounts</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #3b82f6;">
           <span class="stat-card-title" data-i18n="admin.stat.totalWithdrawals">Total Withdrawals</span>
@@ -185,7 +185,8 @@
 
           document.getElementById('stat-total-users').textContent = stats.totalUsers.toLocaleString();
           document.getElementById('stat-pending-kyc').textContent = stats.pendingKyc.toLocaleString();
-          document.getElementById('stat-usdt-balance').textContent = stats.platformUsdtBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₮';
+          // Instead of USDT, we can show total users/merchants. The API returns stats.totalUsers
+          document.getElementById('stat-active-merchants').textContent = stats.totalUsers || '--';
           document.getElementById('stat-withdrawals').textContent = '฿ ' + stats.totalWithdrawVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
           // Render Chart
@@ -508,7 +509,7 @@
   </div><!-- /ep-main-wrap -->
   </div><!-- /ep-layout -->
   <script src="/js/admin-sidebar.js"></script>
-    <script src="/js/i18n.js?v=4"></script>
+    <script src="/js/i18n.js?v=5"></script>
 </body>
 
 </html>

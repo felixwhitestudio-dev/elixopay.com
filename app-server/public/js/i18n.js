@@ -4,6 +4,10 @@
   const dictionaries = {
     th: {
 
+      'admin.stat.activeMerchants': 'ร้านค้าที่ใช้งานอยู่',
+      'admin.stat.verifiedAccounts': 'บัญชีที่ยืนยันแล้ว',
+
+
       // Additional Dashboard Keys
       'dashboard.sandbox_balance': 'ยอดเงินทดสอบ (Sandbox)',
       'dashboard.thb_balance': 'ยอดเงิน THB',
@@ -73,7 +77,7 @@
       'admin.stat.completedVolume': 'ยอดที่ดำเนินการแล้ว (THB)',
       'admin.stat.liquidityPool': 'สภาพคล่องในระบบ',
       'admin.stat.registeredAccounts': 'บัญชีที่ลงทะเบียนทั้งหมด',
-      'admin.stat.systemUsdt': 'USDT ในระบบ',
+      
       'admin.stat.totalWithdrawals': 'ยอดถอนเงินรวม',
       'admin.verification.title': 'รอการตรวจสอบยืนยันตัวตน',
 
@@ -106,7 +110,7 @@
       'signup.currency.cny': 'CNY - หยวน',
       'signup.currency.vnd': 'VND - ดอง',
       'signup.currency.btc': 'BTC - บิตคอยน์',
-      'signup.currency.usdt': 'USDT - สเตเบิลคอยน์',
+      
       'signup.currency.usd': 'USD - ดอลลาร์',
       'signup.termsLabel': 'ฉันยอมรับข้อตกลงและนโยบาย',
       'signup.cta': 'สร้างบัญชี',
@@ -768,14 +772,14 @@
       'modal.success_msg': 'ทำรายการสำเร็จ!',
       'common.error_default': 'การทำรายการล้มเหลว',
       // Exchange
-      'modal.exchange.title': 'ซื้อ USDT',
-      'modal.exchange.subtitle': 'แลกเปลี่ยนเงินบาทเป็น USDT',
-      'modal.exchange.amount_thb': 'จำนวนเงินที่ต้องการซื้อ (THB)',
-      'modal.exchange.estimated_usdt': 'ยอดที่ได้รับโดยประมาณ (USDT)',
-      'modal.exchange.rate': 'อัตราแลกเปลี่ยน: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': 'ยืนยันการซื้อ',
-      'modal.exchange.success': 'แลกเปลี่ยนสำเร็จ!',
-      'modal.exchange.failed': 'การแลกเปลี่ยนล้มเหลว',
+      
+      
+      
+      
+      
+      
+      
+      
       // Banks
       'bank.kbank': 'ธนาคารกสิกรไทย',
       'bank.scb': 'ธนาคารไทยพาณิชย์',
@@ -823,14 +827,14 @@
       'bank.account_type.saving': 'บัญชีออมทรัพย์',
       'promptpay.enter_amount': 'ระบุจำนวนเงินเพื่อสร้าง QR',
       'promptpay.scan_via_app': 'สแกนผ่านแอปธนาคารใดก็ได้',
-      'exchange.buy_usdt': 'ซื้อ USDT',
-      'exchange.sell_usdt': 'ขาย USDT',
-      'exchange.spend_thb': 'จำนวนเงินที่ใช้ (THB)',
-      'exchange.sell_usdt_amount': 'จำนวนเงินที่ขาย (USDT)',
-      'exchange.rate_buy': 'อัตรา: 1 USDT ≈ ',
-      'exchange.rate_sell': 'อัตรา: 1 USDT ≈ ',
-      'exchange.confirm_buy': 'ยืนยันการซื้อ',
-      'exchange.confirm_sell': 'ยืนยันการขาย',
+      
+      
+      
+      
+      
+      
+      
+      
       'activity.no_recent': 'ไม่มีรายการล่าสุด',
       'activity.transaction': 'ธุรกรรม',
       'common.success': 'สำเร็จ!',
@@ -1136,6 +1140,10 @@
     },
     en: {
 
+      'admin.stat.activeMerchants': 'Active Merchants',
+      'admin.stat.verifiedAccounts': 'Verified Accounts',
+
+
       // Additional Dashboard Keys
       'dashboard.sandbox_balance': 'TEST SANDBOX BALANCE',
       'dashboard.thb_balance': 'THB Balance',
@@ -1205,7 +1213,7 @@
       'admin.stat.completedVolume': 'Completed Volume (THB)',
       'admin.stat.liquidityPool': 'Liquidity Pool',
       'admin.stat.registeredAccounts': 'Registered Accounts',
-      'admin.stat.systemUsdt': 'System USDT',
+      
       'admin.stat.totalWithdrawals': 'Total Withdrawals',
       'admin.verification.title': 'Pending Verifications',
 
@@ -1260,14 +1268,14 @@
       'common.processing': 'Processing...',
       'modal.success_msg': 'Transaction Successful!',
       'common.error_default': 'Transaction Failed',
-      'modal.exchange.title': 'Buy USDT',
-      'modal.exchange.subtitle': 'Exchange THB to USDT',
-      'modal.exchange.amount_thb': 'Amount to Spend (THB)',
-      'modal.exchange.estimated_usdt': 'Estimated Received (USDT)',
-      'modal.exchange.rate': 'Exchange Rate: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': 'Confirm Purchase',
-      'modal.exchange.success': 'Exchange Successful!',
-      'modal.exchange.failed': 'Exchange Failed',
+      
+      
+      
+      
+      
+      
+      
+      
       'bank.kbank': 'Kasikornbank',
       'bank.scb': 'Siam Commercial Bank',
       'bank.bbl': 'Bangkok Bank',
@@ -1312,14 +1320,14 @@
       'bank.account_type.saving': 'Saving Account',
       'promptpay.enter_amount': 'Enter amount to generate QR',
       'promptpay.scan_via_app': 'Scan via any Banking App',
-      'exchange.buy_usdt': 'Buy USDT',
-      'exchange.sell_usdt': 'Sell USDT',
-      'exchange.spend_thb': 'Amount to Spend (THB)',
-      'exchange.sell_usdt_amount': 'Amount to Sell (USDT)',
-      'exchange.rate_buy': 'Rate: 1 USDT ≈ ',
-      'exchange.rate_sell': 'Rate: 1 USDT ≈ ',
-      'exchange.confirm_buy': 'Confirm Purchase',
-      'exchange.confirm_sell': 'Confirm Sale',
+      
+      
+      
+      
+      
+      
+      
+      
       'activity.no_recent': 'No recent transactions',
       'activity.transaction': 'Transaction',
       'common.success': 'Success!',
@@ -1354,7 +1362,7 @@
       'signup.currency.cny': 'CNY - Yuan',
       'signup.currency.vnd': 'VND - Dong',
       'signup.currency.btc': 'BTC - Bitcoin',
-      'signup.currency.usdt': 'USDT - Stablecoin',
+      
       'signup.currency.usd': 'USD - Dollar',
       'signup.termsLabel': 'I accept terms and policies',
       'signup.cta': 'Create Account',
@@ -1824,14 +1832,14 @@
       'modal.success_msg': 'Success!',
       'common.error_default': 'Transaction failed',
       // Exchange
-      'modal.exchange.title': 'Buy USDT',
-      'modal.exchange.subtitle': 'Exchange THB to USDT',
-      'modal.exchange.amount_thb': 'Amount to Spend (THB)',
-      'modal.exchange.estimated_usdt': 'Estimated Received (USDT)',
-      'modal.exchange.rate': 'Exchange Rate: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': 'Confirm Purchase',
-      'modal.exchange.success': 'Exchange Successful!',
-      'modal.exchange.failed': 'Exchange Failed',
+      
+      
+      
+      
+      
+      
+      
+      
       // Banks
       // Docs
       'docs.title': 'API Documentation',
@@ -2141,14 +2149,14 @@
       'bank.account_type.saving': 'Saving Account',
       'promptpay.enter_amount': 'Enter amount to generate QR',
       'promptpay.scan_via_app': 'Scan via any Banking App',
-      'exchange.buy_usdt': 'Buy USDT',
-      'exchange.sell_usdt': 'Sell USDT',
-      'exchange.spend_thb': 'Amount to Spend (THB)',
-      'exchange.sell_usdt_amount': 'Amount to Sell (USDT)',
-      'exchange.rate_buy': 'Rate: 1 USDT ≈ ',
-      'exchange.rate_sell': 'Rate: 1 USDT ≈ ',
-      'exchange.confirm_buy': 'Confirm Purchase',
-      'exchange.confirm_sell': 'Confirm Sale',
+      
+      
+      
+      
+      
+      
+      
+      
       'activity.no_recent': 'No recent transactions',
       'activity.transaction': 'Transaction',
       'common.success': 'Success!',
@@ -2422,6 +2430,10 @@
     },
     zh: {
 
+      'admin.stat.activeMerchants': '活跃商户',
+      'admin.stat.verifiedAccounts': '已验证账户',
+
+
       // Additional Dashboard Keys
       'dashboard.sandbox_balance': '测试沙盒余额',
       'dashboard.thb_balance': '泰铢余额',
@@ -2491,7 +2503,7 @@
       'admin.stat.completedVolume': '已完成金额 (THB)',
       'admin.stat.liquidityPool': '流动性池',
       'admin.stat.registeredAccounts': '已注册账户',
-      'admin.stat.systemUsdt': '系统 USDT',
+      
       'admin.stat.totalWithdrawals': '总提现',
       'admin.verification.title': '待审核验证',
 
@@ -2546,14 +2558,14 @@
       'common.processing': '处理中...',
       'modal.success_msg': '交易成功！',
       'common.error_default': '交易失败',
-      'modal.exchange.title': '购买 USDT',
-      'modal.exchange.subtitle': '将泰铢兑换为 USDT',
-      'modal.exchange.amount_thb': '花费金额 (THB)',
-      'modal.exchange.estimated_usdt': '预计获得金额 (USDT)',
-      'modal.exchange.rate': '汇率: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': '确认购买',
-      'modal.exchange.success': '兑换成功！',
-      'modal.exchange.failed': '兑换失败',
+      
+      
+      
+      
+      
+      
+      
+      
       'bank.kbank': '开泰银行',
       'bank.scb': '泰国汇商银行',
       'bank.bbl': '盘谷银行',
@@ -2598,14 +2610,14 @@
       'bank.account_type.saving': '储蓄账户',
       'promptpay.enter_amount': '输入金额以生成 QR',
       'promptpay.scan_via_app': '使用任何银行 App 扫描',
-      'exchange.buy_usdt': '购买 USDT',
-      'exchange.sell_usdt': '出售 USDT',
-      'exchange.spend_thb': '花费金额 (THB)',
-      'exchange.sell_usdt_amount': '出售金额 (USDT)',
-      'exchange.rate_buy': '汇率: 1 USDT ≈ ',
-      'exchange.rate_sell': '汇率: 1 USDT ≈ ',
-      'exchange.confirm_buy': '确认购买',
-      'exchange.confirm_sell': '确认出售',
+      
+      
+      
+      
+      
+      
+      
+      
       'activity.no_recent': '没有近期交易',
       'activity.transaction': '交易',
       'common.success': '成功！',
@@ -2640,7 +2652,7 @@
       'signup.currency.cny': 'CNY - 人民币',
       'signup.currency.vnd': 'VND - 越南盾',
       'signup.currency.btc': 'BTC - 比特币',
-      'signup.currency.usdt': 'USDT - 稳定币',
+      
       'signup.currency.usd': 'USD - 美元',
       'signup.termsLabel': '我接受条款和政策',
       'signup.cta': '创建账户',
@@ -3283,14 +3295,14 @@
       'bank.account_type.saving': '储蓄账户',
       'promptpay.enter_amount': '输入金额以生成 QR',
       'promptpay.scan_via_app': '使用任何银行 App 扫描',
-      'exchange.buy_usdt': '购买 USDT',
-      'exchange.sell_usdt': '出售 USDT',
-      'exchange.spend_thb': '支付金额 (THB)',
-      'exchange.sell_usdt_amount': '出售金额 (USDT)',
-      'exchange.rate_buy': '汇率: 1 USDT ≈ ',
-      'exchange.rate_sell': '汇率: 1 USDT ≈ ',
-      'exchange.confirm_buy': '确认购买',
-      'exchange.confirm_sell': '确认出售',
+      
+      
+      
+      
+      
+      
+      
+      
       'activity.no_recent': '无最近交易',
       'activity.transaction': '交易',
       'common.success': '成功！',
