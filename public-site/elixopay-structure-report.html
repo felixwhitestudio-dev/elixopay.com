@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elixopay — Website Structure & Company Information</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @page { size: A4; margin: 20mm 18mm; }
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none !important; }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Sarabun', 'Inter', sans-serif; color: #1e293b; line-height: 1.7; background: #fff; font-size: 11pt; }
+
+        /* Header */
+        .doc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #4f46e5; padding-bottom: 16px; margin-bottom: 28px; }
+        .doc-logo { display: flex; align-items: center; gap: 10px; }
+        .doc-logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 18px; }
+        .doc-logo-text { font-size: 22px; font-weight: 800; color: #1e1b4b; }
+        .doc-logo-text span { color: #6366f1; }
+        .doc-meta { text-align: right; font-size: 9pt; color: #64748b; }
+        .doc-meta strong { color: #1e293b; font-size: 10pt; }
+
+        /* Title */
+        .doc-title { text-align: center; margin-bottom: 32px; }
+        .doc-title h1 { font-size: 20pt; font-weight: 800; color: #1e1b4b; margin-bottom: 6px; }
+        .doc-title p { color: #64748b; font-size: 11pt; }
+        .doc-title .badge { display: inline-block; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 16px; font-size: 9pt; font-weight: 700; margin-top: 8px; }
+
+        /* Sections */
+        .section { margin-bottom: 24px; }
+        .section-title { font-size: 13pt; font-weight: 800; color: #1e1b4b; border-left: 4px solid #6366f1; padding-left: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .section-title .num { background: #6366f1; color: white; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10pt; font-weight: 700; }
+
+        /* Company Info Grid */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+        .info-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
+        .info-card .label { font-size: 8pt; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+        .info-card .value { font-size: 10.5pt; font-weight: 600; color: #0f172a; }
+        .info-card .value small { color: #64748b; font-weight: 400; font-size: 9pt; }
+
+        /* Sitemap */
+        .sitemap-group { margin-bottom: 16px; }
+        .sitemap-group-title { font-size: 10.5pt; font-weight: 700; color: #4f46e5; margin-bottom: 6px; padding: 6px 10px; background: #eef2ff; border-radius: 6px; }
+        .sitemap-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+        .sitemap-table th { background: #f1f5f9; color: #475569; font-weight: 700; text-align: left; padding: 6px 10px; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.03em; }
+        .sitemap-table td { padding: 5px 10px; border-bottom: 1px solid #f1f5f9; }
+        .sitemap-table tr:hover td { background: #fafbfc; }
+        .url { color: #4f46e5; font-family: 'Inter', monospace; font-size: 8.5pt; }
+
+        /* Highlight Box */
+        .highlight { background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+        .highlight strong { color: #92400e; }
+        .highlight p { color: #78350f; font-size: 10pt; margin: 0; }
+
+        .anti-p2p { background: #f0fdf4; border: 2px solid #86efac; border-radius: 10px; padding: 14px 18px; margin: 14px 0; }
+        .anti-p2p p { color: #166534; font-size: 10.5pt; font-weight: 600; margin: 0; }
+
+        /* Flow Diagram */
+        .flow { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 16px 0; flex-wrap: wrap; }
+        .flow-step { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 10px 14px; text-align: center; min-width: 110px; }
+        .flow-step .icon { font-size: 20px; margin-bottom: 2px; }
+        .flow-step .text { font-size: 8.5pt; font-weight: 600; color: #312e81; }
+        .flow-arrow { color: #6366f1; font-size: 16px; font-weight: 800; }
+
+        /* Print button */
+        .print-btn { position: fixed; bottom: 24px; right: 24px; background: #4f46e5; color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(79,70,229,0.35); z-index: 999; }
+        .print-btn:hover { background: #4338ca; }
+
+        /* Footer */
+        .doc-footer { border-top: 2px solid #e2e8f0; padding-top: 12px; margin-top: 28px; text-align: center; font-size: 8.5pt; color: #94a3b8; }
+
+        ul { padding-left: 18px; }
+        li { margin-bottom: 3px; font-size: 10pt; }
+        p { font-size: 10.5pt; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+
+<!-- Print Button -->
+<button class="print-btn no-print" onclick="window.print()">🖨️ บันทึกเป็น PDF</button>
+
+<!-- PAGE 1: Company Info + Business Model -->
+<div class="doc-header">
+    <div class="doc-logo">
+        <div class="doc-logo-icon">E</div>
+        <div class="doc-logo-text">Elixo<span>pay</span></div>
+    </div>
+    <div class="doc-meta">
+        <strong>CONFIDENTIAL</strong><br>
+        เอกสารประกอบการพิจารณา<br>
+        วันที่: 29 เมษายน 2569
+    </div>
+</div>
+
+<div class="doc-title">
+    <h1>โครงสร้างเว็บไซต์และข้อมูลบริษัท</h1>
+    <p>Website Structure & Company Information — เอกสารจัดทำเพื่อประกอบการพิจารณาของสถาบันการเงิน</p>
+    <div class="badge">✅ Merchant Acquiring Service — ไม่ใช่ P2P</div>
+</div>
+
+<!-- Section 1: Company Info -->
+<div class="section">
+    <div class="section-title"><span class="num">1</span> ข้อมูลนิติบุคคล (Company Information)</div>
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="label">ชื่อบริษัท / Company Name</div>
+            <div class="value">บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด<br><small>Culture Capital Pay Co., Ltd.</small></div>
+        </div>
+        <div class="info-card">
+            <div class="label">เลขทะเบียนนิติบุคคล / Registration No.</div>
+            <div class="value">0105565039818</div>
+        </div>
+        <div class="info-card">
+            <div class="label">ที่อยู่สำนักงาน / Registered Address</div>
+            <div class="value">53 ซอย รามคำแหง 207 แขวงมีนบุรี เขตมีนบุรี กรุงเทพมหานคร</div>
+        </div>
+        <div class="info-card">
+            <div class="label">ประเภทธุรกิจ / Business Type</div>
+            <div class="value">Merchant Payment Acquiring Service<br><small>ระบบรับชำระเงินสำหรับร้านค้า</small></div>
+        </div>
+        <div class="info-card">
+            <div class="label">เว็บไซต์หลัก / Main Website</div>
+            <div class="value">https://elixopay.com</div>
+        </div>
+        <div class="info-card">
+            <div class="label">แดชบอร์ดร้านค้า / Merchant Dashboard</div>
+            <div class="value">https://app.elixopay.com</div>
+        </div>
+        <div class="info-card">
+            <div class="label">อีเมลติดต่อ / Contact Email</div>
+            <div class="value">support@elixopay.com<br><small>compliance@elixopay.com</small></div>
+        </div>
+        <div class="info-card">
+            <div class="label">สถานะใบอนุญาต / License Status</div>
+            <div class="value">อยู่ระหว่างดำเนินการ<br><small>ภายใต้การกำกับดูแลของ ธปท.</small></div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Business Model -->
+<div class="section">
+    <div class="section-title"><span class="num">2</span> รูปแบบธุรกิจ (Business Model)</div>
+    <p>Elixopay เป็น <strong>ระบบรับชำระเงินสำหรับร้านค้า (Merchant Acquiring Service)</strong> ที่ช่วยให้ธุรกิจสามารถรับชำระเงินจากลูกค้าผ่านช่องทางออนไลน์ได้อย่างปลอดภัย โดยมีขั้นตอนดังนี้:</p>
+
+    <div class="flow">
+        <div class="flow-step"><div class="icon">🛒</div><div class="text">ลูกค้าสั่งซื้อ<br>บนเว็บร้านค้า</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="icon">💳</div><div class="text">ชำระเงินผ่าน<br>Elixopay Gateway</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="icon">🏦</div><div class="text">ธนาคาร<br>อนุมัติรายการ</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="icon">✅</div><div class="text">เงินเข้าบัญชี<br>ร้านค้า (T+1)</div></div>
+    </div>
+
+    <div class="anti-p2p">
+        <p>⚠️ Elixopay <strong>ไม่ได้ให้บริการโอนเงินระหว่างบุคคล (P2P Transfer)</strong> — เราให้บริการเฉพาะการรับชำระเงินจากลูกค้าของร้านค้า (Merchant) ที่ผ่านการตรวจสอบ KYC แล้วเท่านั้น</p>
+    </div>
+
+    <p><strong>บริการหลัก:</strong></p>
+    <ul>
+        <li><strong>Payment Gateway API</strong> — รับชำระเงินผ่าน QR PromptPay, บัตรเครดิต/เดบิต, Mobile Banking</li>
+        <li><strong>Merchant Dashboard</strong> — ระบบจัดการร้านค้า ดูยอดขาย รายการธุรกรรม</li>
+        <li><strong>Settlement (T+1)</strong> — โอนเงินเข้าบัญชีร้านค้าตามรอบที่กำหนด</li>
+        <li><strong>Webhook & API</strong> — แจ้งเตือนและเชื่อมต่อระบบอัตโนมัติ</li>
+        <li><strong>KYC Verification</strong> — ยืนยันตัวตนร้านค้าก่อนเปิดใช้งาน</li>
+    </ul>
+</div>
+
+<!-- Section 3: Compliance -->
+<div class="section">
+    <div class="section-title"><span class="num">3</span> นโยบายการปฏิบัติตามกฎหมาย (Compliance)</div>
+    <p><strong>AML/KYC:</strong> ดำเนินนโยบายป้องกันการฟอกเงินตาม พ.ร.บ. ป้องกันและปราบปรามการฟอกเงิน พ.ศ. 2542 และแนวทาง FATF</p>
+    <ul>
+        <li>Customer Due Diligence (CDD) & Enhanced Due Diligence (EDD)</li>
+        <li>Real-time Transaction Monitoring — ระบบ AI ตรวจจับธุรกรรมผิดปกติ 24/7</li>
+        <li>Suspicious Transaction Reporting (STR) — รายงานธุรกรรมที่น่าสงสัยต่อ ปปง.</li>
+        <li>Sanction Screening — ตรวจสอบรายชื่อ UN, OFAC, EU</li>
+    </ul>
+    <p style="margin-top:8px;"><strong>ความปลอดภัย:</strong> PCI-DSS Level 1 | TLS 1.3 | 3D Secure 2.0 | SOC 2 Type II</p>
+    <p><strong>ธุรกิจต้องห้าม:</strong> การพนันออนไลน์, P2P Money Transfer, Cryptocurrency Exchange, สินค้าผิดกฎหมาย, Ponzi/Pyramid Scheme</p>
+</div>
+
+<!-- PAGE BREAK -->
+<div class="page-break"></div>
+
+<div class="doc-header">
+    <div class="doc-logo">
+        <div class="doc-logo-icon">E</div>
+        <div class="doc-logo-text">Elixo<span>pay</span></div>
+    </div>
+    <div class="doc-meta">
+        <strong>หน้า 2/2</strong><br>
+        โครงสร้างเว็บไซต์ (Sitemap)
+    </div>
+</div>
+
+<!-- Section 4: Sitemap -->
+<div class="section">
+    <div class="section-title"><span class="num">4</span> โครงสร้างเว็บไซต์ — elixopay.com (Public Website)</div>
+
+    <div class="sitemap-group">
+        <div class="sitemap-group-title">🏠 หน้าหลักและข้อมูลบริษัท</div>
+        <table class="sitemap-table">
+            <tr><th style="width:35%">หน้า</th><th style="width:30%">URL</th><th>รายละเอียด</th></tr>
+            <tr><td>หน้าแรก</td><td class="url">/index.html</td><td>Landing page แนะนำบริการ Merchant Acquiring</td></tr>
+            <tr><td>เกี่ยวกับเรา</td><td class="url">/about.html</td><td>ข้อมูลบริษัท ทีมงาน วิสัยทัศน์</td></tr>
+            <tr><td>ราคา</td><td class="url">/pricing.html</td><td>แผนราคาและค่าธรรมเนียมสำหรับร้านค้า</td></tr>
+            <tr><td>Use Cases</td><td class="url">/usecases.html</td><td>ตัวอย่างการใช้งานสำหรับธุรกิจต่างๆ</td></tr>
+            <tr><td>พาร์ทเนอร์</td><td class="url">/partners.html</td><td>โปรแกรมพาร์ทเนอร์สำหรับตัวแทน</td></tr>
+            <tr><td>ติดต่อเรา</td><td class="url">/contact.html</td><td>แบบฟอร์มติดต่อและข้อมูลการติดต่อ</td></tr>
+            <tr><td>บล็อก</td><td class="url">/blog.html</td><td>บทความและข่าวสาร Fintech</td></tr>
+            <tr><td>System Status</td><td class="url">/status.html</td><td>สถานะระบบแบบ Real-time</td></tr>
+        </table>
+    </div>
+
+    <div class="sitemap-group">
+        <div class="sitemap-group-title">📖 เอกสารนักพัฒนา (Developer)</div>
+        <table class="sitemap-table">
+            <tr><th style="width:35%">หน้า</th><th style="width:30%">URL</th><th>รายละเอียด</th></tr>
+            <tr><td>API Documentation</td><td class="url">/apidocs.html</td><td>เอกสาร API สำหรับเชื่อมต่อระบบชำระเงิน</td></tr>
+            <tr><td>Quick Start Guide</td><td class="url">/quickstart.html</td><td>คู่มือเริ่มต้นใช้งานอย่างรวดเร็ว</td></tr>
+            <tr><td>Developer Portal</td><td class="url">/developer.html</td><td>ศูนย์รวมเครื่องมือสำหรับนักพัฒนา</td></tr>
+        </table>
+    </div>
+
+    <div class="sitemap-group">
+        <div class="sitemap-group-title">⚖️ กฎหมายและนโยบาย (Legal & Compliance)</div>
+        <table class="sitemap-table">
+            <tr><th style="width:35%">หน้า</th><th style="width:30%">URL</th><th>รายละเอียด</th></tr>
+            <tr><td>AML/KYC Compliance</td><td class="url">/compliance.html</td><td>นโยบาย AML/KYC และข้อมูลนิติบุคคล</td></tr>
+            <tr><td>Privacy Policy</td><td class="url">/privacy.html</td><td>นโยบายความเป็นส่วนตัว PDPA</td></tr>
+            <tr><td>Terms of Service</td><td class="url">/terms.html</td><td>เงื่อนไขการใช้บริการ</td></tr>
+            <tr><td>Refund Policy</td><td class="url">/refund.html</td><td>นโยบายการคืนเงิน</td></tr>
+            <tr><td>Security</td><td class="url">/security.html</td><td>มาตรฐานความปลอดภัย PCI-DSS, TLS</td></tr>
+            <tr><td>Help Center</td><td class="url">/help.html</td><td>ศูนย์ช่วยเหลือสำหรับร้านค้า</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- Section 5: Dashboard -->
+<div class="section">
+    <div class="section-title"><span class="num">5</span> ระบบหลังบ้าน — app.elixopay.com (Merchant Dashboard)</div>
+    <p style="margin-bottom:10px;">ระบบจัดการสำหรับร้านค้าที่ผ่านการตรวจสอบ KYC แล้ว (ต้องเข้าสู่ระบบ)</p>
+    <table class="sitemap-table">
+        <tr><th style="width:35%">หน้า</th><th style="width:30%">URL</th><th>รายละเอียด</th></tr>
+        <tr><td>เข้าสู่ระบบ</td><td class="url">/login.html</td><td>หน้าล็อกอิน (Email + Google OAuth)</td></tr>
+        <tr><td>ลงทะเบียนร้านค้า</td><td class="url">/signup.html</td><td>สมัครสมาชิกร้านค้าใหม่</td></tr>
+        <tr><td>แดชบอร์ด</td><td class="url">/dashboard.html</td><td>ภาพรวมยอดขาย สถิติ กราฟรายได้</td></tr>
+        <tr><td>ธุรกรรม</td><td class="url">/transactions.html</td><td>รายการธุรกรรมทั้งหมด พร้อม Export CSV</td></tr>
+        <tr><td>การเรียกเก็บเงิน</td><td class="url">/billing.html</td><td>รอบบิลและใบแจ้งหนี้</td></tr>
+        <tr><td>Payout / Settlement</td><td class="url">/payout.html</td><td>ถอนเงินเข้าบัญชีธนาคารร้านค้า</td></tr>
+        <tr><td>API Keys</td><td class="url">/api-keys.html</td><td>จัดการ API Key สำหรับเชื่อมต่อ</td></tr>
+        <tr><td>Webhooks</td><td class="url">/webhooks.html</td><td>ตั้งค่า Webhook URL สำหรับแจ้งเตือน</td></tr>
+        <tr><td>KYC Verification</td><td class="url">/kyc.html</td><td>อัปโหลดเอกสารยืนยันตัวตน</td></tr>
+        <tr><td>โปรไฟล์</td><td class="url">/profile.html</td><td>จัดการข้อมูลส่วนตัว</td></tr>
+        <tr><td>ตั้งค่า</td><td class="url">/settings.html</td><td>ตั้งค่าบัญชีและการแจ้งเตือน</td></tr>
+        <tr><td>Checkout</td><td class="url">/checkout.html</td><td>หน้าชำระเงินสำหรับลูกค้าของร้านค้า</td></tr>
+    </table>
+</div>
+
+<div class="doc-footer">
+    <p>© 2026 Elixopay — บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด | เลขทะเบียน 0105565039818</p>
+    <p style="margin-top:4px;">Merchant Acquiring Service — <strong>ไม่มีบริการ P2P Transfer</strong> | เอกสารนี้จัดทำเพื่อประกอบการพิจารณาของสถาบันการเงินเท่านั้น</p>
+</div>
+
+</body>
+</html>
