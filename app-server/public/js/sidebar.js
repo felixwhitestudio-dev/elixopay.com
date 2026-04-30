@@ -194,6 +194,11 @@
     initTheme();
     loadNotifications();
 
+    // Re-apply i18n translations after sidebar injects new DOM elements
+    if (window.ElixopayI18n && window.ElixopayI18n.updatePage) {
+      window.ElixopayI18n.updatePage();
+    }
+
     // Backdrop close
     const backdrop = document.getElementById('ep-sidebar-backdrop');
     if (backdrop) {
