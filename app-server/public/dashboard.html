@@ -150,195 +150,30 @@
         }
 
         /* ============================================================
-           LIGHT MODE OVERRIDES — Ultra-high specificity
-           Uses html body.ep-light for maximum CSS priority
+           FORCE DARK: Dashboard always uses dark purple theme.
+           Prevents Light Mode from turning content white.
            ============================================================ */
-        
-        /* === GLOBAL: Body + Background === */
         html body.ep-light {
-            background: linear-gradient(135deg, #f0f4ff 0%, #e8ecf8 50%, #f5f3ff 100%) !important;
-            color: #1e293b !important;
+            background: linear-gradient(135deg, #1A0B2E 0%, #2D1B4E 50%, #1a103c 100%) !important;
+            color: #e2e8f0 !important;
         }
         html body.ep-light::before {
-            background: radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 40%) !important;
+            background: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 40%) !important;
         }
-
-        /* === CATCH-ALL: Force dark text on ALL elements === */
-        html body.ep-light,
-        html body.ep-light *:not(footer *):not(nav a):not(.ep-sidebar *):not([class*="bg-gradient"]) {
-            color: inherit;
+        html body.ep-light .ep-content h1,
+        html body.ep-light .ep-content h2,
+        html body.ep-light .ep-content h3 { color: #f1f5f9 !important; }
+        html body.ep-light .ep-content p,
+        html body.ep-light .ep-content span,
+        html body.ep-light .ep-content div,
+        html body.ep-light .ep-content td { color: inherit !important; }
+        html body.ep-light select {
+            background: rgba(30, 20, 60, 0.8) !important;
+            color: #cbd5e1 !important;
+            border-color: rgba(124, 58, 237, 0.2) !important;
         }
-        html body.ep-light h1,
-        html body.ep-light h2,
-        html body.ep-light h3,
-        html body.ep-light h4,
-        html body.ep-light p,
-        html body.ep-light span,
-        html body.ep-light div,
-        html body.ep-light td,
-        html body.ep-light th,
-        html body.ep-light label {
-            color: #1e293b !important;
-        }
-        
-        /* Lighter secondary text */
-        html body.ep-light [class*="text-slate-4"],
-        html body.ep-light [class*="text-slate-5"],
-        html body.ep-light [class*="text-gray-4"] {
-            color: #64748b !important;
-        }
-        html body.ep-light [class*="text-slate-6"],
-        html body.ep-light [class*="text-gray-5"] {
-            color: #94a3b8 !important;
-        }
-        
-        /* Colored label text → darker versions for light bg */
-        html body.ep-light [class*="text-purple-3"],
-        html body.ep-light [class*="text-purple-4"] { color: #7c3aed !important; }
-        html body.ep-light [class*="text-orange-3"],
-        html body.ep-light [class*="text-orange-2"] { color: #ea580c !important; }
-        html body.ep-light [class*="text-blue-3"],
-        html body.ep-light [class*="text-blue-4"] { color: #2563eb !important; }
-        html body.ep-light [class*="text-green-3"],
-        html body.ep-light [class*="text-green-4"] { color: #16a34a !important; }
-        html body.ep-light [class*="text-teal-3"] { color: #0d9488 !important; }
-        html body.ep-light [class*="text-indigo-3"],
-        html body.ep-light [class*="text-indigo-4"] { color: #4f46e5 !important; }
-        html body.ep-light [class*="text-yellow-3"] { color: #ca8a04 !important; }
-        html body.ep-light [class*="text-yellow-5"] { color: #a16207 !important; }
-        html body.ep-light [class*="text-red-3"],
-        html body.ep-light [class*="text-red-4"] { color: #dc2626 !important; }
-        
-        /* === Glass Panels → White Cards === */
-        html body.ep-light .glass-panel {
-            background: rgba(255,255,255,0.95) !important;
-            border: 1px solid #e2e8f0 !important;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04) !important;
-        }
-        html body.ep-light .glass-panel::before {
-            display: none !important;
-        }
-        html body.ep-light .glass-panel:hover {
-            border-color: #cbd5e1 !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
-        }
-        html body.ep-light .glass-panel h2,
-        html body.ep-light .glass-panel h3 {
-            color: #0f172a !important;
-        }
-        html body.ep-light .glass-panel-light {
-            background: rgba(124, 58, 237, 0.04) !important;
-            border: 1px solid #e2e8f0 !important;
-        }
-        html body.ep-light .glass-panel-light:hover {
-            background: rgba(124, 58, 237, 0.08) !important;
-        }
-
-        /* === Nav Bar → White === */
-        html body.ep-light nav {
-            background: rgba(255,255,255,0.92) !important;
-            backdrop-filter: blur(12px) !important;
-            border-bottom-color: #e2e8f0 !important;
-        }
-        html body.ep-light nav span,
-        html body.ep-light nav a,
-        html body.ep-light nav button,
-        html body.ep-light nav p,
-        html body.ep-light nav div {
-            color: #334155 !important;
-        }
-        html body.ep-light nav [class*="bg-purple-900"],
-        html body.ep-light nav [class*="bg-slate-800"] {
-            background: #f1f5f9 !important;
-        }
-        html body.ep-light nav [class*="text-purple-3"],
-        html body.ep-light nav [class*="text-purple-4"] {
-            color: #7c3aed !important;
-        }
-        /* Logo gradient text — keep it */
-        html body.ep-light nav [class*="bg-clip-text"] {
-            color: transparent !important;
-        }
-
-        /* === Stat Card Boxes === */
-        html body.ep-light [class*="bg-purple-900\\/"] { background: rgba(124,58,237,0.08) !important; }
-        html body.ep-light [class*="bg-orange-900\\/"] { background: rgba(234,88,12,0.08) !important; }
-        html body.ep-light [class*="bg-blue-900\\/"] { background: rgba(37,99,235,0.08) !important; }
-        html body.ep-light [class*="bg-green-900\\/"] { background: rgba(22,163,74,0.08) !important; }
-        html body.ep-light [class*="bg-purple-900\\/"] { border-color: rgba(124,58,237,0.2) !important; }
-        html body.ep-light [class*="bg-orange-900\\/"] { border-color: rgba(234,88,12,0.2) !important; }
-        html body.ep-light [class*="bg-blue-900\\/"] { border-color: rgba(37,99,235,0.2) !important; }
-        html body.ep-light [class*="bg-green-900\\/"] { border-color: rgba(22,163,74,0.2) !important; }
-        
-        /* === Buttons & Surfaces === */
-        html body.ep-light [class*="bg-slate-8"],
-        html body.ep-light [class*="bg-slate-900\\/"] {
-            background: #f1f5f9 !important;
-        }
-        html body.ep-light [class*="bg-purple-900\\/50"] { background: rgba(124,58,237,0.1) !important; }
-        html body.ep-light [class*="bg-teal-900\\/"] { background: rgba(13,148,136,0.1) !important; }
-        html body.ep-light [class*="bg-indigo-900\\/"] { background: rgba(79,70,229,0.1) !important; }
-        html body.ep-light [class*="bg-yellow-900\\/"] { background: rgba(202,138,4,0.1) !important; }
-        html body.ep-light [class*="bg-blue-500\\/"] { background: rgba(37,99,235,0.1) !important; }
-        html body.ep-light [class*="bg-green-500\\/"] { background: rgba(22,163,74,0.1) !important; }
-        html body.ep-light [class*="bg-orange-500\\/"] { background: rgba(234,88,12,0.1) !important; }
-        html body.ep-light [class*="bg-red-500\\/"] { background: rgba(239,68,68,0.1) !important; }
-
-        /* === Borders & Dividers === */
-        html body.ep-light [class*="divide-slate"] > :not([hidden]) ~ :not([hidden]) { border-color: #e2e8f0 !important; }
-        html body.ep-light [class*="border-slate-7"],
-        html body.ep-light [class*="border-slate-6"] { border-color: #e2e8f0 !important; }
-        html body.ep-light [class*="border-purple-8"] { border-color: rgba(124,58,237,0.2) !important; }
-        html body.ep-light [class*="border-orange-8"] { border-color: rgba(234,88,12,0.2) !important; }
-        html body.ep-light [class*="border-blue-8"] { border-color: rgba(37,99,235,0.2) !important; }
-        html body.ep-light [class*="border-green-8"] { border-color: rgba(22,163,74,0.2) !important; }
-
-        /* === Badges === */
-        html body.ep-light [class*="bg-green-900\\/50"] { background: rgba(22,163,74,0.1) !important; }
-        html body.ep-light [class*="border-green-800"] { border-color: rgba(22,163,74,0.25) !important; }
-        html body.ep-light [class*="bg-gray-700"] { background: #f1f5f9 !important; }
-        
-        /* === Select/Input === */
-        html body.ep-light select,
-        html body.ep-light input {
-            background: #f8fafc !important;
-            color: #1e293b !important;
-            border-color: #e2e8f0 !important;
-        }
-
-        /* === Notification Dropdown === */
-        html body.ep-light [class*="bg-slate-800"] {
-            background: #ffffff !important;
-        }
-
-        /* === Footer — keep dark === */
-        html body.ep-light footer {
-            background: #1e1b4b !important;
-        }
-        html body.ep-light footer * {
-            color: inherit !important;
-        }
-        html body.ep-light footer h4 { color: #e2e8f0 !important; }
-        html body.ep-light footer p,
-        html body.ep-light footer li,
-        html body.ep-light footer a,
-        html body.ep-light footer span { color: #94a3b8 !important; }
-        html body.ep-light footer a:hover { color: #ffffff !important; }
-
-        /* === Security banner — keep dark === */
-        html body.ep-light [class*="from-gray-900"] {
-            background: linear-gradient(to right, #1e1b4b, #312e81) !important;
-        }
-        html body.ep-light [class*="from-gray-900"] * { color: inherit !important; }
-        html body.ep-light [class*="from-gray-900"] h3 { color: #ffffff !important; }
-        html body.ep-light [class*="from-gray-900"] p { color: #94a3b8 !important; }
-        html body.ep-light [class*="from-gray-900"] span { color: #e2e8f0 !important; }
-
-        /* === Scrollbar === */
-        html body.ep-light ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
-        html body.ep-light ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.2) !important; }
     </style>
 </head>
 
