@@ -373,18 +373,7 @@
 		let applications = [];
 		let currentAppId = null;
 
-		// Theme toggle
-		const themeToggle = document.getElementById('themeToggle');
-		themeToggle.addEventListener('click', () => {
-			document.body.classList.toggle('light');
-			const isLight = document.body.classList.contains('light');
-			themeToggle.innerHTML = isLight ? '<i class="fas fa-moon"></i> โหมดมืด' : '<i class="fas fa-sun"></i> โหมดสว่าง';
-			localStorage.setItem('elixopay-theme', isLight ? 'light' : 'dark');
-		});
-		if (localStorage.getItem('elixopay-theme') === 'light') {
-			document.body.classList.add('light');
-			themeToggle.innerHTML = '<i class="fas fa-moon"></i> โหมดมืด';
-		}
+		// Theme is handled by design-system.css — no manual toggle needed
 
 		// Load applications from backend API
 		async function loadApplications() {
@@ -392,7 +381,7 @@
 				const token = localStorage.getItem('token');
 				if (!token) return window.location.href = '/login.html';
 
-				const response = await fetch(window.apiUrl('/api/v1/kyc/all')), {
+				const response = await fetch(window.apiUrl('/api/v1/kyc/all'), {
 					headers: { 'Authorization': `Bearer ${token}` }
 				});
 
