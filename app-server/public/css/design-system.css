@@ -191,7 +191,7 @@ body.ep-body.ep-light .ep-sidebar {
 }
 body.ep-body.ep-light .ep-sidebar-link.active {
   color: #a78bfa !important;
-  background: rgba(124, 58, 237, 0.12) !important;
+  background: rgba(124, 58, 237, 0.15) !important;
 }
 body.ep-body.ep-light .ep-sidebar-link {
   color: #94a3b8 !important;
@@ -432,8 +432,8 @@ body.ep-body {
 }
 
 .ep-sidebar-link.active {
-  background: var(--ep-bg-active);
-  color: var(--ep-purple-light);
+  background: rgba(99, 40, 200, 0.20) !important;
+  color: #a78bfa !important;
 }
 
 .ep-sidebar-link.active::before {
