@@ -347,6 +347,19 @@
       'billing.modal.product_desc': 'คำอธิบาย (ไม่จำเป็น)',
       'billing.modal.submit': 'ยืนยัน',
       'billing.modal.cancel': 'ยกเลิก',
+      // === Transactions Page ===
+      'txn.title': 'ธุรกรรม',
+      'txn.desc': 'ดูและจัดการธุรกรรมการชำระเงินทั้งหมด',
+      'txn.refresh': 'รีเฟรช',
+      'txn.colDate': 'วันที่/เวลา',
+      'txn.colDesc': 'คำอธิบาย',
+      'txn.colAmount': 'จำนวนเงิน',
+      'txn.colStatus': 'สถานะ',
+      'txn.colActions': 'จัดการ',
+      'txn.records': 'รายการ',
+      'txn.prev': 'ก่อนหน้า',
+      'txn.next': 'ถัดไป',
+
       // === API Keys Page ===
       'apikeys.title': 'ทรัพยากรนักพัฒนา',
       'apikeys.desc': 'จัดการ API Keys และ Webhook endpoints สำหรับการเชื่อมต่อ',
