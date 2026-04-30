@@ -330,7 +330,7 @@ export const getAuditLogs = catchAsync(async (req: Request, res: Response, next:
 });
 
 export const getStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
     const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
 
     res.status(200).json({
@@ -343,7 +343,7 @@ export const getStats = catchAsync(async (req: Request, res: Response, next: Nex
 });
 
 export const getLiquidity = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
 
     res.status(200).json({
         success: true,
@@ -362,8 +362,8 @@ export const addLiquidity = catchAsync(async (req: Request, res: Response, next:
         return next(new AppError('Please provide a valid numeric amount greater than 0.', 400));
     }
 
-    if (currency !== 'USDT') {
-        return next(new AppError('Currently, only USDT liquidity addition is supported via this interface.', 400));
+    if (currency !== 'THB') {
+        return next(new AppError('Currently, only THB liquidity addition is supported via this interface.', 400));
     }
 
     const numericAmount = Number(amount);
@@ -382,7 +382,7 @@ export const addLiquidity = catchAsync(async (req: Request, res: Response, next:
         });
 
         // 2. Fetch current settings and increment
-        const existingUsdtSetting = await tx.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+        const existingUsdtSetting = await tx.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
         const currentBalance = existingUsdtSetting && !isNaN(parseFloat(existingUsdtSetting.value))
             ? parseFloat(existingUsdtSetting.value)
             : 0;
@@ -391,9 +391,9 @@ export const addLiquidity = catchAsync(async (req: Request, res: Response, next:
 
         // 3. Upsert
         await tx.systemSetting.upsert({
-            where: { key: 'platform_usdt_balance' },
+            where: { key: 'platform_thb_reserve' },
             update: { value: newBalance.toString() },
-            create: { key: 'platform_usdt_balance', value: newBalance.toString(), description: 'Platform liquidity pool for USDT' }
+            create: { key: 'platform_thb_reserve', value: newBalance.toString(), description: 'Platform liquidity pool for THB' }
         });
     });
 
@@ -418,7 +418,7 @@ export const getLiquidityHistory = catchAsync(async (req: Request, res: Response
                 created_at: tx.createdAt,
                 type: 'deposit', // Mapping SYSTEM_LIQUIDITY_ADD to 'deposit' for UI consistency
                 amount: tx.amount,
-                currency: tx.metadata ? JSON.parse(tx.metadata).currency || 'USDT' : 'USDT',
+                currency: tx.metadata ? JSON.parse(tx.metadata).currency || 'THB' : 'THB',
                 status: tx.status
             }))
         }
@@ -441,8 +441,8 @@ export const getDashboardOverview = catchAsync(async (req: Request, res: Respons
         where: { status: 'pending' }
     });
 
-    // 4. Get active platforms balances (USDT and THB)
-    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_usdt_balance' } });
+    // 4. Get active platforms balances (THB and THB)
+    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
     const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
 
     // 5. Calculate total withdraw volume (Completed THB withdrawals)
@@ -478,7 +478,7 @@ export const getDashboardOverview = catchAsync(async (req: Request, res: Respons
                 totalUsers,
                 pendingKyc,
                 pendingBankRequests,
-                platformUsdtBalance: usdtSetting && !isNaN(parseFloat(usdtSetting.value)) ? parseFloat(usdtSetting.value) : 0,
+                platformThbReserve: usdtSetting && !isNaN(parseFloat(usdtSetting.value)) ? parseFloat(usdtSetting.value) : 0,
                 platformThbBalance: thbSetting && !isNaN(parseFloat(thbSetting.value)) ? parseFloat(thbSetting.value) : 0,
                 totalWithdrawVolume
             },

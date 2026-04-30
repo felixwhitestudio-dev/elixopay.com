@@ -33,7 +33,7 @@
         <div class="md:flex md:items-center md:justify-between mb-8">
             <div class="flex-1 min-w-0">
                 <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate" data-i18n="admin.liquidity.pageTitle">
-                    Platform Liquidity Management (USDT)
+                    Platform Settlement Reserve (THB)
                 </h2>
                 <p class="mt-1 text-sm text-gray-500" data-i18n="admin.liquidity.pageDesc">
                     Manage the platform's settlement reserve for user withdrawals.
@@ -53,14 +53,14 @@
                         <div class="ml-5 w-0 flex-1">
                             <dl>
                                 <dt class="text-sm font-medium text-gray-500 truncate" data-i18n="admin.liquidity.currentBalance">
-                                    Current Liquidity
+                                    Current Reserve
                                 </dt>
                                 <dd class="flex items-baseline">
                                     <div id="liquidityBalance" class="text-3xl font-semibold text-gray-900" data-i18n="admin.common.loading">
                                         Loading...
                                     </div>
                                     <div class="ml-2 flex items-baseline text-sm font-semibold text-gray-600">
-                                        USDT
+                                        THB
                                     </div>
                                 </dd>
                             </dl>
@@ -86,7 +86,7 @@
                     <form id="addLiquidityForm" class="mt-5 sm:flex sm:items-center"
                         onsubmit="handleAddLiquidity(event)">
                         <div class="w-full sm:max-w-xs">
-                            <label for="amount" class="sr-only">Amount (USDT)</label>
+                            <label for="amount" class="sr-only">Amount (THB)</label>
                             <div class="relative rounded-md shadow-sm">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">$</span>
@@ -95,7 +95,7 @@
                                     class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-3 border"
                                     placeholder="0.00" step="0.01" min="1" required>
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 sm:text-sm">USDT</span>
+                                    <span class="text-gray-500 sm:text-sm">THB</span>
                                 </div>
                             </div>
                         </div>
@@ -181,14 +181,14 @@
             try {
                 const res = await apiFetch('/api/v1/admin/liquidity/add', {
                     method: 'POST',
-                    body: JSON.stringify({ amount, currency: 'USDT' })
+                    body: JSON.stringify({ amount, currency: 'THB' })
                 });
                 const data = await res.json();
 
                 msg.classList.remove('hidden');
                 if (data.success) {
                     msg.className = 'mt-3 p-2 rounded text-sm bg-green-100 text-green-700';
-                    msg.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Successfully added ${amount} USDT`;
+                    msg.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Successfully added ${amount} THB`;
                     fetchLiquidity(); // Refresh balance
                     fetchLiquidityHistory(); // Refresh history
                     document.getElementById('addLiquidityForm').reset();

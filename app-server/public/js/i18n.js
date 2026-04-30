@@ -4,6 +4,28 @@
   const dictionaries = {
     th: {
 
+      // Transaction Filters
+      'filter.all': 'ทั้งหมด',
+      'filter.succeeded': 'สำเร็จ',
+      'filter.pending': 'รอดำเนินการ',
+      'filter.failed': 'ล้มเหลว',
+      'filter.cancelled': 'ยกเลิก',
+      'filter.refunded': 'คืนเงิน',
+      'filter.total': 'ยอดรวม',
+      'filter.status': 'สถานะ',
+      'filter.sortBy': 'เรียงตาม',
+      'filter.createdAt': 'วันที่สร้าง',
+      'filter.amount': 'จำนวนเงิน',
+      'filter.order': 'ลำดับ',
+      'filter.desc': 'ล่าสุดก่อน',
+      'filter.asc': 'เก่าสุดก่อน',
+      'common.loading': 'กำลังโหลดข้อมูล...',
+      'pagination.showing': 'แสดง',
+      'pagination.to': 'ถึง',
+      'pagination.from': 'จาก',
+      'table.noTransactions': 'ไม่พบรายการธุรกรรม',
+
+
       'admin.stat.activeMerchants': 'ร้านค้าที่ใช้งานอยู่',
       'admin.stat.verifiedAccounts': 'บัญชีที่ยืนยันแล้ว',
 
@@ -1139,6 +1161,28 @@
       'comp.contact.title': 'ติดต่อฝ่าย Compliance'
     },
     en: {
+
+      // Transaction Filters
+      'filter.all': 'All',
+      'filter.succeeded': 'Succeeded',
+      'filter.pending': 'Pending',
+      'filter.failed': 'Failed',
+      'filter.cancelled': 'Cancelled',
+      'filter.refunded': 'Refunded',
+      'filter.total': 'Total',
+      'filter.status': 'Status',
+      'filter.sortBy': 'Sort By',
+      'filter.createdAt': 'Date Created',
+      'filter.amount': 'Amount',
+      'filter.order': 'Order',
+      'filter.desc': 'Newest First',
+      'filter.asc': 'Oldest First',
+      'common.loading': 'Loading data...',
+      'pagination.showing': 'Showing',
+      'pagination.to': 'to',
+      'pagination.from': 'of',
+      'table.noTransactions': 'No transactions found.',
+
 
       'admin.stat.activeMerchants': 'Active Merchants',
       'admin.stat.verifiedAccounts': 'Verified Accounts',
@@ -2429,6 +2473,28 @@
       'comp.contact.title': 'Contact Compliance'
     },
     zh: {
+
+      // Transaction Filters
+      'filter.all': '全部',
+      'filter.succeeded': '已成功',
+      'filter.pending': '待处理',
+      'filter.failed': '已失败',
+      'filter.cancelled': '已取消',
+      'filter.refunded': '已退款',
+      'filter.total': '总计',
+      'filter.status': '状态',
+      'filter.sortBy': '排序',
+      'filter.createdAt': '创建日期',
+      'filter.amount': '金额',
+      'filter.order': '顺序',
+      'filter.desc': '最新',
+      'filter.asc': '最旧',
+      'common.loading': '正在加载数据...',
+      'pagination.showing': '显示',
+      'pagination.to': '到',
+      'pagination.from': '共',
+      'table.noTransactions': '未找到交易记录。',
+
 
       'admin.stat.activeMerchants': '活跃商户',
       'admin.stat.verifiedAccounts': '已验证账户',
