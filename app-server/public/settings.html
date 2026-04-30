@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/design-system.css?v=2">
     <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
     <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
     <style>
         .st-section {
@@ -125,16 +126,16 @@
         <!-- Business Profile -->
         <section class="st-section">
             <div class="st-section-header">
-                <h2><i class="fas fa-building"></i> Business Profile</h2>
-                <p class="st-desc">ข้อมูลธุรกิจที่จะแสดงในใบเสร็จและรายงาน</p>
+                <h2><i class="fas fa-building"></i> <span data-i18n="settings.profile.title">Business Profile</span></h2>
+                <p class="st-desc" data-i18n="settings.profile.desc">Business information shown on receipts and reports</p>
             </div>
             <div class="st-form-grid">
                 <div class="st-field">
-                    <label for="bizName">Business Name</label>
+                    <label for="bizName" data-i18n="settings.profile.name">Business Name</label>
                     <input type="text" id="bizName" placeholder="e.g. My Shop Co., Ltd.">
                 </div>
                 <div class="st-field">
-                    <label for="bizType">Business Type</label>
+                    <label for="bizType" data-i18n="settings.profile.type">Business Type</label>
                     <select id="bizType">
                         <option value="">— Select —</option>
                         <option value="individual">Individual / บุคคลธรรมดา</option>
@@ -144,36 +145,36 @@
                     </select>
                 </div>
                 <div class="st-field">
-                    <label for="bizEmail">Contact Email</label>
+                    <label for="bizEmail" data-i18n="settings.profile.email">Contact Email</label>
                     <input type="email" id="bizEmail" placeholder="billing@myshop.com">
                 </div>
                 <div class="st-field">
-                    <label for="bizPhone">Phone</label>
+                    <label for="bizPhone" data-i18n="settings.profile.phone">Phone</label>
                     <input type="tel" id="bizPhone" placeholder="+66 XX XXX XXXX">
                 </div>
                 <div class="st-field full">
-                    <label for="bizWebsite">Website URL</label>
+                    <label for="bizWebsite" data-i18n="settings.profile.website">Website URL</label>
                     <input type="url" id="bizWebsite" placeholder="https://www.myshop.com">
                 </div>
                 <div class="st-field full">
-                    <label for="bizAddress">Business Address</label>
+                    <label for="bizAddress" data-i18n="settings.profile.address">Business Address</label>
                     <textarea id="bizAddress" rows="2" placeholder="123/45 Sukhumvit Rd., Klongtoey, Bangkok 10110"></textarea>
                 </div>
             </div>
             <div class="st-actions">
-                <button class="st-btn primary" onclick="saveSettings('profile')"><i class="fas fa-save"></i> Save Profile</button>
+                <button class="st-btn primary" onclick="saveSettings('profile')"><i class="fas fa-save"></i> <span data-i18n="settings.profile.save">Save Profile</span></button>
             </div>
         </section>
 
         <!-- Payment Settings -->
         <section class="st-section">
             <div class="st-section-header">
-                <h2><i class="fas fa-credit-card"></i> Payment Settings</h2>
-                <p class="st-desc">ตั้งค่าเกี่ยวกับการรับชำระเงิน</p>
+                <h2><i class="fas fa-credit-card"></i> <span data-i18n="settings.payment.title">Payment Settings</span></h2>
+                <p class="st-desc" data-i18n="settings.payment.desc">Configure payment acceptance settings</p>
             </div>
             <div class="st-form-grid">
                 <div class="st-field">
-                    <label for="paymentCurrency">Default Currency</label>
+                    <label for="paymentCurrency" data-i18n="settings.payment.currency">Default Currency</label>
                     <select id="paymentCurrency">
                         <option value="THB" selected>THB — Thai Baht (฿)</option>
                         <option value="USD">USD — US Dollar ($)</option>
@@ -182,7 +183,7 @@
                     </select>
                 </div>
                 <div class="st-field">
-                    <label for="autoPayout">Auto Payout</label>
+                    <label for="autoPayout" data-i18n="settings.payment.autoPayout">Auto Payout</label>
                     <select id="autoPayout">
                         <option value="manual">Manual — ถอนเอง</option>
                         <option value="daily">Daily — ทุกวัน</option>
@@ -191,77 +192,77 @@
                     </select>
                 </div>
                 <div class="st-field full">
-                    <label for="paymentDesc">Default Payment Description</label>
+                    <label for="paymentDesc" data-i18n="settings.payment.defaultDesc">Default Payment Description</label>
                     <input type="text" id="paymentDesc" placeholder="e.g. Payment for order #">
                 </div>
             </div>
             <div class="st-toggle-row">
                 <div class="st-toggle-item">
                     <div class="st-toggle-text">
-                        <strong>Test Mode</strong>
-                        <span>เปิดโหมดทดสอบ — ไม่มีการเรียกเก็บเงินจริง</span>
+                        <strong data-i18n="settings.payment.testMode">Test Mode</strong>
+                        <span data-i18n="settings.payment.testModeDesc">Enable test mode — no real charges</span>
                     </div>
                     <label class="st-switch"><input type="checkbox" id="testMode"><span class="st-slider"></span></label>
                 </div>
                 <div class="st-toggle-item">
                     <div class="st-toggle-text">
-                        <strong>Auto-capture Payments</strong>
-                        <span>เก็บเงินอัตโนมัติทันทีที่ลูกค้าชำระ</span>
+                        <strong data-i18n="settings.payment.autoCapture">Auto-capture Payments</strong>
+                        <span data-i18n="settings.payment.autoCaptureDesc">Automatically capture payments when customer pays</span>
                     </div>
                     <label class="st-switch"><input type="checkbox" id="autoCapture" checked><span class="st-slider"></span></label>
                 </div>
             </div>
             <div class="st-actions">
-                <button class="st-btn primary" onclick="saveSettings('payment')"><i class="fas fa-save"></i> Save Payment Settings</button>
+                <button class="st-btn primary" onclick="saveSettings('payment')"><i class="fas fa-save"></i> <span data-i18n="settings.payment.save">Save Payment Settings</span></button>
             </div>
         </section>
 
         <!-- Notifications -->
         <section class="st-section">
             <div class="st-section-header">
-                <h2><i class="fas fa-bell"></i> Notifications</h2>
-                <p class="st-desc">ตั้งค่าการแจ้งเตือนทาง Email และ SMS</p>
+                <h2><i class="fas fa-bell"></i> <span data-i18n="settings.notif.title">Notifications</span></h2>
+                <p class="st-desc" data-i18n="settings.notif.desc">Configure Email and SMS notifications</p>
             </div>
             <div class="st-toggle-row">
                 <div class="st-toggle-item">
-                    <div class="st-toggle-text"><strong>Email — รายการสำเร็จ</strong><span>แจ้งเตือนทาง email ทุกครั้งที่มีการชำระเงินสำเร็จ</span></div>
+                    <div class="st-toggle-text"><strong data-i18n="settings.notif.emailSuccess">Email — Successful Payments</strong><span data-i18n="settings.notif.emailSuccessDesc">Notify via email for every successful payment</span></div>
                     <label class="st-switch"><input type="checkbox" id="notifEmailSuccess" checked><span class="st-slider"></span></label>
                 </div>
                 <div class="st-toggle-item">
-                    <div class="st-toggle-text"><strong>Email — รายการล้มเหลว</strong><span>แจ้งเตือนเมื่อการชำระเงินล้มเหลวหรือถูกปฏิเสธ</span></div>
+                    <div class="st-toggle-text"><strong data-i18n="settings.notif.emailFail">Email — Failed Payments</strong><span data-i18n="settings.notif.emailFailDesc">Notify when payment fails or is declined</span></div>
                     <label class="st-switch"><input type="checkbox" id="notifEmailFail" checked><span class="st-slider"></span></label>
                 </div>
                 <div class="st-toggle-item">
-                    <div class="st-toggle-text"><strong>Email — Payout Completed</strong><span>แจ้งเตือนเมื่อถอนเงินเข้าบัญชีธนาคารสำเร็จ</span></div>
+                    <div class="st-toggle-text"><strong data-i18n="settings.notif.emailPayout">Email — Payout Completed</strong><span data-i18n="settings.notif.emailPayoutDesc">Notify when withdrawal to bank succeeds</span></div>
                     <label class="st-switch"><input type="checkbox" id="notifEmailPayout" checked><span class="st-slider"></span></label>
                 </div>
                 <div class="st-toggle-item">
-                    <div class="st-toggle-text"><strong>Email — Daily Summary</strong><span>รับสรุปรายวันของรายการธุรกรรมทั้งหมด</span></div>
+                    <div class="st-toggle-text"><strong data-i18n="settings.notif.emailDaily">Email — Daily Summary</strong><span data-i18n="settings.notif.emailDailyDesc">Receive daily summary of all transactions</span></div>
                     <label class="st-switch"><input type="checkbox" id="notifDailySummary"><span class="st-slider"></span></label>
                 </div>
                 <div class="st-toggle-item">
-                    <div class="st-toggle-text"><strong>SMS — High-value Transactions</strong><span>แจ้งเตือนทาง SMS เมื่อมีรายการที่มูลค่าสูงเกิน ฿10,000</span></div>
+                    <div class="st-toggle-text"><strong data-i18n="settings.notif.smsHigh">SMS — High-value Transactions</strong><span data-i18n="settings.notif.smsHighDesc">SMS alert for transactions over ฿10,000</span></div>
                     <label class="st-switch"><input type="checkbox" id="notifSmsHighValue"><span class="st-slider"></span></label>
                 </div>
                 <div class="st-toggle-item">
-                    <div class="st-toggle-text"><strong>SMS — Security Alerts</strong><span>แจ้งเตือนเมื่อมีกิจกรรมที่น่าสงสัยในบัญชี</span></div>
+                    <div class="st-toggle-text"><strong data-i18n="settings.notif.smsSecurity">SMS — Security Alerts</strong><span data-i18n="settings.notif.smsSecurityDesc">Alert for suspicious account activity</span></div>
                     <label class="st-switch"><input type="checkbox" id="notifSmsSecurity" checked><span class="st-slider"></span></label>
                 </div>
             </div>
             <div class="st-actions">
-                <button class="st-btn primary" onclick="saveSettings('notifications')"><i class="fas fa-save"></i> Save Notification Settings</button>
+                <button class="st-btn primary" onclick="saveSettings('notifications')"><i class="fas fa-save"></i> <span data-i18n="settings.notif.save">Save Notification Settings</span></button>
             </div>
         </section>
 
         <!-- Display -->
         <section class="st-section">
             <div class="st-section-header">
-                <h2><i class="fas fa-palette"></i> Display & Localization</h2>
-                <p class="st-desc">ตั้งค่าภาษา โซนเวลา และรูปแบบการแสดงผล</p>
+                <h2><i class="fas fa-palette"></i> <span data-i18n="settings.display.title">Display & Localization</span></h2>
+                <p class="st-desc" data-i18n="settings.display.desc">Configure language, timezone, and display format</p>
             </div>
             <div class="st-form-grid">
                 <div class="st-field">
-                    <label for="displayLang">Dashboard Language</label>
+                    <label for="displayLang" data-i18n="settings.display.lang">Dashboard Language</label>
                     <select id="displayLang">
                         <option value="th" selected>ภาษาไทย</option>
                         <option value="en">English</option>
@@ -269,7 +270,7 @@
                     </select>
                 </div>
                 <div class="st-field">
-                    <label for="displayTimezone">Timezone</label>
+                    <label for="displayTimezone" data-i18n="settings.display.timezone">Timezone</label>
                     <select id="displayTimezone">
                         <option value="Asia/Bangkok" selected>Asia/Bangkok (UTC+7)</option>
                         <option value="Asia/Shanghai">Asia/Shanghai (UTC+8)</option>
@@ -280,7 +281,7 @@
                     </select>
                 </div>
                 <div class="st-field">
-                    <label for="displayDateFormat">Date Format</label>
+                    <label for="displayDateFormat" data-i18n="settings.display.dateFormat">Date Format</label>
                     <select id="displayDateFormat">
                         <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
                         <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -288,7 +289,7 @@
                     </select>
                 </div>
                 <div class="st-field">
-                    <label for="displayNumberFormat">Number Format</label>
+                    <label for="displayNumberFormat" data-i18n="settings.display.numberFormat">Number Format</label>
                     <select id="displayNumberFormat">
                         <option value="th" selected>1,234,567.89 (Thai)</option>
                         <option value="en">1,234,567.89 (International)</option>
@@ -297,27 +298,27 @@
                 </div>
             </div>
             <div class="st-actions">
-                <button class="st-btn primary" onclick="saveSettings('display')"><i class="fas fa-save"></i> Save Display Settings</button>
+                <button class="st-btn primary" onclick="saveSettings('display')"><i class="fas fa-save"></i> <span data-i18n="settings.display.save">Save Display Settings</span></button>
             </div>
         </section>
 
         <!-- Danger Zone -->
         <section class="st-section danger">
             <div class="st-section-header">
-                <h2><i class="fas fa-exclamation-triangle"></i> Account Actions</h2>
-                <p class="st-desc">การดำเนินการที่มีผลกระทบต่อบัญชีของคุณ</p>
+                <h2><i class="fas fa-exclamation-triangle"></i> <span data-i18n="settings.danger.title">Account Actions</span></h2>
+                <p class="st-desc" data-i18n="settings.danger.desc">Actions that affect your account</p>
             </div>
             <div class="st-danger-items">
                 <div class="st-danger-item">
-                    <div><strong>Export All Data</strong><span>ดาวน์โหลดข้อมูลทั้งหมดของคุณเป็นไฟล์ CSV</span></div>
+                    <div><strong data-i18n="settings.danger.export">Export All Data</strong><span data-i18n="settings.danger.exportDesc">Download all your data as CSV</span></div>
                     <button class="st-btn outline" onclick="showToast('Export จะพร้อมเร็วๆ นี้')"><i class="fas fa-download"></i> Export</button>
                 </div>
                 <div class="st-danger-item">
-                    <div><strong>Deactivate Account</strong><span>ปิดการใช้งานบัญชีชั่วคราว — สามารถเปิดใช้งานอีกครั้งได้</span></div>
+                    <div><strong data-i18n="settings.danger.deactivate">Deactivate Account</strong><span data-i18n="settings.danger.deactivateDesc">Temporarily disable account — can be reactivated</span></div>
                     <button class="st-btn outline warning" onclick="confirmAction('deactivate')"><i class="fas fa-pause-circle"></i> Deactivate</button>
                 </div>
                 <div class="st-danger-item">
-                    <div><strong>Delete Account</strong><span>ลบบัญชีอย่างถาวร — ไม่สามารถเรียกคืนข้อมูลได้</span></div>
+                    <div><strong data-i18n="settings.danger.delete">Delete Account</strong><span data-i18n="settings.danger.deleteDesc">Permanently delete account — data cannot be recovered</span></div>
                     <button class="st-btn outline danger" onclick="confirmAction('delete')"><i class="fas fa-trash-alt"></i> Delete</button>
                 </div>
             </div>
