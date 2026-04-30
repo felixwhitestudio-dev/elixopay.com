@@ -384,6 +384,7 @@ body.ep-body {
   flex: 1;
   padding: 12px 10px;
   overflow-y: auto;
+  background: transparent !important;
 }
 
 .ep-sidebar-section {
