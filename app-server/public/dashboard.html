@@ -524,7 +524,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            <!-- Left Column: Wallet Card (Modern) -->
+            <!-- Left Column: Revenue Overview -->
             <div class="lg:col-span-2 space-y-8 reveal">
                 <!-- KYC Warning Banner -->
                 <div class="glass-panel border-orange-500/50 bg-orange-900/20 p-6 flex flex-col sm:flex-row items-center justify-between"
@@ -779,24 +779,24 @@
                     <h3 class="text-lg font-bold text-slate-100 mb-4" data-i18n="dashboard.quick_actions">Quick Actions
                     </h3>
                     <div class="grid grid-cols-2 gap-3">
-                        <button id="btn-payout" onclick="openWalletModal('withdraw')"
+                        <a id="btn-settlement" href="/payout.html"
                             class="group flex flex-col items-center justify-center p-3 glass-panel-light hover:bg-purple-900/20 rounded-xl transition">
                             <div
                                 class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                                <i class="fas fa-university text-purple-300"></i>
+                                <i class="fas fa-file-invoice text-purple-300"></i>
                             </div>
                             <span class="text-sm font-medium text-slate-200"
-                                data-i18n="dashboard.actions.payout">Payout</span>
-                        </button>
+                                data-i18n="dashboard.actions.settlement">Settlement</span>
+                        </a>
 
-                        <a href="javascript:void(0)" onclick="alert('Settlement feature is coming soon!')"
-                            class="group flex flex-col items-center justify-center p-3 bg-slate-900/40 rounded-xl transition cursor-not-allowed opacity-60">
+                        <a href="/transactions.html"
+                            class="group flex flex-col items-center justify-center p-3 glass-panel-light hover:bg-orange-900/20 rounded-xl transition">
                             <div
-                                class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mb-2 transition">
-                                <i class="fas fa-paper-plane text-slate-500"></i>
+                                class="w-10 h-10 rounded-full bg-orange-900/50 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                                <i class="fas fa-arrow-right-arrow-left text-orange-300"></i>
                             </div>
-                            <span class="text-sm font-medium text-slate-400"
-                                data-i18n="dashboard.actions.settle">Settlement (Soon)</span>
+                            <span class="text-sm font-medium text-slate-200"
+                                data-i18n="nav.transactions">Transactions</span>
                         </a>
 
                         <button id="btn-manage-bank" onclick="openBankModal()"

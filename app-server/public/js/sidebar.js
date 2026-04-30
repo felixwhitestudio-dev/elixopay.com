@@ -47,8 +47,8 @@
             <span data-i18n="nav.billing">Billing</span>
           </a>
           <a href="/payout.html" class="ep-sidebar-link" data-page="payout">
-            <i class="fas fa-building-columns"></i>
-            <span data-i18n="nav.payout">Payout</span>
+            <i class="fas fa-file-invoice"></i>
+            <span data-i18n="nav.settlement">Settlement</span>
           </a>
         </div>
 
@@ -163,17 +163,17 @@
     const notifs = {
       th: [
         { id: 1, icon: 'fa-check-circle', color: '#22c55e', title: 'KYC อนุมัติแล้ว', desc: 'เอกสารยืนยันตัวตนของคุณได้รับการอนุมัติ', time: '2 ชม. ที่แล้ว', read: false },
-        { id: 2, icon: 'fa-money-bill-transfer', color: '#7c3aed', title: 'ถอนเงินสำเร็จ', desc: '฿5,000 ถูกโอนเข้าบัญชีธนาคาร', time: '5 ชม. ที่แล้ว', read: false },
+        { id: 2, icon: 'fa-credit-card', color: '#7c3aed', title: 'รายการชำระเงินสำเร็จ', desc: '฿5,000 ชำระเงินเข้าบัญชีร้านค้าเรียบร้อย', time: '5 ชม. ที่แล้ว', read: false },
         { id: 3, icon: 'fa-shield-halved', color: '#3b82f6', title: 'อัปเกรดความปลอดภัย', desc: 'แนะนำเปิด 2FA เพื่อความปลอดภัย', time: '1 วัน ที่แล้ว', read: true },
       ],
       en: [
         { id: 1, icon: 'fa-check-circle', color: '#22c55e', title: 'KYC Approved', desc: 'Your identity documents have been verified', time: '2h ago', read: false },
-        { id: 2, icon: 'fa-money-bill-transfer', color: '#7c3aed', title: 'Withdrawal Successful', desc: '฿5,000 transferred to your bank', time: '5h ago', read: false },
+        { id: 2, icon: 'fa-credit-card', color: '#7c3aed', title: 'Payment Received', desc: '฿5,000 settled to your bank account', time: '5h ago', read: false },
         { id: 3, icon: 'fa-shield-halved', color: '#3b82f6', title: 'Security Upgrade', desc: 'Enable 2FA for better security', time: '1d ago', read: true },
       ],
       zh: [
         { id: 1, icon: 'fa-check-circle', color: '#22c55e', title: 'KYC 已通过', desc: '您的身份文件已通过验证', time: '2小时前', read: false },
-        { id: 2, icon: 'fa-money-bill-transfer', color: '#7c3aed', title: '提款成功', desc: '฿5,000 已转入银行', time: '5小时前', read: false },
+        { id: 2, icon: 'fa-credit-card', color: '#7c3aed', title: '收款成功', desc: '฿5,000 已结算至银行账户', time: '5小时前', read: false },
         { id: 3, icon: 'fa-shield-halved', color: '#3b82f6', title: '安全升级', desc: '建议开启2FA', time: '1天前', read: true },
       ]
     };
