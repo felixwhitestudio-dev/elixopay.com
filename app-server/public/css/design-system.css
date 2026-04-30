@@ -183,23 +183,69 @@ body.ep-body.ep-light .ep-stat-card-icon.red {
   color: #dc2626;
 }
 
-/* --- Light Mode: Sidebar Active --- */
+/* --- Light Mode: Sidebar — KEEP DARK (forced dark sidebar) --- */
+body.ep-body.ep-light .ep-sidebar {
+  background: #0d0819 !important;
+  border-right-color: rgba(124, 58, 237, 0.15) !important;
+  box-shadow: none !important;
+}
 body.ep-body.ep-light .ep-sidebar-link.active {
-  color: #7c3aed;
-  background: rgba(124, 58, 237, 0.06);
+  color: #a78bfa !important;
+  background: rgba(124, 58, 237, 0.12) !important;
 }
 body.ep-body.ep-light .ep-sidebar-link {
-  color: #475569;
+  color: #94a3b8 !important;
 }
 body.ep-body.ep-light .ep-sidebar-link:hover {
-  color: #1e293b;
-  background: rgba(0, 0, 0, 0.04);
+  color: #f1f5f9 !important;
+  background: rgba(124, 58, 237, 0.06) !important;
 }
 body.ep-body.ep-light .ep-sidebar-label {
-  color: #94a3b8;
+  color: #64748b !important;
 }
 body.ep-body.ep-light .ep-sidebar-user-email {
-  color: #64748b;
+  color: #64748b !important;
+}
+body.ep-body.ep-light .ep-sidebar-user-name {
+  color: #f1f5f9 !important;
+}
+body.ep-body.ep-light .ep-sidebar-header {
+  border-bottom-color: rgba(124, 58, 237, 0.15) !important;
+}
+body.ep-body.ep-light .ep-sidebar-footer {
+  border-top-color: rgba(124, 58, 237, 0.15) !important;
+}
+body.ep-body.ep-light .ep-sidebar-logo-text {
+  color: #f1f5f9 !important;
+}
+body.ep-body.ep-light .ep-sidebar-logout {
+  color: #94a3b8 !important;
+  border-color: rgba(124, 58, 237, 0.15) !important;
+}
+body.ep-body.ep-light .ep-sidebar-logout:hover {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+body.ep-body.ep-light .ep-sidebar-user {
+  background: rgba(124, 58, 237, 0.06) !important;
+}
+body.ep-body.ep-light .ep-sidebar .ep-theme-toggle {
+  color: #94a3b8 !important;
+}
+body.ep-body.ep-light .ep-sidebar .ep-lang-btn {
+  color: #94a3b8 !important;
+  border-color: rgba(124, 58, 237, 0.15) !important;
+}
+body.ep-body.ep-light .ep-sidebar .ep-lang-btn.active {
+  color: #a78bfa !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+}
+body.ep-body.ep-light .ep-mobile-header {
+  background: #0d0819 !important;
+  border-bottom-color: rgba(124, 58, 237, 0.15) !important;
+}
+body.ep-body.ep-light .ep-mobile-header * {
+  color: #f1f5f9 !important;
 }
 
 /* --- Light Mode: Card Header --- */
@@ -275,11 +321,11 @@ body.ep-body {
   min-height: 100vh;
 }
 
-/* -- Sidebar -- */
+/* -- Sidebar (always dark, regardless of theme) -- */
 .ep-sidebar {
   width: var(--ep-sidebar-width);
-  background: var(--ep-bg-sidebar);
-  border-right: 1px solid var(--ep-border);
+  background: #0d0819 !important;
+  border-right: 1px solid rgba(124, 58, 237, 0.15) !important;
   position: fixed;
   top: 0;
   left: 0;
@@ -290,6 +336,7 @@ body.ep-body {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
   overflow-x: hidden;
+  color: #f1f5f9 !important;
 }
 
 .ep-sidebar-header {
