@@ -19,7 +19,7 @@
       <nav class="ep-sidebar-nav">
         <!-- OVERVIEW -->
         <div class="ep-sidebar-section">
-          <span class="ep-sidebar-label">Overview</span>
+          <span class="ep-sidebar-label" data-i18n="admin.sidebar.overview">Overview</span>
           <a href="/admin-dashboard.html" class="ep-sidebar-link" data-page="admin-dashboard">
             <i class="fas fa-gauge-high"></i>
             <span data-i18n="admin.sidebar.dashboard">Dashboard</span>
@@ -32,7 +32,7 @@
 
         <!-- FINANCE -->
         <div class="ep-sidebar-section">
-          <span class="ep-sidebar-label">Finance</span>
+          <span class="ep-sidebar-label" data-i18n="admin.sidebar.finance">Finance</span>
           <a href="/admin-payouts.html" class="ep-sidebar-link" data-page="admin-payouts">
             <i class="fas fa-money-bill-transfer"></i>
             <span data-i18n="admin.sidebar.payouts">Payouts</span>
@@ -45,7 +45,7 @@
 
         <!-- LINKS -->
         <div class="ep-sidebar-section">
-          <span class="ep-sidebar-label">Quick Links</span>
+          <span class="ep-sidebar-label" data-i18n="admin.sidebar.quick_links">Quick Links</span>
           <a href="/dashboard.html" class="ep-sidebar-link">
             <i class="fas fa-arrow-left"></i>
             <span data-i18n="admin.sidebar.goHome">Merchant View</span>
@@ -58,7 +58,7 @@
         <div class="ep-sidebar-theme-row">
           <button class="ep-theme-toggle" id="ep-theme-toggle" onclick="window.epToggleTheme && window.epToggleTheme()" title="Toggle theme">
             <i class="fas fa-moon" id="ep-theme-icon-admin"></i>
-            <span id="ep-theme-label-admin">Dark Mode</span>
+            <span id="ep-theme-label-admin" data-i18n="sidebar.dark_mode">Dark Mode</span>
           </button>
         </div>
 
@@ -83,7 +83,7 @@
         </div>
         <button class="ep-sidebar-logout" onclick="window.epAdminLogout()">
           <i class="fas fa-arrow-right-from-bracket"></i>
-          <span>Sign Out</span>
+          <span data-i18n="nav.signout">Sign Out</span>
         </button>
       </div>
     </aside>
