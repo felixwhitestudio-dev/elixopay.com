@@ -70,7 +70,7 @@ export const executeExchange = async (userId: number, type: 'BUY' | 'SELL', amou
 
     return await prisma.$transaction(async (tx) => {
         const wallet = await tx.wallet.findUnique({ where: { userId } });
-        if (!wallet) throw new AppError('Wallet not found', 404);
+        if (!wallet) throw new AppError('Merchant account not found', 404);
 
         let amountOut = 0;
         let rateUsed = 0;

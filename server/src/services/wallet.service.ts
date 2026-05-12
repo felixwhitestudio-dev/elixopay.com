@@ -125,7 +125,7 @@ export const transfer = async (senderId: number, recipientIdentifier: string, am
             const walletId = parseInt(walletIdStr, 10);
 
             if (isNaN(walletId)) {
-                throw new AppError('Invalid Wallet ID format', 400);
+                throw new AppError('Invalid Account ID format', 400);
             }
 
             const recipientWallet = await tx.wallet.findUnique({

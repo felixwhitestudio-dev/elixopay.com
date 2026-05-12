@@ -1149,7 +1149,7 @@
                     if (userEmail) userEmail.textContent = user.email;
                     if (userInitial) userInitial.textContent = (user.firstName || user.email).charAt(0).toUpperCase();
 
-                    // Update Wallet Balance from /me response
+                    // Update Merchant Account Balance from /me response
                     const walletAddress = document.getElementById('wallet-address');
                     if (walletAddress) walletAddress.textContent = user.merchantId || 'Not generated';
 
@@ -1239,7 +1239,7 @@
             }
         }
 
-        // Load Wallet Data
+        // Load Account Data
         async function loadWallet() {
             await loadDashboardData();
         }
@@ -1707,7 +1707,7 @@
         }
 
 
-        // --- Wallet Modal Logic ---
+        // --- Account Modal Logic ---
         const modal = document.getElementById('wallet-modal');
         const modalContent = document.getElementById('wallet-modal-content');
         let walletAction = '';
@@ -2043,7 +2043,7 @@
                         // Transfer logic
                         // Transfer logic
                         // url = '/api/v1/users/wallet/transfer'; 
-                        throw new Error('Peer-to-peer transfers are currently disabled.');
+                        throw new Error('Direct transfers between accounts are currently disabled.');
                         // Ensure we grab the input correctly
                         const recipientVal = form.to_wallet_address ? form.to_wallet_address.value : '';
 
@@ -2056,7 +2056,7 @@
 
                     if (!url) throw new Error('Invalid action');
 
-                    // --- SECURITY: Re-authentication for Withdrawals ---
+                    // --- SECURITY: Re-authentication for Transfers ---
                     if (walletAction === 'withdraw' && window.ElixopaySecurity) {
                         const actionDesc = window.ElixopayI18n ? window.ElixopayI18n.t('modal.action.withdraw') || 'withdraw funds' : 'withdraw funds';
                         // Wait for password verification
