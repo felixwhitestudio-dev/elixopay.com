@@ -12,7 +12,8 @@ router.use(protect);
 router.get('/', walletController.getMyWallet);
 router.get('/transactions', walletController.getMyTransactions);
 router.post('/deposit', walletController.deposit);
-router.post('/withdraw', walletController.withdraw);
+// DISABLED: Direct Payment Model — no withdrawals needed
+// router.post('/withdraw', walletController.withdraw);
 
 // ============================================================
 // 🚫 P2P Transfer — DISABLED for banking compliance

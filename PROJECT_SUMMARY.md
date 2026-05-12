@@ -22,7 +22,7 @@ Elixopay is a modern, secure payment gateway designed for high-performance and d
 2.  **Dashboard**:
     - Real-time transaction tracking.
     - Wallet management (Deeposit/Withdraw/Transfer).
-    - Dynamic currency exchange (THB/USDT).
+    - Payment processing via bank APIs.
     - Analytics and reporting.
 3.  **Security**:
     - JWT Authentication.
@@ -38,7 +38,7 @@ Elixopay is a modern, secure payment gateway designed for high-performance and d
 - **Internationalization**: Full translation support across all pages.
 - **Wallet Features**: 
   - Instant Deposit via PromptPay (2-step verification).
-  - USDT/THB Exchange logic.
+  - Settlement and fee management.
   - Transfer system between users.
 - **Backend Enhancements**:
   - Implementation of email notification system.

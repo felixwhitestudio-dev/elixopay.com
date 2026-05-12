@@ -211,7 +211,7 @@ export async function sendPayoutApprovedEmail(to: string, firstName: string, amo
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    logger.info('[Mailer] Transfer Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Settlement Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Transfer Rejected ───────────────────────────────────────
@@ -235,7 +235,7 @@ export async function sendPayoutRejectedEmail(to: string, firstName: string, amo
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    logger.info('[Mailer] Transfer Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Settlement Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Settlement Notification ──────────────────────────────

@@ -8,9 +8,10 @@ const router = express.Router();
 router.use(protect);
 router.use(restrictTo('admin'));
 
-router.get('/withdrawals/pending', adminController.getPendingWithdrawals);
-router.post('/withdrawals/:id/approve', adminController.approveWithdrawal);
-router.post('/withdrawals/:id/reject', adminController.rejectWithdrawal);
+// DISABLED: Withdrawal management removed — Direct Payment Model
+// router.get('/withdrawals/pending', adminController.getPendingWithdrawals);
+// router.post('/withdrawals/:id/approve', adminController.approveWithdrawal);
+// router.post('/withdrawals/:id/reject', adminController.rejectWithdrawal);
 
 router.get('/users', adminController.getAllUsers);
 router.patch('/users/:id/status', adminController.toggleUserStatus);

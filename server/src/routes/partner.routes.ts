@@ -25,12 +25,10 @@ router.get('/network', protect, partnerController.getPartnerNetwork);
  */
 router.get('/payouts', protect, partnerController.getPayoutHistory);
 
-/**
- * @route   POST /api/v1/partners/withdraw
- * @desc    Request a withdrawal
- * @access  Private
+/*
+ * DISABLED: Direct Payment Model — partner commissions go directly to bank
+ * router.post('/withdraw', protect, partnerController.requestWithdrawal);
  */
-router.post('/withdraw', protect, partnerController.requestWithdrawal);
 
 /**
  * @route   GET /api/v1/partners/team
