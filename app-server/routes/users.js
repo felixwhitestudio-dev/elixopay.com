@@ -204,55 +204,13 @@ router.delete('/bank-accounts/:id', authenticate, async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/v1/users/wallet/withdraw
- * @desc    Withdraw money from current user's wallet
- * @access  Private
+/*
+ * DISABLED: Withdraw route removed — Direct Payment Model
+ * In Elixopay's model, money flows directly from customer to merchant's bank account.
+ * Elixopay is a technology provider and does NOT hold merchant funds.
+ * Route: POST /api/v1/users/wallet/withdraw
+ * To re-enable, uncomment this route.
  */
-router.post('/wallet/withdraw', authenticate, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { amount, currency, bank_account_id } = req.body;
-
-    if (!amount || isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ success: false, error: { message: 'Invalid amount' } });
-    }
-
-    // Check balance and currency
-    const walletRes = await db.query('SELECT id, balance, currency FROM wallets WHERE user_id = $1', [userId]);
-    if (walletRes.rows.length === 0) {
-      return res.status(404).json({ success: false, error: { message: 'Wallet not found' } });
-    }
-    const wallet = walletRes.rows[0];
-    if (currency && currency !== wallet.currency) {
-      return res.status(400).json({ success: false, error: { message: 'Currency mismatch' } });
-    }
-    if (parseFloat(wallet.balance) < amount) {
-      return res.status(400).json({ success: false, error: { message: 'Insufficient balance' } });
-    }
-
-    // Get Bank Account Details (if provided)
-    let description = 'Withdraw from wallet';
-    if (bank_account_id) {
-      const bankRes = await db.query('SELECT * FROM user_bank_accounts WHERE id = $1 AND user_id = $2', [bank_account_id, userId]);
-      if (bankRes.rows.length > 0) {
-        const bank = bankRes.rows[0];
-        description = `Withdraw to ${bank.bank_name} (${bank.account_number})`;
-      } else {
-        return res.status(400).json({ success: false, error: { message: 'Invalid bank account' } });
-      }
-    }
-
-    const result = await db.query('UPDATE wallets SET balance = balance - $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2 RETURNING *', [amount, userId]);
-
-    // Log transaction with updated description
-    await db.query('INSERT INTO transaction_logs (wallet_id, user_id, type, amount, currency, description) VALUES ($1, $2, $3, $4, $5, $6)', [wallet.id, userId, 'withdraw', amount, wallet.currency, description]);
-
-    res.json({ success: true, data: { wallet: result.rows[0] } });
-  } catch (error) {
-    res.status(500).json({ success: false, error: { message: error.message } });
-  }
-});
 
 /*
  * DISABLED: Crypto features removed for banking compliance
