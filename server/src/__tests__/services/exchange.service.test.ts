@@ -160,7 +160,7 @@ describe('Exchange Service', () => {
                 .rejects.toThrow('Insufficient USDT balance');
         });
 
-        it('should throw error for non-existent wallet', async () => {
+        it('should throw error for non-existent merchant account', async () => {
             mockPrisma.systemSetting.findUnique
                 .mockResolvedValueOnce({ key: 'exchange_rate_mode', value: 'manual' })
                 .mockResolvedValueOnce({ key: 'exchange_rate_usdt_thb', value: '35.00' });

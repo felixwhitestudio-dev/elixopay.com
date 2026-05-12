@@ -316,7 +316,7 @@
         <div class="toc-item"><span>1. Introduction & Authentication</span><span class="page">3</span></div>
         <div class="toc-item"><span>2. Create Payment</span><span class="page">5</span></div>
         <div class="toc-item"><span>3. Check Payment Status</span><span class="page">8</span></div>
-        <div class="toc-item"><span>4. Create Payout (Withdrawal)</span><span class="page">10</span></div>
+        <div class="toc-item"><span>4. Direct Bank Transfer</span><span class="page">10</span></div>
         <div class="toc-item"><span>5. Webhooks</span><span class="page">12</span></div>
     </div>
 
@@ -501,10 +501,10 @@
 }</code></pre>
     </div>
 
-    <!-- 4. Create Payout -->
+    <!-- 4. Direct Bank Transfer -->
     <div class="section">
-        <h2>4. Create Payout (Withdrawal)</h2>
-        <p>Use this endpoint to request a withdrawal from your Wallet. The funds will be transferred to your bound bank
+        <h2>4. Direct Bank Transfer</h2>
+        <p>Use this endpoint to request a transfer from your Merchant Account. The funds will be transferred to your bound bank
             account.</p>
 
         <div class="endpoint">
@@ -528,7 +528,7 @@
                                 class="type">Number</span></div>
                     </td>
                     <td>
-                        <p>The amount to withdraw (must have sufficient balance including fees), e.g., 500.00.</p>
+                        <p>The amount to transfer (must have sufficient balance including fees), e.g., 500.00.</p>
                     </td>
                 </tr>
             </tbody>
@@ -547,7 +547,7 @@
   "success": true,
   "transaction": {
     "id": "txn_89012cd",
-    "type": "WITHDRAWAL",
+    "type": "TRANSFER",
     "amount": 500.00,
     "fee": 15.00,
     "netAmount": 485.00,

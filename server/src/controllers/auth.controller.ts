@@ -130,7 +130,7 @@ export const me = catchAsync(async (req: Request, res: Response, next: NextFunct
     // @ts-ignore - User is attached by protect middleware
     let user = req.user;
 
-    // Auto-generate wallet if missing (fail-safe for legacy or incomplete accounts)
+    // Auto-generate merchant account if missing (fail-safe for legacy or incomplete accounts)
     if (!user.wallet) {
         try {
             const newWallet = await prisma.wallet.create({
@@ -138,7 +138,7 @@ export const me = catchAsync(async (req: Request, res: Response, next: NextFunct
             });
             user.wallet = newWallet;
         } catch (err) {
-            logger.error('Failed to auto-generate wallet in /me endpoint:', err);
+            logger.error('Failed to auto-generate merchant account in /me endpoint:', err);
         }
     }
 

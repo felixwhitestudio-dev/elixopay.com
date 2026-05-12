@@ -4,89 +4,51 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Elixopay Payout Management" />
-    <title>Payout Management - Elixopay Admin</title>
+    <meta name="description" content="Elixopay Transfer Management" />
+    <title>Transfer Management - Elixopay Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/design-system.css?v=2">
     <script src="/js/api-config.js"></script>
     <script src="/js/auth-guard.js" data-require-role="admin"></script>
+    <style>
+        .bg-gray-50, .bg-white { background-color: var(--ep-bg-card) !important; color: var(--ep-text-primary) !important; }
+        .text-gray-900, .text-gray-800 { color: var(--ep-text-primary) !important; }
+        .text-gray-700, .text-gray-600 { color: var(--ep-text-secondary) !important; }
+        .text-gray-500 { color: var(--ep-text-muted) !important; }
+        .border-gray-200, .border-gray-300 { border-color: var(--ep-border) !important; }
+        .shadow, .shadow-sm { box-shadow: var(--ep-shadow-sm) !important; }
+        .bg-green-50 { background: rgba(34, 197, 94, 0.08) !important; }
+        .bg-yellow-50 { background: rgba(245, 158, 11, 0.08) !important; }
+        .bg-red-50 { background: rgba(239, 68, 68, 0.08) !important; }
+        .bg-blue-50 { background: rgba(59, 130, 246, 0.08) !important; }
+        table thead { background: rgba(124, 58, 237, 0.04) !important; }
+        table th { color: var(--ep-text-muted) !important; border-color: var(--ep-border) !important; }
+        table td { color: var(--ep-text-secondary) !important; border-color: var(--ep-border) !important; }
+        table tbody tr:hover { background: var(--ep-bg-hover) !important; }
+        select, input { background-color: var(--ep-bg-base) !important; color: var(--ep-text-primary) !important; border-color: var(--ep-border) !important; }
+    </style>
 </head>
 
-<body class="bg-gray-50">
-    <div class="flex h-screen bg-gray-50">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
-            <div class="h-16 flex items-center px-6 border-b border-gray-200">
-                <h1 class="text-xl font-bold text-red-600 flex items-center">
-                    <i class="fas fa-shield-alt mr-2"></i> Admin
-                </h1>
-            </div>
-            <nav class="flex-1 px-4 py-6 space-y-2">
-                <button onclick="switchTab('payouts')" id="nav-payouts"
-                    class="w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-red-50 text-red-700">
-                    <i class="fas fa-money-bill-wave w-5 mr-3"></i> Payouts
-                </button>
-                <button onclick="switchTab('users')" id="nav-users"
-                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
-                    <i class="fas fa-users w-5 mr-3"></i> Users
-                </button>
-                <button onclick="switchTab('settings')" id="nav-settings"
-                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
-                    <i class="fas fa-cog w-5 mr-3"></i> Settings
-                </button>
-                <button onclick="switchTab('transactions')" id="nav-transactions"
-                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
-                    <i class="fas fa-list-ul w-5 mr-3"></i> Transactions
-                </button>
-                <button onclick="switchTab('audit')" id="nav-audit"
-                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition">
-                    <i class="fas fa-shield-alt w-5 mr-3"></i> Audit Logs
-                </button>
-            </nav>
-            <div class="p-4 border-t border-gray-200">
-                <a href="/dashboard.html"
-                    class="w-full flex items-center justify-center px-4 py-2 mb-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
-                </a>
-                <div class="flex items-center mb-4">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold mr-3"
-                        id="user-initial">A</div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-700 truncate" id="user-name">Admin</p>
-                        <p class="text-xs text-gray-500">Super User</p>
-                    </div>
-                </div>
-                <button onclick="logout()"
-                    class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Mobile Header -->
-            <header class="md:hidden bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
-                <h1 class="text-lg font-bold text-red-600">Admin Panel</h1>
-                <button onclick="logout()" class="text-gray-500"><i class="fas fa-sign-out-alt"></i></button>
-            </header>
-
-            <main class="flex-1 overflow-auto p-8">
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
 
                 <!-- Payouts View -->
                 <div id="view-payouts">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Payout Requests</h2>
-                            <p class="text-gray-600">Manage pending withdrawals</p>
+                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.payouts.pageTitle">Transfer Requests</h2>
+                            <p class="text-gray-600" data-i18n="admin.payouts.pageDesc">Manage pending transfer requests</p>
                         </div>
                         <button onclick="loadPendingWithdrawals()"
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                            <i class="fas fa-sync-alt mr-2"></i> <span data-i18n="admin.common.refresh">Refresh</span>
                         </button>
-                        <button onclick="exportTableToCSV('payouts-table-id', 'Payout_Requests')"
+                        <button onclick="exportTableToCSV('payouts-table-id', 'Transfer_Requests')"
                             class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
-                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                            <i class="fas fa-file-csv mr-2"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span>
                         </button>
                     </div>
 
@@ -96,19 +58,16 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date</th>
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.date">Date</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            User</th>
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.user">User</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Amount</th>
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.amount">Amount</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.payouts.details">
                                             Details</th>
                                         <th
-                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.payouts.actions">
                                             Actions</th>
                                     </tr>
                                 </thead>
@@ -124,16 +83,16 @@
                 <div id="view-users" class="hidden">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
-                            <p class="text-gray-600">View and manage registered users</p>
+                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.users.title">User Management</h2>
+                            <p class="text-gray-600" data-i18n="admin.users.desc">View and manage registered users</p>
                         </div>
                         <button onclick="loadUsers()"
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                            <i class="fas fa-sync-alt mr-2"></i> <span data-i18n="admin.common.refresh">Refresh</span>
                         </button>
                         <button onclick="exportTableToCSV('users-table-id', 'User_Management')"
                             class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
-                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                            <i class="fas fa-file-csv mr-2"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span>
                         </button>
                     </div>
 
@@ -143,22 +102,20 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.user">
                                             User</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Role</th>
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.users.role">Role</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.users.balance">
                                             Balance</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Status</th>
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.status">Status</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.users.joined">
                                             Joined</th>
                                         <th
-                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.payouts.actions">
                                             Actions</th>
                                     </tr>
                                 </thead>
@@ -174,12 +131,12 @@
                 <div id="view-settings" class="hidden">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">System Settings</h2>
-                            <p class="text-gray-600">Configure system parameters and fees</p>
+                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.settings.title">System Settings</h2>
+                            <p class="text-gray-600" data-i18n="admin.settings.desc">Configure system parameters and fees</p>
                         </div>
                         <button onclick="saveSettings()"
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm">
-                            <i class="fas fa-save mr-2"></i> Save Changes
+                            <i class="fas fa-save mr-2"></i> <span data-i18n="admin.settings.save">Save Changes</span>
                         </button>
                     </div>
 
@@ -187,19 +144,11 @@
                         <!-- System Reserve -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:col-span-2">
                             <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-university text-purple-600 mr-2"></i> System Reserve
-                                (Liquidity)
+                                <i class="fas fa-university text-purple-600 mr-2"></i> <span data-i18n="admin.settings.reserve">Settlement Reserve (THB)</span>
                             </h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                                    <p class="text-sm text-gray-500 mb-1">USDT Reserve</p>
-                                    <p class="text-2xl font-bold text-green-600 flex items-center">
-                                        <i class="fas fa-coins mr-2 text-green-400"></i>
-                                        <span id="sys-balance-usdt">Loading...</span>
-                                    </p>
-                                </div>
-                                <div class="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                                    <p class="text-sm text-gray-500 mb-1">THB Reserve</p>
+                                    <p class="text-sm text-gray-500 mb-1" data-i18n="admin.settings.thbReserve">THB Reserve</p>
                                     <p class="text-2xl font-bold text-blue-600 flex items-center">
                                         <i class="fas fa-money-bill-wave mr-2 text-blue-400"></i>
                                         <span id="sys-balance-thb">Loading...</span>
@@ -211,11 +160,11 @@
                         <!-- Fee Settings -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-percentage text-blue-500 mr-2"></i> Fees
+                                <i class="fas fa-percentage text-blue-500 mr-2"></i> <span data-i18n="admin.settings.fees">Fees</span>
                             </h3>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Withdrawal Fee
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.settings.withdrawalFee">Transfer Fee
                                         (THB)</label>
                                     <div class="relative rounded-md shadow-sm">
                                         <div
@@ -226,50 +175,21 @@
                                             class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
                                             placeholder="0.00">
                                     </div>
-                                    <p class="mt-1 text-xs text-gray-500">Fixed fee per withdrawal transaction.
+                                    <p class="mt-1 text-xs text-gray-500" data-i18n="admin.settings.withdrawalFeeDesc">Fixed fee per transfer transaction.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Exchange Rate Settings -->
+                        <!-- Platform Info -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                             <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-exchange-alt text-green-500 mr-2"></i> Exchange Rates
+                                <i class="fas fa-info-circle text-blue-500 mr-2"></i> <span data-i18n="admin.settings.platformInfo">Platform Info</span>
                             </h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rate
-                                        Mode</label>
-                                    <select id="setting_exchange_rate_mode"
-                                        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 bg-white">
-                                        <option value="manual">Manual Set</option>
-                                        <option value="auto">Auto Sync (Bitkub)</option>
-                                    </select>
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Manual: You set the rate.<br>
-                                        Auto: Syncs real-time from Bitkub.
-                                    </p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">USDT to THB
-                                        Rate</label>
-                                    <div class="relative rounded-md shadow-sm">
-                                        <div
-                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm">1 USDT =</span>
-                                        </div>
-                                        <input type="number" step="0.01" id="setting_exchange_rate_usdt_thb"
-                                            class="focus:ring-green-500 focus:border-green-500 block w-full pl-20 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
-                                            placeholder="0.00">
-                                        <div
-                                            class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm">THB</span>
-                                        </div>
-                                    </div>
-                                    <p class="mt-1 text-xs text-gray-500">Used for estimating portfolio value.
-                                    </p>
-                                </div>
+                            <div class="space-y-3 text-sm text-gray-600">
+                                <p><strong>Currency:</strong> THB (Thai Baht)</p>
+                                <p><strong>Settlement:</strong> T+1 Business Day</p>
+                                <p><strong>Payment Methods:</strong> Bank Transfer, QR PromptPay</p>
                             </div>
                         </div>
                     </div>
@@ -279,16 +199,16 @@
                 <div id="view-transactions" class="hidden">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Transaction History</h2>
-                            <p class="text-gray-600">View all system transactions (Last 100)</p>
+                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.txn.title">Transaction History</h2>
+                            <p class="text-gray-600" data-i18n="admin.txn.desc">View all system transactions (Last 100)</p>
                         </div>
                         <button onclick="loadAllTransactions()"
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                            <i class="fas fa-sync-alt mr-2"></i> <span data-i18n="admin.common.refresh">Refresh</span>
                         </button>
                         <button onclick="exportTableToCSV('transactions-table-id', 'Transaction_History')"
                             class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
-                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                            <i class="fas fa-file-csv mr-2"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span>
                         </button>
                     </div>
 
@@ -298,22 +218,21 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.date">
                                             Date</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.user">
                                             User</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Type</th>
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.type">Type</th>
                                         <th
-                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.amount">
                                             Amount</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider pl-12">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider pl-12" data-i18n="admin.common.status">
                                             Status</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.txn.ref">
                                             Ref</th>
                                     </tr>
                                 </thead>
@@ -329,16 +248,16 @@
                 <div id="view-audit" class="hidden">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Audit Logs</h2>
-                            <p class="text-gray-600">Review system activities and security events</p>
+                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.audit.title">Audit Logs</h2>
+                            <p class="text-gray-600" data-i18n="admin.audit.desc">Review system activities and security events</p>
                         </div>
                         <button onclick="loadAuditLogs()"
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                            <i class="fas fa-sync-alt mr-2"></i> <span data-i18n="admin.common.refresh">Refresh</span>
                         </button>
                         <button onclick="exportTableToCSV('audit-logs-table-id', 'Audit_Logs')"
                             class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
-                            <i class="fas fa-file-csv mr-2"></i> Export CSV
+                            <i class="fas fa-file-csv mr-2"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span>
                         </button>
                     </div>
 
@@ -348,22 +267,22 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.date">
                                             Date</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.common.user">
                                             User</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.audit.action">
                                             Action</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.audit.entity">
                                             Entity</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.audit.details">
                                             Details</th>
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="admin.audit.ipAddress">
                                             IP Address</th>
                                     </tr>
                                 </thead>
@@ -383,20 +302,20 @@
     <!-- Reject Modal -->
     <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-            <h3 class="text-lg font-bold mb-4 text-red-600">Reject Withdrawal</h3>
-            <p class="mb-4 text-gray-600">The amount will be refunded to the user's wallet.</p>
+            <h3 class="text-lg font-bold mb-4 text-red-600" data-i18n="admin.payouts.rejectTitle">Reject Transfer</h3>
+            <p class="mb-4 text-gray-600" data-i18n="admin.payouts.rejectDesc">The amount will be returned to the merchant's account.</p>
             <input type="hidden" id="rejectId">
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.payouts.rejectReason">Reason</label>
                 <textarea id="rejectReason"
                     class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-500 focus:outline-none"
                     rows="3"></textarea>
             </div>
             <div class="flex justify-end space-x-3">
                 <button onclick="closeRejectModal()"
-                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg" data-i18n="admin.common.cancel">Cancel</button>
                 <button onclick="submitReject()"
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Confirm Reject</button>
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" data-i18n="admin.payouts.confirmReject">Confirm Reject</button>
             </div>
         </div>
     </div>
@@ -525,7 +444,7 @@
             }
         }
 
-        // --- Payouts Logic ---
+        // --- Transfer Requests Logic ---
         async function loadPendingWithdrawals() {
             const tbody = document.getElementById('payoutsTableBody');
             tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
@@ -557,7 +476,7 @@
                         </tr>
                     `).join('');
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending withdrawals.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending transfer requests.</td></tr>';
                 }
             } catch (e) {
                 console.error(e);
@@ -566,7 +485,7 @@
         }
 
         async function approve(id) {
-            if (!confirm("Approve this payout?")) return;
+            if (!confirm("Approve this transfer?")) return;
             const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
             if (res && res.success) {
                 loadPendingWithdrawals();
@@ -586,7 +505,7 @@
 
                 if (data.success && data.data.length > 0) {
                     tbody.innerHTML = data.data.map(tx => {
-                        const isPositive = ['DEPOSIT', 'TRANSFER_IN', 'SELL_USDT'].includes(tx.type);
+                        const isPositive = ['DEPOSIT', 'TRANSFER_IN', 'CREDIT'].includes(tx.type);
                         const isFee = tx.type.includes('FEE');
                         const amountColor = isPositive ? 'text-green-600' : (isFee ? 'text-gray-500' : 'text-red-600');
                         const amountPrefix = isPositive ? '+' : '';
@@ -728,22 +647,12 @@
                 if (data && data.success) {
                     const s = data.data;
                     document.getElementById('setting_withdrawal_fee_thb').value = s.withdrawal_fee_thb || '';
-                    document.getElementById('setting_exchange_rate_usdt_thb').value = s.exchange_rate_usdt_thb || '';
-
-                    const mode = s.exchange_rate_mode || 'manual';
-                    const modeSelect = document.getElementById('setting_exchange_rate_mode');
-                    if (modeSelect) {
-                        modeSelect.value = mode;
-                        toggleRateInput(mode);
-                    }
                 }
 
-                // 2. Load System Stats (Liquidity)
+                // 2. Load System Stats (THB Reserve)
                 const stats = await safeFetch('/api/v1/admin/stats');
                 if (stats && stats.success) {
-                    const usdt = stats.data.usdt;
-                    const thb = stats.data.thb;
-                    document.getElementById('sys-balance-usdt').textContent = usdt.toLocaleString() + ' USDT';
+                    const thb = stats.data.thb || 0;
                     document.getElementById('sys-balance-thb').textContent = '฿' + thb.toLocaleString();
                 }
 
@@ -753,52 +662,17 @@
             }
         }
 
-        // Add event listener safely
-        document.addEventListener('DOMContentLoaded', () => {
-            const modeSelect = document.getElementById('setting_exchange_rate_mode');
-            if (modeSelect) {
-                modeSelect.addEventListener('change', (e) => toggleRateInput(e.target.value));
-            }
-        });
 
-        async function toggleRateInput(mode) {
-            const rateInput = document.getElementById('setting_exchange_rate_usdt_thb');
-            if (!rateInput) return;
 
-            if (mode === 'auto') {
-                rateInput.disabled = true;
-                rateInput.classList.add('bg-gray-100');
-                rateInput.title = "Rate is synced automatically from Bitkub";
-
-                // Fetch the live rate from the backend
-                try {
-                    const res = await safeFetch('/api/v1/users/wallet/exchange/rate');
-                    if (res && res.success && res.data) {
-                        // Use the buy rate or average as the display rate
-                        rateInput.value = res.data.buy.toFixed(2);
-                    }
-                } catch (e) {
-                    console.error('Failed to sync rate from Bitkub', e);
-                }
-            } else {
-                rateInput.disabled = false;
-                rateInput.classList.remove('bg-gray-100');
-                rateInput.title = "";
-            }
-        }
 
         async function saveSettings() {
             const withdrawal_fee_thb = document.getElementById('setting_withdrawal_fee_thb').value;
-            const exchange_rate_usdt_thb = document.getElementById('setting_exchange_rate_usdt_thb').value;
-            const exchange_rate_mode = document.getElementById('setting_exchange_rate_mode').value;
 
             try {
                 const res = await safeFetch('/api/v1/admin/settings', {
                     method: 'POST',
                     body: JSON.stringify({
-                        withdrawal_fee_thb,
-                        exchange_rate_usdt_thb,
-                        exchange_rate_mode
+                        withdrawal_fee_thb
                     })
                 });
                 if (res && res.success) {
@@ -816,9 +690,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('user');
             if (userStr) {
-                const u = JSON.parse(userStr);
-                document.getElementById('user-name').textContent = u.email;
-                document.getElementById('user-initial').textContent = u.email.charAt(0).toUpperCase();
+                try {
+                    const u = JSON.parse(userStr);
+                    const nameEl = document.getElementById('user-name');
+                    const initialEl = document.getElementById('user-initial');
+                    if (nameEl) nameEl.textContent = u.email;
+                    if (initialEl) initialEl.textContent = u.email.charAt(0).toUpperCase();
+                } catch(e) { /* ignore parse errors */ }
             }
             // Load default tab
             loadPendingWithdrawals();
@@ -827,6 +705,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/csv-export.js"></script>
     <script src="js/ui-enhancements.js?v=6"></script>
+    </main>
+    </div><!-- /ep-main-wrap -->
+    </div><!-- /ep-layout -->
+    <script src="/js/admin-sidebar.js"></script>
+    <script src="js/i18n.js"></script>
 </body>
 
 </html>

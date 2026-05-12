@@ -98,7 +98,7 @@ const partnerRoutes = require('./routes/partners');
 const agencyRoutes = require('./routes/agencies');
 const merchantSiteRoutes = require('./routes/merchantSites');
 const commissionRulesRoutes = require('./routes/commissionRules');
-const walletRoutes = require('./routes/wallet');
+const merchantAccountRoutes = require('./routes/wallet'); // Route path kept as /wallet for backward compatibility
 const verificationRoutes = require('./routes/verification');
 const hierarchyRoutes = require('./routes/hierarchy');
 const contactRoutes = require('./routes/contact');
@@ -107,7 +107,7 @@ const contactRoutes = require('./routes/contact');
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/balances', balanceRoutes);
-app.use('/api/v1/wallet', walletRoutes);
+app.use('/api/v1/wallet', merchantAccountRoutes); // Legacy path maintained for API stability
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/api-keys', apiKeyRoutes);
 app.use('/api/v1/webhooks', webhookRoutes);

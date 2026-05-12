@@ -37,7 +37,7 @@ const options: swaggerJsdoc.Options = {
             { name: 'Checkout', description: 'สร้างรายการชำระเงิน' },
             { name: 'Payments', description: 'ดูรายการชำระเงิน' },
             { name: 'Refund', description: 'คืนเงิน' },
-            { name: 'Wallet', description: 'กระเป๋าเงิน / ถอนเงิน' },
+            { name: 'Merchant Account', description: 'บัญชีร้านค้า / โอนเงินเข้าบัญชี' },
             { name: 'KYC', description: 'ยืนยันตัวตน' },
             { name: 'Webhooks', description: 'Webhook สำหรับร้านค้า' },
             { name: 'API Keys', description: 'จัดการ API Key' },
@@ -166,16 +166,16 @@ const options: swaggerJsdoc.Options = {
             },
             '/users/wallet': {
                 get: {
-                    tags: ['Wallet'],
-                    summary: 'ดูยอดเงินในกระเป๋า',
+                    tags: ['Merchant Account'],
+                    summary: 'ดูยอดขายสะสม',
                     security: [{ BearerAuth: [] }],
-                    responses: { '200': { description: 'ข้อมูลกระเป๋าเงิน' } },
+                    responses: { '200': { description: 'ข้อมูลบัญชีร้านค้า' } },
                 },
             },
             '/users/wallet/withdraw': {
                 post: {
-                    tags: ['Wallet'],
-                    summary: 'ถอนเงินเข้าบัญชีธนาคาร',
+                    tags: ['Merchant Account'],
+                    summary: 'โอนเงินเข้าบัญชีธนาคาร',
                     security: [{ BearerAuth: [] }],
                     requestBody: {
                         required: true,
@@ -185,13 +185,13 @@ const options: swaggerJsdoc.Options = {
                                     type: 'object',
                                     required: ['amount'],
                                     properties: {
-                                        amount: { type: 'number', example: 5000.00, description: 'จำนวนเงินที่ต้องการถอน (ขั้นต่ำ 100 บาท)' },
+                                        amount: { type: 'number', example: 5000.00, description: 'จำนวนเงินที่ต้องการโอน (ขั้นต่ำ 100 บาท)' },
                                     },
                                 },
                             },
                         },
                     },
-                    responses: { '200': { description: 'ถอนเงินสำเร็จ' } },
+                    responses: { '200': { description: 'โอนเงินสำเร็จ' } },
                 },
             },
         },

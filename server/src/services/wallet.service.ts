@@ -34,7 +34,7 @@ export const deposit = async (userId: number, amount: number, reference?: string
             },
         });
 
-        // 2. Update Wallet Balance
+        // 2. Update Merchant Account Balance
         const wallet = await tx.wallet.update({
             where: { userId },
             data: {
@@ -50,18 +50,18 @@ export const deposit = async (userId: number, amount: number, reference?: string
 
 export const withdraw = async (userId: number, amount: number, bankAccount?: string) => {
     return await prisma.$transaction(async (tx) => {
-        // 0. Get Withdrawal Fee
+        // 0. Get Transfer Fee
         const feeSetting = await tx.systemSetting.findUnique({ where: { key: 'withdrawal_fee_thb' } });
         const fee = feeSetting ? Number(feeSetting.value) : 0;
         const totalDeduction = amount + fee;
 
-        // 1. Check Balance
+        // 1. Check Merchant Account Balance
         const wallet = await tx.wallet.findUnique({ where: { userId } });
         if (!wallet || Number(wallet.balance) < totalDeduction) {
             throw new AppError(`Insufficient funds (Amount: ${amount} + Fee: ${fee})`, 400);
         }
 
-        // 2. Create Transaction Record (Withdrawal)
+        // 2. Create Transaction Record (Transfer Request)
         const transaction = await tx.transaction.create({
             data: {
                 userId,
@@ -87,7 +87,7 @@ export const withdraw = async (userId: number, amount: number, bankAccount?: str
             });
         }
 
-        // 3. Update Wallet Balance
+        // 3. Update Merchant Account Balance
         const updatedWallet = await tx.wallet.update({
             where: { userId },
             data: {

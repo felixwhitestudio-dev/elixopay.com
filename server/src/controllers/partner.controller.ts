@@ -88,7 +88,7 @@ export const getPartnerStats = async (req: Request, res: Response, next: NextFun
 };
 
 /**
- * @desc Get payout history
+ * @desc Get transfer history
  * @route GET /api/v1/partners/payouts
  * @access Private
  */
@@ -108,7 +108,7 @@ export const getPayoutHistory = async (req: Request, res: Response, next: NextFu
 
         const agencyId = memberRes[0].agency_id;
 
-        // 2. Query Withdrawal Requests
+        // 2. Query Transfer Requests
         const payoutsRes = await prisma.$queryRawUnsafe<any[]>(
             `SELECT id, amount, currency, status, method, created_at 
        FROM withdrawal_requests 
@@ -128,7 +128,7 @@ export const getPayoutHistory = async (req: Request, res: Response, next: NextFu
 };
 
 /**
- * @desc Request a withdrawal
+ * @desc Request a transfer
  * @route POST /api/v1/partners/withdraw
  * @access Private
  */
@@ -143,7 +143,7 @@ export const requestWithdrawal = async (req: Request, res: Response, next: NextF
         if ((req as any).user?.verification_status !== 'verified') {
             return res.status(403).json({
                 success: false,
-                message: 'Account must be verified to withdraw funds. Please go to the Verification tab.'
+                message: 'Account must be verified to request transfers. Please go to the Verification tab.'
             });
         }
 
@@ -176,7 +176,7 @@ export const requestWithdrawal = async (req: Request, res: Response, next: NextF
             );
 
             if (balanceRes.length === 0) {
-                throw new AppError('No wallet found', 400);
+                throw new AppError('No merchant account found', 400);
             }
 
             const currentBalance = parseFloat(balanceRes[0].available_amount);
@@ -195,7 +195,7 @@ export const requestWithdrawal = async (req: Request, res: Response, next: NextF
                 withdrawAmount, agencyId
             );
 
-            // 4. Create Withdrawal Request
+            // 4. Create Transfer Request
             const destination = {
                 bank_name: bankName,
                 account_number: accountNumber,
@@ -213,14 +213,14 @@ export const requestWithdrawal = async (req: Request, res: Response, next: NextF
             // 5. Create Ledger Entry
             await tx.$executeRawUnsafe(
                 `INSERT INTO ledger_entries (agency_id, type, direction, amount, currency, status, withdrawal_request_id, description)
-                 VALUES ($1, 'WITHDRAWAL', 'D', $2, $3, 'PENDING', $4, 'Withdrawal Request')`,
+                 VALUES ($1, 'WITHDRAWAL', 'D', $2, $3, 'PENDING', $4, 'Transfer Request')`,
                 agencyId, withdrawAmount, currency, withdrawalId
             );
 
             res.json({
                 success: true,
                 data: {
-                    message: 'Withdrawal requested successfully',
+                    message: 'Transfer requested successfully',
                     newBalance: currentBalance - withdrawAmount
                 }
             });

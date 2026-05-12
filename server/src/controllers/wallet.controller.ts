@@ -77,7 +77,7 @@ export const transfer = catchAsync(async (req: Request, res: Response, next: Nex
     const finalRecipient = recipient || email;
 
     if (!finalRecipient || !amount || amount <= 0) {
-        return next(new AppError('Please provide recipient (Email or Wallet ID) and valid amount', 400));
+        return next(new AppError('Please provide recipient (Email or Account ID) and valid amount', 400));
     }
 
     const result = await walletService.transfer(userId, finalRecipient, Number(amount));

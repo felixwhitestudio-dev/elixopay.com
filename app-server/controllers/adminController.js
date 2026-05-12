@@ -147,12 +147,12 @@ exports.reviewVerification = async (req, res, next) => {
  */
 exports.getSystemStats = async (req, res, next) => {
     try {
-        const SYSTEM_WALLET_USDT = '84404d85-9272-4c9f-b010-17c127efe157';
+        const SYSTEM_WALLET_THB_RESERVE = 'RESERVE_WALLET_ID_HERE';
         const SYSTEM_WALLET_THB = 'd7776b71-7c1e-4e47-919b-3b5b45b9d7e9';
 
         const result = await db.query(
             `SELECT id, currency, balance FROM wallets WHERE id IN ($1, $2)`,
-            [SYSTEM_WALLET_USDT, SYSTEM_WALLET_THB]
+            [SYSTEM_WALLET_THB_RESERVE, SYSTEM_WALLET_THB]
         );
 
         let stats = {
@@ -161,7 +161,7 @@ exports.getSystemStats = async (req, res, next) => {
         };
 
         result.rows.forEach(row => {
-            if (row.id === SYSTEM_WALLET_USDT) stats.usdt = parseFloat(row.balance);
+            if (row.id === SYSTEM_WALLET_THB_RESERVE) stats.thb_reserve = parseFloat(row.balance);
             if (row.id === SYSTEM_WALLET_THB) stats.thb = parseFloat(row.balance);
         });
 

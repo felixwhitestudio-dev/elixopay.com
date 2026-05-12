@@ -285,7 +285,7 @@ export const simulatePaymentCompletion = catchAsync(async (req: Request, res: Re
             data: { status: 'COMPLETED' }
         });
 
-        // 2. Add funds to the appropriate Merchant Wallet balance
+        // 2. Add funds to the appropriate Merchant Account balance
         let updateData = {};
         try {
             if (transaction.metadata) {
@@ -322,7 +322,7 @@ export const simulatePaymentCompletion = catchAsync(async (req: Request, res: Re
 
     res.status(200).json({
         success: true,
-        message: 'Mock payment completed successfully. Funds added to merchant wallet.'
+        message: 'Mock payment completed successfully. Funds added to merchant account.'
     });
 });
 
@@ -395,13 +395,13 @@ export const refundPayment = catchAsync(async (req: Request, res: Response, next
             throw new AppError(`Refund amount (${refundAmount}) exceeds maximum refundable balance (${maxRefundable})`, 400, 'exceeds_refundable_balance');
         }
 
-        // 5. Deduct from Merchant Wallet
+        // 5. Deduct from Merchant Account
         const wallet = await tx.wallet.findUnique({ where: { userId: user.id } });
-        if (!wallet) throw new AppError('Merchant wallet not found', 404);
+        if (!wallet) throw new AppError('Merchant account not found', 404);
 
         const currentBalance = mode === 'test' ? Number(wallet.testBalance) : Number(wallet.balance);
         if (currentBalance < refundAmount) {
-            throw new AppError(`Insufficient funds in ${mode.toUpperCase()} wallet to process this refund.`, 400, 'insufficient_funds');
+            throw new AppError(`Insufficient funds in ${mode.toUpperCase()} account to process this refund.`, 400, 'insufficient_funds');
         }
 
         const updateData = mode === 'test'

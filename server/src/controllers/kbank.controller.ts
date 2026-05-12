@@ -32,7 +32,7 @@ export const handleWebhook = async (req: Request, res: Response) => {
         // 1. Verify KBank Signature
         // 2. Find internal Transaction by payload.partnerTxnUid
         // 3. Update DB to COMPLETED
-        // 4. Update Merchant Wallet Balance
+        // 4. Update Merchant Account Balance
 
         // Mock Example: Assuming we found transaction ID 1 for User ID X and updated it
         // const transaction = await prisma.transaction.update({ ... });

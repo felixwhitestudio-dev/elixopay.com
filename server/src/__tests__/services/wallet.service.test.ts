@@ -1,5 +1,5 @@
 /**
- * Wallet Service Tests
+ * Merchant Account Service Tests
  * Uses mocked Prisma client to test business logic without database
  */
 
@@ -36,14 +36,14 @@ import * as walletService from '../../services/wallet.service';
 // Type helpers for mocks
 const mockPrisma = prisma as any;
 
-describe('Wallet Service', () => {
+describe('Merchant Account Service', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     // ============ getWalletByUserId ============
     describe('getWalletByUserId', () => {
-        it('should return wallet for valid user', async () => {
+        it('should return merchant account for valid user', async () => {
             const mockWallet = { id: 1, userId: 1, balance: 100.0, currency: 'THB' };
             mockPrisma.wallet.findUnique.mockResolvedValue(mockWallet);
 
@@ -55,7 +55,7 @@ describe('Wallet Service', () => {
             });
         });
 
-        it('should return null for non-existent user', async () => {
+        it('should return null for non-existent merchant', async () => {
             mockPrisma.wallet.findUnique.mockResolvedValue(null);
 
             const result = await walletService.getWalletByUserId(999);
@@ -65,7 +65,7 @@ describe('Wallet Service', () => {
 
     // ============ createWallet ============
     describe('createWallet', () => {
-        it('should create a wallet with zero balance', async () => {
+        it('should create a merchant account with zero balance', async () => {
             const mockCreated = { id: 1, userId: 5, balance: 0.0, currency: 'THB' };
             mockPrisma.wallet.create.mockResolvedValue(mockCreated);
 
@@ -106,7 +106,7 @@ describe('Wallet Service', () => {
 
     // ============ withdraw ============
     describe('withdraw', () => {
-        it('should create a PENDING withdrawal with fee deduction', async () => {
+        it('should create a PENDING transfer request with fee deduction', async () => {
             const mockTx = { id: 20, userId: 1, amount: -1000, type: 'WITHDRAW', status: 'PENDING' };
             const mockFeeSettng = { key: 'withdrawal_fee_thb', value: '30' };
             const mockWallet = { id: 1, userId: 1, balance: 2000 };

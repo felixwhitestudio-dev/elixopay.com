@@ -101,7 +101,7 @@ export async function sendBankApprovedEmail(to: string, firstName: string, bankN
             <h2 style="font-size:18px; color:#1e293b;">อัปเดตบัญชีธนาคารสำเร็จ ✅</h2>
             <p style="color:#475569;">สวัสดีคุณ <strong>${firstName}</strong>,</p>
             <p style="color:#475569;">คำขอเปลี่ยนแปลงบัญชีธนาคารเป็นบัญชี <strong>${bankName}</strong> ของคุณได้รับการอนุมัติเรียบร้อยแล้ว
-            จากการนี้ยอดเงินทั้งหมดจะถูกถอนไปยังบัญชีใหม่ของคุณในการทำรายการถัดไป</p>
+            จากการนี้ยอดเงินทั้งหมดจะถูกโอนไปยังบัญชีใหม่ของคุณในการทำรายการถัดไป</p>
             <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
@@ -189,19 +189,19 @@ export async function sendPasswordResetEmail(to: string, firstName: string, rese
     logger.info('[Mailer] Password reset email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
-// ── Payout Approved ───────────────────────────────────────
+// ── Transfer Approved ───────────────────────────────────────
 export async function sendPayoutApprovedEmail(to: string, firstName: string, amount: number) {
     const transport = await getTransporter();
     const info = await transport.sendMail({
         from: FROM,
         to,
-        subject: '✅ การถอนเงินของคุณได้รับการอนุมัติแล้ว — Elixopay',
+        subject: '✅ การโอนเงินของคุณได้รับการอนุมัติแล้ว — Elixopay',
         html: `
         <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#f8fafc; border-radius:12px;">
             <h1 style="color:#4f46e5; font-size:24px; margin-bottom:8px;">Elixopay</h1>
-            <h2 style="font-size:18px; color:#1e293b;">อนุมัติการถอนเงินสำเร็จ ✅</h2>
+            <h2 style="font-size:18px; color:#1e293b;">อนุมัติการโอนเงินสำเร็จ ✅</h2>
             <p style="color:#475569;">สวัสดีคุณ <strong>${firstName}</strong>,</p>
-            <p style="color:#475569;">คำขอถอนเงินจำนวน <strong>฿ ${Math.abs(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> ของคุณได้รับการอนุมัติ สำเร็จเรียบร้อยแล้ว
+            <p style="color:#475569;">คำขอโอนเงินจำนวน <strong>฿ ${Math.abs(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> ของคุณได้รับการอนุมัติสำเร็จเรียบร้อยแล้ว
             ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณระบุไว้ กรุณาตรวจสอบยอดเงินในบัญชีของคุณ</p>
             <a href="${process.env.APP_URL || 'http://localhost:8080'}/dashboard.html"
                style="display:inline-block; margin-top:16px; padding:12px 24px; background:#4f46e5; color:white; border-radius:8px; text-decoration:none; font-weight:bold;">
@@ -211,31 +211,31 @@ export async function sendPayoutApprovedEmail(to: string, firstName: string, amo
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    logger.info('[Mailer] Payout Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Transfer Approved email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
-// ── Payout Rejected ───────────────────────────────────────
+// ── Transfer Rejected ───────────────────────────────────────
 export async function sendPayoutRejectedEmail(to: string, firstName: string, amount: number, reason: string) {
     const transport = await getTransporter();
     const info = await transport.sendMail({
         from: FROM,
         to,
-        subject: '❌ การถอนเงินของคุณไม่สำเร็จ — Elixopay',
+        subject: '❌ การโอนเงินของคุณไม่สำเร็จ — Elixopay',
         html: `
         <div style="font-family:Inter,sans-serif; max-width:600px; margin:auto; padding:32px; background:#f8fafc; border-radius:12px;">
             <h1 style="color:#4f46e5; font-size:24px; margin-bottom:8px;">Elixopay</h1>
-            <h2 style="font-size:18px; color:#dc2626;">ระงับการถอนเงิน</h2>
+            <h2 style="font-size:18px; color:#dc2626;">ไม่สามารถดำเนินการโอนเงินได้</h2>
             <p style="color:#475569;">สวัสดีคุณ <strong>${firstName}</strong>,</p>
-            <p style="color:#475569;">คำขอถอนเงินจำนวน <strong>฿ ${Math.abs(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> ของคุณไม่สามารถดำเนินการได้ ด้วยเหตุผลดังนี้:</p>
+            <p style="color:#475569;">คำขอโอนเงินจำนวน <strong>฿ ${Math.abs(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> ของคุณไม่สามารถดำเนินการได้ ด้วยเหตุผลดังนี้:</p>
             <div style="background:#fef2f2; border-left:4px solid #dc2626; padding:12px 16px; border-radius:4px; margin:16px 0;">
                 <p style="color:#dc2626; margin:0; font-weight:600;">${reason}</p>
             </div>
-            <p style="color:#475569;">ยอดเงินดังกล่าวได้ถูกคืนเข้าสู่กระเป๋าเงิน (Wallet) ของคุณเรียบร้อยแล้ว หากมีข้อสงสัยเพิ่มเติมโปรดติดต่อฝ่ายสนับสนุน</p>
+            <p style="color:#475569;">ยอดเงินดังกล่าวได้ถูกคืนเข้าสู่บัญชีร้านค้าของคุณเรียบร้อยแล้ว หากมีข้อสงสัยเพิ่มเติมโปรดติดต่อฝ่ายสนับสนุน</p>
             <hr style="border:none; border-top:1px solid #e2e8f0; margin:24px 0;">
             <p style="color:#94a3b8; font-size:12px;">© ${new Date().getFullYear()} Elixopay — อีเมลนี้ส่งโดยอัตโนมัติ กรุณาอย่าตอบกลับ</p>
         </div>`,
     });
-    logger.info('[Mailer] Payout Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
+    logger.info('[Mailer] Transfer Rejected email sent to', to, nodemailer.getTestMessageUrl(info) || '');
 }
 
 // ── Settlement Notification ──────────────────────────────

@@ -26,7 +26,7 @@ const thKeys = `
       'admin.sidebar.quick_links': 'ลิงก์ด่วน',
       'admin.sidebar.dashboard': 'แดชบอร์ด',
       'admin.pending.title': 'คำขอ KYC',
-      'admin.sidebar.payouts': 'การถอนเงิน',
+      'admin.sidebar.payouts': 'การโอนเงิน',
       'admin.sidebar.liquidity': 'สภาพคล่อง',
       'admin.sidebar.goHome': 'กลับหน้าหลัก',
       
@@ -66,14 +66,14 @@ const enKeys = `
       'admin.sidebar.quick_links': 'QUICK LINKS',
       'admin.sidebar.dashboard': 'Dashboard',
       'admin.pending.title': 'KYC Applications',
-      'admin.sidebar.payouts': 'Payouts',
+      'admin.sidebar.payouts': 'Transfers',
       'admin.sidebar.liquidity': 'Liquidity',
       'admin.sidebar.goHome': 'Merchant View',
       
       // Missing Bank Card
       'dashboard.bank.title': 'Bank Account',
       'dashboard.bank.loading': 'Loading account data...',
-      'dashboard.bank.not_set': 'No bank account linked. Add an account to receive payouts.',
+      'dashboard.bank.not_set': 'No bank account linked. Add an account to receive transfers.',
       'dashboard.bank.add_btn': 'Add Bank Account',
       'dashboard.bank.bank_name': 'Bank',
       'dashboard.bank.account_number': 'Account Number',
@@ -106,7 +106,7 @@ const zhKeys = `
       'admin.sidebar.quick_links': '快捷链接',
       'admin.sidebar.dashboard': '仪表盘',
       'admin.pending.title': 'KYC 申请审核',
-      'admin.sidebar.payouts': '提现管理',
+      'admin.sidebar.payouts': '转账管理',
       'admin.sidebar.liquidity': '流动性池',
       'admin.sidebar.goHome': '商户视图',
       

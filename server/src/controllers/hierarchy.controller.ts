@@ -77,7 +77,7 @@ export const createSubAccount = async (req: Request, res: Response, next: NextFu
             );
             const newUser = insertUser[0];
 
-            // 2. Create Wallet
+            // 2. Create Merchant Account
             const walletAddress = uuidv4();
             await tx.$executeRawUnsafe(
                 `INSERT INTO wallets (user_id, wallet_address, balance, currency, is_active, created_at)

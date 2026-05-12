@@ -36,7 +36,7 @@ describe('Transfer Flow', () => {
     test('Transfer via Email Success', async () => {
         // 1. BEGIN
         mockClient.query.mockResolvedValueOnce({ rows: [] });
-        // 2. Select Sender Wallet
+        // 2. Select Sender Account
         mockClient.query.mockResolvedValueOnce({
             rows: [{ id: 'w1', balance: '1000', currency: 'USDT', wallet_address: 'Tsender' }]
         });
@@ -71,7 +71,7 @@ describe('Transfer Flow', () => {
     test('Transfer via Address Success', async () => {
         // 1. BEGIN
         mockClient.query.mockResolvedValueOnce({ rows: [] });
-        // 2. Select Sender Wallet
+        // 2. Select Sender Account
         mockClient.query.mockResolvedValueOnce({
             rows: [{ id: 'w1', balance: '1000', currency: 'USDT', wallet_address: 'Tsender' }]
         });
@@ -105,7 +105,7 @@ describe('Transfer Flow', () => {
     test('Transfer fail insufficient balance', async () => {
         // 1. BEGIN
         mockClient.query.mockResolvedValueOnce({ rows: [] });
-        // 2. Select Sender Wallet
+        // 2. Select Sender Account
         mockClient.query.mockResolvedValueOnce({
             rows: [{ id: 'w1', balance: '50', currency: 'USDT', wallet_address: 'Tsender' }]
         });

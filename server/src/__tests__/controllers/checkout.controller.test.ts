@@ -140,7 +140,7 @@ describe('Checkout Controller', () => {
     });
 
     describe('Payment Completion (Mock)', () => {
-        it('should update transaction status and wallet balance', async () => {
+        it('should update transaction status and merchant account balance', async () => {
             const mockTx = { id: 100, userId: 1, amount: 500, status: 'PENDING', metadata: '{}' };
             const mockUpdatedTx = { ...mockTx, status: 'COMPLETED' };
 

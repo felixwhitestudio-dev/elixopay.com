@@ -93,15 +93,15 @@ export const refundPayment = catchAsync(async (req: Request, res: Response, next
 
     // 3. Process the refund within a safe transaction
     await prisma.$transaction(async (tx) => {
-        // A. Verify Merchant Wallet has enough balance to cover the refund
+        // A. Verify Merchant Account has enough balance to cover the refund
         const wallet = await tx.wallet.findUnique({ where: { userId } });
-        if (!wallet) throw new AppError('Wallet not found', 404);
+        if (!wallet) throw new AppError('Merchant account not found', 404);
 
         if (Number(wallet.balance) < requestRefundAmount) {
-            throw new AppError('Insufficient wallet balance to process refund', 400, 'insufficient_balance');
+            throw new AppError('Insufficient merchant account balance to process refund', 400, 'insufficient_balance');
         }
 
-        // B. Deduct Merchant Wallet
+        // B. Deduct from Merchant Account
         await tx.wallet.update({
             where: { userId },
             data: { balance: { decrement: requestRefundAmount } }

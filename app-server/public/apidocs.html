@@ -601,7 +601,7 @@
             <a href="#check-payment" data-i18n="docs.sidebar.check">ตรวจสอบสถานะ</a>
             <a href="#refunds" data-i18n="docs.sidebar.refunds">การคืนเงิน (Refunds)</a>
             <a href="#subscriptions" data-i18n="docs.sidebar.subscriptions">ระบบสมาชิก (Subscriptions)</a>
-            <a href="#payouts" data-i18n="docs.sidebar.payouts">สร้างการถอนเงิน (Payout)</a>
+            <a href="#payouts" data-i18n="docs.sidebar.payouts">โอนเงินเข้าบัญชีร้านค้า (Direct Transfer)</a>
             <a href="#webhooks" data-i18n="docs.sidebar.webhooks">Webhooks</a>
             <a href="#downloads" data-i18n="nav.docs_downloads">ดาวน์โหลด</a>
           </div>
@@ -1224,7 +1224,7 @@
               <h2 data-i18n="docs.refunds.title">การคืนเงิน (Refunds)</h2>
               <p data-i18n="docs.refunds.desc">
                 ใช้ Endpoint นี้เพื่อทำการคืนเงิน (Refund) ให้กับลูกค้า หลังจากที่ชำระเงินสำเร็จ (Completed)
-                สามารถระบุจำนวนเงินคืนบางส่วน หรือคืนเต็มจำนวนก็ได้ ยอดเงินจะถูกหักจากยอดคงเหลือร้านค้า (Merchant Balance) ของคุณ
+                สามารถระบุจำนวนเงินคืนบางส่วน หรือคืนเต็มจำนวนก็ได้ ยอดเงินจะถูกหักจากยอดขายสะสมของคุณ
               </p>
 
               <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/payments/:id/refund
@@ -1668,9 +1668,9 @@
           <!-- Payouts -->
           <div id="payouts" class="api-section">
             <div class="api-prose">
-              <h2 data-i18n="docs.payouts.title">สร้างการถอนเงิน (Payouts)</h2>
+              <h2 data-i18n="docs.payouts.title">โอนเงินเข้าบัญชีร้านค้า (Direct Bank Transfer)</h2>
               <p data-i18n="docs.payouts.desc">
-                ใช้ Endpoint นี้เพื่อสร้างคำสั่งถอนยอดรายรับออกจากยอดคงเหลือร้านค้า (Merchant Balance)
+                ใช้ Endpoint นี้เพื่อโอนเงินจากยอดขายที่สำเร็จแล้วเข้าบัญชีธนาคารของร้านค้าโดยตรง
                 ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณผูกไว้ในระบบ
               </p>
 
@@ -1694,7 +1694,7 @@
                         data-i18n="docs.common.table.required">Required</span>
                     </td>
                     <td class="param-desc" data-i18n="docs.payouts.req_params.amount">
-                      จำนวนเงินที่ต้องการถอน (ต้องมียอดคงเหลือเพียงพอรวมค่าธรรมเนียม) ตัวอย่างเช่น 500.00
+                      จำนวนเงินที่ต้องการโอน (รวมค่าธรรมเนียม) ตัวอย่างเช่น 500.00
                     </td>
                   </tr>
                 </tbody>
@@ -1726,7 +1726,7 @@
                       <span class="param-type">object</span>
                     </td>
                     <td class="param-desc" data-i18n="docs.payouts.res_params.transaction">
-                      ออบเจ็กต์ข้อมูลรายการถอนเงินที่ถูกสร้างขึ้นในสถานะ 'PENDING'
+                      ออบเจ็กต์ข้อมูลรายการโอนเงินที่ถูกสร้างขึ้นในสถานะ 'PENDING'
                     </td>
                   </tr>
                 </tbody>
@@ -1817,13 +1817,13 @@
                   <div class="code-block" style="color: #a5b4fc;">
                     {
                     "success": true,
-                    "message": "Withdrawal requested successfully",
+                    "message": "Transfer requested successfully",
                     "data": {
                     "transaction": {
                     "id": 164,
                     "amount": 599.00,
                     "status": "PENDING",
-                    "reference": "WD-16440590",
+                    "reference": "TF-16440590",
                     "fee": "99.00"
                     }
                     }

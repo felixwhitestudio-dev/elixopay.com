@@ -45,7 +45,7 @@ async function main() {
             }
         });
 
-        // Create wallet
+        // Create merchant account
         await prisma.wallet.create({
             data: {
                 userId: user.id,

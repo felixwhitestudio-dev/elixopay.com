@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Elixopay Payout Management" />
-    <title>Payout Management - Elixopay Admin</title>
+    <meta name="description" content="Elixopay Transfer Management" />
+    <title>Transfer Management - Elixopay Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/design-system.css?v=2">
@@ -39,14 +39,14 @@
                 <div id="view-payouts">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.payouts.pageTitle">Payout Requests</h2>
-                            <p class="text-gray-600" data-i18n="admin.payouts.pageDesc">Manage pending withdrawals</p>
+                            <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.payouts.pageTitle">Transfer Requests</h2>
+                            <p class="text-gray-600" data-i18n="admin.payouts.pageDesc">Manage pending transfer requests</p>
                         </div>
                         <button onclick="loadPendingWithdrawals()"
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
                             <i class="fas fa-sync-alt mr-2"></i> <span data-i18n="admin.common.refresh">Refresh</span>
                         </button>
-                        <button onclick="exportTableToCSV('payouts-table-id', 'Payout_Requests')"
+                        <button onclick="exportTableToCSV('payouts-table-id', 'Transfer_Requests')"
                             class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
                             <i class="fas fa-file-csv mr-2"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span>
                         </button>
@@ -164,7 +164,7 @@
                             </h3>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.settings.withdrawalFee">Withdrawal Fee
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.settings.withdrawalFee">Transfer Fee
                                         (THB)</label>
                                     <div class="relative rounded-md shadow-sm">
                                         <div
@@ -175,7 +175,7 @@
                                             class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
                                             placeholder="0.00">
                                     </div>
-                                    <p class="mt-1 text-xs text-gray-500" data-i18n="admin.settings.withdrawalFeeDesc">Fixed fee per withdrawal transaction.
+                                    <p class="mt-1 text-xs text-gray-500" data-i18n="admin.settings.withdrawalFeeDesc">Fixed fee per transfer transaction.
                                     </p>
                                 </div>
                             </div>
@@ -302,8 +302,8 @@
     <!-- Reject Modal -->
     <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-            <h3 class="text-lg font-bold mb-4 text-red-600" data-i18n="admin.payouts.rejectTitle">Reject Withdrawal</h3>
-            <p class="mb-4 text-gray-600" data-i18n="admin.payouts.rejectDesc">The amount will be returned to the merchant's balance.</p>
+            <h3 class="text-lg font-bold mb-4 text-red-600" data-i18n="admin.payouts.rejectTitle">Reject Transfer</h3>
+            <p class="mb-4 text-gray-600" data-i18n="admin.payouts.rejectDesc">The amount will be returned to the merchant's account.</p>
             <input type="hidden" id="rejectId">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.payouts.rejectReason">Reason</label>
@@ -444,7 +444,7 @@
             }
         }
 
-        // --- Payouts Logic ---
+        // --- Transfer Requests Logic ---
         async function loadPendingWithdrawals() {
             const tbody = document.getElementById('payoutsTableBody');
             tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
@@ -476,7 +476,7 @@
                         </tr>
                     `).join('');
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending withdrawals.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending transfer requests.</td></tr>';
                 }
             } catch (e) {
                 console.error(e);
@@ -485,7 +485,7 @@
         }
 
         async function approve(id) {
-            if (!confirm("Approve this payout?")) return;
+            if (!confirm("Approve this transfer?")) return;
             const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
             if (res && res.success) {
                 loadPendingWithdrawals();

@@ -78,16 +78,16 @@ export const approveWithdrawal = catchAsync(async (req: Request, res: Response, 
             transactionRecord.user.email,
             transactionRecord.user.firstName || 'User',
             Number(transactionRecord.amount)
-        ).catch(err => logger.error('[Mailer] Failed to send payout approval email', err));
+        ).catch(err => logger.error('[Mailer] Failed to send transfer approval email', err));
     }
 
     // Log Action
     // @ts-ignore
-    await logAction(req.user.id, 'APPROVE_WITHDRAWAL', 'TRANSACTION', id, { amount: 'unknown' }, req);
+    await logAction(req.user.id, 'APPROVE_TRANSFER', 'TRANSACTION', id, { amount: 'unknown' }, req);
 
     res.status(200).json({
         success: true,
-        message: 'Withdrawal approved successfully'
+        message: 'Transfer approved successfully'
     });
 });
 
@@ -123,7 +123,7 @@ export const rejectWithdrawal = catchAsync(async (req: Request, res: Response, n
             }
         });
 
-        // 2. Refund money to user wallet
+        // 2. Refund money to merchant account
 
         // Optional: Create a refund transaction record? 
         // Usually good practice, but for simplicity we rely on the FAILED status of the original tx to explain why money didn't leave?
@@ -165,16 +165,16 @@ export const rejectWithdrawal = catchAsync(async (req: Request, res: Response, n
             transactionRecord.user.firstName || 'User',
             Number(transactionRecord.amount),
             reason
-        ).catch(err => logger.error('[Mailer] Failed to send payout rejection email', err));
+        ).catch(err => logger.error('[Mailer] Failed to send transfer rejection email', err));
     }
 
     // Log Action
     // @ts-ignore
-    await logAction(req.user.id, 'REJECT_WITHDRAWAL', 'TRANSACTION', id, { reason }, req);
+    await logAction(req.user.id, 'REJECT_TRANSFER', 'TRANSACTION', id, { reason }, req);
 
     res.status(200).json({
         success: true,
-        message: 'Withdrawal rejected and refunded'
+        message: 'Transfer rejected and refunded'
     });
 });
 
@@ -445,7 +445,7 @@ export const getDashboardOverview = catchAsync(async (req: Request, res: Respons
     const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
     const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
 
-    // 5. Calculate total withdraw volume (Completed THB withdrawals)
+    // 5. Calculate total transfer volume (Completed THB transfers)
     const completedWithdrawals = await prisma.transaction.aggregate({
         where: { type: 'WITHDRAW', status: 'COMPLETED' },
         _sum: { amount: true }

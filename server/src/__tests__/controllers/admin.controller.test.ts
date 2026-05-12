@@ -41,9 +41,9 @@ describe('Admin Controller', () => {
         jest.clearAllMocks();
     });
 
-    // ============ getPendingWithdrawals ============
-    describe('getPendingWithdrawals logic', () => {
-        it('should return pending withdrawals with user info', async () => {
+    // ============ getPendingTransfers ============
+    describe('getPendingTransfers logic', () => {
+        it('should return pending transfers with user info', async () => {
             const mockWithdrawals = [
                 {
                     id: 1, amount: 1000, type: 'WITHDRAW', status: 'PENDING',
@@ -63,7 +63,7 @@ describe('Admin Controller', () => {
             expect(result[0].user.email).toBe('user@test.com');
         });
 
-        it('should return empty when no pending withdrawals', async () => {
+        it('should return empty when no pending transfers', async () => {
             mockPrisma.transaction.findMany.mockResolvedValue([]);
 
             const result = await prisma.transaction.findMany({
@@ -74,8 +74,8 @@ describe('Admin Controller', () => {
         });
     });
 
-    // ============ approveWithdrawal ============
-    describe('approveWithdrawal logic', () => {
+    // ============ approveTransfer ============
+    describe('approveTransfer logic', () => {
         it('should update transaction status to COMPLETED', async () => {
             const mockTx = { id: 1, userId: 1, amount: -500, status: 'PENDING', user: { email: 'u@t.com' } };
 
@@ -101,17 +101,17 @@ describe('Admin Controller', () => {
         });
 
         it('should log the approval action via audit service', async () => {
-            await logAction(1, 'APPROVE_WITHDRAWAL', 'TRANSACTION', '1', { amount: 500 }, {} as any);
+            await logAction(1, 'APPROVE_TRANSFER', 'TRANSACTION', '1', { amount: 500 }, {} as any);
 
             expect(logAction).toHaveBeenCalledWith(
-                1, 'APPROVE_WITHDRAWAL', 'TRANSACTION', '1',
+                1, 'APPROVE_TRANSFER', 'TRANSACTION', '1',
                 expect.any(Object), expect.any(Object)
             );
         });
     });
 
-    // ============ rejectWithdrawal ============
-    describe('rejectWithdrawal logic', () => {
+    // ============ rejectTransfer ============
+    describe('rejectTransfer logic', () => {
         it('should refund balance and create refund transaction on rejection', async () => {
             const mockTx = { id: 1, userId: 1, amount: -500, status: 'PENDING', user: { email: 'u@t.com', firstName: 'U' } };
 
@@ -138,7 +138,7 @@ describe('Admin Controller', () => {
                     data: { userId: 1, amount: 500, type: 'REFUND', status: 'COMPLETED' },
                 });
 
-                // Refund to wallet
+                // Refund to merchant account
                 await tx.wallet.update({
                     where: { userId: 1 },
                     data: { balance: { increment: 500 } },
@@ -154,7 +154,7 @@ describe('Admin Controller', () => {
 
     // ============ getAllUsers ============
     describe('getAllUsers logic', () => {
-        it('should return all users with wallet info', async () => {
+        it('should return all users with account info', async () => {
             const mockUsers = [
                 { id: 1, email: 'a@b.com', role: 'user', isActive: true, wallet: { balance: 100, currency: 'THB' } },
                 { id: 2, email: 'c@d.com', role: 'admin', isActive: true, wallet: { balance: 0, currency: 'THB' } },
