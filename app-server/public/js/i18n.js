@@ -634,10 +634,10 @@
       'footer.newsletter.button': 'ส่ง',
 
       // Dashboard & Transfer
-      'dashboard.wallet.total_balance': 'ยอดขายสะสม',
+      'dashboard.wallet.total_balance': 'ยอดขายรวม',
       'dashboard.wallet.address': 'Merchant ID',
       'dashboard.merchantAccount': 'บัญชีร้านค้า',
-      'dashboard.totalRevenue': 'ยอดขายสะสม',
+      'dashboard.totalRevenue': 'ยอดขายรวม',
       'dashboard.actions.payout': 'ดูรายงานการโอน',
       'dashboard.actions.settle': 'รายงานธุรกรรม',
       'dashboard.actions.deposit': 'เติมเงิน (ระงับ)',
@@ -953,7 +953,7 @@
       'dashboard.welcome': 'ยินดีต้อนรับกลับมา! 👋',
       'dashboard.subtitle': 'นี่คือภาพรวมบัญชีของคุณในวันนี้',
       'dashboard.merchantAccount': 'บัญชีร้านค้า',
-      'dashboard.totalRevenue': 'ยอดขายสะสม',
+      'dashboard.totalRevenue': 'ยอดขายรวม',
       'dashboard.recent_activity': 'รายการล่าสุด',
       'dashboard.view_all': 'ดูทั้งหมด',
       'dashboard.stats.title': 'สถิติด่วน',
@@ -1550,10 +1550,10 @@
       'modal.account_name_ph': 'Name on account',
       'modal.account_number_ph': '012-3-45678-9',
       'modal.select_bank': 'Select Bank',
-      'modal.title.withdraw': 'Withdraw Funds',
+      // DISABLED: 'modal.title.withdraw' removed — direct payment model,
       'modal.title.deposit': 'Deposit Funds',
       // DISABLED: P2P transfer removed
-      'modal.action.withdraw': 'Withdraw',
+      // DISABLED: 'modal.action.withdraw' removed — direct payment model,
       'modal.action.deposit': 'Deposit',
       // DISABLED: P2P transfer removed
       'common.processing': 'Processing...',
@@ -1795,7 +1795,7 @@
       'footer.links.terms': 'Terms of Service',
 
       // Dashboard & Transfer
-      'dashboard.wallet.total_balance': 'Total Revenue',
+      'dashboard.wallet.total_balance': 'Total Sales',
       'dashboard.wallet.address': 'Merchant ID',
       'dashboard.merchantAccount': 'Merchant Account',
       'dashboard.totalRevenue': 'Total Revenue',

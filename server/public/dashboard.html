@@ -264,7 +264,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <p class="text-sm text-slate-400 mb-1" data-i18n="dashboard.totalRevenue">ยอดขายสะสม</p>
+                        <p class="text-sm text-slate-400 mb-1" data-i18n="dashboard.totalRevenue">ยอดขายรวม</p>
                         <div class="flex flex-col mb-2 relative">
                             <!-- Live Balance -->
                             <div class="flex items-baseline group" id="live-balance-container">
@@ -1742,28 +1742,9 @@
                     if (amountInput) amountInput.classList.add('rounded-r-xl');
                 }
             } else if (action === 'withdraw') {
-                titleEl.setAttribute('data-i18n', 'modal.title.withdraw');
-                iconEl.className = 'fas fa-arrow-up';
-
-                // Re-enable currency select for withdraw
-                const currencySelect = document.getElementById('currency-select');
-                if (currencySelect) {
-                    currencySelect.classList.remove('hidden');
-                    const amountInput = document.getElementById('amount-input');
-                    if (amountInput) amountInput.classList.remove('rounded-r-xl');
-                }
-
-                // Security: Auto-fill account name from logged-in user and lock it
-                const userStr = localStorage.getItem('user');
-                if (userStr) {
-                    try {
-                        const user = JSON.parse(userStr);
-                        const accNameInput = document.querySelector('input[name="account_name"]');
-                        if (accNameInput && user.name) {
-                            accNameInput.value = user.name;
-                        }
-                    } catch (e) { console.error('Error parsing user data', e); }
-                }
+                // DISABLED: Withdraw removed — direct payment model
+                // Money goes directly to merchant's bank, no withdrawal needed
+                return;
             }
             // Trigger translation update for the new attribute
             if (window.ElixopayI18n) {
@@ -2012,26 +1993,9 @@
                             amount: amount,
                             channel: form.deposit_channel ? form.deposit_channel.value : 'bank'
                         };
-                    } else if (walletAction === 'withdraw') {
-                        url = '/api/v1/users/wallet/withdraw';
-
-                        body = {
-                            amount: amount,
-                            bankAccount: `${form.bank_name.value} - ${form.account_number.value} (${form.account_name.value})`
-                        };
-                    } else if (walletAction === 'transfer') {
-                        // Transfer logic
-                        // Transfer logic
-                        // url = '/api/v1/users/wallet/transfer'; 
-                        throw new Error('Direct transfers between accounts are currently disabled.');
-                        // Ensure we grab the input correctly
-                        const recipientVal = form.to_wallet_address ? form.to_wallet_address.value : '';
-
-                        if (!recipientVal) throw new Error('Please enter a recipient Wallet ID or Email');
-
-                        body = {
-                            recipient: recipientVal
-                        };
+                    } else if (walletAction === 'withdraw' || walletAction === 'transfer') {
+                        // DISABLED: Withdraw/Transfer removed — direct payment model
+                        throw new Error('This feature is not available.');
                     }
 
                     if (!url) throw new Error('Invalid action');

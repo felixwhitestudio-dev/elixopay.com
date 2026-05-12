@@ -6,7 +6,7 @@ let content = fs.readFileSync(filePath, 'utf8');
 
 // The new English keys
 const enKeys = `
-      'dashboard.wallet.total_balance': 'Total Balance',
+      'dashboard.wallet.total_balance': 'Total Sales',
       'dashboard.wallet.address': 'Merchant ID', 
       'dashboard.merchantAccount': 'Merchant Account',
       'dashboard.totalRevenue': 'Total Revenue',
@@ -123,7 +123,7 @@ const enKeys = `
 `;
 
 const zhKeys = `
-      'dashboard.wallet.total_balance': '总余额',
+      'dashboard.wallet.total_balance': '总销售额',
       'dashboard.wallet.address': '商户 ID', 
       'dashboard.merchantAccount': '商户账户',
       'dashboard.totalRevenue': '总收入',
