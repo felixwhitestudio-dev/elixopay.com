@@ -30,7 +30,7 @@ const thKeys = `
       'admin.stat.liquidityPool': 'สภาพคล่องในระบบ',
       'admin.stat.registeredAccounts': 'บัญชีที่ลงทะเบียนทั้งหมด',
       'admin.stat.systemUsdt': 'USDT ในระบบ',
-      'admin.stat.totalWithdrawals': 'ยอดถอนเงินรวม',
+      'admin.stat.totalWithdrawals': 'ยอดโอนเงินรวม',
       'admin.verification.title': 'รอการตรวจสอบยืนยันตัวตน',
 `;
 
@@ -60,7 +60,7 @@ const enKeys = `
       'admin.stat.liquidityPool': 'Liquidity Pool',
       'admin.stat.registeredAccounts': 'Registered Accounts',
       'admin.stat.systemUsdt': 'System USDT',
-      'admin.stat.totalWithdrawals': 'Total Withdrawals',
+      'admin.stat.totalWithdrawals': 'Total Transfers',
       'admin.verification.title': 'Pending Verifications',
 `;
 
@@ -90,7 +90,7 @@ const zhKeys = `
       'admin.stat.liquidityPool': '流动性池',
       'admin.stat.registeredAccounts': '已注册账户',
       'admin.stat.systemUsdt': '系统 USDT',
-      'admin.stat.totalWithdrawals': '总提现',
+      'admin.stat.totalWithdrawals': '总转账',
       'admin.verification.title': '待审核验证',
 `;
 
