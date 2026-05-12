@@ -1728,7 +1728,7 @@
       'status.api_name': 'API Gateway',
       'status.dashboard_name': 'Dashboard',
       'status.payment_name': 'Payment Processing (PromptPay / QR)',
-      'status.wallet_name': 'Transfer System',
+      'status.wallet_name': 'Settlement System',
       'status.webhooks_name': 'Webhooks',
       'status.db_name': 'Database',
       'status.incidents_title': 'Past Incidents',
@@ -3090,7 +3090,7 @@
 
       // KYC
       'dashboard.kyc.title': '需要操作：身份验证',
-      'dashboard.kyc.desc': '请提交您的 KYC 文件以激活支付网关并启用提款功能。',
+      'dashboard.kyc.desc': '请提交您的 KYC 文件以激活支付网关并启用收款功能。',
       'dashboard.kyc.btn': '上传文件',
       'kyc.title': '身份验证 (KYC)',
       'kyc.subtitle': '为遵守反洗钱规定及银行政策，请上传您的身份文件以激活系统。',

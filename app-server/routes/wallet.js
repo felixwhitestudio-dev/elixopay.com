@@ -3,14 +3,13 @@ const router = express.Router();
 const { authenticate } = require('../middleware/auth');
 const requireKyc = require('../middleware/kyc');
 const walletController = require('../controllers/walletController');
-const exchangeController = require('../controllers/exchangeController');
+// const exchangeController = require('../controllers/exchangeController'); // DISABLED: crypto exchange removed
 
-/**
- * @route   POST /api/v1/wallet/withdraw
- * @desc    Request a withdrawal
- * @access  Private
+/*
+ * DISABLED: Withdraw route removed — Direct Payment Model
+ * Elixopay does NOT hold merchant funds. Money flows directly to merchant bank.
+ * router.post('/withdraw', authenticate, requireKyc, walletController.requestWithdrawal);
  */
-router.post('/withdraw', authenticate, requireKyc, walletController.requestWithdrawal);
 // router.post('/deposit', authenticate, walletController.processDeposit); // DISABLED FOR LICENSE-FREE MODE
 
 /**

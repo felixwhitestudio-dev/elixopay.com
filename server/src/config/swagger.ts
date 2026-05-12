@@ -167,33 +167,12 @@ const options: swaggerJsdoc.Options = {
             '/users/wallet': {
                 get: {
                     tags: ['Merchant Account'],
-                    summary: 'ดูยอดขายสะสม',
+                    summary: 'ดูยอดขายรวม',
                     security: [{ BearerAuth: [] }],
                     responses: { '200': { description: 'ข้อมูลบัญชีร้านค้า' } },
                 },
             },
-            '/users/wallet/withdraw': {
-                post: {
-                    tags: ['Merchant Account'],
-                    summary: 'โอนเงินเข้าบัญชีธนาคาร',
-                    security: [{ BearerAuth: [] }],
-                    requestBody: {
-                        required: true,
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'object',
-                                    required: ['amount'],
-                                    properties: {
-                                        amount: { type: 'number', example: 5000.00, description: 'จำนวนเงินที่ต้องการโอน (ขั้นต่ำ 100 บาท)' },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    responses: { '200': { description: 'โอนเงินสำเร็จ' } },
-                },
-            },
+            /* DISABLED: /users/wallet/withdraw removed — Direct Payment Model */
         },
     },
     apis: [], // We define paths inline above

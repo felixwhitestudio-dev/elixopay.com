@@ -24,12 +24,11 @@ router.get('/network', authenticate, partnerController.getPartnerNetwork);
  */
 router.get('/payouts', authenticate, partnerController.getPayoutHistory);
 
-/**
- * @route   POST /api/v1/partners/withdraw
- * @desc    Request a withdrawal
- * @access  Private
+/*
+ * DISABLED: Partner withdraw route removed — Direct Payment Model
+ * Partner commissions are transferred directly to bank account.
+ * router.post('/withdraw', authenticate, partnerController.requestWithdrawal);
  */
-router.post('/withdraw', authenticate, partnerController.requestWithdrawal);
 
 /**
  * @route   GET /api/v1/partners/team
