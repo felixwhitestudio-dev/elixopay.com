@@ -330,25 +330,25 @@ export const getAuditLogs = catchAsync(async (req: Request, res: Response, next:
 });
 
 export const getStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
+    const reserveSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
     const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
 
     res.status(200).json({
         success: true,
         data: {
-            usdt: usdtSetting ? parseFloat(usdtSetting.value) : 0,
+            reserve: reserveSetting ? parseFloat(reserveSetting.value) : 0,
             thb: thbSetting ? parseFloat(thbSetting.value) : 0
         }
     });
 });
 
 export const getLiquidity = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
+    const reserveSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
 
     res.status(200).json({
         success: true,
         data: {
-            balance: usdtSetting ? parseFloat(usdtSetting.value) : 0
+            balance: reserveSetting ? parseFloat(reserveSetting.value) : 0
         }
     });
 });
@@ -442,7 +442,7 @@ export const getDashboardOverview = catchAsync(async (req: Request, res: Respons
     });
 
     // 4. Get active platforms balances (THB and THB)
-    const usdtSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
+    const reserveSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_reserve' } });
     const thbSetting = await prisma.systemSetting.findUnique({ where: { key: 'platform_thb_balance' } });
 
     // 5. Calculate total transfer volume (Completed THB transfers)
@@ -478,7 +478,7 @@ export const getDashboardOverview = catchAsync(async (req: Request, res: Respons
                 totalUsers,
                 pendingKyc,
                 pendingBankRequests,
-                platformThbReserve: usdtSetting && !isNaN(parseFloat(usdtSetting.value)) ? parseFloat(usdtSetting.value) : 0,
+                platformThbReserve: reserveSetting && !isNaN(parseFloat(reserveSetting.value)) ? parseFloat(reserveSetting.value) : 0,
                 platformThbBalance: thbSetting && !isNaN(parseFloat(thbSetting.value)) ? parseFloat(thbSetting.value) : 0,
                 totalWithdrawVolume
             },

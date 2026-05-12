@@ -31,7 +31,7 @@
       'signup.currency.thb': 'THB - บาท',
       'signup.currency.cny': 'CNY - หยวน',
       'signup.currency.vnd': 'VND - ดอง',
-      'signup.currency.btc': 'BTC - บิตคอยน์',
+      // DISABLED: crypto removed for banking compliance
       // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - ดอลลาร์',
       'signup.termsLabel': 'ฉันยอมรับข้อตกลงและนโยบาย',
@@ -1089,7 +1089,7 @@
       'signup.currency.thb': 'THB - Baht',
       'signup.currency.cny': 'CNY - Yuan',
       'signup.currency.vnd': 'VND - Dong',
-      'signup.currency.btc': 'BTC - Bitcoin',
+      // DISABLED: crypto removed for banking compliance
       // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - Dollar',
       'signup.termsLabel': 'I accept terms and policies',
@@ -2185,7 +2185,7 @@
       'signup.currency.thb': 'THB - 泰铢',
       'signup.currency.cny': 'CNY - 人民币',
       'signup.currency.vnd': 'VND - 越南盾',
-      'signup.currency.btc': 'BTC - 比特币',
+      // DISABLED: crypto removed for banking compliance
       // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - 美元',
       'signup.termsLabel': '我接受条款和政策',

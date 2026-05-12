@@ -12,11 +12,12 @@ async function main() {
             value: '15',
             description: 'Withdrawal fee in THB'
         },
-        {
-            key: 'exchange_rate_usdt_thb',
-            value: '34.50',
-            description: 'Exchange rate: 1 USDT = ? THB'
-        }
+        // DISABLED: Crypto features removed for banking compliance
+        // {
+        //     key: 'exchange_rate_usdt_thb',
+        //     value: '34.50',
+        //     description: 'Exchange rate: 1 USDT = ? THB'
+        // }
     ];
 
     for (const setting of settings) {

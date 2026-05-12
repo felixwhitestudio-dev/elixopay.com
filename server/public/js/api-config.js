@@ -68,8 +68,8 @@
         stats: '/api/v1/users/stats',
         profile: '/api/v1/users/profile',
         // Wallet specific endpoints
-        exchangeRate: '/api/v1/wallet/exchange-rate',
-        exchange: '/api/v1/wallet/exchange'
+        // DISABLED: exchangeRate removed for banking compliance
+        // DISABLED: exchange removed for banking compliance
       },
       apiKeys: {
         list: '/api/v1/api-keys',
