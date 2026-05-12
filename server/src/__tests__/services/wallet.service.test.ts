@@ -148,81 +148,8 @@ describe('Merchant Account Service', () => {
     });
 
     // ============ transfer ============
-    describe('transfer', () => {
-        it('should transfer between two users', async () => {
-            const mockSenderWallet = { id: 1, userId: 1, balance: 5000 };
-            const mockRecipientUser = {
-                id: 2, email: 'recipient@test.com',
-                wallet: { id: 2, userId: 2, balance: 100 },
-            };
-            const mockSenderTx = { id: 30, type: 'TRANSFER_OUT', amount: -200 };
-            const mockRecipientTx = { id: 31, type: 'TRANSFER_IN', amount: 200 };
-            const mockUpdatedSenderWallet = { id: 1, userId: 1, balance: 4800 };
-
-            mockPrisma.$transaction.mockImplementation(async (cb: any) => {
-                const txContext = {
-                    wallet: {
-                        findUnique: jest.fn()
-                            .mockResolvedValueOnce(mockSenderWallet)  // sender check
-                            .mockResolvedValue(null),
-                        update: jest.fn().mockResolvedValue(mockUpdatedSenderWallet),
-                    },
-                    user: {
-                        findUnique: jest.fn().mockResolvedValue(mockRecipientUser),
-                    },
-                    transaction: {
-                        create: jest.fn()
-                            .mockResolvedValueOnce(mockSenderTx)
-                            .mockResolvedValueOnce(mockRecipientTx),
-                    },
-                };
-                return cb(txContext);
-            });
-
-            const result = await walletService.transfer(1, 'recipient@test.com', 200);
-
-            expect(result.senderTx.type).toBe('TRANSFER_OUT');
-            expect(result.senderTx.amount).toBe(-200);
-        });
-
-        it('should throw error when transferring to self', async () => {
-            const mockSenderWallet = { id: 1, userId: 1, balance: 5000 };
-            const mockSelfUser = {
-                id: 1, email: 'self@test.com',
-                wallet: { id: 1, userId: 1, balance: 5000 },
-            };
-
-            mockPrisma.$transaction.mockImplementation(async (cb: any) => {
-                const txContext = {
-                    wallet: {
-                        findUnique: jest.fn().mockResolvedValue(mockSenderWallet),
-                    },
-                    user: {
-                        findUnique: jest.fn().mockResolvedValue(mockSelfUser),
-                    },
-                    transaction: { create: jest.fn() },
-                };
-                return cb(txContext);
-            });
-
-            await expect(walletService.transfer(1, 'self@test.com', 100)).rejects.toThrow('Cannot transfer to yourself');
-        });
-
-        it('should throw error for insufficient funds', async () => {
-            const mockSenderWallet = { id: 1, userId: 1, balance: 10 }; // Only 10 THB
-
-            mockPrisma.$transaction.mockImplementation(async (cb: any) => {
-                const txContext = {
-                    wallet: { findUnique: jest.fn().mockResolvedValue(mockSenderWallet) },
-                    user: { findUnique: jest.fn() },
-                    transaction: { create: jest.fn() },
-                };
-                return cb(txContext);
-            });
-
-            await expect(walletService.transfer(1, 'someone@test.com', 100)).rejects.toThrow('Insufficient funds');
-        });
-    });
+    // DISABLED: P2P Transfer tests removed for banking compliance
+    // describe('transfer', () => { ... });
 
     // ============ getTransactions ============
     describe('getTransactions', () => {

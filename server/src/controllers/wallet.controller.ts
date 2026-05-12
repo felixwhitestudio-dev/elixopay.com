@@ -69,21 +69,7 @@ export const withdraw = catchAsync(async (req: Request, res: Response, next: Nex
     });
 });
 
-export const transfer = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
-    const userId = req.user.id;
-    const { email, recipient, amount } = req.body;
-    // Support both legacy 'email' and new 'recipient' fields
-    const finalRecipient = recipient || email;
-
-    if (!finalRecipient || !amount || amount <= 0) {
-        return next(new AppError('Please provide recipient (Email or Account ID) and valid amount', 400));
-    }
-
-    const result = await walletService.transfer(userId, finalRecipient, Number(amount));
-
-    res.status(200).json({
-        success: true,
-        data: result
-    });
-});
+/*
+ * DISABLED: P2P Transfer controller removed for banking compliance
+ * export const transfer = catchAsync(async (req, res, next) => { ... });
+ */

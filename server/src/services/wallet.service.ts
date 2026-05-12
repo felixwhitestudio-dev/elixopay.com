@@ -14,7 +14,7 @@ export const createWallet = async (userId: number) => {
             userId,
             balance: 0.0,
             // @ts-ignore
-            usdtBalance: 0.0,
+            // usdtBalance removed for banking compliance
             currency: 'THB',
         },
     });
@@ -101,93 +101,12 @@ export const withdraw = async (userId: number, amount: number, bankAccount?: str
     });
 };
 
-export const transfer = async (senderId: number, recipientIdentifier: string, amount: number) => {
-    return await prisma.$transaction(async (tx) => {
-        // 1. Validate Sender & Balance
-        const senderWallet = await tx.wallet.findUnique({ where: { userId: senderId } });
-        if (!senderWallet || Number(senderWallet.balance) < amount) {
-            throw new AppError('Insufficient funds', 400);
-        }
-
-        // 2. Find Recipient (Email or Wallet ID)
-        let recipientUser;
-        const isEmail = recipientIdentifier.includes('@');
-
-        if (isEmail) {
-            recipientUser = await tx.user.findUnique({
-                where: { email: recipientIdentifier },
-                include: { wallet: true },
-            });
-        } else {
-            // Assume format WALLET-123 or just 123
-            // Extract numeric ID
-            const walletIdStr = recipientIdentifier.toUpperCase().replace('WALLET-', '');
-            const walletId = parseInt(walletIdStr, 10);
-
-            if (isNaN(walletId)) {
-                throw new AppError('Invalid Account ID format', 400);
-            }
-
-            const recipientWallet = await tx.wallet.findUnique({
-                where: { id: walletId },
-                include: { user: true }
-            });
-
-            if (recipientWallet) {
-                recipientUser = { ...recipientWallet.user, wallet: recipientWallet };
-            }
-        }
-
-        if (!recipientUser || !recipientUser.wallet) {
-            throw new AppError('Recipient not found', 404);
-        }
-
-        if (recipientUser.id === senderId) {
-            throw new AppError('Cannot transfer to yourself', 400);
-        }
-
-        // 3. Create Sender Transaction (Debit)
-        const senderTx = await tx.transaction.create({
-            data: {
-                userId: senderId,
-                amount: -amount,
-                type: 'TRANSFER_OUT',
-                status: 'COMPLETED',
-                reference: `TO: ${recipientUser.email}`,
-                metadata: JSON.stringify({ recipientId: recipientUser.id }),
-            },
-        });
-
-        // 4. Create Recipient Transaction (Credit)
-        const recipientTx = await tx.transaction.create({
-            data: {
-                userId: recipientUser.id,
-                amount: amount,
-                type: 'TRANSFER_IN',
-                status: 'COMPLETED',
-                reference: `FROM: User ${senderId}`, // You might want to show email here but need extra query
-                metadata: JSON.stringify({ senderId: senderId }),
-            },
-        });
-
-        // 5. Update Balances
-        const updatedSenderWallet = await tx.wallet.update({
-            where: { userId: senderId },
-            data: { balance: { decrement: amount } },
-        });
-
-        await tx.wallet.update({
-            where: { userId: recipientUser.id },
-            data: { balance: { increment: amount } },
-        });
-
-        return {
-            senderTx,
-            recipientTx,
-            senderWallet: updatedSenderWallet,
-        };
-    });
-};
+/*
+ * DISABLED: P2P Transfer function removed for banking compliance
+ * This function allowed user-to-user money transfers (sender → recipient)
+ * which constitutes P2P money transfer services.
+ * To re-enable, uncomment this function.
+ */
 
 export const getTransactions = async (userId: number, limit = 20) => {
     return await prisma.transaction.findMany({

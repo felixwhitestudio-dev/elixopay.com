@@ -794,13 +794,7 @@
                         </div>
                     </div>
 
-                    <div id="wallet-modal-to" class="hidden">
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5"
-                            data-i18n="modal.recipient_address">Recipient Merchant ID or Email</label>
-                        <input type="text" name="to_wallet_address"
-                            class="block w-full rounded-xl border-gray-300 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white shadow-sm"
-                            placeholder="MID_xxx or email@example.com" />
-                    </div>
+                    <!-- DISABLED: P2P Transfer recipient field removed for banking compliance -->
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1.5"
@@ -1770,16 +1764,6 @@
                         }
                     } catch (e) { console.error('Error parsing user data', e); }
                 }
-            } else if (action === 'transfer') {
-                titleEl.setAttribute('data-i18n', 'modal.title.transfer');
-                iconEl.className = 'fas fa-paper-plane';
-                // Re-enable currency select for transfer
-                const currencySelect = document.getElementById('currency-select');
-                if (currencySelect) {
-                    currencySelect.classList.remove('hidden');
-                    const amountInput = document.getElementById('amount-input');
-                    if (amountInput) amountInput.classList.remove('rounded-r-xl');
-                }
             }
             // Trigger translation update for the new attribute
             if (window.ElixopayI18n) {
@@ -1951,10 +1935,7 @@
                 if (bankName) bankName.required = false;
             }
 
-            if (walletAction === 'transfer') {
-                walletTo.classList.remove('hidden');
-                if (toAddrInput) toAddrInput.required = true;
-            } else if (walletAction === 'withdraw') {
+            if (walletAction === 'withdraw') {
                 // THB Withdraw -> Bank Account
                 if (walletBank) walletBank.classList.remove('hidden');
             }
@@ -2017,7 +1998,6 @@
                 if (window.ElixopayI18n) window.ElixopayI18n.setLang(localStorage.getItem('elixopay-lang') || 'th');
 
                 const amount = parseFloat(form.amount.value);
-                const to_wallet_address = form.to_wallet_address ? form.to_wallet_address.value : '';
                 const currency = form.currency ? form.currency.value : 'THB';
 
                 let body = {};
