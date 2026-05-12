@@ -29,7 +29,7 @@ const thKeys = `
       'admin.stat.completedVolume': 'ยอดที่ดำเนินการแล้ว (THB)',
       'admin.stat.liquidityPool': 'สภาพคล่องในระบบ',
       'admin.stat.registeredAccounts': 'บัญชีที่ลงทะเบียนทั้งหมด',
-      'admin.stat.systemUsdt': 'USDT ในระบบ',
+      // DISABLED: 'admin.stat.systemUsdt' removed for banking compliance
       'admin.stat.totalWithdrawals': 'ยอดโอนเงินรวม',
       'admin.verification.title': 'รอการตรวจสอบยืนยันตัวตน',
 `;
@@ -59,7 +59,7 @@ const enKeys = `
       'admin.stat.completedVolume': 'Completed Volume (THB)',
       'admin.stat.liquidityPool': 'Liquidity Pool',
       'admin.stat.registeredAccounts': 'Registered Accounts',
-      'admin.stat.systemUsdt': 'System USDT',
+      // DISABLED: 'admin.stat.systemUsdt' removed for banking compliance
       'admin.stat.totalWithdrawals': 'Total Transfers',
       'admin.verification.title': 'Pending Verifications',
 `;
@@ -89,7 +89,7 @@ const zhKeys = `
       'admin.stat.completedVolume': '已完成金额 (THB)',
       'admin.stat.liquidityPool': '流动性池',
       'admin.stat.registeredAccounts': '已注册账户',
-      'admin.stat.systemUsdt': '系统 USDT',
+      // DISABLED: 'admin.stat.systemUsdt' removed for banking compliance
       'admin.stat.totalWithdrawals': '总转账',
       'admin.verification.title': '待审核验证',
 `;

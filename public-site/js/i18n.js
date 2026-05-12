@@ -32,7 +32,7 @@
       'signup.currency.cny': 'CNY - หยวน',
       'signup.currency.vnd': 'VND - ดอง',
       'signup.currency.btc': 'BTC - บิตคอยน์',
-      'signup.currency.usdt': 'USDT - สเตเบิลคอยน์',
+      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - ดอลลาร์',
       'signup.termsLabel': 'ฉันยอมรับข้อตกลงและนโยบาย',
       'signup.cta': 'สร้างบัญชี',
@@ -694,14 +694,14 @@
       'modal.success_msg': 'ทำรายการสำเร็จ!',
       'common.error_default': 'การทำรายการล้มเหลว',
       // Exchange
-      'modal.exchange.title': 'ซื้อ USDT',
-      'modal.exchange.subtitle': 'แลกเปลี่ยนเงินบาทเป็น USDT',
-      'modal.exchange.amount_thb': 'จำนวนเงินที่ต้องการซื้อ (THB)',
-      'modal.exchange.estimated_usdt': 'ยอดที่ได้รับโดยประมาณ (USDT)',
-      'modal.exchange.rate': 'อัตราแลกเปลี่ยน: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': 'ยืนยันการซื้อ',
-      'modal.exchange.success': 'แลกเปลี่ยนสำเร็จ!',
-      'modal.exchange.failed': 'การแลกเปลี่ยนล้มเหลว',
+      // DISABLED: crypto exchange removed for banking compliance
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       // Banks
       'bank.kbank': 'ธนาคารกสิกรไทย',
       'bank.scb': 'ธนาคารไทยพาณิชย์',
@@ -749,14 +749,14 @@
       'bank.account_type.saving': 'บัญชีออมทรัพย์',
       'promptpay.enter_amount': 'ระบุจำนวนเงินเพื่อสร้าง QR',
       'promptpay.scan_via_app': 'สแกนผ่านแอปธนาคารใดก็ได้',
-      'exchange.buy_usdt': 'ซื้อ USDT',
-      'exchange.sell_usdt': 'ขาย USDT',
-      'exchange.spend_thb': 'จำนวนเงินที่ใช้ (THB)',
-      'exchange.sell_usdt_amount': 'จำนวนเงินที่ขาย (USDT)',
-      'exchange.rate_buy': 'อัตรา: 1 USDT ≈ ',
-      'exchange.rate_sell': 'อัตรา: 1 USDT ≈ ',
-      'exchange.confirm_buy': 'ยืนยันการซื้อ',
-      'exchange.confirm_sell': 'ยืนยันการขาย',
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'activity.no_recent': 'ไม่มีรายการล่าสุด',
       'activity.transaction': 'ธุรกรรม',
       'common.success': 'สำเร็จ!',
@@ -851,7 +851,7 @@
       'partner.dashboard.title': 'แดชบอร์ดพาร์ทเนอร์ - Elixopay',
       'partner.menu.overview': 'ภาพรวม',
       'partner.menu.referrals': 'การแนะนำ',
-      'partner.menu.payouts': 'การจ่ายเงิน',
+      'partner.menu.payouts': 'การโอนเงิน',
       'partner.menu.settings': 'การตั้งค่า',
       'partner.overview.title': 'ภาพรวมพาร์ทเนอร์',
       'partner.overview.withdraw': 'ดูรายงานการโอน',
@@ -861,7 +861,7 @@
       'partner.ref.title': 'ลิงก์แนะนำของคุณ',
       'partner.ref.desc': 'แชร์ลิงก์นี้เพื่อรับค่าคอมมิชชั่น 20% จากทุกธุรกรรมของคนที่คุณแนะนำ ตลอดไป',
       'partner.ref.copy': 'คัดลอก',
-      'partner.payouts.title': 'การจ่ายเงินล่าสุด',
+      'partner.payouts.title': 'การโอนเงินล่าสุด',
       'partner.table.date': 'วันที่',
       'partner.table.amount': 'จำนวนเงิน',
       'partner.table.status': 'สถานะ',
@@ -1090,7 +1090,7 @@
       'signup.currency.cny': 'CNY - Yuan',
       'signup.currency.vnd': 'VND - Dong',
       'signup.currency.btc': 'BTC - Bitcoin',
-      'signup.currency.usdt': 'USDT - Stablecoin',
+      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - Dollar',
       'signup.termsLabel': 'I accept terms and policies',
       'signup.cta': 'Create Account',
@@ -1230,14 +1230,14 @@
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
       'partner.menu.overview': 'Overview',
       'partner.menu.referrals': 'Referrals',
-      'partner.menu.payouts': 'Payouts',
+      'partner.menu.payouts': 'Transfers',
       'partner.menu.settings': 'Settings',
       'partner.overview.title': 'Partner Network',
       'partner.overview.subtitle': 'Manage your referrals, track commissions, and grow your agency network from one powerful interface.',
       'partner.overview.withdraw': 'Withdraw',
       'partner.stats.earnings': 'Total Earnings',
       'partner.stats.active_referrals': 'Active Merchants',
-      'partner.stats.pending_payout': 'Pending Payout',
+      'partner.stats.pending_payout': 'Pending Transfer',
       'partner.stats.clicks': 'Link Clicks',
       'partner.ref.title': 'Your Referral Link',
       'partner.ref.desc': 'Share this link with potential merchants. You\'ll earn 20% commission on their transaction fees forever.',
@@ -1302,7 +1302,7 @@
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
       'partner.menu.overview': 'Overview',
       'partner.menu.referrals': 'Referrals',
-      'partner.menu.payouts': 'Payouts',
+      'partner.menu.payouts': 'Transfers',
       'partner.menu.settings': 'Settings',
       'partner.overview.title': 'Partner Overview',
       'partner.overview.withdraw': 'Withdraw Funds',
@@ -1312,7 +1312,7 @@
       'partner.ref.title': 'Your Referral Link',
       'partner.ref.desc': 'Share this link to earn 20% commission on every transaction from your referrals.',
       'partner.ref.copy': 'Copy',
-      'partner.payouts.title': 'Recent Payouts',
+      'partner.payouts.title': 'Recent Transfers',
       'partner.table.date': 'Date',
       'partner.table.amount': 'Amount',
       'partner.table.status': 'Status',
@@ -1560,14 +1560,14 @@
       'modal.success_msg': 'Success!',
       'common.error_default': 'Transaction failed',
       // Exchange
-      'modal.exchange.title': 'Buy USDT',
-      'modal.exchange.subtitle': 'Exchange THB to USDT',
-      'modal.exchange.amount_thb': 'Amount to Spend (THB)',
-      'modal.exchange.estimated_usdt': 'Estimated Received (USDT)',
-      'modal.exchange.rate': 'Exchange Rate: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': 'Confirm Purchase',
-      'modal.exchange.success': 'Exchange Successful!',
-      'modal.exchange.failed': 'Exchange Failed',
+      // DISABLED: crypto exchange removed for banking compliance
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       // Banks
       // Docs
       'docs.title': 'API Documentation',
@@ -1877,14 +1877,14 @@
       'bank.account_type.saving': 'Saving Account',
       'promptpay.enter_amount': 'Enter amount to generate QR',
       'promptpay.scan_via_app': 'Scan via any Banking App',
-      'exchange.buy_usdt': 'Buy USDT',
-      'exchange.sell_usdt': 'Sell USDT',
-      'exchange.spend_thb': 'Amount to Spend (THB)',
-      'exchange.sell_usdt_amount': 'Amount to Sell (USDT)',
-      'exchange.rate_buy': 'Rate: 1 USDT ≈ ',
-      'exchange.rate_sell': 'Rate: 1 USDT ≈ ',
-      'exchange.confirm_buy': 'Confirm Purchase',
-      'exchange.confirm_sell': 'Confirm Sale',
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'activity.no_recent': 'No recent transactions',
       'activity.transaction': 'Transaction',
       'common.success': 'Success!',
@@ -1984,19 +1984,19 @@
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
       'partner.menu.overview': 'Overview',
       'partner.menu.referrals': 'Referrals',
-      'partner.menu.payouts': 'Payouts',
+      'partner.menu.payouts': 'Transfers',
       'partner.menu.settings': 'Settings',
       'partner.overview.title': 'Partner Overview',
       'partner.overview.subtitle': 'Manage your referrals, track commissions, and grow your agency network from one powerful interface.',
       'partner.overview.withdraw': 'Withdraw',
       'partner.stats.earnings': 'TOTAL EARNINGS',
       'partner.stats.active_referrals': 'ACTIVE MERCHANTS',
-      'partner.stats.pending_payout': 'PENDING PAYOUT',
+      'partner.stats.pending_payout': 'PENDING TRANSFER',
       'partner.stats.clicks': 'LINK CLICKS',
       'partner.ref.title': 'Your Referral Link',
       'partner.ref.desc': 'Share this link to earn 20% commission on transaction fees forever.',
       'partner.ref.copy': 'Copy Link',
-      'partner.payouts.title': 'Recent Payouts',
+      'partner.payouts.title': 'Recent Transfers',
       'partner.network.title': 'My Network',
       'partner.network.add_member': 'Add Member',
       'partner.network.refresh': 'Refresh',
@@ -2104,7 +2104,7 @@
 
       // KYC
       'dashboard.kyc.title': 'Action Required: Identity Verification',
-      'dashboard.kyc.desc': 'Submit your KYC documents to activate payment gateways and enable withdrawals.',
+      'dashboard.kyc.desc': 'Submit your KYC documents to activate payment gateways and enable transfers.',
       'dashboard.kyc.btn': 'Upload Documents',
       'kyc.title': 'Identity Verification (KYC)',
       'kyc.subtitle': 'To comply with AML regulations and bank policies, please upload your identity documents to activate your account.',
@@ -2186,7 +2186,7 @@
       'signup.currency.cny': 'CNY - 人民币',
       'signup.currency.vnd': 'VND - 越南盾',
       'signup.currency.btc': 'BTC - 比特币',
-      'signup.currency.usdt': 'USDT - 稳定币',
+      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - 美元',
       'signup.termsLabel': '我接受条款和政策',
       'signup.cta': '创建账户',
@@ -2829,14 +2829,14 @@
       'bank.account_type.saving': '储蓄账户',
       'promptpay.enter_amount': '输入金额以生成 QR',
       'promptpay.scan_via_app': '使用任何银行 App 扫描',
-      'exchange.buy_usdt': '购买 USDT',
-      'exchange.sell_usdt': '出售 USDT',
-      'exchange.spend_thb': '支付金额 (THB)',
-      'exchange.sell_usdt_amount': '出售金额 (USDT)',
-      'exchange.rate_buy': '汇率: 1 USDT ≈ ',
-      'exchange.rate_sell': '汇率: 1 USDT ≈ ',
-      'exchange.confirm_buy': '确认购买',
-      'exchange.confirm_sell': '确认出售',
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'activity.no_recent': '无最近交易',
       'activity.transaction': '交易',
       'common.success': '成功！',

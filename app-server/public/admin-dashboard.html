@@ -185,7 +185,7 @@
 
           document.getElementById('stat-total-users').textContent = stats.totalUsers.toLocaleString();
           document.getElementById('stat-pending-kyc').textContent = stats.pendingKyc.toLocaleString();
-          // Instead of USDT, we can show total users/merchants. The API returns stats.totalUsers
+          // Show total users/merchants. The API returns stats.totalUsers
           document.getElementById('stat-active-merchants').textContent = stats.totalUsers || '--';
           document.getElementById('stat-withdrawals').textContent = '฿ ' + stats.totalWithdrawVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 

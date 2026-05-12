@@ -56,14 +56,14 @@ const enKeys = `
       'common.processing': 'Processing...',
       'modal.success_msg': 'Transaction Successful!',
       'common.error_default': 'Transaction Failed',
-      'modal.exchange.title': 'Buy USDT',
-      'modal.exchange.subtitle': 'Exchange THB to USDT',
-      'modal.exchange.amount_thb': 'Amount to Spend (THB)',
-      'modal.exchange.estimated_usdt': 'Estimated Received (USDT)',
-      'modal.exchange.rate': 'Exchange Rate: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': 'Confirm Purchase',
-      'modal.exchange.success': 'Exchange Successful!',
-      'modal.exchange.failed': 'Exchange Failed',
+      // DISABLED: crypto exchange removed for banking compliance
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'bank.kbank': 'Kasikornbank',
       'bank.scb': 'Siam Commercial Bank',
       'bank.bbl': 'Bangkok Bank',
@@ -108,14 +108,14 @@ const enKeys = `
       'bank.account_type.saving': 'Saving Account',
       'promptpay.enter_amount': 'Enter amount to generate QR',
       'promptpay.scan_via_app': 'Scan via any Banking App',
-      'exchange.buy_usdt': 'Buy USDT',
-      'exchange.sell_usdt': 'Sell USDT',
-      'exchange.spend_thb': 'Amount to Spend (THB)',
-      'exchange.sell_usdt_amount': 'Amount to Sell (USDT)',
-      'exchange.rate_buy': 'Rate: 1 USDT ≈ ',
-      'exchange.rate_sell': 'Rate: 1 USDT ≈ ',
-      'exchange.confirm_buy': 'Confirm Purchase',
-      'exchange.confirm_sell': 'Confirm Sale',
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'activity.no_recent': 'No recent transactions',
       'activity.transaction': 'Transaction',
       'common.success': 'Success!',
@@ -173,14 +173,14 @@ const zhKeys = `
       'common.processing': '处理中...',
       'modal.success_msg': '交易成功！',
       'common.error_default': '交易失败',
-      'modal.exchange.title': '购买 USDT',
-      'modal.exchange.subtitle': '将泰铢兑换为 USDT',
-      'modal.exchange.amount_thb': '花费金额 (THB)',
-      'modal.exchange.estimated_usdt': '预计获得金额 (USDT)',
-      'modal.exchange.rate': '汇率: 1 USDT = 35.00 THB',
-      'modal.exchange.confirm': '确认购买',
-      'modal.exchange.success': '兑换成功！',
-      'modal.exchange.failed': '兑换失败',
+      // DISABLED: crypto exchange removed for banking compliance
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'bank.kbank': '开泰银行',
       'bank.scb': '泰国汇商银行',
       'bank.bbl': '盘谷银行',
@@ -225,14 +225,14 @@ const zhKeys = `
       'bank.account_type.saving': '储蓄账户',
       'promptpay.enter_amount': '输入金额以生成 QR',
       'promptpay.scan_via_app': '使用任何银行 App 扫描',
-      'exchange.buy_usdt': '购买 USDT',
-      'exchange.sell_usdt': '出售 USDT',
-      'exchange.spend_thb': '花费金额 (THB)',
-      'exchange.sell_usdt_amount': '出售金额 (USDT)',
-      'exchange.rate_buy': '汇率: 1 USDT ≈ ',
-      'exchange.rate_sell': '汇率: 1 USDT ≈ ',
-      'exchange.confirm_buy': '确认购买',
-      'exchange.confirm_sell': '确认出售',
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
+      // DISABLED
       'activity.no_recent': '没有近期交易',
       'activity.transaction': '交易',
       'common.success': '成功！',

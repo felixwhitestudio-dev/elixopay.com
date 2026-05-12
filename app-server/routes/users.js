@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const { authenticate } = require('../middleware/auth');
-const { sendUSDT_TRON } = require('../utils/usdt_trc20');
+// DISABLED: Crypto features removed for banking compliance
+// const { sendUSDT_TRON } = require('../utils/usdt_trc20');
 
 /**
  * @route   GET /api/v1/users/profile
@@ -79,33 +80,11 @@ router.get('/wallet', authenticate, async (req, res) => {
     // 2. Identify distinct wallets
     const allWallets = result.rows;
     const thbWallet = allWallets.find(w => w.currency === 'THB');
-    const usdtWallet = allWallets.find(w => w.currency === 'USDT');
 
-    // 3. Determine the "primary" wallet to return
-    let primaryWallet;
+    // 3. Determine the primary wallet (THB only — crypto disabled for banking compliance)
+    const primaryWallet = thbWallet || allWallets[0];
 
-    if (currency) {
-      // If specific currency requested, try to find it
-      primaryWallet = allWallets.find(w => w.currency === currency);
-      if (!primaryWallet) {
-        // Fallback or 404? For safety, if not found, return the first one or error.
-        // Given the issue, let's just return the THB one if the requested one is missing, or the first one.
-        primaryWallet = thbWallet || allWallets[0];
-      }
-    } else {
-      // Default to THB or first available
-      primaryWallet = thbWallet || allWallets[0];
-    }
-
-    // 4. Attach stats/cross-currency info
-    // Always attach usdtBalance if it exists, regardless of which wallet is primary
-    if (usdtWallet) {
-      primaryWallet.usdtBalance = usdtWallet.balance;
-    } else {
-      primaryWallet.usdtBalance = 0;
-    }
-
-    // 5. Return
+    // 4. Return
     res.json({ success: true, data: { wallet: primaryWallet } });
   } catch (error) {
     console.error('Wallet Fetch Error:', error);
@@ -275,159 +254,13 @@ router.post('/wallet/withdraw', authenticate, async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/v1/users/wallet/withdraw-usdt-onchain
- * @desc    Withdraw USDT (TRC20) to external address
- * @access  Private
+/*
+ * DISABLED: Crypto features removed for banking compliance
+ * The following routes have been disabled:
+ * - POST /wallet/withdraw-usdt-onchain (USDT TRC20 withdrawal)
+ * - POST /wallet/exchange (THB to USDT exchange)
+ * To re-enable, uncomment these routes and restore tronweb dependency.
  */
-router.post('/wallet/withdraw-usdt-onchain', authenticate, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { to_wallet_address, amount } = req.body;
-    if (!to_wallet_address || !amount || isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ success: false, error: { message: 'Invalid input' } });
-    }
-    // ตรวจสอบยอด USDT ในระบบ (database)
-    const walletRes = await db.query('SELECT id, balance, currency FROM wallets WHERE user_id = $1 AND currency = $2', [userId, 'USDT']);
-    if (walletRes.rows.length === 0) {
-      return res.status(404).json({ success: false, error: { message: 'USDT wallet not found' } });
-    }
-    const wallet = walletRes.rows[0];
-    if (parseFloat(wallet.balance) < amount) {
-      return res.status(400).json({ success: false, error: { message: 'Insufficient USDT balance' } });
-    }
-    // (Optional) ตรวจสอบ address ปลายทางเบื้องต้น
-    if (!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(to_wallet_address)) {
-      return res.status(400).json({ success: false, error: { message: 'Invalid Tron address' } });
-    }
-    // หักยอดในระบบก่อน (atomic)
-    await db.query('BEGIN');
-    await db.query('UPDATE wallets SET balance = balance - $1 WHERE user_id = $2 AND currency = $3', [amount, userId, 'USDT']);
-    // เรียกฟังก์ชันโอน USDT TRC20
-    let txId;
-    try {
-      txId = await sendUSDT_TRON(to_wallet_address, amount);
-    } catch (err) {
-      await db.query('ROLLBACK');
-      return res.status(500).json({ success: false, error: { message: 'Blockchain error: ' + err.message } });
-    }
-    // log ธุรกรรม
-    await db.query('INSERT INTO transaction_logs (wallet_id, user_id, type, amount, currency, related_wallet_address, description) VALUES ($1, $2, $3, $4, $5, $6, $7)', [wallet.id, userId, 'withdraw_onchain', amount, 'USDT', to_wallet_address, 'Withdraw USDT on-chain: ' + txId]);
-    await db.query('COMMIT');
-    res.json({ success: true, txId });
-  } catch (error) {
-    try { await db.query('ROLLBACK'); } catch (_) { }
-    res.status(500).json({ success: false, error: { message: error.message } });
-  }
-});
-
-/**
- * @route   POST /api/v1/users/wallet/exchange
- * @desc    Exchange THB to USDT
- * @access  Private
- */
-router.post('/wallet/exchange', authenticate, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { amount_thb } = req.body;
-
-    if (!amount_thb || isNaN(amount_thb) || amount_thb <= 0) {
-      return res.status(400).json({ success: false, error: { message: 'Invalid THB amount' } });
-    }
-
-    // Exchange Rate (Fixed for now)
-    const EXCHANGE_RATE = 34.5;
-    const amount_usdt = parseFloat((amount_thb / EXCHANGE_RATE).toFixed(6));
-
-    // 1. Get THB Wallet
-    const thbWalletRes = await db.query(
-      "SELECT * FROM wallets WHERE user_id = $1 AND currency = 'THB'",
-      [userId]
-    );
-
-    if (thbWalletRes.rows.length === 0) {
-      return res.status(404).json({ success: false, error: { message: 'THB Wallet not found' } });
-    }
-    const thbWallet = thbWalletRes.rows[0];
-
-    if (parseFloat(thbWallet.balance) < amount_thb) {
-      return res.status(400).json({ success: false, error: { message: 'Insufficient THB balance' } });
-    }
-
-    // 2. Get or Create USDT Wallet
-    let usdtWalletRes = await db.query(
-      "SELECT * FROM wallets WHERE user_id = $1 AND currency = 'USDT'",
-      [userId]
-    );
-    let usdtWallet;
-
-    if (usdtWalletRes.rows.length === 0) {
-      // Create USDT wallet if not exists (same address as THB for simplicity, or new UUID?)
-      // Schema says wallet_address must be UNIQUE. So we cannot reuse address if it's strictly unique column.
-      // Let's assume we generate a new one or append suffix?
-      // Actually, for this system, maybe we just create one.
-      // Let's generate a pseudo-T-address for USDT if missing.
-      const crypto = require('crypto'); // Ensure crypto is available or use uuid
-      // Just reusing the generator logic might be complex here without the helper.
-      // For now, let's assume if THB exists, USDT should exist?
-      // Or let's just error if not found for safety, OR try to insert.
-      // Let's try to insert a dummy address if needed for now to unblock.
-      // "T" + random hex.
-      const newAddress = 'T' + require('crypto').randomBytes(16).toString('hex');
-      const newWallet = await db.query(
-        "INSERT INTO wallets (user_id, currency, balance, wallet_address) VALUES ($1, 'USDT', 0, $2) RETURNING *",
-        [userId, newAddress]
-      );
-      usdtWallet = newWallet.rows[0];
-    } else {
-      usdtWallet = usdtWalletRes.rows[0];
-    }
-
-    // 3. Perform Exchange (Atomic Transaction)
-    await db.query('BEGIN');
-
-    // Deduct THB
-    await db.query(
-      "UPDATE wallets SET balance = balance - $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2",
-      [amount_thb, thbWallet.id]
-    );
-
-    // Add USDT
-    await db.query(
-      "UPDATE wallets SET balance = balance + $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2",
-      [amount_usdt, usdtWallet.id]
-    );
-
-    // Log Transactions
-    await db.query(
-      "INSERT INTO transaction_logs (wallet_id, user_id, type, amount, currency, description) VALUES ($1, $2, 'withdraw', $3, 'THB', $4)",
-      [thbWallet.id, userId, amount_thb, `Exchange to ${amount_usdt} USDT`]
-    );
-    await db.query(
-      "INSERT INTO transaction_logs (wallet_id, user_id, type, amount, currency, description) VALUES ($1, $2, 'deposit', $3, 'USDT', $4)",
-      [usdtWallet.id, userId, amount_usdt, `Exchange from ${amount_thb} THB`]
-    );
-
-    await db.query('COMMIT');
-
-    res.json({
-      success: true,
-      data: {
-        exchanged: {
-          from: 'THB',
-          to: 'USDT',
-          amount_in: amount_thb,
-          amount_out: amount_usdt,
-          rate: EXCHANGE_RATE
-        }
-      }
-    });
-
-  } catch (error) {
-    try { await db.query('ROLLBACK'); } catch (_) { }
-    res.status(500).json({ success: false, error: { message: error.message } });
-  }
-});
 
 /**
  * @route   POST /api/v1/users/wallet/transfer

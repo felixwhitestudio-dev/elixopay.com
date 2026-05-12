@@ -26,16 +26,10 @@
     "pg": "^8.11.3",
     "qrcode": "^1.5.4",
     "stripe": "^14.11.0",
-    "tronweb": "^6.3.0",
     "uuid": "^9.0.0",
     "winston": "^3.11.0"
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "overrides": {
-    "tronweb": {
-      "axios": "$axios"
-    }
   }
 }
