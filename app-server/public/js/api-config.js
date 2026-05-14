@@ -34,6 +34,9 @@
     BASE = overrideBase;
   } else if (isLocalhost) {
     BASE = DEV_BASE;
+  } else if (window.location.hostname.includes('.run.app')) {
+    // Cloud Run: API is same-origin (frontend and API on same server)
+    BASE = '';
   } else {
     BASE = PROD_BASE;
   }
@@ -67,9 +70,7 @@
       users: {
         stats: '/api/v1/users/stats',
         profile: '/api/v1/users/profile',
-        // Wallet specific endpoints
-        // DISABLED: exchangeRate removed for banking compliance
-        // DISABLED: exchange removed for banking compliance
+        // Settlement & fee endpoints managed server-side
       },
       apiKeys: {
         list: '/api/v1/api-keys',

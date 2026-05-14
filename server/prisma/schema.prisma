@@ -50,7 +50,7 @@ model User {
   twoFactorSecret   String?  // Encrypted TOTP secret
   twoFactorEnabled  Boolean  @default(false)
 
-  wallet          Wallet?
+  wallet          Wallet?    // Merchant settlement balance
   transactions    Transaction[]
   auditLogs       AuditLog[]
   bankChangeRequests BankAccountChangeRequest[]
@@ -77,13 +77,12 @@ model BankAccountChangeRequest {
   resolvedAt           DateTime?
 }
 
-model Wallet {
+model Wallet {  // Merchant settlement balance — not a crypto wallet
   id        Int      @id @default(autoincrement())
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
   balance   Decimal  @default(0.00)
   testBalance Decimal @default(0.00)
-  // usdtBalance removed — banking compliance
   currency  String   @default("THB")
   updatedAt DateTime @updatedAt
 }
@@ -93,7 +92,7 @@ model Transaction {
   userId         Int
   user           User     @relation(fields: [userId], references: [id])
   amount         Decimal
-  type           String   // DEPOSIT, WITHDRAW, EXCHANGE
+  type           String   // PAYMENT, REFUND, SETTLEMENT, FEE
   status         String   // PENDING, COMPLETED, FAILED
   reference      String?  // Bank reference or Slip ID
   idempotencyKey String?  @unique // Critical for stability
@@ -102,7 +101,7 @@ model Transaction {
   // Payment Orchestrator Fields
   provider        String?  // 'kbank', 'omise', 'bbl', 'mock' — which gateway processed this
   providerChargeId String? // Charge/Transaction ID from the gateway
-  paymentMethod   String?  // 'qr', 'card', 'bank_transfer', 'wallet'
+  paymentMethod   String?  // 'qr', 'card', 'bank_transfer'
 
   // Tracking Fields for Refunds
   refundedAmount Decimal  @default(0.00) // Tracks how much has been refunded

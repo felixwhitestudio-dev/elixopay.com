@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // CORS Configuration
 const allowedOrigins = process.env.FRONTEND_ALLOWED_ORIGINS
   ? process.env.FRONTEND_ALLOWED_ORIGINS.split(',')
-  : ['https://elixopay.com', 'https://www.elixopay.com', 'https://app.elixopay.com'];
+  : ['https://elixopay.com', 'https://www.elixopay.com', 'https://app.elixopay.com', 'https://elixopay-api-811815196850.asia-southeast1.run.app'];
 
 app.use(cors({
   origin: (origin, callback) => {

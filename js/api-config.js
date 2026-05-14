@@ -2,9 +2,9 @@
 // ใช้ไฟล์นี้ในทุกหน้าแทนการ hardcode localhost
 
 (function () {
-  // Preferred production API URL
-  // TODO: Update this to your actual production domain when ready (e.g. https://api.elixopay.com)
-  const PROD_BASE = 'https://elixopay-com.onrender.com';
+  // Use same-origin for dashboard (frontend + API on same server)
+  // External API consumers can use api.elixopay.com directly
+  const PROD_BASE = 'https://api.elixopay.com';
   const DEV_BASE = 'http://localhost:3000';
 
   // Allow overriding the API base via localStorage for flexibility
@@ -34,6 +34,9 @@
     BASE = overrideBase;
   } else if (isLocalhost) {
     BASE = DEV_BASE;
+  } else if (window.location.hostname.includes('.run.app')) {
+    // Cloud Run: API is same-origin (frontend and API on same server)
+    BASE = '';
   } else {
     BASE = PROD_BASE;
   }
@@ -67,9 +70,7 @@
       users: {
         stats: '/api/v1/users/stats',
         profile: '/api/v1/users/profile',
-        // Wallet specific endpoints
-        // DISABLED: exchangeRate removed for banking compliance
-        // DISABLED: exchange removed for banking compliance
+        // Settlement & fee endpoints managed server-side
       },
       apiKeys: {
         list: '/api/v1/api-keys',
@@ -107,19 +108,31 @@
     const csrf = isMutating ? getCookie('csrf_token') : null;
 
     const defaultHeaders = {
-      'Content-Type': 'application/json',
       // Backward compatibility: still send Authorization if legacy token exists
       ...(localStorage.getItem('token') && { 'Authorization': `Bearer ${localStorage.getItem('token')}` }),
       ...(csrf && { 'X-CSRF-Token': csrf })
     };
 
+    // Only set application/json if not sending FormData
+    if (!(options.body instanceof FormData)) {
+      defaultHeaders['Content-Type'] = 'application/json';
+    }
+
+    // Merge headers but ensure we don't accidentally override Content-Type for FormData
+    const finalHeaders = {
+      ...defaultHeaders,
+      ...(options.headers || {})
+    };
+
+    // CRITICAL FIX: If using FormData, let the browser set the Content-Type automatically with boundaries
+    if (options.body instanceof FormData && finalHeaders['Content-Type'] === 'application/json') {
+      delete finalHeaders['Content-Type'];
+    }
+
     let response = await fetch(url, {
       credentials: 'include', // include cookies
       ...options,
-      headers: {
-        ...defaultHeaders,
-        ...(options.headers || {})
-      }
+      headers: finalHeaders
     });
 
     if (response.status === 401 && window.location.pathname !== '/login.html') {
@@ -163,4 +176,22 @@
     localStorage.setItem('api_base_url', url);
     window.location.reload();
   };
+
+  // Frontend URL resolution to ensure the Home/Logo links point to the correct environment
+  const FRONTEND_PROD = 'https://www.elixopay.com';
+  const FRONTEND_DEV = 'http://localhost:8080'; // Local public site running on 8080
+  window.API_CONFIG.FRONTEND_URL = isLocalhost ? FRONTEND_DEV : FRONTEND_PROD;
+
+  // Automatically update all hardcoded Elixopay homepage links to resolve conditionally based on the environment
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href^="https://www.elixopay.com"]').forEach(link => {
+      try {
+        const url = new URL(link.href);
+        const frontendUrl = new URL(window.API_CONFIG.FRONTEND_URL);
+        link.href = `${frontendUrl.origin}${url.pathname}${url.search}${url.hash}`;
+      } catch (e) {
+        link.href = window.API_CONFIG.FRONTEND_URL;
+      }
+    });
+  });
 })();
