@@ -36,7 +36,7 @@
                     Platform Settlement Reserve (THB)
                 </h2>
                 <p class="mt-1 text-sm text-gray-500" data-i18n="admin.liquidity.pageDesc">
-                    Manage the platform's settlement reserve for merchant transfers.
+                    Manage the platform's settlement reserve for merchant settlements.
                 </p>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="bg-gray-50 px-5 py-3">
                     <div class="text-sm text-gray-500">
-                        <i class="fas fa-info-circle mr-1"></i> <span data-i18n="admin.liquidity.fundsAvailable">Funds available for transfers</span>
+                        <i class="fas fa-info-circle mr-1"></i> <span data-i18n="admin.liquidity.fundsAvailable">Funds available for settlements</span>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                         Add Liquidity
                     </h3>
                     <div class="mt-2 max-w-xl text-sm text-gray-500">
-                        <p data-i18n="admin.liquidity.addDesc">Top up the settlement reserve via bank transfer.</p>
+                        <p data-i18n="admin.liquidity.addDesc">Top up the settlement reserve via bank settlement.</p>
                     </div>
                     <form id="addLiquidityForm" class="mt-5 sm:flex sm:items-center"
                         onsubmit="handleAddLiquidity(event)">
@@ -227,7 +227,7 @@
                 if (data.success && data.data.transactions.length > 0) {
                     tbody.innerHTML = data.data.transactions.map(tx => {
                         const date = new Date(tx.created_at).toLocaleString();
-                        const isDeposit = tx.type === 'deposit' || tx.type === 'transfer_in';
+                        const isDeposit = tx.type === 'deposit' || tx.type === 'settlement_in';
                         const colorClass = isDeposit ? 'text-green-600' : 'text-red-600';
                         const icon = isDeposit ? 'fa-arrow-down' : 'fa-arrow-up';
 

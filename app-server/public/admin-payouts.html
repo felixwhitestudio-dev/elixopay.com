@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Elixopay Transfer Management" />
-    <title>Transfer Management - Elixopay Admin</title>
+    <meta name="description" content="Elixopay Settlement Management" />
+    <title>Settlement Management - Elixopay Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/design-system.css?v=2">
@@ -40,13 +40,13 @@
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <h2 class="text-2xl font-bold text-gray-800" data-i18n="admin.payouts.pageTitle">Transfer Requests</h2>
-                            <p class="text-gray-600" data-i18n="admin.payouts.pageDesc">Manage pending transfer requests</p>
+                            <p class="text-gray-600" data-i18n="admin.payouts.pageDesc">Manage pending settlement requests</p>
                         </div>
-                        <button onclick="loadPendingWithdrawals()"
+                        <button onclick="loadPendingSettlements()"
                             class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm">
                             <i class="fas fa-sync-alt mr-2"></i> <span data-i18n="admin.common.refresh">Refresh</span>
                         </button>
-                        <button onclick="exportTableToCSV('payouts-table-id', 'Transfer_Requests')"
+                        <button onclick="exportTableToCSV('payouts-table-id', 'Settlement_Requests')"
                             class="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 shadow-sm ml-2">
                             <i class="fas fa-file-csv mr-2"></i> <span data-i18n="admin.common.exportCsv">Export CSV</span>
                         </button>
@@ -164,18 +164,18 @@
                             </h3>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.settings.withdrawalFee">Transfer Fee
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="admin.settings.withdrawalFee">Settlement Fee
                                         (THB)</label>
                                     <div class="relative rounded-md shadow-sm">
                                         <div
                                             class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <span class="text-gray-500 sm:text-sm">฿</span>
                                         </div>
-                                        <input type="number" id="setting_withdrawal_fee_thb"
+                                        <input type="number" id="setting_settlement_fee_thb"
                                             class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 px-12 sm:text-sm border-gray-300 rounded-md py-2 border"
                                             placeholder="0.00">
                                     </div>
-                                    <p class="mt-1 text-xs text-gray-500" data-i18n="admin.settings.withdrawalFeeDesc">Fixed fee per transfer transaction.
+                                    <p class="mt-1 text-xs text-gray-500" data-i18n="admin.settings.settlementFeeDesc">Fixed fee per settlement.
                                     </p>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
                             <div class="space-y-3 text-sm text-gray-600">
                                 <p><strong>Currency:</strong> THB (Thai Baht)</p>
                                 <p><strong>Settlement:</strong> T+1 Business Day</p>
-                                <p><strong>Payment Methods:</strong> Bank Transfer, QR PromptPay</p>
+                                <p><strong>Payment Methods:</strong> Bank Settlement, QR PromptPay</p>
                             </div>
                         </div>
                     </div>
@@ -378,7 +378,7 @@
             activeNav.classList.add('bg-red-50', 'text-red-700');
 
             // Data Load
-            if (tab === 'payouts') loadPendingWithdrawals();
+            if (tab === 'payouts') loadPendingSettlements();
             if (tab === 'users') loadUsers();
             if (tab === 'settings') loadSettings();
             if (tab === 'transactions') loadAllTransactions();
@@ -444,8 +444,8 @@
             }
         }
 
-        // --- Transfer Requests Logic ---
-        async function loadPendingWithdrawals() {
+        // --- Settlement Requests Logic ---
+        async function loadPendingSettlements() {
             const tbody = document.getElementById('payoutsTableBody');
             tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading...</td></tr>';
 
@@ -476,7 +476,7 @@
                         </tr>
                     `).join('');
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending transfer requests.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-gray-400">No pending settlement requests.</td></tr>';
                 }
             } catch (e) {
                 console.error(e);
@@ -485,10 +485,10 @@
         }
 
         async function approve(id) {
-            if (!confirm("Approve this transfer?")) return;
+            if (!confirm("Approve this settlement?")) return;
             const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
             if (res && res.success) {
-                loadPendingWithdrawals();
+                loadPendingSettlements();
             } else {
                 alert(res?.message || 'Failed');
             }
@@ -564,7 +564,7 @@
             const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/reject`, { method: 'POST', body: JSON.stringify({ reason }) });
             if (res && res.success) {
                 closeRejectModal();
-                loadPendingWithdrawals();
+                loadPendingSettlements();
             } else {
                 alert(res?.message || 'Failed');
             }
@@ -646,7 +646,7 @@
                 const data = await safeFetch('/api/v1/admin/settings');
                 if (data && data.success) {
                     const s = data.data;
-                    document.getElementById('setting_withdrawal_fee_thb').value = s.withdrawal_fee_thb || '';
+                    document.getElementById('setting_settlement_fee_thb').value = s.settlement_fee_thb || '';
                 }
 
                 // 2. Load System Stats (THB Reserve)
@@ -666,13 +666,13 @@
 
 
         async function saveSettings() {
-            const withdrawal_fee_thb = document.getElementById('setting_withdrawal_fee_thb').value;
+            const settlement_fee_thb = document.getElementById('setting_settlement_fee_thb').value;
 
             try {
                 const res = await safeFetch('/api/v1/admin/settings', {
                     method: 'POST',
                     body: JSON.stringify({
-                        withdrawal_fee_thb
+                        settlement_fee_thb
                     })
                 });
                 if (res && res.success) {
@@ -699,7 +699,7 @@
                 } catch(e) { /* ignore parse errors */ }
             }
             // Load default tab
-            loadPendingWithdrawals();
+            loadPendingSettlements();
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
