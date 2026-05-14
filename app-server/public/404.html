@@ -126,14 +126,25 @@
         <div class="error-logo-icon">E</div>
         <span class="error-logo-text">Elixo<span>pay</span></span>
     </a>
+    <div style="position:fixed;top:24px;right:24px;display:flex;gap:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;">
+        <button class="lang-btn" onclick="changeLang('th')" style="padding:5px 10px;font-size:0.75rem;font-weight:600;color:#94a3b8;background:transparent;border:none;cursor:pointer;">TH</button>
+        <button class="lang-btn" onclick="changeLang('en')" style="padding:5px 10px;font-size:0.75rem;font-weight:600;color:#94a3b8;background:transparent;border:none;cursor:pointer;">EN</button>
+        <button class="lang-btn" onclick="changeLang('zh')" style="padding:5px 10px;font-size:0.75rem;font-weight:600;color:#94a3b8;background:transparent;border:none;cursor:pointer;">中文</button>
+    </div>
     <div class="error-container">
         <div class="error-code">404</div>
-        <h1 class="error-title">Page Not Found</h1>
-        <p class="error-desc">ไม่พบหน้าที่คุณค้นหา อาจถูกย้ายหรือลบออกแล้ว</p>
+        <h1 class="error-title" data-i18n="error404.title">Page Not Found</h1>
+        <p class="error-desc" data-i18n="error404.desc">ไม่พบหน้าที่คุณค้นหา อาจถูกย้ายหรือลบออกแล้ว</p>
         <div class="error-actions">
-            <a href="/dashboard.html" class="error-btn primary"><i class="fas fa-gauge-high"></i> Go to Dashboard</a>
-            <a href="/" class="error-btn outline"><i class="fas fa-home"></i> Homepage</a>
+            <a href="/dashboard.html" class="error-btn primary"><i class="fas fa-gauge-high"></i> <span data-i18n="error404.dashboard">Go to Dashboard</span></a>
+            <a href="/" class="error-btn outline"><i class="fas fa-home"></i> <span data-i18n="error404.home">Homepage</span></a>
         </div>
     </div>
+    <script src="js/i18n.js"></script>
+    <script>
+        function changeLang(lang) {
+            if (window.changeLanguage) window.changeLanguage(lang);
+        }
+    </script>
 </body>
 </html>

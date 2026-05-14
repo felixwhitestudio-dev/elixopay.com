@@ -258,10 +258,17 @@
             </a>
             <button class="mobile-menu-btn" style="color: var(--text-primary);"><i class="fas fa-bars"></i></button>
             <ul class="nav-links">
-                <li><a href="apidocs.html">เอกสาร API</a></li>
-                <li><a href="support.html">ช่วยเหลือ</a></li>
-                <li><a href="https://app.elixopay.com/login.html" class="btn">เข้าสู่ระบบ</a></li>
-                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary">สมัครสมาชิก</a></li>
+                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร API</a></li>
+                <li><a href="help.html" data-i18n="footer.links.help">ช่วยเหลือ</a></li>
+                <li><a href="https://app.elixopay.com/login.html" class="btn" data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary" data-i18n="nav.signup">สมัครสมาชิก</a></li>
+                <li>
+                    <select id="langSelect" style="background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.1);color:#1e293b;border-radius:6px;padding:0.3rem 0.6rem;font-size:0.8rem;cursor:pointer;" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
             </ul>
         </div>
     </nav>
@@ -361,6 +368,7 @@ window.location.href = response.data.checkout_url;</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/ui-enhancements.js?v=6"></script>
 </body>
 
