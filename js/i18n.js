@@ -32,7 +32,7 @@
       'signup.currency.cny': 'CNY - หยวน',
       'signup.currency.vnd': 'VND - ดอง',
       // DISABLED: crypto removed for banking compliance
-      // DISABLED: crypto removed for banking compliance
+      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - ดอลลาร์',
       'signup.termsLabel': 'ฉันยอมรับข้อตกลงและนโยบาย',
       'signup.cta': 'สร้างบัญชี',
@@ -562,7 +562,8 @@
       'status.api_name': 'API Gateway',
       'status.dashboard_name': 'Dashboard',
       'status.payment_name': 'ระบบชำระเงิน (PromptPay / QR)',
-      'status.wallet_name': 'ระบบการโอนเงิน',
+      'status.wallet_name': 'ระบบ Settlement',
+      'status.wallet_subtitle': 'การชำระเงินและค่าธรรมเนียม',
       'status.webhooks_name': 'Webhooks',
       'status.db_name': 'Database',
       'status.incidents_title': 'เหตุการณ์ที่ผ่านมา',
@@ -694,7 +695,7 @@
       'modal.success_msg': 'ทำรายการสำเร็จ!',
       'common.error_default': 'การทำรายการล้มเหลว',
       // Exchange
-      // DISABLED: crypto exchange removed
+      // DISABLED: crypto exchange removed for banking compliance
       // DISABLED
       // DISABLED
       // DISABLED
@@ -851,7 +852,7 @@
       'partner.dashboard.title': 'แดชบอร์ดพาร์ทเนอร์ - Elixopay',
       'partner.menu.overview': 'ภาพรวม',
       'partner.menu.referrals': 'การแนะนำ',
-      'partner.menu.payouts': 'การจ่ายเงิน',
+      'partner.menu.payouts': 'การโอนเงิน',
       'partner.menu.settings': 'การตั้งค่า',
       'partner.overview.title': 'ภาพรวมพาร์ทเนอร์',
       'partner.overview.withdraw': 'ดูรายงานการโอน',
@@ -861,7 +862,7 @@
       'partner.ref.title': 'ลิงก์แนะนำของคุณ',
       'partner.ref.desc': 'แชร์ลิงก์นี้เพื่อรับค่าคอมมิชชั่น 20% จากทุกธุรกรรมของคนที่คุณแนะนำ ตลอดไป',
       'partner.ref.copy': 'คัดลอก',
-      'partner.payouts.title': 'การจ่ายเงินล่าสุด',
+      'partner.payouts.title': 'การโอนเงินล่าสุด',
       'partner.table.date': 'วันที่',
       'partner.table.amount': 'จำนวนเงิน',
       'partner.table.status': 'สถานะ',
@@ -1090,7 +1091,7 @@
       'signup.currency.cny': 'CNY - Yuan',
       'signup.currency.vnd': 'VND - Dong',
       // DISABLED: crypto removed for banking compliance
-      // DISABLED: crypto removed for banking compliance
+      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - Dollar',
       'signup.termsLabel': 'I accept terms and policies',
       'signup.cta': 'Create Account',
@@ -1230,14 +1231,14 @@
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
       'partner.menu.overview': 'Overview',
       'partner.menu.referrals': 'Referrals',
-      'partner.menu.payouts': 'Payouts',
+      'partner.menu.payouts': 'Transfers',
       'partner.menu.settings': 'Settings',
       'partner.overview.title': 'Partner Network',
       'partner.overview.subtitle': 'Manage your referrals, track commissions, and grow your agency network from one powerful interface.',
       'partner.overview.withdraw': 'Withdraw',
       'partner.stats.earnings': 'Total Earnings',
       'partner.stats.active_referrals': 'Active Merchants',
-      'partner.stats.pending_payout': 'Pending Payout',
+      'partner.stats.pending_payout': 'Pending Transfer',
       'partner.stats.clicks': 'Link Clicks',
       'partner.ref.title': 'Your Referral Link',
       'partner.ref.desc': 'Share this link with potential merchants. You\'ll earn 20% commission on their transaction fees forever.',
@@ -1302,7 +1303,7 @@
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
       'partner.menu.overview': 'Overview',
       'partner.menu.referrals': 'Referrals',
-      'partner.menu.payouts': 'Payouts',
+      'partner.menu.payouts': 'Transfers',
       'partner.menu.settings': 'Settings',
       'partner.overview.title': 'Partner Overview',
       'partner.overview.withdraw': 'Withdraw Funds',
@@ -1312,7 +1313,7 @@
       'partner.ref.title': 'Your Referral Link',
       'partner.ref.desc': 'Share this link to earn 20% commission on every transaction from your referrals.',
       'partner.ref.copy': 'Copy',
-      'partner.payouts.title': 'Recent Payouts',
+      'partner.payouts.title': 'Recent Transfers',
       'partner.table.date': 'Date',
       'partner.table.amount': 'Amount',
       'partner.table.status': 'Status',
@@ -1560,7 +1561,7 @@
       'modal.success_msg': 'Success!',
       'common.error_default': 'Transaction failed',
       // Exchange
-      // DISABLED: crypto exchange removed
+      // DISABLED: crypto exchange removed for banking compliance
       // DISABLED
       // DISABLED
       // DISABLED
@@ -1729,6 +1730,7 @@
       'status.dashboard_name': 'Dashboard',
       'status.payment_name': 'Payment Processing (PromptPay / QR)',
       'status.wallet_name': 'Settlement System',
+      'status.wallet_subtitle': 'Settlement & Fees',
       'status.webhooks_name': 'Webhooks',
       'status.db_name': 'Database',
       'status.incidents_title': 'Past Incidents',
@@ -1984,19 +1986,19 @@
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
       'partner.menu.overview': 'Overview',
       'partner.menu.referrals': 'Referrals',
-      'partner.menu.payouts': 'Payouts',
+      'partner.menu.payouts': 'Transfers',
       'partner.menu.settings': 'Settings',
       'partner.overview.title': 'Partner Overview',
       'partner.overview.subtitle': 'Manage your referrals, track commissions, and grow your agency network from one powerful interface.',
       'partner.overview.withdraw': 'Withdraw',
       'partner.stats.earnings': 'TOTAL EARNINGS',
       'partner.stats.active_referrals': 'ACTIVE MERCHANTS',
-      'partner.stats.pending_payout': 'PENDING PAYOUT',
+      'partner.stats.pending_payout': 'PENDING TRANSFER',
       'partner.stats.clicks': 'LINK CLICKS',
       'partner.ref.title': 'Your Referral Link',
       'partner.ref.desc': 'Share this link to earn 20% commission on transaction fees forever.',
       'partner.ref.copy': 'Copy Link',
-      'partner.payouts.title': 'Recent Payouts',
+      'partner.payouts.title': 'Recent Transfers',
       'partner.network.title': 'My Network',
       'partner.network.add_member': 'Add Member',
       'partner.network.refresh': 'Refresh',
@@ -2104,7 +2106,7 @@
 
       // KYC
       'dashboard.kyc.title': 'Action Required: Identity Verification',
-      'dashboard.kyc.desc': 'Submit your KYC documents to activate payment gateways and enable withdrawals.',
+      'dashboard.kyc.desc': 'Submit your KYC documents to activate payment gateways and enable transfers.',
       'dashboard.kyc.btn': 'Upload Documents',
       'kyc.title': 'Identity Verification (KYC)',
       'kyc.subtitle': 'To comply with AML regulations and bank policies, please upload your identity documents to activate your account.',
@@ -2186,7 +2188,7 @@
       'signup.currency.cny': 'CNY - 人民币',
       'signup.currency.vnd': 'VND - 越南盾',
       // DISABLED: crypto removed for banking compliance
-      // DISABLED: crypto removed for banking compliance
+      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - 美元',
       'signup.termsLabel': '我接受条款和政策',
       'signup.cta': '创建账户',
@@ -2758,7 +2760,8 @@
       'status.api_name': 'API 网关',
       'status.dashboard_name': '控制台',
       'status.payment_name': '支付处理（PromptPay / QR）',
-      'status.wallet_name': '转账系统',
+      'status.wallet_name': '结算系统',
+      'status.wallet_subtitle': '结算与费用',
       'status.webhooks_name': 'Webhooks',
       'status.db_name': '数据库',
       'status.incidents_title': '历史事件',
