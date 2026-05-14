@@ -601,7 +601,7 @@
             <a href="#check-payment" data-i18n="docs.sidebar.check">ตรวจสอบสถานะ</a>
             <a href="#refunds" data-i18n="docs.sidebar.refunds">การคืนเงิน (Refunds)</a>
             <a href="#subscriptions" data-i18n="docs.sidebar.subscriptions">ระบบสมาชิก (Subscriptions)</a>
-            <a href="#payouts" data-i18n="docs.sidebar.payouts">โอนเงินเข้าบัญชีร้านค้า (Direct Transfer)</a>
+            <a href="#settlement" data-i18n="docs.sidebar.settlement">การ Settlement (รอบจ่ายเงินร้านค้า)</a>
             <a href="#webhooks" data-i18n="docs.sidebar.webhooks">Webhooks</a>
             <a href="#downloads" data-i18n="nav.docs_downloads">ดาวน์โหลด</a>
           </div>
@@ -1665,150 +1665,58 @@
             </div>
           </div>
 
-          <!-- Payouts -->
-          <div id="payouts" class="api-section">
+          <!-- Settlement -->
+          <div id="settlement" class="api-section">
             <div class="api-prose">
-              <h2 data-i18n="docs.payouts.title">โอนเงินเข้าบัญชีร้านค้า (Direct Bank Transfer)</h2>
-              <p data-i18n="docs.payouts.desc">
-                ใช้ Endpoint นี้เพื่อโอนเงินจากยอดขายที่สำเร็จแล้วเข้าบัญชีธนาคารของร้านค้าโดยตรง
-                ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณผูกไว้ในระบบ
+              <h2 data-i18n="docs.settlement.title">การ Settlement (รอบจ่ายเงินร้านค้า)</h2>
+              <p data-i18n="docs.settlement.desc">
+                เมื่อลูกค้าชำระเงินสำเร็จผ่าน Elixopay เงินจะถูกโอนเข้าบัญชีธนาคารของร้านค้าโดยตรงจากธนาคารผู้ให้บริการ (Acquiring Bank) 
+                <strong>Elixopay ไม่ได้ถือเงินหรือเป็นตัวกลางในการโอนเงิน</strong> — ธนาคารจะ settle เงินเข้าบัญชีร้านค้าตามรอบ T+1 (วันทำการถัดไป)
               </p>
 
-              <div class="endpoint-badge"><span class="method-post">POST</span> /api/v1/merchant/settlement</div>
+              <div
+                style="background: rgba(52, 211, 153, 0.1); border-left: 4px solid #34d399; padding: 1rem 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 2rem;">
+                <h4
+                  style="color: #6ee7b7; font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fas fa-shield-alt"></i> Non-Custodial Model</h4>
+                <p style="color: #a7f3d0; margin: 0; font-size: 0.95rem;">
+                  Elixopay เป็น Payment Gateway — ไม่ใช่ e-Wallet หรือ P2P Platform<br>
+                  เงินจากลูกค้าจะเข้าบัญชีธนาคารของร้านค้าโดยตรง ไม่ผ่านบัญชีของ Elixopay
+                </p>
+              </div>
 
-              <h3 data-i18n="docs.payouts.req_params.title"
-                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ Request
-                (Body)</h3>
-              <table class="param-table">
-                <thead>
-                  <tr>
-                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
-                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <span class="param-name">amount</span>
-                      <span class="param-type">number</span><span class="param-required"
-                        data-i18n="docs.common.table.required">Required</span>
-                    </td>
-                    <td class="param-desc" data-i18n="docs.payouts.req_params.amount">
-                      จำนวนเงินที่ต้องการโอน (รวมค่าธรรมเนียม) ตัวอย่างเช่น 500.00
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <h3 data-i18n="docs.payouts.res_params.title"
-                style="margin-top: 3rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: white;">พารามิเตอร์ของ
-                Response</h3>
-              <table class="param-table" style="margin-bottom: 0;">
-                <thead>
-                  <tr>
-                    <th data-i18n="docs.common.table.parameter" style="width: 35%;">พารามิเตอร์</th>
-                    <th data-i18n="docs.common.table.description">คำอธิบาย</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <span class="param-name">success</span>
-                      <span class="param-type">boolean</span>
-                    </td>
-                    <td class="param-desc" data-i18n="docs.payouts.res_params.success">
-                      ระบุว่าการส่งคำขอสำเร็จหรือไม่
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <span class="param-name">transaction</span>
-                      <span class="param-type">object</span>
-                    </td>
-                    <td class="param-desc" data-i18n="docs.payouts.res_params.transaction">
-                      ออบเจ็กต์ข้อมูลรายการโอนเงินที่ถูกสร้างขึ้นในสถานะ 'PENDING'
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="api-code">
-              <h3 data-i18n="docs.common.request">ตัวอย่าง Request</h3>
-              <div class="code-tabs-container">
-                <div class="code-tabs-header">
-                  <button class="code-tab-btn active" data-lang="curl">cURL</button>
-                  <button class="code-tab-btn" data-lang="node">Node.js</button>
-                  <button class="code-tab-btn" data-lang="python">Python</button>
-                  <button class="code-tab-btn" data-lang="php">PHP</button>
-                </div>
-
-                <!-- cURL -->
-                <div class="code-tab-content active" data-lang="curl">
-                  <div class="code-block">
-                    curl -X POST https://api.elixopay.com/api/v1/merchant/settlement \
-                    -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
-                    -H "Content-Type: application/json" \
-                    -d '{
-                    "amount": 500.00
-                    }'
+              <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem; color: white;">ขั้นตอนการ Settlement</h3>
+              <div style="display: grid; gap: 1rem;">
+                <div style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                  <span style="background: #6366f1; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">1</span>
+                  <div>
+                    <strong style="color: #e2e8f0;">ลูกค้าชำระเงิน</strong>
+                    <p style="color: #94a3b8; margin: 0.25rem 0 0; font-size: 0.9rem;">ลูกค้าชำระผ่าน QR Code, บัตรเครดิต หรือ Internet Banking</p>
                   </div>
                 </div>
-
-                <!-- Node.js -->
-                <div class="code-tab-content" data-lang="node">
-                  <div class="code-block">
-                    const axios = require('axios');
-
-                    axios.post('https://api.elixopay.com/api/v1/merchant/settlement', {
-                    amount: 500.00
-                    }, {
-                    headers: {
-                    'Authorization': 'Bearer sk_live_YOUR_SECRET_KEY',
-                    'Content-Type': 'application/json'
-                    }
-                    }).then(res => console.log(res.data));
+                <div style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                  <span style="background: #6366f1; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">2</span>
+                  <div>
+                    <strong style="color: #e2e8f0;">ธนาคารประมวลผล</strong>
+                    <p style="color: #94a3b8; margin: 0.25rem 0 0; font-size: 0.9rem;">Banking API (KBank/SCB) ยืนยันรายการ — Elixopay ส่ง Webhook แจ้งร้านค้า</p>
                   </div>
                 </div>
-
-                <!-- Python -->
-                <div class="code-tab-content" data-lang="python">
-                  <div class="code-block">
-                    import requests
-
-                    url = "https://api.elixopay.com/api/v1/merchant/settlement"
-                    headers = {
-                    "Authorization": "Bearer sk_live_YOUR_SECRET_KEY",
-                    "Content-Type": "application/json"
-                    }
-                    data = {
-                    "amount": 500.00
-                    }
-                    response = requests.post(url, json=data, headers=headers)
-                    print(response.json())
-                  </div>
-                </div>
-
-                <!-- PHP -->
-                <div class="code-tab-content" data-lang="php">
-                  <div class="code-block">
-                    $ch = curl_init('https://api.elixopay.com/api/v1/merchant/settlement');
-                    $payload = json_encode([
-                    'amount' => 500.00
-                    ]);
-
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                    'Authorization: Bearer sk_live_YOUR_SECRET_KEY',
-                    'Content-Type: application/json'
-                    ]);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($ch);
+                <div style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                  <span style="background: #10b981; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">3</span>
+                  <div>
+                    <strong style="color: #e2e8f0;">เงินเข้าบัญชีร้านค้าโดยตรง</strong>
+                    <p style="color: #94a3b8; margin: 0.25rem 0 0; font-size: 0.9rem;">ธนาคาร settle เงิน (หักค่าธรรมเนียม) เข้าบัญชีธนาคารของร้านค้าในรอบ T+1</p>
                   </div>
                 </div>
               </div>
 
-              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (201 Created)</h3>
+              <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem; color: white;">API ตรวจสอบยอด Settlement</h3>
+              <div class="endpoint-badge"><span class="method-get">GET</span> /api/v1/balances/me</div>
+              <p style="color: #94a3b8; font-size: 0.95rem;">ใช้ Endpoint นี้เพื่อดูยอดขายสะสมและยอดที่ธนาคาร settle แล้ว</p>
+            </div>
+
+            <div class="api-code">
+              <h3 data-i18n="docs.common.response">ตัวอย่าง Response (200 OK)</h3>
               <div class="code-tabs-container">
                 <div class="code-tabs-header">
                   <button class="code-tab-btn active">JSON</button>
@@ -1817,15 +1725,14 @@
                   <div class="code-block" style="color: #a5b4fc;">
                     {
                     "success": true,
-                    "message": "Transfer requested successfully",
                     "data": {
-                    "transaction": {
-                    "id": 164,
-                    "amount": 599.00,
-                    "status": "PENDING",
-                    "reference": "TF-16440590",
-                    "fee": "99.00"
-                    }
+                    "total_sales": 150000.00,
+                    "settled_amount": 145500.00,
+                    "pending_settlement": 4500.00,
+                    "total_fees": 4500.00,
+                    "currency": "THB",
+                    "settlement_cycle": "T+1",
+                    "bank_account": "xxx-x-xxxxx-x (KBank)"
                     }
                     }
                   </div>

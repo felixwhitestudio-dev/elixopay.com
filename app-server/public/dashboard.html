@@ -268,7 +268,7 @@
                         <div class="flex flex-col mb-2 relative">
                             <!-- Live Balance -->
                             <div class="flex items-baseline group" id="live-balance-container">
-                                <h2 class="text-5xl font-black text-slate-100 tracking-tight" id="wallet-balance">฿0.00
+                                <h2 class="text-5xl font-black text-slate-100 tracking-tight" id="merchant-balance">฿0.00
                                 </h2>
                                 <span class="text-xl font-bold text-slate-400 ml-2">THB</span>
                             </div>
@@ -281,7 +281,7 @@
                                             class="fas fa-vial mr-1.5"></i> <span data-i18n="dashboard.sandbox_balance">Test Sandbox Balance</span></span>
                                     <div class="flex items-baseline">
                                         <h3 class="text-2xl font-black text-slate-300 tracking-tight"
-                                            id="wallet-test-balance">฿0.00</h3>
+                                            id="merchant-test-balance">฿0.00</h3>
                                         <span class="text-sm font-bold text-slate-500 ml-1.5">THB</span>
                                     </div>
                                 </div>
@@ -514,7 +514,7 @@
                         </button>
                     </div>
                     <div class="glass-panel-light rounded-xl p-4 flex items-center justify-between">
-                        <p class="font-mono text-sm text-slate-300 truncate mr-2 select-all flex-1" id="wallet-address">
+                        <p class="font-mono text-sm text-slate-300 truncate mr-2 select-all flex-1" id="merchant-id-display">
                             Loading...
                         </p>
                         <button onclick="copyAddress()"
@@ -636,25 +636,25 @@
     </div>
 
     <!-- Account Modal (Settlement/Transfer) -->
-    <div id="wallet-modal"
+    <div id="payment-modal"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative scale-95 transition-transform duration-300"
-            id="wallet-modal-content">
-            <button onclick="closeWalletModal()"
+            id="payment-modal-content">
+            <button onclick="closePaymentModal()"
                 class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition rounded-full p-1 hover:bg-gray-100"><i
                     class="fas fa-times text-lg"></i></button>
 
             <div class="mb-6">
                 <div
                     class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4 text-purple-600 text-xl">
-                    <i class="fas fa-wallet" id="modal-icon"></i>
+                    <i class="fas fa-cash-register" id="modal-icon"></i>
                 </div>
-                <h3 id="wallet-modal-title" class="text-2xl font-bold text-gray-900" data-i18n="modal.title">Account
+                <h3 id="payment-modal-title" class="text-2xl font-bold text-gray-900" data-i18n="modal.title">Account
                     Action</h3>
                 <p class="text-sm text-gray-500 mt-1" data-i18n="modal.subtitle">Process your transaction securely.</p>
             </div>
 
-            <form id="wallet-modal-form" class="space-y-0">
+            <form id="payment-modal-form" class="space-y-0">
                 <div class="bg-gray-50 rounded-xl border border-gray-200 p-5 space-y-5">
                     <div id="deposit-channel-group" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-1.5"
@@ -762,7 +762,7 @@
                         </div>
                     </div>
 
-                    <div id="wallet-modal-bank-group" class="hidden space-y-4">
+                    <div id="payment-modal-bank-group" class="hidden space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1.5"
                                 data-i18n="modal.bank_name">Bank Name</label>
@@ -822,7 +822,7 @@
                 </div> <!-- End of styled container -->
             </form>
 
-            <div id="wallet-modal-message" class="mt-4 text-center text-sm font-medium min-h-[20px]"></div>
+            <div id="payment-modal-message" class="mt-4 text-center text-sm font-medium min-h-[20px]"></div>
         </div>
     </div>
 
@@ -981,7 +981,7 @@
         }
 
         function copyAddress() {
-            const addressEl = document.getElementById('wallet-address');
+            const addressEl = document.getElementById('merchant-id-display');
             if (addressEl) {
                 const text = addressEl.textContent.trim();
                 navigator.clipboard.writeText(text).then(() => {
@@ -1144,18 +1144,18 @@
                     if (userInitial) userInitial.textContent = (user.firstName || user.email).charAt(0).toUpperCase();
 
                     // Update Merchant Account Balance from /me response
-                    const walletAddress = document.getElementById('wallet-address');
-                    if (walletAddress) walletAddress.textContent = user.merchantId || 'Not generated';
+                    const merchantIdEl = document.getElementById('merchant-id-display');
+                    if (merchantIdEl) merchantIdEl.textContent = user.merchantId || 'Not generated';
 
                     let thbBalance = 0;
                     let testBalance = 0;
 
-                    if (user.wallet) {
-                        thbBalance = parseFloat(user.wallet.balance);
-                        testBalance = parseFloat(user.wallet.testBalance || 0);
+                    if (user.balance) {
+                        thbBalance = parseFloat(user.balance.balance);
+                        testBalance = parseFloat(user.balance.testBalance || 0);
 
-                        const balanceEl = document.getElementById('wallet-balance');
-                        const testBalanceEl = document.getElementById('wallet-test-balance');
+                        const balanceEl = document.getElementById('merchant-balance');
+                        const testBalanceEl = document.getElementById('merchant-test-balance');
 
                         if (balanceEl) balanceEl.textContent = `฿${thbBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                         if (testBalanceEl) testBalanceEl.textContent = `฿${testBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -1207,20 +1207,20 @@
                     }
 
                     try {
-                        const respWallet = await apiFetch('/api/v1/balances/me?currency=THB');
+                        const respBalance = await apiFetch('/api/v1/balances/me?currency=THB');
                         let fetchThbValue = 0;
-                        if (respWallet.ok) {
-                            const dataWallet = await respWallet.json();
-                            fetchThbValue = parseFloat(dataWallet.data?.available_amount || 0);
+                        if (respBalance.ok) {
+                            const dataBalance = await respBalance.json();
+                            fetchThbValue = parseFloat(dataBalance.data?.available_amount || 0);
                             window.currentBalanceTHB = fetchThbValue;
                         } else {
                             window.currentBalanceTHB = 0;
                         }
 
-                        if (respWallet.ok) thbBalance = fetchThbValue;
+                        if (respBalance.ok) thbBalance = fetchThbValue;
 
                         // Update Total Big Display with Animation
-                        const balanceEl = document.getElementById('wallet-balance');
+                        const balanceEl = document.getElementById('merchant-balance');
                         if (balanceEl) {
                             animateValue(balanceEl, 0, thbBalance, 1500, '', true);
                         }
@@ -1234,7 +1234,7 @@
         }
 
         // Load Account Data
-        async function loadWallet() {
+        async function loadMerchantData() {
             await loadDashboardData();
         }
 
@@ -1644,7 +1644,7 @@
         document.addEventListener('DOMContentLoaded', initRevenueChart);
 
 
-        window.addEventListener('auth:ready', loadWallet);
+        window.addEventListener('auth:ready', loadMerchantData);
         window.addEventListener('auth:ready', loadBankInfo);
 
         // Reveal animation on scroll
@@ -1702,12 +1702,12 @@
 
 
         // --- Account Modal Logic ---
-        const modal = document.getElementById('wallet-modal');
-        const modalContent = document.getElementById('wallet-modal-content');
-        let walletAction = '';
+        const modal = document.getElementById('payment-modal');
+        const modalContent = document.getElementById('payment-modal-content');
+        let paymentAction = '';
 
-        window.openWalletModal = function (action) {
-            walletAction = action;
+        window.openPaymentModal = function (action) {
+            paymentAction = action;
             modal.classList.remove('hidden');
             // Slight delay for animation
             requestAnimationFrame(() => {
@@ -1716,16 +1716,16 @@
                 modalContent.classList.add('scale-100');
             });
 
-            document.getElementById('wallet-modal-message').textContent = '';
-            document.getElementById('wallet-modal-form').reset();
+            document.getElementById('payment-modal-message').textContent = '';
+            document.getElementById('payment-modal-form').reset();
 
             // Toggle Fields
             document.getElementById('deposit-channel-group').classList.toggle('hidden', action !== 'deposit');
-            const bankGroup = document.getElementById('wallet-modal-bank-group');
-            if (bankGroup) bankGroup.classList.toggle('hidden', action !== 'withdraw');
+            const bankGroup = document.getElementById('payment-modal-bank-group');
+            if (bankGroup) bankGroup.classList.toggle('hidden', action !== 'settlement');
 
             // Title & Icon
-            const titleEl = document.getElementById('wallet-modal-title');
+            const titleEl = document.getElementById('payment-modal-title');
             const iconEl = document.getElementById('modal-icon');
 
             if (action === 'deposit') {
@@ -1741,9 +1741,9 @@
                     const amountInput = document.getElementById('amount-input');
                     if (amountInput) amountInput.classList.add('rounded-r-xl');
                 }
-            } else if (action === 'withdraw') {
-                // DISABLED: Withdraw removed — direct payment model
-                // Money goes directly to merchant's bank, no withdrawal needed
+            } else if (action === 'settlement') {
+                // Settlement handled by bank — direct payment model
+                // Non-custodial: bank settles directly
                 return;
             }
             // Trigger translation update for the new attribute
@@ -1752,8 +1752,8 @@
                 window.ElixopayI18n.setLang(lang);
             }
 
-            updateWalletToField();
-            // updateWalletToField(); // Duplicate call removed
+            updatePaymentToField();
+            // updatePaymentToField(); // Duplicate call removed
             // updateDepositFields(); // Removed
             if (document.getElementById('deposit-channel')) {
                 document.getElementById('deposit-channel').dispatchEvent(new Event('change'));
@@ -1796,7 +1796,7 @@
         if (depositChannelSelect) {
             depositChannelSelect.addEventListener('change', (e) => {
                 const value = e.target.value;
-                const formBtnText = document.querySelector('#wallet-modal-form button[type="submit"] span');
+                const formBtnText = document.querySelector('#payment-modal-form button[type="submit"] span');
 
                 // Reset visibility
                 bankInstruction.classList.add('hidden');
@@ -1855,7 +1855,7 @@
         // updateDepositFields removed - logic consolidated into depositChannelSelect change listener
 
 
-        window.closeWalletModal = function () {
+        window.closePaymentModal = function () {
             modal.classList.add('opacity-0');
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
@@ -1863,7 +1863,7 @@
                 modal.classList.add('hidden');
                 // Reset PromptPay state
                 promptPayStep = 0;
-                const btn = document.querySelector('#wallet-modal-form button[type="submit"] span');
+                const btn = document.querySelector('#payment-modal-form button[type="submit"] span');
                 if (btn) {
                     btn.setAttribute('data-i18n', 'modal.confirm_transaction');
                     btn.textContent = window.ElixopayI18n ? window.ElixopayI18n.t('modal.confirm_transaction') : 'Confirm Transaction';
@@ -1876,31 +1876,31 @@
         // Close on backdrop click
         if (modal) {
             modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeWalletModal();
+                if (e.target === modal) closePaymentModal();
             });
         }
 
         // Dynamic Currency Logic
         const currencySelect = document.getElementById('currency-select');
-        const walletTo = document.getElementById('wallet-modal-to');
-        const walletBank = document.getElementById('wallet-modal-bank-group');
+        const paymentTo = document.getElementById('payment-modal-to');
+        const paymentBank = document.getElementById('payment-modal-bank-group');
         const symbolSpan = document.getElementById('currency-symbol');
 
-        function updateWalletToField() {
+        function updatePaymentToField() {
             const selectedCurrency = currencySelect ? currencySelect.value : 'THB';
 
             // Update Symbol
             if (symbolSpan) symbolSpan.textContent = selectedCurrency === 'THB' ? '฿' : '$';
 
             // Reset visibility
-            if (walletTo) walletTo.classList.add('hidden');
-            if (walletBank) walletBank.classList.add('hidden');
-            const toAddrInput = document.querySelector('input[name="to_wallet_address"]');
+            if (paymentTo) paymentTo.classList.add('hidden');
+            if (paymentBank) paymentBank.classList.add('hidden');
+            const toAddrInput = document.querySelector('input[name="to_merchant_account"]');
             if (toAddrInput) toAddrInput.required = false;
 
             // Logic
-            if (walletAction === 'withdraw') {
-                if (walletBank) walletBank.classList.remove('hidden');
+            if (paymentAction === 'settlement') {
+                if (paymentBank) paymentBank.classList.remove('hidden');
                 const accountName = document.querySelector('input[name="account_name"]');
                 const accountNumber = document.querySelector('input[name="account_number"]');
                 const bankName = document.querySelector('select[name="bank_name"]');
@@ -1916,20 +1916,20 @@
                 if (bankName) bankName.required = false;
             }
 
-            if (walletAction === 'withdraw') {
-                // THB Withdraw -> Bank Account
-                if (walletBank) walletBank.classList.remove('hidden');
+            if (paymentAction === 'settlement') {
+                // Settlement tracking
+                if (paymentBank) paymentBank.classList.remove('hidden');
             }
         }
 
         if (currencySelect) {
-            currencySelect.addEventListener('change', updateWalletToField);
+            currencySelect.addEventListener('change', updatePaymentToField);
         }
 
         // Form Submit
-        const walletFormEl = document.getElementById('wallet-modal-form');
-        if (walletFormEl) {
-            walletFormEl.onsubmit = async function (e) {
+        const paymentFormEl = document.getElementById('payment-modal-form');
+        if (paymentFormEl) {
+            paymentFormEl.onsubmit = async function (e) {
                 e.preventDefault();
                 const form = e.target;
                 const btn = form.querySelector('button[type="submit"]');
@@ -1937,7 +1937,7 @@
                 const originalBtnText = btnSpan ? btnSpan.textContent : (window.ElixopayI18n ? window.ElixopayI18n.t('modal.confirm_transaction') : 'Confirm Transaction');
 
                 // Handle PromptPay Two-Step Flow
-                if (walletAction === 'deposit' && form.deposit_channel.value === 'promptpay') {
+                if (paymentAction === 'deposit' && form.deposit_channel.value === 'promptpay') {
                     const amount = parseFloat(form.amount.value);
 
                     if (promptPayStep === 1) {
@@ -1986,23 +1986,23 @@
 
                 try {
 
-                    if (walletAction === 'deposit') {
+                    if (paymentAction === 'deposit') {
                         // Call Instant Deposit API
                         url = '/api/v1/wallet/deposit';
                         body = {
                             amount: amount,
                             channel: form.deposit_channel ? form.deposit_channel.value : 'bank'
                         };
-                    } else if (walletAction === 'withdraw' || walletAction === 'transfer') {
-                        // DISABLED: Withdraw/Transfer removed — direct payment model
+                    } else if (paymentAction === 'settlement' || paymentAction === 'transfer') {
+                        // Settlement handled by acquiring bank — direct payment model
                         throw new Error('This feature is not available.');
                     }
 
                     if (!url) throw new Error('Invalid action');
 
                     // --- SECURITY: Re-authentication for Transfers ---
-                    if (walletAction === 'withdraw' && window.ElixopaySecurity) {
-                        const actionDesc = window.ElixopayI18n ? window.ElixopayI18n.t('modal.action.withdraw') || 'withdraw funds' : 'withdraw funds';
+                    if (paymentAction === 'settlement' && window.ElixopaySecurity) {
+                        const actionDesc = window.ElixopayI18n ? window.ElixopayI18n.t('modal.action.settlement') || 'request settlement' : 'request settlement';
                         // Wait for password verification
                         await window.ElixopaySecurity.promptReauth(actionDesc);
                         // If it fails or is cancelled, it throws an error and falls to the catch block, aborting the transfer
@@ -2017,15 +2017,15 @@
                     const result = await response.json();
 
                     if (result.success) {
-                        const msgEl = document.getElementById('wallet-modal-message');
+                        const msgEl = document.getElementById('payment-modal-message');
                         msgEl.setAttribute('data-i18n', 'modal.success_msg');
                         msgEl.textContent = 'Success!'; // Fallback
                         if (window.ElixopayI18n) window.ElixopayI18n.setLang(localStorage.getItem('elixopay-lang') || 'th');
-                        // document.getElementById('wallet-modal-message').textContent = 'Success!';
-                        document.getElementById('wallet-modal-message').className = 'mt-4 text-center text-sm font-medium text-green-600';
+                        // document.getElementById('payment-modal-message').textContent = 'Success!';
+                        document.getElementById('payment-modal-message').className = 'mt-4 text-center text-sm font-medium text-green-600';
                         setTimeout(() => {
-                            closeWalletModal();
-                            loadWallet(); // Refresh balance
+                            closePaymentModal();
+                            loadMerchantData(); // Refresh balance
                             loadRecentActivity(); // Refresh activity
                         }, 1500);
                     } else {
@@ -2034,8 +2034,8 @@
 
                 } catch (error) {
                     console.error(error);
-                    document.getElementById('wallet-modal-message').textContent = error.message;
-                    document.getElementById('wallet-modal-message').className = 'mt-4 text-center text-sm font-medium text-red-600';
+                    document.getElementById('payment-modal-message').textContent = error.message;
+                    document.getElementById('payment-modal-message').className = 'mt-4 text-center text-sm font-medium text-red-600';
                 } finally {
                     btn.disabled = false;
                     // Restore button text based on state
@@ -2157,9 +2157,9 @@
                 if (response.ok) {
                     toggleAddBank(false);
                     loadBankAccounts();
-                    // Try to refresh withdraw modal list if function exists
-                    if (typeof loadBankAccountsForWithdraw === 'function') {
-                        loadBankAccountsForWithdraw();
+                    // Refresh settlement bank list if function exists
+                    if (typeof loadBankAccountsForSettlement === 'function') {
+                        loadBankAccountsForSettlement();
                     }
                 } else {
                     const data = await response.json();
@@ -2179,7 +2179,7 @@
                 const response = await apiFetch(`/api/v1/users/bank-accounts/${id}`, { method: 'DELETE' });
                 if (response.ok) {
                     loadBankAccounts();
-                    loadBankAccountsForWithdraw();
+                    loadBankAccountsForSettlement();
                 } else {
                     alert('Failed to delete');
                 }
@@ -2190,9 +2190,9 @@
 
 
 
-        // --- Update Withdraw Modal Logic ---
-        async function loadBankAccountsForWithdraw() {
-            const select = document.getElementById('withdraw-bank-select');
+        // --- Settlement Bank Selection ---
+        async function loadBankAccountsForSettlement() {
+            const select = document.getElementById('settlement-bank-select');
             if (!select) return; // Only if element exists (need to add html first)
 
             try {
@@ -2349,7 +2349,7 @@
                             </div>
                         </div>
                         <p class="mt-2 text-xs text-slate-500">You can issue a partial or full refund. The amount will
-                            be deducted from your Wallet Balance.</p>
+                            be deducted from your Sales Balance.</p>
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t border-slate-700/50 bg-slate-800/80 sm:flex sm:flex-row-reverse">
