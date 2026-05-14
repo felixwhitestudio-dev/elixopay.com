@@ -220,7 +220,7 @@
                             <h3 class="text-lg font-bold text-orange-300" data-i18n="dashboard.kyc.title">Action
                                 Required: Identity Verification</h3>
                             <p class="text-sm text-orange-200/80 mt-1" data-i18n="dashboard.kyc.desc">Submit your KYC
-                                documents to activate payment gateways and enable transfers.</p>
+                                documents to activate payment gateways and start accepting payments.</p>
                         </div>
                     </div>
                     <button onclick="window.location.href='/kyc.html'"
@@ -836,7 +836,7 @@
             </button>
             <div class="mb-5">
                 <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mb-3 text-indigo-600">
-                    <i class="fas fa-exchange-alt"></i>
+                    <i class="fas fa-university"></i>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900">ขอเปลี่ยนบัญชีธนาคาร</h3>
                 <p class="text-sm text-gray-500 mt-1">คำร้องนี้จะถูกส่งให้ผู้ดูแลระบบตรวจสอบก่อนอนุมัติ ตามมาตรฐาน BOT
@@ -1272,7 +1272,7 @@
                         };
                         const s = statusMap[t.status] || { label: t.status || 'Unknown', cls: 'badge-yellow' };
                         const date = t.created_at ? new Date(t.created_at).toLocaleDateString('th-TH') : '—';
-                        const icon = t.type === 'deposit' ? 'fa-arrow-down' : 'fa-exchange-alt';
+                        const icon = t.type === 'deposit' ? 'fa-arrow-down' : 'fa-receipt';
                         const iconColor = t.type === 'deposit' ? '#22c55e' : '#818cf8';
 
                         const tJson = encodeURIComponent(JSON.stringify(t));

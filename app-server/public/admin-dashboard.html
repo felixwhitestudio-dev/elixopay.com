@@ -67,7 +67,7 @@
           <span class="stat-card-subtitle" data-i18n="admin.stat.verifiedAccounts">Verified Accounts</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #3b82f6;">
-          <span class="stat-card-title" data-i18n="admin.stat.totalWithdrawals">Total Transfers</span>
+          <span class="stat-card-title" data-i18n="admin.stat.totalSettlements">Total Settlements</span>
           <span class="stat-card-value" id="stat-withdrawals">--</span>
           <span class="stat-card-subtitle" data-i18n="admin.stat.completedVolume">Completed Volume (THB)</span>
         </div>
@@ -187,7 +187,7 @@
           document.getElementById('stat-pending-kyc').textContent = stats.pendingKyc.toLocaleString();
           // Show total users/merchants. The API returns stats.totalUsers
           document.getElementById('stat-active-merchants').textContent = stats.totalUsers || '--';
-          document.getElementById('stat-withdrawals').textContent = '฿ ' + stats.totalWithdrawVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          document.getElementById('stat-withdrawals').textContent = '฿ ' + (stats.totalWithdrawVolume || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
           // Render Chart
           const chartData = data.data.chartData.userSignupsByDate;
@@ -266,7 +266,7 @@
                         <td>${user.firstName || ''} ${user.lastName || ''}</td>
                         <td>${user.email}</td>
                         <td><span class="status-badge status-pending">${user.kycStatus}</span></td>
-                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;" class="btn btn-primary" data-i18n="transfer.step2.review">Review</button></td>
+                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;" class="btn btn-primary" data-i18n="admin.common.review">Review</button></td>
                     `;
           tbody.appendChild(tr);
         });
