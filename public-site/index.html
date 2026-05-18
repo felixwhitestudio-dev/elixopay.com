@@ -1221,26 +1221,24 @@
                         style="grid-column: 1; text-align: left; width: 100%; z-index: 10; display: flex; flex-direction: column;">
 
                         <div
-                            style="display: inline-block; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 50px; padding: 6px 16px; margin-bottom: 1.5rem;">
+                            style="display: inline-block; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 50px; padding: 6px 16px; margin-bottom: 1.5rem;">
                             <span
-                                style="color: #d8b4fe; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;"
+                                style="color: #6ee7b7; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;"
                                 data-i18n="index.hero.badge">
-                                <i class="fas fa-circle"
-                                    style="font-size: 0.5rem; color: #10b981; margin-right: 6px;"></i>
-                                Banking-Grade Infrastructure
+                                <i class="fas fa-store"
+                                    style="font-size: 0.7rem; color: #10b981; margin-right: 6px;"></i>
+                                Merchant Payment Gateway
                             </span>
                         </div>
 
                         <h1 class="hero-title-large" data-i18n="index.hero.title"
                             style="margin-bottom: 1.5rem; font-size: 3.5rem !important; line-height: 1.1; margin-left: 0 !important; width: 100%; text-align: left;">
-                            The Financial Layer for <span class="text-gradient hero-glow-text">Southeast Asia</span>
+                            Payment Gateway <br><span class="text-gradient hero-glow-text">สำหรับร้านค้าออนไลน์</span>
                         </h1>
 
                         <p class="hero-subtitle-large reveal" data-i18n="index.hero.subtitle"
                             style="margin-bottom: 2.5rem; max-width: 90%;">
-                            Accept payments, automate settlements, and manage liquidity with a certified
-                            <span style="color: white; font-weight: 500;">PCI-DSS Level 1</span> platform powered by
-                            SCB-grade security.
+                            ระบบรับชำระเงินออนไลน์สำหรับ<span style="color: white; font-weight: 500;">ร้านค้าออนไลน์ ร้านอาหาร แพลตฟอร์ม E-commerce</span> — ลูกค้าชำระเงินตรงเข้าบัญชีร้านค้า ปลอดภัยระดับ PCI-DSS Level 1
                         </p>
 
 
@@ -1396,8 +1394,31 @@
                 </div> <!-- End Container -->
     </header>
 
-    <!-- Trust Layer Removed (Integrated into Hero) -->
-    <div style="height: 1px; background: rgba(255,255,255,0.05); width: 100%;"></div>
+    <!-- Merchant Trust Strip -->
+    <section id="merchant-trust-strip" style="background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%); padding: 1.25rem 2rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4='); opacity: 0.3; pointer-events: none;"></div>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 2.5rem; flex-wrap: wrap; position: relative; z-index: 1;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: white; font-size: 0.9rem; font-weight: 600;">
+                <i class="fas fa-store" style="color: #6ee7b7;"></i>
+                <span data-i18n="trust.forMerchants">สำหรับร้านค้าออนไลน์โดยเฉพาะ</span>
+            </div>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.3);"></div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: white; font-size: 0.9rem; font-weight: 600;">
+                <i class="fas fa-university" style="color: #6ee7b7;"></i>
+                <span data-i18n="trust.directToBank">ลูกค้าชำระเงินตรงเข้าบัญชีร้านค้า</span>
+            </div>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.3);"></div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: white; font-size: 0.9rem; font-weight: 600;">
+                <i class="fas fa-ban" style="color: #fca5a5;"></i>
+                <span data-i18n="trust.notP2P">ไม่ใช่บริการ P2P</span>
+            </div>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.3);"></div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: white; font-size: 0.9rem; font-weight: 600;">
+                <i class="fas fa-shield-alt" style="color: #6ee7b7;"></i>
+                <span>PCI-DSS Level 1</span>
+            </div>
+        </div>
+    </section>
 
     <!-- Payment Channels Section -->
     <section class="payment-channels"
@@ -1565,6 +1586,123 @@
             </div>
         </div>
     </section>
+
+    <!-- Industries We Serve Section -->
+    <section id="industries-we-serve" style="background: linear-gradient(180deg, #F7F8FC 0%, #ffffff 50%, #f8fafc 100%); padding: 5rem 2rem; position: relative; overflow: hidden;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 3.5rem;">
+                <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 50px; padding: 6px 16px; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle" style="color: #059669; font-size: 0.75rem;"></i>
+                    <span style="color: #065f46; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="industries.badge">Merchant Acquiring Service</span>
+                </div>
+                <h2 style="color: #0f172a; font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.03em;" data-i18n="industries.title">สำหรับธุรกิจประเภทไหนบ้าง?</h2>
+                <p style="color: #64748b; font-size: 1.1rem; max-width: 700px; margin: 0 auto; line-height: 1.7;" data-i18n="industries.subtitle">Elixopay เป็น Payment Gateway สำหรับร้านค้าออนไลน์โดยเฉพาะ — ไม่ใช่บริการโอนเงินระหว่างบุคคล (P2P)</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+
+                <!-- 1. E-commerce -->
+                <div class="industry-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 2rem; transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; flex-shrink: 0;">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #0f172a; font-size: 1.2rem; font-weight: 700; margin: 0;" data-i18n="industries.ecom.title">ร้านค้าออนไลน์ / E-commerce</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;" data-i18n="industries.ecom.sub">Shopee, Lazada, เว็บขายสินค้า</p>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="industries.ecom.desc">รับชำระเงินจากลูกค้าแบบครั้งเดียว ผ่อนชำระ หรือ Subscription พร้อมระบบจัดการคำสั่งซื้อ</p>
+                </div>
+
+                <!-- 2. Restaurant / Food -->
+                <div class="industry-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 2rem; transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; flex-shrink: 0;">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #0f172a; font-size: 1.2rem; font-weight: 700; margin: 0;" data-i18n="industries.food.title">ร้านอาหาร / Food Delivery</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;" data-i18n="industries.food.sub">ร้านอาหาร, คาเฟ่, แพลตฟอร์มสั่งอาหาร</p>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="industries.food.desc">ระบบรับออเดอร์และชำระเงินแบบเรียลไทม์ รองรับ QR PromptPay และบัตรเครดิต</p>
+                </div>
+
+                <!-- 3. Education -->
+                <div class="industry-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 2rem; transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; flex-shrink: 0;">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #0f172a; font-size: 1.2rem; font-weight: 700; margin: 0;" data-i18n="industries.edu.title">คอร์สออนไลน์ / Education</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;" data-i18n="industries.edu.sub">แพลตฟอร์มขายคอร์สเรียน, ติวเตอร์</p>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="industries.edu.desc">เก็บค่าคอร์สเรียนแบบครั้งเดียวหรือรายเดือน พร้อมรายงานรายได้ตามผู้สอน</p>
+                </div>
+
+                <!-- 4. SaaS -->
+                <div class="industry-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 2rem; transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #3b82f6, #2563eb); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; flex-shrink: 0;">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #0f172a; font-size: 1.2rem; font-weight: 700; margin: 0;" data-i18n="industries.saas.title">SaaS / Software</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;" data-i18n="industries.saas.sub">บริษัทซอฟต์แวร์, Subscription</p>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="industries.saas.desc">Recurring Billing อัตโนมัติ จัดการ Subscription, Trial, Upgrade ได้ง่าย</p>
+                </div>
+
+                <!-- 5. Marketplace -->
+                <div class="industry-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 2rem; transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #ec4899, #db2777); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; flex-shrink: 0;">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #0f172a; font-size: 1.2rem; font-weight: 700; margin: 0;" data-i18n="industries.market.title">Marketplace / ตลาดออนไลน์</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;" data-i18n="industries.market.sub">แพลตฟอร์มรวมร้านค้าหลายราย</p>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="industries.market.desc">รายงานธุรกรรมแยกตามร้านค้า ระบบ Multi-merchant พร้อม Referral Tracking</p>
+                </div>
+
+                <!-- 6. Services -->
+                <div class="industry-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 2rem; transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; flex-shrink: 0;">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #0f172a; font-size: 1.2rem; font-weight: 700; margin: 0;" data-i18n="industries.service.title">ธุรกิจบริการ / Services</h3>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;" data-i18n="industries.service.sub">จองคิว, สปา, คลินิก, ฟิตเนส</p>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="industries.service.desc">ระบบจองบริการและชำระเงินล่วงหน้า รองรับทุกช่องทางการชำระเงิน</p>
+                </div>
+
+            </div>
+
+            <!-- CTA -->
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="usecases.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 0.85rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);" data-i18n="industries.cta">
+                    ดูรายละเอียดเพิ่มเติม <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .industry-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+    </style>
 
     <style>
         @keyframes float-mascot {
