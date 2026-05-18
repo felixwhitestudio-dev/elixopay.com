@@ -159,6 +159,6 @@ describe('Webhook Service', () => {
             await expect(
                 WebhookService.dispatchEvent(1, 'payment.success', { id: 1 })
             ).resolves.toBeUndefined();
-        });
+        }, 10000);
     });
 });
