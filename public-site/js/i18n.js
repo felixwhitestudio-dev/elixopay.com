@@ -31,8 +31,6 @@
       'signup.currency.thb': 'THB - บาท',
       'signup.currency.cny': 'CNY - หยวน',
       'signup.currency.vnd': 'VND - ดอง',
-      // DISABLED: crypto removed for banking compliance
-      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - ดอลลาร์',
       'signup.termsLabel': 'ฉันยอมรับข้อตกลงและนโยบาย',
       'signup.cta': 'สร้างบัญชี',
@@ -92,9 +90,9 @@
       'calc.compare': 'เปรียบเทียบราคา',
 
       // Index (Professional/PaySolutions Tone)
-      'index.hero.badge': 'โครงสร้างพื้นฐานระดับธนาคาร',
-      'index.hero.title': 'โครงสร้างพื้นฐานทางการเงินสำหรับ <br /> <span style="background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">เศรษฐกิจดิจิทัลแห่งเอเชียตะวันออกเฉียงใต้</span>',
-      'index.hero.subtitle': 'รองรับธุรกรรมนับพันล้านทั้งในและต่างประเทศ ด้วยเกตเวย์มาตรฐานธนาคารที่เน้นความปลอดภัย การขยายตัว และเสถียรภาพระดับ 99.999%',
+      'index.hero.badge': '<i class="fas fa-store" style="font-size: 0.7rem; color: #10b981; margin-right: 6px;"></i> ระบบรับชำระเงินสำหรับร้านค้า',
+      'index.hero.title': 'ระบบรับชำระเงินออนไลน์<br><span class="text-gradient hero-glow-text">สำหรับร้านค้าและ Social Commerce</span>',
+      'index.hero.subtitle': 'ร้านค้าออนไลน์ ร้านใน Facebook, TikTok, Instagram, LINE สามารถรับชำระเงินจากลูกค้าผ่าน QR PromptPay และบัตรเครดิต <span style="color: white; font-weight: 500;">เข้าบัญชีธนาคารร้านค้าโดยตรง</span> — ปลอดภัยระดับ PCI-DSS Level 1',
 
       // Financial Stack (New)
       'index.stack.title.html': '<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">โซลูชันการเงิน</span>ครบวงจร',
@@ -146,6 +144,36 @@
       'index.trust_badge': 'พัฒนาตามมาตรฐานธนาคารแห่งประเทศไทย & ได้รับมาตรฐาน PCI-DSS',
       'index.trust.bot': 'มาตรฐาน ธปท.',
       'index.trust.pci': 'มาตรฐาน PCI-DSS',
+      // Trust Strip (Banking Compliance)
+      'trust.forMerchants': 'สำหรับร้านค้าออนไลน์โดยเฉพาะ',
+      'trust.directToBank': 'ลูกค้าชำระเงินตรงเข้าบัญชีร้านค้า',
+      'trust.notP2P': 'ไม่ใช่บริการ P2P',
+      // Industries Section
+      'industries.badge': 'Merchant Acquiring Service',
+      'industries.title': 'สำหรับธุรกิจประเภทไหนบ้าง?',
+      'industries.subtitle': 'Elixopay เป็น Payment Gateway สำหรับร้านค้าออนไลน์โดยเฉพาะ — ไม่ใช่บริการโอนเงินระหว่างบุคคล (P2P)',
+      'industries.ecom.title': 'ร้านค้าออนไลน์ / E-commerce',
+      'industries.ecom.sub': 'Shopee, Lazada, เว็บขายสินค้า',
+      'industries.ecom.desc': 'รับชำระเงินจากลูกค้าแบบครั้งเดียว ผ่อนชำระ หรือ Subscription พร้อมระบบจัดการคำสั่งซื้อ',
+      'industries.food.title': 'ร้านอาหาร / Food Delivery',
+      'industries.food.sub': 'ร้านอาหาร, คาเฟ่, แพลตฟอร์มสั่งอาหาร',
+      'industries.food.desc': 'ระบบรับออเดอร์และชำระเงินแบบเรียลไทม์ รองรับ QR PromptPay และบัตรเครดิต',
+      'industries.edu.title': 'คอร์สออนไลน์ / Education',
+      'industries.edu.sub': 'แพลตฟอร์มขายคอร์สเรียน, ติวเตอร์',
+      'industries.edu.desc': 'เก็บค่าคอร์สเรียนแบบครั้งเดียวหรือรายเดือน พร้อมรายงานรายได้ตามผู้สอน',
+      'industries.saas.title': 'SaaS / Software',
+      'industries.saas.sub': 'บริษัทซอฟต์แวร์, Subscription',
+      'industries.saas.desc': 'Recurring Billing อัตโนมัติ จัดการ Subscription, Trial, Upgrade ได้ง่าย',
+      'industries.market.title': 'Marketplace / ตลาดออนไลน์',
+      'industries.market.sub': 'แพลตฟอร์มรวมร้านค้าหลายราย',
+      'industries.market.desc': 'รายงานธุรกรรมแยกตามร้านค้า ระบบ Multi-merchant พร้อม Referral Tracking',
+      'industries.service.title': 'ธุรกิจบริการ / Services',
+      'industries.service.sub': 'จองคิว, สปา, คลินิก, ฟิตเนส',
+      'industries.service.desc': 'ระบบจองบริการและชำระเงินล่วงหน้า รองรับทุกช่องทางการชำระเงิน',
+      'industries.social.title': 'Social Commerce',
+      'industries.social.sub': 'TikTok, Facebook, Instagram, LINE',
+      'industries.social.desc': 'สร้าง Payment Link ส่งให้ลูกค้าผ่านแชท ปิดการขายได้ทุกที่ เงินเข้าบัญชีร้านค้าทันที',
+      'industries.cta': 'ดูรายละเอียดเพิ่มเติม',
 
       // Payment Orchestration (New)
       'index.orchestration.title': 'เทคโนโลยีการชำระเงินที่ไร้รอยต่อ',
@@ -702,7 +730,6 @@
       'modal.subtitle': 'ทำรายการธุรกรรมอย่างปลอดภัย',
       'modal.payment_method': 'วิธีการชำระเงิน',
       'modal.amount': 'จำนวนเงิน',
-      // DISABLED: P2P transfer removed
       'modal.confirm_transaction': 'ยืนยันการทำรายการ',
       'modal.method.bank': 'โอนผ่านธนาคาร',
       'modal.method.promptpay': 'พร้อมเพย์ (QR)',
@@ -715,22 +742,12 @@
       'modal.select_bank': 'เลือกธนาคาร',
       'modal.title.withdraw': 'โอนเงินเข้าบัญชี',
       'modal.title.deposit': 'ฝากเงิน',
-      // DISABLED: P2P transfer removed
       'modal.action.withdraw': 'โอนเงินเข้าบัญชี',
       'modal.action.deposit': 'ฝากเงิน',
-      // DISABLED: P2P transfer removed
       'common.processing': 'กำลังดำเนินการ...',
       'modal.success_msg': 'ทำรายการสำเร็จ!',
       'common.error_default': 'การทำรายการล้มเหลว',
       // Exchange
-      // DISABLED: crypto exchange removed for banking compliance
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
       // Banks
       'bank.kbank': 'ธนาคารกสิกรไทย',
       'bank.scb': 'ธนาคารไทยพาณิชย์',
@@ -739,7 +756,6 @@
       'bank.bay': 'ธนาคารกรุงศรีอยุธยา',
       'bank.ttb': 'ทีเอ็มบีธนชาต',
       'bank.gsb': 'ธนาคารออมสิน',
-      // DISABLED: 'transfer.step1.input_placeholder': 'อีเมล, ชื่อ, หรือที่อยู่',
       // Transfer Page
       'common.next': 'ถัดไป',
       'common.continue': 'ดำเนินการต่อ',
@@ -749,25 +765,8 @@
       'common.to': 'ถึง',
       'common.fee': 'ค่าธรรมเนียม',
       'common.edit': 'แก้ไข',
-      // DISABLED: 'transfer.step.recipient': 'ผู้รับ',
-      // DISABLED: 'transfer.step.amount': 'จำนวนเงิน',
-      // DISABLED: 'transfer.step.confirm': 'ยืนยัน',
-      // DISABLED: 'transfer.step1.title': 'ส่งเงินให้ใคร?',
-      // DISABLED: 'transfer.step1.subtitle': 'เลือกจากรายการล่าสุดหรือระบุที่อยู่ใหม่',
-      // DISABLED: 'transfer.step1.label': 'อีเมลหรือที่อยู่ผู้รับ',
-      // DISABLED: 'transfer.step1.recent': 'โอนล่าสุด',
-      // DISABLED: 'transfer.step2.sending_to': 'กำลังส่งให้',
-      // DISABLED: 'transfer.step2.enter_amount': 'ระบุจำนวนเงิน',
-      // DISABLED: 'transfer.step2.max': 'สูงสุด',
-      // DISABLED: 'transfer.step2.fee': 'ค่าธรรมเนียมโดยประมาณ',
-      // DISABLED: 'transfer.step2.total_deduct': 'ยอดหักทั้งหมด',
-      // DISABLED: 'transfer.step2.review': 'ตรวจสอบ',
-      // DISABLED: 'transfer.step3.title': 'ยืนยันการโอน',
-      // DISABLED: 'transfer.step3.total_amount': 'ยอดเงินโอน',
-      // DISABLED: 'transfer.step3.total_deducted': 'ยอดหักรวม',
-      // DISABLED: 'transfer.step3.confirm_pay': 'ยืนยันและชำระเงิน',
-      'transfer.success.title': 'โอนเงินสำเร็จ!',
-      'transfer.success.message': 'ระบบดำเนินการโอนเงินของคุณเรียบร้อยแล้ว',
+      'transfer.success.title': 'ดำเนินการสำเร็จ!',
+      'transfer.success.message': 'ระบบดำเนินการธุรกรรมของคุณเรียบร้อยแล้ว',
       'transfer.success.ref_id': 'รหัสอ้างอิง',
       'transfer.success.time': 'เวลา',
       'transfer.success.return': 'กลับสู่แดชบอร์ด',
@@ -778,14 +777,6 @@
       'bank.account_type.saving': 'บัญชีออมทรัพย์',
       'promptpay.enter_amount': 'ระบุจำนวนเงินเพื่อสร้าง QR',
       'promptpay.scan_via_app': 'สแกนผ่านแอปธนาคารใดก็ได้',
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
       'activity.no_recent': 'ไม่มีรายการล่าสุด',
       'activity.transaction': 'ธุรกรรม',
       'common.success': 'สำเร็จ!',
@@ -1118,8 +1109,6 @@
       'signup.currency.thb': 'THB - Baht',
       'signup.currency.cny': 'CNY - Yuan',
       'signup.currency.vnd': 'VND - Dong',
-      // DISABLED: crypto removed for banking compliance
-      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - Dollar',
       'signup.termsLabel': 'I accept terms and policies',
       'signup.cta': 'Create Account',
@@ -1178,9 +1167,9 @@
       'calc.compare': 'Compare price',
 
       // Index
-      'index.hero.badge': 'Banking-Grade Infrastructure',
-      'index.hero.title': 'The Financial Layer for<br/><span class="text-gradient hero-glow-text">Southeast Asia</span>',
-      'index.hero.subtitle': 'Accept payments and manage transactions with a certified <span style="color: white; font-weight: 500;">PCI-DSS Level 1</span> technology platform built to banking-grade security standards.',
+      'index.hero.badge': '<i class="fas fa-store" style="font-size: 0.7rem; color: #10b981; margin-right: 6px;"></i> Merchant Payment Gateway',
+      'index.hero.title': 'Online Payment Gateway<br/><span class="text-gradient hero-glow-text">for Merchants & Social Commerce</span>',
+      'index.hero.subtitle': 'Online stores, Facebook, TikTok, Instagram, and LINE sellers can accept payments via QR PromptPay and credit cards — <span style="color: white; font-weight: 500;">settled directly to merchant bank accounts.</span> PCI-DSS Level 1 certified.',
 
       // Financial Stack (New)
       'index.stack.title.html': 'The complete <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">financial stack</span>',
@@ -1199,6 +1188,36 @@
       'index.hero.stat.support': '24/7 Support',
       'index.channels.title': 'Comprehensive Payment Channels',
       'index.channels.subtitle': 'Support every lifestyle',
+      // Trust Strip (Banking Compliance)
+      'trust.forMerchants': 'For online merchants only',
+      'trust.directToBank': 'Payments go directly to merchant bank accounts',
+      'trust.notP2P': 'Not a P2P service',
+      // Industries Section
+      'industries.badge': 'Merchant Acquiring Service',
+      'industries.title': 'Which businesses can use ElixoPay?',
+      'industries.subtitle': 'ElixoPay is a Payment Gateway for online merchants only — not a peer-to-peer (P2P) money transfer service',
+      'industries.ecom.title': 'Online Store / E-commerce',
+      'industries.ecom.sub': 'Shopee, Lazada, web stores',
+      'industries.ecom.desc': 'Accept one-time, installment, or subscription payments with order management',
+      'industries.food.title': 'Restaurants / Food Delivery',
+      'industries.food.sub': 'Restaurants, cafes, food delivery platforms',
+      'industries.food.desc': 'Real-time order and payment processing via QR PromptPay and credit cards',
+      'industries.edu.title': 'Online Courses / Education',
+      'industries.edu.sub': 'Course platforms, tutoring',
+      'industries.edu.desc': 'Collect course fees one-time or monthly with instructor revenue reports',
+      'industries.saas.title': 'SaaS / Software',
+      'industries.saas.sub': 'Software companies, subscriptions',
+      'industries.saas.desc': 'Automated recurring billing with subscription, trial, and upgrade management',
+      'industries.market.title': 'Marketplace',
+      'industries.market.sub': 'Multi-vendor platforms',
+      'industries.market.desc': 'Per-merchant transaction reports with multi-merchant and referral tracking',
+      'industries.service.title': 'Services',
+      'industries.service.sub': 'Booking, spa, clinic, fitness',
+      'industries.service.desc': 'Service booking and advance payment system supporting all payment channels',
+      'industries.social.title': 'Social Commerce',
+      'industries.social.sub': 'TikTok, Facebook, Instagram, LINE',
+      'industries.social.desc': 'Create Payment Links and send via chat — close sales anywhere, funds settle instantly',
+      'industries.cta': 'See more details',
 
       // Payment Orchestration (New)
       'index.orchestration.title': 'Seamless Payment Technology',
@@ -1601,24 +1620,12 @@
       'modal.account_name_ph': 'Name on account',
       'modal.account_number_ph': '012-3-45678-9',
       'modal.select_bank': 'Select Bank',
-      // DISABLED: 'modal.title.withdraw' removed — direct payment model,
       'modal.title.deposit': 'Deposit Funds',
-      // DISABLED: P2P transfer removed
-      // DISABLED: 'modal.action.withdraw' removed — direct payment model,
       'modal.action.deposit': 'Deposit',
-      // DISABLED: P2P transfer removed
       'common.processing': 'Processing...',
       'modal.success_msg': 'Success!',
       'common.error_default': 'Transaction failed',
       // Exchange
-      // DISABLED: crypto exchange removed for banking compliance
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
       // Banks
       // Docs
       'docs.title': 'API Documentation',
@@ -1891,12 +1898,10 @@
       'modal.subtitle': 'Process your transaction securely.',
       'modal.payment_method': 'Payment Method',
       'modal.amount': 'Amount',
-      // DISABLED: P2P transfer removed
       'modal.confirm_transaction': 'Confirm Transaction',
       'modal.method.bank': 'Bank Transfer',
       'modal.method.promptpay': 'PromptPay (QR)',
       'modal.method.card': 'Credit/Debit Card',
-      // DISABLED: 'transfer.step1.input_placeholder': 'Email, Name, or Address',
       // Transfer Page
       'common.next': 'Next',
       'common.continue': 'Continue',
@@ -1906,25 +1911,8 @@
       'common.to': 'To',
       'common.fee': 'Fee',
       'common.edit': 'Edit',
-      // DISABLED: 'transfer.step.recipient': 'Recipient',
-      // DISABLED: 'transfer.step.amount': 'Amount',
-      // DISABLED: 'transfer.step.confirm': 'Confirm',
-      // DISABLED: 'transfer.step1.title': 'Who are you sending to?',
-      // DISABLED: 'transfer.step1.subtitle': 'Choose from recent or enter a new address',
-      // DISABLED: 'transfer.step1.label': 'Recipient Email or ID',
-      // DISABLED: 'transfer.step1.recent': 'Recent Transfers',
-      // DISABLED: 'transfer.step2.sending_to': 'Sending to',
-      // DISABLED: 'transfer.step2.enter_amount': 'Enter Amount',
-      // DISABLED: 'transfer.step2.max': 'Max',
-      // DISABLED: 'transfer.step2.fee': 'Estimated Fee',
-      // DISABLED: 'transfer.step2.total_deduct': 'Total to be deducted',
-      // DISABLED: 'transfer.step2.review': 'Review',
-      // DISABLED: 'transfer.step3.title': 'Confirm Transfer',
-      // DISABLED: 'transfer.step3.total_amount': 'Total Amount',
-      // DISABLED: 'transfer.step3.total_deducted': 'Total Deducted',
-      // DISABLED: 'transfer.step3.confirm_pay': 'Confirm & Pay',
-      'transfer.success.title': 'Transfer Successful!',
-      'transfer.success.message': 'Your transfer has been processed successfully.',
+      'transfer.success.title': 'Transaction Successful!',
+      'transfer.success.message': 'Your transaction has been processed successfully.',
       'transfer.success.ref_id': 'Reference ID',
       'transfer.success.time': 'Time',
       'transfer.success.return': 'Return to Dashboard',
@@ -1935,14 +1923,6 @@
       'bank.account_type.saving': 'Saving Account',
       'promptpay.enter_amount': 'Enter amount to generate QR',
       'promptpay.scan_via_app': 'Scan via any Banking App',
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
       'activity.no_recent': 'No recent transactions',
       'activity.transaction': 'Transaction',
       'common.success': 'Success!',
@@ -2162,7 +2142,7 @@
 
       // KYC
       'dashboard.kyc.title': 'Action Required: Identity Verification',
-      'dashboard.kyc.desc': 'Submit your KYC documents to activate payment gateways and enable transfers.',
+      'dashboard.kyc.desc': 'Submit your KYC documents to activate payment gateways and enable settlements.',
       'dashboard.kyc.btn': 'Upload Documents',
       'kyc.title': 'Identity Verification (KYC)',
       'kyc.subtitle': 'To comply with AML regulations and bank policies, please upload your identity documents to activate your account.',
@@ -2243,8 +2223,6 @@
       'signup.currency.thb': 'THB - 泰铢',
       'signup.currency.cny': 'CNY - 人民币',
       'signup.currency.vnd': 'VND - 越南盾',
-      // DISABLED: crypto removed for banking compliance
-      // DISABLED: 'signup.currency.usdt' removed for banking compliance
       'signup.currency.usd': 'USD - 美元',
       'signup.termsLabel': '我接受条款和政策',
       'signup.cta': '创建账户',
@@ -2303,9 +2281,9 @@
       'nav.signup': '注册',
 
       // Index
-      'index.hero.badge': '银行级基础设施',
-      'index.hero.title': '东南亚企业经济的<br/><span class=\"text-gradient hero-glow-text\">金融基础设施</span>',
-      'index.hero.subtitle': '处理数十亿笔本地和跨境支付，拥有银行级网关，专为合规性、可扩展性和99.999%的正常运行时间而设计。',
+      'index.hero.badge': '<i class="fas fa-store" style="font-size: 0.7rem; color: #10b981; margin-right: 6px;"></i> 商户支付网关',
+      'index.hero.title': '在线支付网关<br/><span class="text-gradient hero-glow-text">为商户和社交电商而生</span>',
+      'index.hero.subtitle': '网店、Facebook、TikTok、Instagram和LINE卖家可通过QR PromptPay和信用卡收款 — <span style="color: white; font-weight: 500;">资金直接结算到商户银行账户。</span> PCI-DSS Level 1认证。',
 
       // Financial Stack (New)
       'index.stack.title.html': '完整的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">金融堆栈</span>',
@@ -2328,6 +2306,36 @@
       'index.trust.pci': '符合 PCI-DSS 标准',
       'index.channels.title': '全面的支付渠道',
       'index.channels.subtitle': '支持各种生活方式',
+      // Trust Strip (Banking Compliance)
+      'trust.forMerchants': '专为在线商户打造',
+      'trust.directToBank': '款项直接进入商户银行账户',
+      'trust.notP2P': '非P2P服务',
+      // Industries Section
+      'industries.badge': '商户收单服务',
+      'industries.title': '适用于哪些业务类型？',
+      'industries.subtitle': 'ElixoPay 是专为在线商户设计的支付网关 — 不是个人间转账(P2P)服务',
+      'industries.ecom.title': '在线商店 / 电子商务',
+      'industries.ecom.sub': 'Shopee, Lazada, 网上商店',
+      'industries.ecom.desc': '接受一次性、分期或订阅付款，配备订单管理系统',
+      'industries.food.title': '餐厅 / 外卖配送',
+      'industries.food.sub': '餐厅、咖啡馆、外卖平台',
+      'industries.food.desc': '通过QR PromptPay和信用卡实时接收订单和付款',
+      'industries.edu.title': '在线课程 / 教育',
+      'industries.edu.sub': '课程平台、辅导',
+      'industries.edu.desc': '按次或按月收取课程费用，提供按讲师分类的收入报告',
+      'industries.saas.title': 'SaaS / 软件',
+      'industries.saas.sub': '软件公司、订阅服务',
+      'industries.saas.desc': '自动化周期性计费，管理订阅、试用和升级',
+      'industries.market.title': '市场平台',
+      'industries.market.sub': '多供应商平台',
+      'industries.market.desc': '按商户分类的交易报告，多商户和推荐追踪系统',
+      'industries.service.title': '服务业',
+      'industries.service.sub': '预约、水疗、诊所、健身',
+      'industries.service.desc': '服务预约和预付款系统，支持所有支付渠道',
+      'industries.social.title': '社交电商',
+      'industries.social.sub': 'TikTok, Facebook, Instagram, LINE',
+      'industries.social.desc': '创建付款链接通过聊天发送 — 随时随地完成交易，资金即时结算',
+      'industries.cta': '查看更多详情',
 
       // Payment Orchestration (New)
       'index.orchestration.title': '无缝支付技术',
@@ -2916,14 +2924,6 @@
       'bank.account_type.saving': '储蓄账户',
       'promptpay.enter_amount': '输入金额以生成 QR',
       'promptpay.scan_via_app': '使用任何银行 App 扫描',
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
-      // DISABLED
       'activity.no_recent': '无最近交易',
       'activity.transaction': '交易',
       'common.success': '成功！',
