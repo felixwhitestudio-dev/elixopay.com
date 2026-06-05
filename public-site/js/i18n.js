@@ -230,7 +230,7 @@
 
       // About
       'about.title': 'เกี่ยวกับ Elixopay',
-      'about.hero.desc': 'เราคือผู้นำด้านเทคโนโลยีการเงินที่มุ่งมั่นขับเคลื่อนเศรษฐกิจดิจิทัลไทย',
+      'about.hero.desc': 'Elixopay เป็นระบบรับชำระเงินสำหรับร้านค้าออนไลน์และ Social Commerce',
       'about.story.title': 'วิสัยทัศน์ของเรา',
       'about.story.p1': 'Elixopay ก่อตั้งขึ้นด้วยความมุ่งมั่นที่จะยกระดับโครงสร้างพื้นฐานการชำระเงินของไทยให้ทัดเทียมระดับโลก',
       'about.story.p2': 'เราผสมผสานเทคโนโลยีที่ทันสมัยเข้ากับความเข้าใจในความต้องการของธุรกิจไทย เพื่อสร้างโซลูชันที่ตอบโจทย์และใช้งานได้จริง',
@@ -717,7 +717,7 @@
       'dashboard.security.shield_title': 'ปกป้องโดย Elixopay Shield',
       'dashboard.security.shield_desc': 'บัญชีของคุณปลอดภัยด้วยการเข้ารหัสระดับทหาร การตรวจสอบการฉ้อโกงแบบเรียลไทม์ และการตรวจจับภัยคุกคามอัตโนมัติ',
       'dashboard.security.view_audit': 'ดูการตรวจสอบความปลอดภัย',
-      'footer.desc': 'โครงสร้างพื้นฐานการชำระเงินยุคใหม่สำหรับเว็บสมัยใหม่ ปลอดภัย รวดเร็ว และเป็นมิตรกับนักพัฒนา',
+      'footer.desc': 'ระบบรับชำระเงินสำหรับร้านค้าออนไลน์และ Social Commerce — รองรับ QR PromptPay, บัตรเครดิต เข้าบัญชีธนาคารร้านค้าโดยตรง',
       'footer.resources': 'ทรัพยากร',
       'footer.docs': 'เอกสารคู่มือ',
       'footer.api_ref': 'อ้างอิง API',
@@ -847,8 +847,8 @@
 
       // About
       'about.title': 'เกี่ยวกับเรา - Elixopay',
-      'about.hero.title': 'เรากำลังสร้างอนาคตของการชำระเงินดิจิทัล',
-      'about.hero.desc': 'ที่ Elixopay เราเชื่อว่าการชำระเงินควรเป็นเรื่องง่าย ปลอดภัย และเข้าถึงได้สำหรับทุกคน',
+      'about.hero.title': 'Payment Gateway สำหรับร้านค้าออนไลน์',
+      'about.hero.desc': 'Elixopay เป็นระบบรับชำระเงินที่สร้างมาเพื่อร้านค้าออนไลน์ ร้านอาหาร และ Social Commerce — เงินเข้าบัญชีร้านค้าโดยตรง',
 
       // Partners
       'partners.hero.title': 'เติบโตไปพร้อมกับ Elixopay',
@@ -957,7 +957,7 @@
       'dashboard.mockup.rev_change': '+12.5% สัปดาห์นี้',
       'dashboard.mockup.merchant_change': '+24 ใหม่วันนี้',
       'dashboard.mockup.live': 'ทำงานอยู่',
-      'index.stack.badge': 'โครงสร้างพื้นฐานแบบรวมศูนย์',
+      'index.stack.badge': 'ระบบรับชำระเงินครบวงจร',
 
       'dashboard.usecases.successRate': 'อัตราความสำเร็จ',
       'dashboard.usecases.latency': 'ความหน่วงเฉลี่ย',
@@ -1343,7 +1343,7 @@
 
       // About
       'about.title': 'About Elixopay',
-      'about.hero.desc': 'We build a secure and reliable payment system for modern businesses',
+      'about.hero.desc': 'Elixopay is a payment gateway built for online merchants and Social Commerce',
 
       // Partners
       'partners.hero.title': 'Grow with Elixopay',
@@ -1885,7 +1885,7 @@
       'footer.newsletter.title': 'Get Latest Updates',
       'footer.newsletter.placeholder': 'Your email',
       'footer.newsletter.button': 'Send',
-      'footer.desc': 'Next-generation payment infrastructure for the modern web. Secure, fast, and developer-friendly.',
+      'footer.desc': 'Merchant Payment Gateway for online stores and Social Commerce — accepting QR PromptPay and credit cards, settled directly to merchant bank accounts.',
       'footer.resources': 'Resources',
       'footer.docs': 'Documentation',
       'footer.api_ref': 'API Reference',
@@ -2015,8 +2015,8 @@
 
       // About
       'about.title': 'About Us - Elixopay',
-      'about.hero.title': 'Building the Future of Digital Payments',
-      'about.hero.desc': 'At Elixopay, we believe payments should be simple, secure, and accessible for everyone.',
+      'about.hero.title': 'Payment Gateway for Online Merchants',
+      'about.hero.desc': 'Elixopay is a payment system built for online stores, restaurants, and Social Commerce — funds settle directly to merchant bank accounts.',
 
       // Partner Dashboard
       'partner.dashboard.title': 'Partner Dashboard - Elixopay',
@@ -2410,7 +2410,7 @@
 
       // About
       'about.title': '关于 Elixopay',
-      'about.hero.desc': '我们为现代企业打造安全可靠的支付系统',
+      'about.hero.desc': 'Elixopay是专为在线商户和社交电商打造的支付网关',
       'about.story.title': '我们的故事',
       'about.story.p1': 'Elixopay 的愿景是让在线支付变得简单且安全，人人可用。',
       'about.story.p2': '我们由一支拥有金融科技与网络安全经验的团队创立，洞察到现有支付系统的复杂与不安全。',
@@ -2994,8 +2994,8 @@
 
       // About
       'about.title': '关于我们 - Elixopay',
-      'about.hero.title': '打造数字支付的未来',
-      'about.hero.desc': '在 Elixopay，我们相信支付应该简单、安全，并且所有人都能轻松使用。',
+      'about.hero.title': '专为在线商户打造的支付网关',
+      'about.hero.desc': 'Elixopay是专为网店、餐厅和社交电商打造的支付系统 — 资金直接结算到商户银行账户。',
 
       // About Pop Theme
       'about.pop.hero.title': '可爱又好用的<br>支付系统！💜',
@@ -3076,7 +3076,7 @@
       'footer.links.jobs': '加入我们',
       'footer.links.contact': '联系我们',
       'footer.links.help': '帮助中心',
-      'footer.desc': '面向现代网络的下一代支付基础设施。安全、快速且对开发者友好。',
+      'footer.desc': '专为在线商户和社交电商打造的支付网关 — 支持QR PromptPay和信用卡，资金直接结算到商户银行账户。',
       'footer.resources': '资源',
       'footer.docs': '开发文档',
       'footer.api_ref': 'API 参考',
@@ -3119,7 +3119,7 @@
       'dashboard.mockup.rev_change': '+12.5% 本周',
       'dashboard.mockup.merchant_change': '今天新增 +24',
       'dashboard.mockup.live': '实时',
-      'index.stack.badge': '统一基础设施',
+      'index.stack.badge': '一体化支付系统',
 
       'dashboard.usecases.successRate': '成功率',
       'dashboard.usecases.latency': '平均延迟',
