@@ -67,9 +67,6 @@
       users: {
         stats: '/api/v1/users/stats',
         profile: '/api/v1/users/profile',
-        // Wallet specific endpoints
-        exchangeRate: '/api/v1/wallet/exchange-rate',
-        exchange: '/api/v1/wallet/exchange'
       },
       apiKeys: {
         list: '/api/v1/api-keys',

@@ -601,7 +601,7 @@
             <a href="#check-payment" data-i18n="docs.sidebar.check">ตรวจสอบสถานะ</a>
             <a href="#refunds" data-i18n="docs.sidebar.refunds">การคืนเงิน (Refunds)</a>
             <a href="#subscriptions" data-i18n="docs.sidebar.subscriptions">ระบบสมาชิก (Subscriptions)</a>
-            <a href="#payouts" data-i18n="docs.sidebar.payouts">โอนเงินเข้าบัญชีร้านค้า (Direct Transfer)</a>
+            <a href="#payouts" data-i18n="docs.sidebar.payouts">การ Settlement เข้าบัญชีร้านค้า (Merchant Settlement)</a>
             <a href="#webhooks" data-i18n="docs.sidebar.webhooks">Webhooks</a>
             <a href="#downloads" data-i18n="nav.docs_downloads">ดาวน์โหลด</a>
           </div>
@@ -1668,9 +1668,9 @@
           <!-- Payouts -->
           <div id="payouts" class="api-section">
             <div class="api-prose">
-              <h2 data-i18n="docs.payouts.title">โอนเงินเข้าบัญชีร้านค้า (Direct Bank Transfer)</h2>
+              <h2 data-i18n="docs.payouts.title">การ Settlement เข้าบัญชีร้านค้า (Merchant Settlement)</h2>
               <p data-i18n="docs.payouts.desc">
-                ใช้ Endpoint นี้เพื่อโอนเงินจากยอดขายที่สำเร็จแล้วเข้าบัญชีธนาคารของร้านค้าโดยตรง
+                ใช้ Endpoint นี้เพื่อสั่ง Settlement จากยอดขายที่สำเร็จเข้าบัญชีธนาคารของร้านค้าโดยตรง
                 ยอดเงินจะถูกโอนเข้าบัญชีธนาคารที่คุณผูกไว้ในระบบ
               </p>
 
@@ -1726,7 +1726,7 @@
                       <span class="param-type">object</span>
                     </td>
                     <td class="param-desc" data-i18n="docs.payouts.res_params.transaction">
-                      ออบเจ็กต์ข้อมูลรายการโอนเงินที่ถูกสร้างขึ้นในสถานะ 'PENDING'
+                      ออบเจ็กต์ข้อมูลรายการ Settlement ที่ถูกสร้างขึ้นในสถานะ 'PENDING'
                     </td>
                   </tr>
                 </tbody>

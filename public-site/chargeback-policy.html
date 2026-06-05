@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargeback & Dispute Resolution Policy | Elixopay</title>
+    <meta name="description" content="นโยบายการจัดการ Chargeback และ Dispute Resolution ของ Elixopay Merchant Payment Gateway">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0e1a; color: #cbd5e1; line-height: 1.8; }
+        .policy-container { max-width: 860px; margin: 0 auto; padding: 120px 24px 80px; }
+        .policy-hero { text-align: center; margin-bottom: 48px; }
+        .policy-hero h1 { font-size: 2.2rem; color: #fff; margin-bottom: 12px; }
+        .policy-hero p { color: #94a3b8; font-size: 1.05rem; }
+        .policy-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3); padding: 6px 16px; border-radius: 999px; font-size: .82rem; color: #818cf8; margin-bottom: 20px; }
+        .section { margin-bottom: 40px; background: rgba(30,41,59,.5); border: 1px solid rgba(148,163,184,.1); border-radius: 16px; padding: 32px; }
+        .section h2 { color: #e2e8f0; font-size: 1.3rem; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .section h2 i { color: #818cf8; font-size: 1rem; }
+        .section h3 { color: #e2e8f0; font-size: 1.05rem; margin: 20px 0 10px; }
+        .section p, .section li { color: #94a3b8; line-height: 1.8; }
+        .section ul { padding-left: 20px; }
+        .section li { margin-bottom: 8px; }
+        .flow-steps { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
+        .flow-step { display: flex; gap: 16px; align-items: flex-start; padding: 16px; background: rgba(99,102,241,.06); border-radius: 12px; border-left: 3px solid #818cf8; }
+        .step-num { background: #6366f1; color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 600; flex-shrink: 0; }
+        .step-content h4 { color: #e2e8f0; font-size: .95rem; margin-bottom: 4px; }
+        .step-content p { font-size: .88rem; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: rgba(99,102,241,.15); color: #c4b5fd; padding: 10px 12px; text-align: left; font-size: .85rem; font-weight: 600; }
+        td { padding: 10px 12px; border-bottom: 1px solid rgba(148,163,184,.1); font-size: .88rem; }
+        .highlight-box { background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+        .highlight-box p { color: #6ee7b7; font-size: .9rem; }
+        .warning-box { background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25); border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+        .warning-box p { color: #fbbf24; font-size: .9rem; }
+        .footer-note { text-align: center; margin-top: 40px; padding: 20px; color: #475569; font-size: .82rem; }
+        a { color: #818cf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        @media (max-width: 640px) { .policy-container { padding: 100px 16px 60px; } .section { padding: 20px; } .policy-hero h1 { font-size: 1.6rem; } }
+    </style>
+</head>
+<body>
+    <div class="policy-container">
+        <div class="policy-hero">
+            <div class="policy-badge"><i class="fas fa-shield-halved"></i> Merchant Payment Gateway</div>
+            <h1>Chargeback & Dispute Resolution Policy</h1>
+            <p>นโยบายการจัดการ Chargeback และการระงับข้อพิพาทสำหรับร้านค้าที่ใช้บริการ Elixopay</p>
+        </div>
+
+        <!-- Section 1: Definitions -->
+        <div class="section">
+            <h2><i class="fas fa-book"></i> 1. คำนิยาม (Definitions)</h2>
+            <table>
+                <tr><th style="width:200px;">คำศัพท์</th><th>ความหมาย</th></tr>
+                <tr><td><strong>Chargeback</strong></td><td>การที่ธนาคารผู้ออกบัตร (Issuing Bank) เรียกเงินคืนจากร้านค้า หลังจากผู้ถือบัตรโต้แย้งรายการ</td></tr>
+                <tr><td><strong>Dispute</strong></td><td>ข้อพิพาทที่ลูกค้าแจ้งต่อธนาคารหรือ Elixopay เกี่ยวกับรายการธุรกรรม</td></tr>
+                <tr><td><strong>Representment</strong></td><td>การที่ร้านค้ายื่นหลักฐานโต้แย้ง Chargeback กลับไปยังธนาคาร</td></tr>
+                <tr><td><strong>Pre-Arbitration</strong></td><td>ขั้นตอนก่อนการตัดสินโดย Card Network (Visa/Mastercard)</td></tr>
+                <tr><td><strong>Retrieval Request</strong></td><td>คำขอข้อมูลธุรกรรมจากธนาคารผู้ออกบัตร ก่อนเปิด Chargeback</td></tr>
+            </table>
+        </div>
+
+        <!-- Section 2: Scope -->
+        <div class="section">
+            <h2><i class="fas fa-bullseye"></i> 2. ขอบเขตของนโยบาย</h2>
+            <p>นโยบายนี้ครอบคลุม:</p>
+            <ul>
+                <li>ธุรกรรมบัตรเครดิต/เดบิต (Visa, Mastercard) ที่ผ่านระบบ Elixopay</li>
+                <li>ธุรกรรม QR PromptPay ที่มี Dispute (ผ่านกระบวนการของธนาคาร)</li>
+                <li>ร้านค้าทุกประเภทที่ใช้บริการ Elixopay Merchant Payment Gateway</li>
+            </ul>
+            <div class="highlight-box">
+                <p>✅ Elixopay เป็น Merchant Acquiring Service — ทุก Chargeback จะดำเนินการผ่านธนาคาร Acquiring Partner ตามมาตรฐาน Visa/Mastercard</p>
+            </div>
+        </div>
+
+        <!-- Section 3: Chargeback Reason Codes -->
+        <div class="section">
+            <h2><i class="fas fa-tag"></i> 3. สาเหตุ Chargeback ที่พบบ่อย</h2>
+            <table>
+                <tr><th>Reason Code</th><th>สาเหตุ</th><th>คำอธิบาย</th></tr>
+                <tr><td>10.4 (Visa)</td><td>Fraud — Card Not Present</td><td>ผู้ถือบัตรไม่ได้ทำรายการ (บัตรถูกขโมย/ปลอม)</td></tr>
+                <tr><td>13.1 (Visa)</td><td>Merchandise Not Received</td><td>ลูกค้าไม่ได้รับสินค้า</td></tr>
+                <tr><td>13.3 (Visa)</td><td>Not as Described</td><td>สินค้าไม่ตรงตามที่โฆษณา</td></tr>
+                <tr><td>4837 (MC)</td><td>No Cardholder Authorization</td><td>ผู้ถือบัตรไม่ได้อนุมัติรายการ</td></tr>
+                <tr><td>4853 (MC)</td><td>Goods/Services Not Provided</td><td>ไม่ได้ส่งมอบสินค้า/บริการ</td></tr>
+            </table>
+        </div>
+
+        <!-- Section 4: Dispute Resolution Process -->
+        <div class="section">
+            <h2><i class="fas fa-diagram-project"></i> 4. กระบวนการระงับข้อพิพาท</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Notification — แจ้งเตือนร้านค้า</h4>
+                        <p>Elixopay ได้รับ Chargeback จากธนาคาร Acquiring → แจ้งร้านค้าภายใน <strong>24 ชั่วโมง</strong> ผ่าน Email + Dashboard Notification</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Evidence Collection — เก็บหลักฐาน</h4>
+                        <p>ร้านค้ามีเวลา <strong>7 วันทำการ</strong> ในการรวบรวมหลักฐาน: ใบเสร็จ, หลักฐานการจัดส่ง, Log การสื่อสารกับลูกค้า, 3DS Authentication Proof</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Representment — ยื่นโต้แย้ง</h4>
+                        <p>Elixopay ส่งหลักฐานไปยัง Acquiring Bank ภายใน <strong>10 วันทำการ</strong> (ตาม Timeline ของ Visa/Mastercard)</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Resolution — ผลการตัดสิน</h4>
+                        <p>ธนาคารผู้ออกบัตรพิจารณาหลักฐาน → แจ้งผล ภายใน <strong>30-45 วัน</strong> (หรือเข้าสู่ Pre-Arbitration)</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>Final Decision — การตัดสินขั้นสุดท้าย</h4>
+                        <p>หากไม่เห็นด้วยกับผล → ยื่น Arbitration ต่อ Card Network (Visa/Mastercard) — ผลตัดสินถือเป็นที่สุด</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Merchant Obligations -->
+        <div class="section">
+            <h2><i class="fas fa-store"></i> 5. หน้าที่ของร้านค้า (Merchant Obligations)</h2>
+            <ul>
+                <li><strong>ตอบกลับภายในกำหนดเวลา:</strong> ร้านค้าต้องส่งหลักฐานภายใน 7 วันทำการ หลังได้รับแจ้ง</li>
+                <li><strong>เก็บรักษาหลักฐาน:</strong> เก็บ Order Details, Shipping Proof, Customer Communication อย่างน้อย 540 วัน</li>
+                <li><strong>ใช้ 3D Secure:</strong> เปิดใช้ 3DS 2.0 สำหรับทุกธุรกรรมบัตร เพื่อลด Fraud Chargeback</li>
+                <li><strong>นโยบาย Refund ชัดเจน:</strong> แสดงนโยบายคืนเงินบนเว็บไซต์ร้านค้า</li>
+                <li><strong>Descriptor ชัดเจน:</strong> ตั้งค่า Statement Descriptor ให้ลูกค้าจำได้</li>
+            </ul>
+            <div class="warning-box">
+                <p>⚠️ หากร้านค้าไม่ตอบกลับภายในกำหนดเวลา — Chargeback จะถูกตัดสินให้ลูกค้าโดยอัตโนมัติ และร้านค้าจะถูกหักเงินจากยอด Settlement</p>
+            </div>
+        </div>
+
+        <!-- Section 6: Chargeback Fees -->
+        <div class="section">
+            <h2><i class="fas fa-coins"></i> 6. ค่าธรรมเนียม Chargeback</h2>
+            <table>
+                <tr><th>รายการ</th><th>ค่าธรรมเนียม</th><th>หมายเหตุ</th></tr>
+                <tr><td>Chargeback Fee</td><td>฿500 ต่อรายการ</td><td>เรียกเก็บทุกครั้งที่เกิด Chargeback</td></tr>
+                <tr><td>Representment Fee</td><td>ไม่มีค่าใช้จ่าย</td><td>Elixopay ช่วยยื่นโต้แย้งฟรี</td></tr>
+                <tr><td>Arbitration Fee</td><td>฿15,000 ต่อรายการ</td><td>หากเข้าสู่ Arbitration กับ Card Network</td></tr>
+            </table>
+        </div>
+
+        <!-- Section 7: Chargeback Monitoring -->
+        <div class="section">
+            <h2><i class="fas fa-chart-line"></i> 7. การตรวจสอบอัตรา Chargeback (Monitoring Program)</h2>
+            <table>
+                <tr><th>อัตรา Chargeback</th><th>ระดับ</th><th>มาตรการ</th></tr>
+                <tr><td>< 0.5%</td><td style="color:#10b981;">🟢 ปกติ</td><td>ไม่มีมาตรการเพิ่มเติม</td></tr>
+                <tr><td>0.5% - 0.9%</td><td style="color:#f59e0b;">🟡 เฝ้าระวัง</td><td>แจ้งเตือนร้านค้า + Review ทุก 2 สัปดาห์</td></tr>
+                <tr><td>0.9% - 1.5%</td><td style="color:#ef4444;">🔴 สูง</td><td>ระงับ Settlement + Mandatory Review</td></tr>
+                <tr><td>> 1.5%</td><td style="color:#dc2626;">⛔ วิกฤต</td><td>ระงับบัญชีชั่วคราว + อาจยกเลิกสัญญา</td></tr>
+            </table>
+            <p style="margin-top:12px; font-size:.85rem; color:#64748b;">* อัตรา Chargeback คำนวณจาก จำนวน Chargeback / จำนวนธุรกรรมทั้งหมด ในรอบ 1 เดือน</p>
+        </div>
+
+        <!-- Section 8: Rolling Reserve -->
+        <div class="section">
+            <h2><i class="fas fa-piggy-bank"></i> 8. Rolling Reserve Policy</h2>
+            <p>เพื่อป้องกันความเสี่ยงจาก Chargeback Elixopay อาจกำหนด Rolling Reserve สำหรับร้านค้าบางประเภท:</p>
+            <table>
+                <tr><th>ระดับความเสี่ยง</th><th>อัตรา Reserve</th><th>ระยะเวลาถือ</th></tr>
+                <tr><td>Low Risk</td><td>0%</td><td>ไม่มี</td></tr>
+                <tr><td>Medium Risk</td><td>5%</td><td>90 วัน</td></tr>
+                <tr><td>High Risk</td><td>10%</td><td>180 วัน</td></tr>
+                <tr><td>Special (ร้านค้าใหม่)</td><td>10%</td><td>90 วัน (ลดลงหลังผ่าน 3 เดือน)</td></tr>
+            </table>
+            <div class="highlight-box">
+                <p>✅ Rolling Reserve จะถูกคืนให้ร้านค้าโดยอัตโนมัติหลังพ้นระยะเวลาที่กำหนด หากไม่มี Chargeback ค้างชำระ</p>
+            </div>
+        </div>
+
+        <!-- Section 9: Contact -->
+        <div class="section">
+            <h2><i class="fas fa-headset"></i> 9. ช่องทางติดต่อ</h2>
+            <p>หากมี Chargeback หรือ Dispute สามารถติดต่อ:</p>
+            <ul>
+                <li><strong>Email:</strong> <a href="mailto:disputes@elixopay.com">disputes@elixopay.com</a></li>
+                <li><strong>Elixopay Dashboard:</strong> เมนู Disputes → รายละเอียด Chargeback</li>
+                <li><strong>SLA:</strong> ตอบกลับภายใน 4 ชั่วโมงทำการ</li>
+            </ul>
+        </div>
+
+        <div class="footer-note">
+            <p>Last updated: June 2026 | Culture Capital Pay Co., Ltd. Reg. 0105565039818</p>
+            <p style="margin-top:8px;">Elixopay — Merchant Payment Gateway | <a href="/">กลับหน้าแรก</a></p>
+        </div>
+    </div>
+
+    <script src="js/i18n.js?v=7"></script>
+</body>
+</html>
