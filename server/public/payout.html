@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Settlement - Elixopay</title>
+    <meta name="description" content="View your Elixopay settlement reports, payment flow, and fee summary.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css?v=2">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <style>
+        /* ─── Payment Flow Diagram ─── */
+        .st-flow {
+            background: linear-gradient(135deg, var(--ep-purple-dark), var(--ep-purple));
+            border-radius: var(--ep-radius-xl);
+            padding: 28px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .st-flow::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+        .st-flow-title {
+            font-size: 1rem; font-weight: 700; color: white; margin-bottom: 4px;
+            position: relative; z-index: 1;
+        }
+        .st-flow-subtitle {
+            font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-bottom: 20px;
+            position: relative; z-index: 1;
+        }
+        .st-flow-diagram {
+            display: flex; align-items: center; justify-content: center; gap: 0;
+            position: relative; z-index: 1; flex-wrap: wrap;
+        }
+        .st-flow-node {
+            display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 100px;
+        }
+        .st-flow-icon {
+            width: 56px; height: 56px; border-radius: var(--ep-radius-lg);
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.3rem;
+        }
+        .st-flow-icon.highlight {
+            background: rgba(34,197,94,0.25); border: 2px solid rgba(34,197,94,0.5);
+        }
+        .st-flow-label { font-size: 0.72rem; color: rgba(255,255,255,0.8); font-weight: 600; text-align: center; }
+        .st-flow-arrow {
+            color: rgba(255,255,255,0.4); font-size: 1.2rem; margin: 0 12px;
+            display: flex; align-items: center;
+        }
+        .st-flow-fee {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; background: rgba(245,158,11,0.2);
+            border: 1px solid rgba(245,158,11,0.3); border-radius: var(--ep-radius-full);
+            font-size: 0.65rem; font-weight: 700; color: #fbbf24;
+            margin-top: 6px;
+        }
+        .st-flow-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.3); border-radius: var(--ep-radius-full);
+            font-size: 0.72rem; font-weight: 700; color: #4ade80;
+            margin-top: 16px; position: relative; z-index: 1;
+        }
+
+        /* ─── Section ─── */
+        .st-section {
+            background: var(--ep-bg-card); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-lg); padding: 20px 24px; margin-bottom: 24px;
+        }
+        .st-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .st-section-header h2 { font-size: 1rem; font-weight: 700; color: var(--ep-text-primary); }
+        .st-section-header h2 i { margin-right: 8px; color: var(--ep-purple-light); }
+
+        /* ─── Fee Summary Cards ─── */
+        .st-fee-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .st-fee-card {
+            background: var(--ep-bg-elevated); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-md); padding: 16px;
+        }
+        .st-fee-card-label { font-size: 0.72rem; color: var(--ep-text-muted); display: block; margin-bottom: 4px; }
+        .st-fee-card-value { font-family: var(--ep-font-mono); font-size: 1.2rem; font-weight: 700; color: var(--ep-text-primary); }
+        .st-fee-card-value.green { color: var(--ep-success); }
+        .st-fee-card-value.amber { color: var(--ep-warning); }
+        .st-fee-card-value.purple { color: var(--ep-purple-light); }
+
+        /* ─── Bank Info ─── */
+        .st-bank-card {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--ep-bg-elevated); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-md); padding: 16px;
+        }
+        .st-bank-logo {
+            width: 44px; height: 44px; border-radius: var(--ep-radius-md);
+            background: linear-gradient(135deg, var(--ep-blue), #6366f1);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .st-bank-info { flex: 1; }
+        .st-bank-info strong { display: block; font-size: 0.85rem; color: var(--ep-text-primary); margin-bottom: 2px; }
+        .st-bank-info span { font-size: 0.75rem; color: var(--ep-text-muted); font-family: var(--ep-font-mono); }
+        .st-bank-badge {
+            font-size: 0.65rem; font-weight: 600; padding: 4px 10px;
+            border-radius: var(--ep-radius-full);
+        }
+        .st-bank-badge.verified { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+        .st-bank-badge.not-set { background: rgba(245,158,11,0.1); color: var(--ep-warning); }
+
+        /* ─── Info Box ─── */
+        .st-info-box {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+            border-radius: var(--ep-radius-md); padding: 14px 16px;
+        }
+        .st-info-box i { color: var(--ep-blue); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+        .st-info-box p { font-size: 0.78rem; color: var(--ep-text-secondary); line-height: 1.5; }
+        .st-info-box strong { color: var(--ep-text-primary); }
+
+        /* ─── Settlement History Items ─── */
+        .st-history-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 0; border-bottom: 1px solid var(--ep-border);
+        }
+        .st-history-item:last-child { border-bottom: none; }
+        .st-history-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; flex-shrink: 0;
+            background: rgba(34,197,94,0.1); color: var(--ep-success);
+        }
+        .st-history-meta { flex: 1; }
+        .st-history-meta strong { font-size: 0.82rem; color: var(--ep-text-primary); display: block; }
+        .st-history-meta span { font-size: 0.7rem; color: var(--ep-text-muted); }
+        .st-history-amounts { text-align: right; }
+        .st-history-gross { font-family: var(--ep-font-mono); font-size: 0.85rem; font-weight: 700; color: var(--ep-text-primary); display: block; }
+        .st-history-fee { font-size: 0.68rem; color: var(--ep-text-muted); }
+        .st-history-net { font-family: var(--ep-font-mono); font-size: 0.75rem; font-weight: 600; color: var(--ep-success); }
+
+        /* ─── Empty & Count ─── */
+        .st-count { font-size: 0.75rem; color: var(--ep-text-muted); }
+        .st-empty { text-align: center; padding: 40px; color: var(--ep-text-muted); }
+        .st-empty i { font-size: 2rem; opacity: 0.3; margin-bottom: 12px; display: block; }
+        .st-empty strong { display: block; color: var(--ep-text-secondary); margin-bottom: 4px; }
+        .st-empty p { font-size: 0.8rem; }
+
+        /* ─── How It Works Steps ─── */
+        .st-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .st-step {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: var(--ep-bg-elevated); border: 1px solid var(--ep-border);
+            border-radius: var(--ep-radius-md); padding: 14px;
+        }
+        .st-step-number {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--ep-purple); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+        }
+        .st-step strong { font-size: 0.78rem; color: var(--ep-text-primary); display: block; margin-bottom: 2px; }
+        .st-step span { font-size: 0.7rem; color: var(--ep-text-muted); line-height: 1.4; }
+
+        @media (max-width: 640px) {
+            .st-flow-diagram { flex-direction: column; gap: 8px; }
+            .st-flow-arrow { transform: rotate(90deg); margin: 4px 0; }
+            .st-fee-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
+
+        <!-- Payment Flow Diagram -->
+        <div class="st-flow">
+            <div class="st-flow-title" data-i18n="settlement.flow_title">
+                <i class="fas fa-route" style="margin-right:6px;"></i> การไหลของเงิน — Payment Flow
+            </div>
+            <div class="st-flow-subtitle" data-i18n="settlement.flow_subtitle">
+                เงินจากลูกค้าจะเข้าบัญชีธนาคารของคุณโดยตรง — Elixopay เป็นผู้ให้บริการเทคโนโลยีการชำระเงิน
+            </div>
+            <div class="st-flow-diagram">
+                <div class="st-flow-node">
+                    <div class="st-flow-icon"><i class="fas fa-user"></i></div>
+                    <span class="st-flow-label" data-i18n="settlement.flow_customer">ลูกค้า<br>Customer</span>
+                </div>
+                <div class="st-flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="st-flow-node">
+                    <div class="st-flow-icon"><i class="fas fa-qrcode"></i></div>
+                    <span class="st-flow-label" data-i18n="settlement.flow_payment">ชำระเงิน<br>Payment</span>
+                </div>
+                <div class="st-flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="st-flow-node">
+                    <div class="st-flow-icon"><i class="fas fa-building-columns"></i></div>
+                    <span class="st-flow-label" data-i18n="settlement.flow_bank">ธนาคาร<br>Bank API</span>
+                    <span class="st-flow-fee"><i class="fas fa-tag"></i> Elixopay Fee</span>
+                </div>
+                <div class="st-flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="st-flow-node">
+                    <div class="st-flow-icon highlight"><i class="fas fa-store"></i></div>
+                    <span class="st-flow-label" data-i18n="settlement.flow_merchant">บัญชีร้านค้า<br>Your Bank</span>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <span class="st-flow-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-i18n="settlement.flow_badge">เงินเข้าบัญชีคุณโดยตรง — ไม่ผ่านบัญชี Elixopay</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Bank Account (read-only) -->
+        <div class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-building-columns"></i> <span data-i18n="settlement.bank_title">บัญชีธนาคารรับเงิน</span></h2>
+            </div>
+            <div class="st-bank-card" id="bankCard">
+                <div class="st-bank-logo"><i class="fas fa-university"></i></div>
+                <div class="st-bank-info">
+                    <strong id="stBankName" data-i18n="settlement.bank_not_set">ยังไม่ได้ตั้งค่า</strong>
+                    <span id="stBankAccount" data-i18n="settlement.bank_via_kyc">กรุณาตั้งค่าผ่านหน้า KYC</span>
+                </div>
+                <span class="st-bank-badge not-set" id="stBankBadge" data-i18n="settlement.bank_not_configured">ไม่ได้ตั้งค่า</span>
+            </div>
+            <div class="st-info-box" style="margin-top:12px;">
+                <i class="fas fa-info-circle"></i>
+                <p data-i18n="settlement.bank_info">
+                    <strong>บัญชีนี้จะได้รับเงินจากลูกค้าโดยตรง</strong> ผ่านระบบธนาคาร โดยหักค่าธรรมเนียม Elixopay ก่อนเข้าบัญชี
+                    หากต้องการเปลี่ยนบัญชี กรุณาติดต่อทีมสนับสนุน
+                </p>
+            </div>
+        </div>
+
+        <!-- Fee Summary -->
+        <div class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-receipt"></i> <span data-i18n="settlement.fee_title">สรุปค่าธรรมเนียม</span></h2>
+            </div>
+            <div class="st-fee-grid">
+                <div class="st-fee-card">
+                    <span class="st-fee-card-label" data-i18n="settlement.total_processed">ยอดขายที่ผ่านระบบ</span>
+                    <strong class="st-fee-card-value" id="stTotalProcessed">฿0.00</strong>
+                </div>
+                <div class="st-fee-card">
+                    <span class="st-fee-card-label" data-i18n="settlement.total_fees">ค่าธรรมเนียมรวม</span>
+                    <strong class="st-fee-card-value amber" id="stTotalFees">฿0.00</strong>
+                </div>
+                <div class="st-fee-card">
+                    <span class="st-fee-card-label" data-i18n="settlement.net_received">ยอดสุทธิที่ร้านค้าได้รับ</span>
+                    <strong class="st-fee-card-value green" id="stNetReceived">฿0.00</strong>
+                </div>
+                <div class="st-fee-card">
+                    <span class="st-fee-card-label" data-i18n="settlement.fee_rate">อัตราค่าธรรมเนียม</span>
+                    <strong class="st-fee-card-value purple" id="stFeeRate">2.90%</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-lightbulb"></i> <span data-i18n="settlement.how_title">วิธีการทำงาน</span></h2>
+            </div>
+            <div class="st-steps">
+                <div class="st-step">
+                    <div class="st-step-number">1</div>
+                    <div>
+                        <strong data-i18n="settlement.step1_title">ลูกค้าชำระเงิน</strong>
+                        <span data-i18n="settlement.step1_desc">ลูกค้าชำระเงินผ่าน QR, บัตรเครดิต หรือ Internet Banking ผ่านระบบ Elixopay API</span>
+                    </div>
+                </div>
+                <div class="st-step">
+                    <div class="st-step-number">2</div>
+                    <div>
+                        <strong data-i18n="settlement.step2_title">ธนาคารประมวลผล</strong>
+                        <span data-i18n="settlement.step2_desc">ธนาคารตรวจสอบและประมวลผลรายการ หักค่าธรรมเนียม Elixopay อัตโนมัติ</span>
+                    </div>
+                </div>
+                <div class="st-step">
+                    <div class="st-step-number">3</div>
+                    <div>
+                        <strong data-i18n="settlement.step3_title">เงินเข้าบัญชีคุณ</strong>
+                        <span data-i18n="settlement.step3_desc">ยอดสุทธิ (หลังหักค่าธรรมเนียม) เข้าบัญชีธนาคารร้านค้าโดยตรง</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settlement History -->
+        <div class="st-section">
+            <div class="st-section-header">
+                <h2><i class="fas fa-history"></i> <span data-i18n="settlement.history_title">ประวัติ Settlement</span></h2>
+                <span class="st-count" id="stHistoryCount">0 รายการ</span>
+            </div>
+            <div id="stHistoryList"></div>
+            <div class="st-empty" id="stHistoryEmpty">
+                <i class="fas fa-inbox"></i>
+                <strong data-i18n="settlement.no_history">ยังไม่มีประวัติ Settlement</strong>
+                <p data-i18n="settlement.no_history_desc">เมื่อมีรายการชำระเงินผ่านระบบ ประวัติจะแสดงที่นี่</p>
+            </div>
+        </div>
+
+    </main>
+    </div>
+    </div>
+
+    <script>
+    // Settlement page logic — fetch from API when available
+    (function() {
+        // Load bank info from localStorage (synced from KYC/dashboard)
+        const bankInfo = JSON.parse(localStorage.getItem('ep-bank') || 'null');
+        if (bankInfo) {
+            document.getElementById('stBankName').textContent = bankInfo.bank;
+            document.getElementById('stBankAccount').textContent = bankInfo.number + ' — ' + bankInfo.holder;
+            const badge = document.getElementById('stBankBadge');
+            badge.textContent = 'Verified';
+            badge.classList.remove('not-set');
+            badge.classList.add('verified');
+        }
+
+        // In a production system, these would come from the API
+        // For now, show zeros until real bank integration is set up
+        const stats = {
+            totalProcessed: 0,
+            totalFees: 0,
+            netReceived: 0,
+            feeRate: '2.90%'
+        };
+
+        const fmt = (n) => '฿' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('stTotalProcessed').textContent = fmt(stats.totalProcessed);
+        document.getElementById('stTotalFees').textContent = fmt(stats.totalFees);
+        document.getElementById('stNetReceived').textContent = fmt(stats.netReceived);
+        document.getElementById('stFeeRate').textContent = stats.feeRate;
+
+        // Settlement history — empty for now
+        const list = document.getElementById('stHistoryList');
+        const empty = document.getElementById('stHistoryEmpty');
+        const count = document.getElementById('stHistoryCount');
+
+        // Placeholder: when API provides settlement data, render items here
+        const settlements = [];
+        count.textContent = settlements.length + ' รายการ';
+        if (settlements.length === 0) {
+            empty.style.display = 'block';
+            list.innerHTML = '';
+        } else {
+            empty.style.display = 'none';
+            list.innerHTML = settlements.map(s => `
+                <div class="st-history-item">
+                    <div class="st-history-icon"><i class="fas fa-check"></i></div>
+                    <div class="st-history-meta">
+                        <strong>${s.description}</strong>
+                        <span>${s.date}</span>
+                    </div>
+                    <div class="st-history-amounts">
+                        <span class="st-history-gross">${fmt(s.gross)}</span>
+                        <span class="st-history-fee">Fee: ${fmt(s.fee)}</span>
+                        <span class="st-history-net">Net: ${fmt(s.net)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+    })();
+    </script>
+    <script src="/js/sidebar.js"></script>
+</body>
+</html>
