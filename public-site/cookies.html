@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="นโยบายคุกกี้ของ Elixopay — ข้อมูลเกี่ยวกับการใช้คุกกี้และเทคโนโลยีติดตามบนเว็บไซต์ของเรา">
+    <title>นโยบายคุกกี้ - Elixopay</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="styles/theme.css?v=4">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        body nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        nav .container {
+            width: 100%;
+            margin: 0;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: #FFFFFF; }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--accent-color); }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-outline:hover {
+            border-color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .lang-select {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-select option {
+            background: #2E1065;
+            color: white;
+        }
+
+        /* Hero */
+        .policy-hero {
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            background: var(--gradient-scb);
+            min-height: 35vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .policy-hero::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 60%);
+            filter: blur(120px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .policy-hero h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.03em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .policy-hero p {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .policy-hero .badge {
+            display: inline-block;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 50px;
+            padding: 6px 18px;
+            margin-bottom: 1.5rem;
+            color: #d8b4fe;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Content */
+        .policy-content {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
+        }
+
+        .policy-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: border-color 0.3s;
+        }
+
+        .policy-section:hover {
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .policy-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .policy-section h2 i {
+            color: #a5b4fc;
+            font-size: 1.2rem;
+        }
+
+        .policy-section h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .policy-section p,
+        .policy-section li {
+            color: #94a3b8;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .policy-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.75rem 0;
+        }
+
+        .policy-section li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .policy-section li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        .cookie-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+        }
+
+        .cookie-table th,
+        .cookie-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .cookie-table th {
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .cookie-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-type {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-essential {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .badge-analytics {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .badge-functional {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+        }
+
+        .update-date {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav ul.nav-links {
+                display: none !important;
+            }
+
+            nav ul.nav-links.show {
+                display: flex !important;
+                flex-direction: column !important;
+                position: absolute !important;
+                top: 100% !important;
+                left: 0 !important;
+                width: 100% !important;
+                background: #0f172a !important;
+                padding: 2rem !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                gap: 1.5rem !important;
+                z-index: 1000 !important;
+                align-items: center !important;
+            }
+
+            nav .mobile-menu-btn { display: block !important; }
+
+            .policy-hero h1 { font-size: 2rem; }
+
+            .policy-section { padding: 1.5rem; }
+
+            .cookie-table { font-size: 0.8rem; }
+
+            .cookie-table th, .cookie-table td { padding: 0.7rem; }
+        }
+
+        /* Footer */
+        .footer-link-v2:hover {
+            color: #a5b4fc !important;
+            transform: translateX(4px);
+        }
+
+        .footer-bottom-link:hover {
+            color: #a5b4fc !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg width="40" height="40" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="136" height="136" rx="28" fill="url(#purpleGrad)" />
+                    <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800"
+                        fill="white" text-anchor="middle">E</text>
+                </svg>
+                <span>Elixopay</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
+                <li><a href="usecases.html" data-i18n="nav.usecases">กรณีการใช้งาน</a></li>
+                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
+                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
+                <li><a href="https://app.elixopay.com/login.html" class="btn btn-outline"
+                        data-i18n="nav.login">เข้าสู่ระบบ</a></li>
+                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary"
+                        data-i18n="nav.signup">ลงทะเบียน</a></li>
+                <li>
+                    <select id="langSelect" class="lang-select" aria-label="Language">
+                        <option value="th">TH</option>
+                        <option value="en">EN</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </li>
+            </ul>
+            <button class="mobile-menu-btn" style="color: white;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    <script>
+        document.querySelector(".mobile-menu-btn").addEventListener("click", function () {
+            document.querySelector(".nav-links").classList.toggle("show");
+        });
+    </script>
+
+    <!-- Hero -->
+    <header class="policy-hero">
+        <div class="hero-grid-overlay"></div>
+        <div class="bg-noise"></div>
+        <div style="position: relative; z-index: 2; max-width: 700px; margin: 0 auto;">
+            <div class="badge">
+                <i class="fas fa-cookie-bite" style="margin-right: 6px;"></i> Cookie Policy
+            </div>
+            <h1>นโยบายคุกกี้</h1>
+            <p>ข้อมูลเกี่ยวกับการใช้คุกกี้และเทคโนโลยีติดตามบนเว็บไซต์ Elixopay</p>
+        </div>
+    </header>
+
+    <!-- Cookie Policy Content -->
+    <main class="policy-content">
+
+        <!-- 1. คุกกี้คืออะไร -->
+        <div class="policy-section">
+            <h2><i class="fas fa-question-circle"></i> คุกกี้คืออะไร</h2>
+            <p>คุกกี้ (Cookies) คือไฟล์ข้อความขนาดเล็กที่ถูกจัดเก็บในเบราว์เซอร์ของท่านเมื่อเข้าชมเว็บไซต์ของเรา คุกกี้ช่วยให้เว็บไซต์จดจำการตั้งค่าและพฤติกรรมการใช้งานของท่าน เพื่อมอบประสบการณ์ที่ดีขึ้นในครั้งถัดไป</p>
+            <p style="margin-top: 0.75rem;">Elixopay ใช้คุกกี้เพื่อให้บริการเว็บไซต์ได้อย่างถูกต้อง ปรับปรุงประสบการณ์การใช้งาน และวิเคราะห์ข้อมูลเพื่อพัฒนาบริการ โดยปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) พ.ศ. 2562</p>
+        </div>
+
+        <!-- 2. ประเภทของคุกกี้ที่เราใช้ -->
+        <div class="policy-section">
+            <h2><i class="fas fa-layer-group"></i> ประเภทของคุกกี้ที่เราใช้</h2>
+
+            <table class="cookie-table">
+                <thead>
+                    <tr>
+                        <th>ประเภท</th>
+                        <th>คุกกี้</th>
+                        <th>วัตถุประสงค์</th>
+                        <th>ระยะเวลา</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge-type badge-essential">จำเป็น</span></td>
+                        <td>session_id</td>
+                        <td>จัดการ session การเข้าสู่ระบบ เพื่อให้ท่านสามารถใช้งานแดชบอร์ดร้านค้าได้อย่างต่อเนื่อง</td>
+                        <td>จนกว่าจะปิดเบราว์เซอร์</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-type badge-essential">จำเป็น</span></td>
+                        <td>csrf_token</td>
+                        <td>ป้องกันการโจมตีแบบ CSRF (Cross-Site Request Forgery) เพื่อความปลอดภัยของธุรกรรม</td>
+                        <td>จนกว่าจะปิดเบราว์เซอร์</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-type badge-essential">จำเป็น</span></td>
+                        <td>cookie_consent</td>
+                        <td>จดจำการตั้งค่าความยินยอมคุกกี้ของท่าน</td>
+                        <td>1 ปี</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-type badge-functional">ฟังก์ชัน</span></td>
+                        <td>lang_pref</td>
+                        <td>จดจำภาษาที่ท่านเลือกใช้งาน (TH / EN / 中文)</td>
+                        <td>1 ปี</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-type badge-functional">ฟังก์ชัน</span></td>
+                        <td>theme_pref</td>
+                        <td>จดจำธีมการแสดงผลที่ท่านเลือก</td>
+                        <td>1 ปี</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-type badge-analytics">วิเคราะห์</span></td>
+                        <td>_ga, _gid</td>
+                        <td>Google Analytics — วิเคราะห์พฤติกรรมการใช้งานเว็บไซต์ เช่น จำนวนผู้เข้าชม หน้าที่ได้รับความนิยม เวลาที่ใช้บนเว็บไซต์</td>
+                        <td>2 ปี / 24 ชม.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. คุกกี้จำเป็น -->
+        <div class="policy-section">
+            <h2><i class="fas fa-lock"></i> คุกกี้ที่จำเป็น (Strictly Necessary)</h2>
+            <p>คุกกี้ประเภทนี้มีความจำเป็นต่อการทำงานของเว็บไซต์และไม่สามารถปิดได้ เนื่องจากเป็นคุกกี้ที่ทำให้ระบบทำงานได้อย่างถูกต้อง ได้แก่:</p>
+            <ul>
+                <li>การจัดการ Session สำหรับการเข้าสู่ระบบร้านค้า</li>
+                <li>การป้องกันความปลอดภัย (CSRF Token)</li>
+                <li>การจดจำสถานะการยินยอมคุกกี้</li>
+                <li>การรักษาความปลอดภัยของธุรกรรมการชำระเงิน</li>
+            </ul>
+            <p style="margin-top: 0.75rem;">คุกกี้ประเภทนี้ไม่เก็บข้อมูลส่วนบุคคลที่สามารถระบุตัวตนได้ และไม่แชร์ข้อมูลกับบุคคลที่สาม</p>
+        </div>
+
+        <!-- 4. คุกกี้ฟังก์ชัน -->
+        <div class="policy-section">
+            <h2><i class="fas fa-sliders-h"></i> คุกกี้เพื่อการใช้งาน (Functional Cookies)</h2>
+            <p>คุกกี้ประเภทนี้ช่วยจดจำการตั้งค่าของท่าน เช่น ภาษาที่เลือก และธีมการแสดงผล เพื่อให้ท่านได้รับประสบการณ์ที่เป็นส่วนตัวมากขึ้น</p>
+            <p style="margin-top: 0.75rem;">ท่านสามารถปิดคุกกี้ประเภทนี้ได้ แต่อาจทำให้บางฟีเจอร์ไม่ทำงานตามที่คาดหวัง เช่น การตั้งค่าภาษาจะไม่ถูกจดจำเมื่อเข้าชมครั้งถัดไป</p>
+        </div>
+
+        <!-- 5. คุกกี้วิเคราะห์ -->
+        <div class="policy-section">
+            <h2><i class="fas fa-chart-bar"></i> คุกกี้เพื่อการวิเคราะห์ (Analytics Cookies)</h2>
+            <p>เราใช้ Google Analytics เพื่อทำความเข้าใจว่าผู้ใช้งานเข้าถึงและใช้งานเว็บไซต์อย่างไร ข้อมูลที่เก็บรวบรวมรวมถึง:</p>
+            <ul>
+                <li>จำนวนผู้เข้าชมเว็บไซต์</li>
+                <li>หน้าที่ได้รับความนิยม</li>
+                <li>ระยะเวลาที่ใช้งานบนเว็บไซต์</li>
+                <li>แหล่งที่มาของการเข้าชม (Search Engine, Social Media, Direct)</li>
+            </ul>
+            <p style="margin-top: 0.75rem;">ข้อมูลเหล่านี้ถูกรวบรวมแบบไม่ระบุตัวตน (Anonymized) และไม่สามารถย้อนกลับเพื่อระบุตัวบุคคลได้ ท่านสามารถปฏิเสธคุกกี้ประเภทนี้ได้โดยไม่กระทบต่อการใช้งานเว็บไซต์</p>
+        </div>
+
+        <!-- 6. การจัดการคุกกี้ -->
+        <div class="policy-section">
+            <h2><i class="fas fa-cog"></i> การจัดการคุกกี้</h2>
+            <p>ท่านสามารถจัดการคุกกี้ได้ผ่านการตั้งค่าเบราว์เซอร์ของท่าน โดยวิธีดังนี้:</p>
+
+            <h3>Google Chrome</h3>
+            <p>ไปที่ Settings → Privacy and Security → Cookies and other site data</p>
+
+            <h3>Safari</h3>
+            <p>ไปที่ Preferences → Privacy → Manage Website Data</p>
+
+            <h3>Firefox</h3>
+            <p>ไปที่ Settings → Privacy & Security → Cookies and Site Data</p>
+
+            <h3>Microsoft Edge</h3>
+            <p>ไปที่ Settings → Cookies and site permissions → Manage and delete cookies and site data</p>
+
+            <p style="margin-top: 1.25rem; padding: 1rem; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.15); border-radius: 12px; color: #fcd34d;">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
+                <strong>หมายเหตุ:</strong> การปิดคุกกี้ที่จำเป็นอาจทำให้ท่านไม่สามารถเข้าสู่ระบบหรือใช้งานบางฟังก์ชันของเว็บไซต์ได้
+            </p>
+        </div>
+
+        <!-- 7. สิทธิ์ของท่านตาม PDPA -->
+        <div class="policy-section">
+            <h2><i class="fas fa-user-shield"></i> สิทธิ์ของท่านตาม PDPA</h2>
+            <p>ตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ท่านมีสิทธิ์ดังต่อไปนี้:</p>
+            <ul>
+                <li><strong>สิทธิ์ในการเข้าถึง:</strong> ขอดูข้อมูลคุกกี้ที่เราเก็บเกี่ยวกับท่าน</li>
+                <li><strong>สิทธิ์ในการลบ:</strong> ขอให้เราลบข้อมูลคุกกี้ของท่าน</li>
+                <li><strong>สิทธิ์ในการถอนความยินยอม:</strong> ถอนความยินยอมในการใช้คุกกี้ที่ไม่จำเป็นได้ทุกเมื่อ</li>
+                <li><strong>สิทธิ์ในการคัดค้าน:</strong> คัดค้านการเก็บรวบรวมข้อมูลผ่านคุกกี้วิเคราะห์</li>
+                <li><strong>สิทธิ์ในการขอสำเนา:</strong> ขอรับสำเนาข้อมูลที่เก็บผ่านคุกกี้ในรูปแบบที่อ่านได้</li>
+            </ul>
+        </div>
+
+        <!-- 8. ติดต่อเรา -->
+        <div class="policy-section">
+            <h2><i class="fas fa-envelope"></i> ติดต่อเรา</h2>
+            <p>หากท่านมีคำถามเกี่ยวกับนโยบายคุกกี้นี้ หรือต้องการใช้สิทธิ์ตาม PDPA สามารถติดต่อเราได้ที่:</p>
+            <ul>
+                <li><strong>บริษัท:</strong> บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด</li>
+                <li><strong>เลขทะเบียน:</strong> 0105565039818</li>
+                <li><strong>อีเมล:</strong> <a href="mailto:privacy@elixopay.com" style="color: #a5b4fc; text-decoration: none;">privacy@elixopay.com</a></li>
+                <li><strong>เว็บไซต์:</strong> <a href="https://elixopay.com/contact" style="color: #a5b4fc; text-decoration: none;">elixopay.com/contact</a></li>
+            </ul>
+        </div>
+
+        <p class="update-date">อัปเดตล่าสุด: 1 มกราคม 2569 | เวอร์ชัน 1.0</p>
+
+    </main>
+
+    <!-- Footer -->
+    <footer
+        style="background: #1A0B2E; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 6rem; position: relative;">
+        <div
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.5), transparent);">
+        </div>
+
+        <div class="container" style="max-width: 1200px; padding: 0 2rem; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem;">
+                <div class="footer-brand">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                        <svg width="32" height="32" viewBox="0 0 136 136" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="purpleGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="136" height="136" rx="28" fill="url(#purpleGradFooter)" />
+                            <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72"
+                                font-weight="800" fill="white" text-anchor="middle">E</text>
+                        </svg>
+                        <span
+                            style="font-size: 1.5rem; font-weight: 800; color: white; letter-spacing: -0.5px;">Elixopay</span>
+                    </div>
+                    <p data-i18n="footer.desc"
+                        style="color: rgba(255, 255, 255, 0.6); line-height: 1.6; font-size: 0.95rem; max-width: 300px;">
+                        ระบบรับชำระเงินสำหรับร้านค้าออนไลน์และ Social Commerce — รองรับ QR PromptPay และบัตรเครดิต
+                    </p>
+                </div>
+                <div>
+                    <h4 data-i18n="footer.resources"
+                        style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;">
+                        ทรัพยากร</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.85rem;"><a href="apidocs.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">เอกสาร API</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="usecases.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">กรณีการใช้งาน</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="contact.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ติดต่อฝ่ายขาย</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 data-i18n="footer.company"
+                        style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;">
+                        บริษัท</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.85rem;"><a href="about.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">เกี่ยวกับเรา</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="security.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ความปลอดภัย</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="blog.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">บล็อก</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="contact.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 data-i18n="footer.help"
+                        style="font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.05em;">
+                        ช่วยเหลือ</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.85rem;"><a href="support.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ศูนย์ช่วยเหลือ</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="status.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">สถานะระบบ</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="privacy.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">นโยบาย</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="terms.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;">ข้อกำหนด</a></li>
+                        <li style="margin-bottom: 0.85rem;"><a href="compliance.html" class="footer-link-v2"
+                                style="color: rgba(255, 255, 255, 0.75); text-decoration: none; transition: all 0.3s ease; display: inline-block; font-size: 0.95rem;"><i class="fas fa-shield-alt" style="margin-right:4px; font-size:.8rem;"></i>AML/KYC Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 2rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+                <p style="color: rgba(255, 255, 255, 0.4); margin: 0; font-size: 0.9rem;">
+                    © 2026 Elixopay — บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด | เลขทะเบียน 0105565039818
+                </p>
+                <p style="color: rgba(255,255,255,0.3); margin: 4px 0 0; font-size: 0.78rem;">Payment Technology Provider — ลูกค้าชำระตรงเข้าบัญชีร้านค้า</p>
+                <div style="display: flex; gap: 2rem; align-items: center;">
+                    <a href="privacy.html"
+                        style="color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;"
+                        class="footer-bottom-link">นโยบาย</a>
+                    <a href="terms.html"
+                        style="color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;"
+                        class="footer-bottom-link">ข้อกำหนด</a>
+                    <a href="cookies.html"
+                        style="color: #a5b4fc; text-decoration: none; font-size: 0.9rem;"
+                        class="footer-bottom-link">คุกกี้</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js?v=8"></script>
+    <script src="js/ui.js?v=3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/ui-enhancements.js?v=6"></script>
+</body>
+
+</html>

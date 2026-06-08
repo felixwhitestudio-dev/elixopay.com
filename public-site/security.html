@@ -2,275 +2,1224 @@
 <html lang="th">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>ความปลอดภัย - Elixopay</title>
-	<link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title data-i18n="security.page_title">Security Infrastructure - Elixopay</title>
+    <meta name="description" content="มาตรฐานความปลอดภัยระดับธนาคารที่ปกป้องทุกธุรกรรมของร้านค้า Elixopay">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-		rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        :root {
+            --bg: #050508;
+            --s1: #0a0a10;
+            --s2: #12121c;
+            --brd: rgba(255, 255, 255, 0.06);
+            --txt: #d4d8e0;
+            --dim: #8b92a0;
+            --w: white;
+            --pri: #818cf8;
+            --pri2: #6366f1;
+            --pri3: #c7d2fe;
+            --pri-bg: rgba(129, 140, 248, 0.06);
+            --pri-glow: rgba(129, 140, 248, 0.12)
+        }
 
-	<style>
-		:root {
-			--primary-color: #6366f1;
-			--primary-dark: #4f46e5;
-			--success-color: #10b981;
-			--dark-bg: #0f172a;
-			--text-primary: #1e293b;
-			--text-secondary: #64748b;
-			--light-bg: #f8fafc;
-		}
+        html {
+            scroll-behavior: smooth
+        }
 
-		body {
-			font-family: 'Inter', sans-serif;
-			background-color: var(--light-bg);
-			color: var(--text-primary);
-			line-height: 1.6;
-			margin: 0;
-		}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased
+        }
 
-		nav {
-			position: fixed;
-			top: 0;
-			width: 100%;
-			background: rgba(255, 255, 255, 0.95);
-			backdrop-filter: blur(10px);
-			z-index: 1000;
-			padding: 1rem 0;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-		}
+        ::selection {
+            background: rgba(129, 140, 248, 0.3)
+        }
 
-		.container {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 0 2rem;
-		}
+        #mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: .35;
+            pointer-events: none
+        }
 
-		nav .container {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
+        .hex-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: .04;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23818cf8' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+        }
 
-		.logo {
-			display: flex;
-			align-items: center;
-			gap: 0.75rem;
-			font-size: 1.5rem;
-			font-weight: 800;
-			color: #1e293b;
-			text-decoration: none;
-		}
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, var(--pri), rgba(129, 140, 248, .6), var(--pri), transparent);
+            opacity: .5;
+            animation: scanDown 8s linear infinite
+        }
 
-		.logo i {
-			color: var(--primary-color);
-		}
+        @keyframes scanDown {
+            0% {
+                top: 0
+            }
 
-		.nav-links {
-			display: flex;
-			gap: 2rem;
-			list-style: none;
-			align-items: center;
-		}
+            100% {
+                top: 100vh
+            }
+        }
 
-		.nav-links a {
-			color: var(--text-secondary);
-			text-decoration: none;
-			font-weight: 500;
-			transition: color 0.3s;
-		}
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+        }
 
-		.nav-links a:hover {
-			color: var(--primary-color);
-		}
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            background: rgba(5, 5, 8, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--brd)
+        }
 
-		.btn {
-			padding: 0.5rem 1rem;
-			border-radius: 8px;
-			font-weight: 600;
-			text-decoration: none;
-		}
+        .nav-in {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
 
-		.btn-primary {
-			background: var(--primary-color);
-			color: white;
-		}
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            text-decoration: none;
+            color: var(--w);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -.03em
+        }
 
-		.sec-header {
-			padding: 8rem 0 4rem;
-			text-align: center;
-			background: white;
-		}
+        .logo-m {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: .8rem;
+            color: var(--w);
+            position: relative;
+            overflow: hidden
+        }
 
-		.sec-header h1 {
-			font-size: 2.5rem;
-			margin-bottom: 1rem;
-		}
+        .logo-m::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #6366f1, #818cf8)
+        }
 
-		.sec-header p {
-			font-size: 1.1rem;
-			color: var(--text-secondary);
-			max-width: 600px;
-			margin: 0 auto;
-		}
+        .logo-m::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #818cf8, #a5b4fc);
+            opacity: 0;
+            animation: logoShift 4s ease-in-out infinite
+        }
 
-		.grid-cards {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-			gap: 2rem;
-			margin: 4rem auto;
-			max-width: 1000px;
-		}
+        @keyframes logoShift {
 
-		.card {
-			background: white;
-			padding: 2rem;
-			border-radius: 12px;
-			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-			border: 1px solid #e2e8f0;
-		}
+            0%,
+            100% {
+                opacity: 0
+            }
 
-		.card h3 {
-			font-size: 1.25rem;
-			margin-bottom: 1rem;
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-		}
+            50% {
+                opacity: 1
+            }
+        }
 
-		.card p {
-			color: var(--text-secondary);
-			font-size: 0.95rem;
-		}
+        .logo-m span {
+            position: relative;
+            z-index: 1
+        }
 
-		.icon-box {
-			width: 40px;
-			height: 40px;
-			background: #eef2ff;
-			color: var(--primary-color);
-			border-radius: 8px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
+        .nav-r {
+            display: flex;
+            align-items: center;
+            gap: .15rem
+        }
 
-		footer {
-			background: var(--dark-bg);
-			color: #94a3b8;
-			padding: 3rem 0;
-			margin-top: 4rem;
-			text-align: center;
-		}
+        .nav-r a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .82rem;
+            font-weight: 500;
+            padding: .45rem .75rem;
+            border-radius: 8px;
+            transition: all .25s
+        }
 
-		ul.check-list {
-			list-style: none;
-			padding: 0;
-		}
+        .nav-r a:hover,
+        .nav-r a.active {
+            color: var(--w)
+        }
 
-		ul.check-list li {
-			margin-bottom: 0.5rem;
-			display: flex;
-			gap: 0.5rem;
-			align-items: start;
-			font-size: 0.95rem;
-			color: var(--text-secondary);
-		}
+        .nav-cta {
+            background: rgba(255, 255, 255, .06) !important;
+            color: var(--w) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important
+        }
 
-		ul.check-list li i {
-			color: var(--success-color);
-			margin-top: 5px;
-		}
-	</style>
+        .hero {
+            padding: 8rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 5
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(99, 102, 241, .18), rgba(129, 140, 248, .06) 50%, transparent 70%);
+            pointer-events: none
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(129, 140, 248, .2), transparent);
+            pointer-events: none
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--pri);
+            position: relative;
+            background: rgba(129, 140, 248, .05);
+            border: 1px solid rgba(129, 140, 248, .12)
+        }
+
+        .hero-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 23px;
+            background: conic-gradient(from 0deg, transparent, var(--pri), transparent, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            padding: 1px;
+            animation: spinBorder 6s linear infinite
+        }
+
+        @keyframes spinBorder {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .hero-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 28px;
+            border: 1px solid rgba(129, 140, 248, .05);
+            animation: iconPulse 3s ease infinite
+        }
+
+        @keyframes iconPulse {
+
+            0%,
+            100% {
+                opacity: .3;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 0;
+                transform: scale(1.12)
+            }
+        }
+
+        .hero-icon i {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 12px rgba(129, 140, 248, .5))
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -.04em;
+            color: var(--w);
+            margin-bottom: .8rem
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(90deg, #6366f1, #818cf8, #c7d2fe, #6366f1);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoShift 5s linear infinite
+        }
+
+        @keyframes holoShift {
+            0% {
+                background-position: 0% 50%
+            }
+
+            100% {
+                background-position: 300% 50%
+            }
+        }
+
+        .hero p {
+            color: var(--dim);
+            font-size: .9rem;
+            max-width: 500px;
+            margin: 0 auto
+        }
+
+        .hero .meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap
+        }
+
+        .hero .updated {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            color: var(--pri);
+            display: flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .hero .updated .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pri);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(129, 140, 248, .4)
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(129, 140, 248, 0)
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .32rem .85rem;
+            background: var(--pri-bg);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 50px;
+            font-size: .7rem;
+            color: var(--pri);
+            font-weight: 600;
+            letter-spacing: .02em
+        }
+
+        .content {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .toc {
+            background: rgba(10, 10, 16, .8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .toc::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pri2), var(--pri), var(--pri2), transparent)
+        }
+
+        .toc::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg, transparent 60%, rgba(129, 140, 248, .03) 80%, transparent 100%);
+            animation: tocGlow 10s linear infinite
+        }
+
+        @keyframes tocGlow {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .toc h3 {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--w);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .toc h3 i {
+            color: var(--pri);
+            font-size: .75rem
+        }
+
+        .toc ol {
+            padding-left: 1.4rem;
+            position: relative;
+            z-index: 1;
+            columns: 2;
+            column-gap: 2rem
+        }
+
+        .toc li {
+            margin-bottom: .45rem;
+            break-inside: avoid
+        }
+
+        .toc a {
+            color: var(--pri3);
+            text-decoration: none;
+            font-size: .82rem;
+            transition: all .2s
+        }
+
+        .toc a:hover {
+            color: var(--w);
+            text-shadow: 0 0 12px rgba(129, 140, 248, .3)
+        }
+
+        .sec {
+            margin-bottom: 1.5rem;
+            padding: 1.8rem 2rem;
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(129, 140, 248, .06);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .4s, box-shadow .4s
+        }
+
+        .sec:hover {
+            border-color: rgba(129, 140, 248, .15);
+            box-shadow: 0 0 30px rgba(129, 140, 248, .04)
+        }
+
+        .sec::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pri), transparent);
+            transition: left 1s
+        }
+
+        .sec:hover::before {
+            left: 100%
+        }
+
+        .sec h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--w);
+            letter-spacing: -.02em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .sec h2 .num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .65rem;
+            color: var(--pri);
+            font-weight: 600;
+            background: var(--pri-bg);
+            padding: .25rem .55rem;
+            border-radius: 6px;
+            border: 1px solid rgba(129, 140, 248, .12);
+            min-width: 30px;
+            text-align: center;
+            position: relative
+        }
+
+        .sec h2 .num::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(129, 140, 248, .15);
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .sec:hover h2 .num::after {
+            opacity: 1
+        }
+
+        .sec h2 .ic {
+            color: var(--pri);
+            font-size: .85rem;
+            filter: drop-shadow(0 0 6px rgba(129, 140, 248, .3))
+        }
+
+        .sec p,
+        .sec li {
+            font-size: .86rem;
+            color: var(--dim);
+            line-height: 1.8
+        }
+
+        .sec ul,
+        .sec ol {
+            padding-left: 1.2rem;
+            margin: .5rem 0
+        }
+
+        .sec ul li,
+        .sec ol li {
+            margin-bottom: .3rem
+        }
+
+        .sec ul li::marker {
+            color: var(--pri)
+        }
+
+        .sec strong {
+            color: var(--txt);
+            font-weight: 600
+        }
+
+        .sec a {
+            color: var(--pri3);
+            text-decoration: none
+        }
+
+        .sec a:hover {
+            text-decoration: underline
+        }
+
+        .highlight {
+            background: rgba(129, 140, 248, .04);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            font-size: .84rem;
+            color: var(--txt);
+            line-height: 1.7;
+            position: relative;
+            overflow: hidden
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--pri2), var(--pri), transparent)
+        }
+
+        .highlight i {
+            color: var(--pri);
+            margin-right: .4rem
+        }
+
+        .data-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: .8rem;
+            margin: 1rem 0
+        }
+
+        .data-card {
+            background: rgba(129, 140, 248, .03);
+            border: 1px solid rgba(129, 140, 248, .08);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            transition: all .3s
+        }
+
+        .data-card:hover {
+            border-color: rgba(129, 140, 248, .18);
+            transform: translateY(-2px)
+        }
+
+        .data-card .dc-icon {
+            font-size: 1.1rem;
+            color: var(--pri);
+            margin-bottom: .5rem;
+            filter: drop-shadow(0 0 4px rgba(129, 140, 248, .3))
+        }
+
+        .data-card h4 {
+            font-size: .8rem;
+            color: var(--w);
+            font-weight: 600;
+            margin-bottom: .3rem
+        }
+
+        .data-card p {
+            font-size: .75rem;
+            color: var(--dim);
+            line-height: 1.5;
+            margin: 0
+        }
+
+        .corner-bracket {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            z-index: 2
+        }
+
+        .corner-bracket.tl {
+            top: -1px;
+            left: -1px;
+            border-top: 2px solid var(--pri);
+            border-left: 2px solid var(--pri);
+            border-radius: 3px 0 0 0
+        }
+
+        .corner-bracket.tr {
+            top: -1px;
+            right: -1px;
+            border-top: 2px solid var(--pri);
+            border-right: 2px solid var(--pri);
+            border-radius: 0 3px 0 0
+        }
+
+        .corner-bracket.bl {
+            bottom: -1px;
+            left: -1px;
+            border-bottom: 2px solid var(--pri);
+            border-left: 2px solid var(--pri);
+            border-radius: 0 0 0 3px
+        }
+
+        .corner-bracket.br {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 2px solid var(--pri);
+            border-right: 2px solid var(--pri);
+            border-radius: 0 0 3px 0
+        }
+
+        .data-stream {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .particle {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .55rem;
+            color: var(--pri);
+            opacity: .12;
+            animation: float linear infinite
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0
+            }
+
+            10% {
+                opacity: .12
+            }
+
+            90% {
+                opacity: .12
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0
+            }
+        }
+
+        footer {
+            border-top: 1px solid var(--brd);
+            padding: 1.8rem 2rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .foot {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem
+        }
+
+        .foot-brand {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            color: var(--w);
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .foot ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem
+        }
+
+        .foot li a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .8rem;
+            transition: color .2s
+        }
+
+        .foot li a:hover {
+            color: var(--w)
+        }
+
+        @media(max-width:700px) {
+            .hero {
+                padding: 7rem 1.5rem 2rem
+            }
+
+            .content {
+                padding: 1.5rem 1rem 4rem
+            }
+
+            .sec {
+                padding: 1.4rem 1.2rem
+            }
+
+            .toc ol {
+                columns: 1
+            }
+
+            .hero h1 {
+                font-size: 2rem
+            }
+
+            .nav-r {
+                gap: 0
+            }
+
+            .nav-r a {
+                font-size: .75rem;
+                padding: .35rem .5rem
+            }
+
+            .data-info {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <canvas id="mesh"></canvas>
+    <div class="hex-grid"></div>
+    <div class="scan-line"></div>
+    <div class="data-stream" id="dataStream"></div>
 
-	<nav>
-		<div class="container">
-			<a href="/" class="logo">
-				<i class="fas fa-shield-alt"></i>
-				<span>Elixopay Security</span>
-			</a>
-			<button class="mobile-menu-btn" style="color: var(--text-primary);"><i class="fas fa-bars"></i></button>
-			<ul class="nav-links">
-				<li><a href="apidocs.html">เอกสาร</a></li>
-				<li><a href="status.html">สถานะ</a></li>
-				<li><a href="contact.html">ติดต่อ</a></li>
-				<li><a href="https://app.elixopay.com/login.html" class="btn btn-primary">เข้าสู่ระบบ</a></li>
-			</ul>
-		</div>
-	</nav>
+    <nav>
+        <div class="nav-in">
+            <a href="index.html" class="logo">
+                <div class="logo-m"><span>E</span></div>
+                Elixopay
+            </a>
+            <div class="nav-r">
+                <a href="about.html" data-i18n="nav.about">About</a>
+                <a href="contact.html" data-i18n="nav.contact">Contact</a>
+                <a href="https://app.elixopay.com/login.html" data-i18n="nav.login">Login</a>
+                <a href="https://app.elixopay.com/signup.html" class="nav-cta" data-i18n="nav.signup">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-icon">
+            <i class="fas fa-shield-halved"></i>
+        </div>
+        <h1 data-i18n="security.main_title"><em>Security</em> Infrastructure</h1>
+        <p data-i18n="security.subtitle">มาตรฐานความปลอดภัยระดับธนาคารที่ปกป้องทุกธุรกรรมของร้านค้า</p>
+        <div class="meta-row">
+            <span class="updated"><span class="dot"></span> UPDATED 2026-01-01</span>
+            <span class="badge"><i class="fas fa-shield-halved"></i> Bank-Grade Security</span>
+            <span class="badge"><i class="fas fa-certificate"></i> ISO 27001</span>
+            <span class="badge"><i class="fas fa-credit-card"></i> PCI DSS Level 1</span>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="toc">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h3><i class="fas fa-list-ol"></i> Table of Contents</h3>
+            <ol>
+                <li><a href="#s1">ภาพรวมความปลอดภัย (Security Overview)</a></li>
+                <li><a href="#s2">การเข้ารหัสข้อมูล (Data Encryption)</a></li>
+                <li><a href="#s3">PCI DSS Compliance</a></li>
+                <li><a href="#s4">โครงสร้างพื้นฐาน (Infrastructure Security)</a></li>
+                <li><a href="#s5">การตรวจจับการฉ้อโกง (Fraud Detection)</a></li>
+                <li><a href="#s6">การควบคุมการเข้าถึง (Access Control)</a></li>
+                <li><a href="#s7">การตรวจสอบและการทดสอบ (Auditing & Testing)</a></li>
+                <li><a href="#s8">การปฏิบัติตามกฎระเบียบ (Regulatory Compliance)</a></li>
+                <li><a href="#s9">การรายงานช่องโหว่ (Responsible Disclosure)</a></li>
+                <li><a href="#s10">ติดต่อทีมความปลอดภัย (Contact Security Team)</a></li>
+            </ol>
+        </div>
+
+        <!-- S1: Security Overview -->
+        <div class="sec" id="s1">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">01</span><i class="fas fa-globe ic"></i> <span
+                    data-i18n="security.overview.title">ภาพรวมความปลอดภัย (Security Overview)</span></h2>
+            <p data-i18n="security.overview.desc">Elixopay ใช้มาตรฐานความปลอดภัยระดับธนาคาร (Bank-Grade Security) เพื่อปกป้องข้อมูลและธุรกรรมของร้านค้าทุกรายการ เราออกแบบระบบด้วยหลักการ Security by Design ตั้งแต่สถาปัตยกรรมพื้นฐาน</p>
+            <div class="highlight">
+                <i class="fas fa-info-circle"></i>
+                <span><strong>Non-Custodial Model:</strong> Elixopay ทำงานในรูปแบบ Non-Custodial Payment Gateway ซึ่งหมายความว่าเงินของลูกค้าจะโอนตรงไปยังบัญชีธนาคารของร้านค้าโดยตรง — เราไม่เคยถือครองหรือเก็บรักษาเงินของลูกค้าไว้ในระบบ รูปแบบนี้ลดความเสี่ยงจากการถูกโจมตีได้อย่างมีนัยสำคัญ เพราะไม่มีเงินทุนถูกเก็บไว้ในระบบของเรา</span>
+            </div>
+            <ul>
+                <li>ระบบรักษาความปลอดภัยหลายชั้น (Defense in Depth)</li>
+                <li>การตรวจสอบและเฝ้าระวังตลอด 24 ชั่วโมง (24/7 Monitoring)</li>
+                <li>ทีมความปลอดภัยเฉพาะทาง (Dedicated Security Team)</li>
+                <li>การปฏิบัติตามมาตรฐานสากล (International Compliance Standards)</li>
+            </ul>
+        </div>
+
+        <!-- S2: Data Encryption -->
+        <div class="sec" id="s2">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">02</span><i class="fas fa-lock ic"></i> <span
+                    data-i18n="security.encryption.title">การเข้ารหัสข้อมูล (Data Encryption)</span></h2>
+            <p data-i18n="security.encryption.desc">ข้อมูลทั้งหมดได้รับการปกป้องด้วยเทคโนโลยีการเข้ารหัสระดับสูงสุด ทั้งในขณะจัดเก็บ (at rest) และระหว่างการส่ง (in transit) เพื่อให้มั่นใจว่าข้อมูลของร้านค้าและลูกค้าปลอดภัยอย่างสมบูรณ์</p>
+            <div class="data-info">
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-hard-drive"></i></div>
+                    <h4>AES-256 Encryption</h4>
+                    <p>เข้ารหัสข้อมูลขณะจัดเก็บ (at rest) ด้วยมาตรฐาน AES-256 ซึ่งเป็นมาตรฐานเดียวกับที่รัฐบาลสหรัฐฯ ใช้</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-network-wired"></i></div>
+                    <h4>TLS 1.3</h4>
+                    <p>การส่งข้อมูลทั้งหมดเข้ารหัสด้วย TLS 1.3 ซึ่งเป็นโปรโตคอลเข้ารหัสเวอร์ชันล่าสุดและปลอดภัยที่สุด</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-globe-lock"></i></div>
+                    <h4>HTTPS Only</h4>
+                    <p>API ทุกตัวทำงานผ่าน HTTPS เท่านั้น ไม่รองรับการเชื่อมต่อ HTTP แบบไม่เข้ารหัส</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-key"></i></div>
+                    <h4>HSM Key Management</h4>
+                    <p>การจัดการกุญแจเข้ารหัสผ่าน Hardware Security Module (HSM) เพื่อความปลอดภัยสูงสุด</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- S3: PCI DSS Compliance -->
+        <div class="sec" id="s3">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">03</span><i class="fas fa-credit-card ic"></i> <span
+                    data-i18n="security.pci.title">PCI DSS Compliance</span></h2>
+            <p data-i18n="security.pci.desc">Elixopay ได้รับการรับรองมาตรฐาน PCI DSS Level 1 ซึ่งเป็นระดับสูงสุดของมาตรฐานความปลอดภัยสำหรับอุตสาหกรรมบัตรชำระเงิน เราผ่านการตรวจสอบอย่างเข้มงวดเป็นประจำทุกปีโดยผู้ตรวจสอบที่ได้รับการรับรอง</p>
+            <div class="data-info">
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-award"></i></div>
+                    <h4>Level 1 Certified</h4>
+                    <p>ระดับสูงสุดของ PCI DSS สำหรับผู้ให้บริการชำระเงินที่ประมวลผลธุรกรรมมากกว่า 6 ล้านรายการต่อปี</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-clipboard-check"></i></div>
+                    <h4>Annual QSA Audit</h4>
+                    <p>การตรวจสอบประจำปีโดย Qualified Security Assessor (QSA) ที่ได้รับการรับรองจาก PCI Council</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-eye-slash"></i></div>
+                    <h4>Tokenization</h4>
+                    <p>หมายเลขบัตรเครดิตจะไม่สัมผัสเซิร์ฟเวอร์ของเราโดยตรง แปลงเป็น Token ก่อนเสมอ</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-compress"></i></div>
+                    <h4>Scope Reduction</h4>
+                    <p>ลดขอบเขต PCI DSS สำหรับร้านค้า ทำให้ร้านค้าไม่ต้องจัดการข้อมูลบัตรด้วยตนเอง</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- S4: Infrastructure Security -->
+        <div class="sec" id="s4">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">04</span><i class="fas fa-server ic"></i> <span
+                    data-i18n="security.infra.title">โครงสร้างพื้นฐาน (Infrastructure Security)</span></h2>
+            <p data-i18n="security.infra.desc">โครงสร้างพื้นฐานของ Elixopay ถูกออกแบบมาเพื่อความปลอดภัย ความเสถียร และประสิทธิภาพสูงสุด โฮสต์บน Cloud Infrastructure ที่ได้รับการรับรองมาตรฐาน ISO 27001 พร้อม SLA รับประกัน Uptime 99.9%</p>
+            <div class="data-info">
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-cloud"></i></div>
+                    <h4>ISO 27001 Cloud</h4>
+                    <p>โฮสต์บน Cloud Provider ที่ผ่านการรับรอง ISO 27001 Information Security Management</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-shield"></i></div>
+                    <h4>DDoS Protection</h4>
+                    <p>ระบบป้องกัน DDoS Attack หลายชั้น สามารถรับมือกับการโจมตีระดับ Terabits ต่อวินาที</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-fire-flame-curved"></i></div>
+                    <h4>WAF</h4>
+                    <p>Web Application Firewall ป้องกัน OWASP Top 10 รวมถึง SQL Injection, XSS, CSRF</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-diagram-project"></i></div>
+                    <h4>Network Segmentation</h4>
+                    <p>แยกเครือข่ายออกเป็นส่วนๆ เพื่อจำกัดพื้นที่ความเสียหายหากเกิดการบุกรุก</p>
+                </div>
+            </div>
+            <ul>
+                <li><strong>Automated Backups:</strong> สำรองข้อมูลอัตโนมัติทุกวัน พร้อมระบบ Point-in-Time Recovery</li>
+                <li><strong>Disaster Recovery:</strong> แผนกู้คืนระบบจากภัยพิบัติ พร้อม Multi-Region Failover</li>
+                <li><strong>99.9% Uptime SLA:</strong> รับประกันความพร้อมใช้งานระดับสูง พร้อมการเฝ้าระวังตลอด 24/7</li>
+            </ul>
+        </div>
+
+        <!-- S5: Fraud Detection -->
+        <div class="sec" id="s5">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">05</span><i class="fas fa-user-secret ic"></i> <span
+                    data-i18n="security.fraud.title">การตรวจจับการฉ้อโกง (Fraud Detection)</span></h2>
+            <p data-i18n="security.fraud.desc">ระบบตรวจจับการฉ้อโกงของ Elixopay ใช้เทคโนโลยี AI และ Machine Learning เพื่อวิเคราะห์และป้องกันธุรกรรมที่น่าสงสัยแบบเรียลไทม์ ปกป้องร้านค้าจากการฉ้อโกงบัตรเครดิตและกิจกรรมที่ผิดปกติ</p>
+            <div class="data-info">
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-brain"></i></div>
+                    <h4>Real-time AI Monitoring</h4>
+                    <p>ระบบ AI วิเคราะห์ธุรกรรมทุกรายการแบบเรียลไทม์ ตรวจจับรูปแบบที่ผิดปกติทันที</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-gauge-high"></i></div>
+                    <h4>Velocity Checks</h4>
+                    <p>ตรวจสอบความถี่ของธุรกรรม ป้องกันการทำธุรกรรมซ้ำหรือถี่ผิดปกติ</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-fingerprint"></i></div>
+                    <h4>Device Fingerprinting</h4>
+                    <p>ระบุลักษณะเฉพาะของอุปกรณ์ เพื่อตรวจจับการใช้อุปกรณ์ที่ถูกปลอมแปลง</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-location-crosshairs"></i></div>
+                    <h4>IP Reputation Scoring</h4>
+                    <p>ให้คะแนนความน่าเชื่อถือของ IP Address เพื่อบล็อกการเข้าถึงจากแหล่งที่น่าสงสัย</p>
+                </div>
+            </div>
+            <ul>
+                <li><strong>3D Secure Authentication:</strong> รองรับ 3D Secure 2.0 เพิ่มชั้นการยืนยันตัวตนผู้ถือบัตร</li>
+                <li><strong>Risk Scoring Engine:</strong> ระบบให้คะแนนความเสี่ยง (Risk Score) สำหรับทุกธุรกรรม ช่วยร้านค้าตัดสินใจอนุมัติหรือปฏิเสธ</li>
+            </ul>
+        </div>
+
+        <!-- S6: Access Control -->
+        <div class="sec" id="s6">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">06</span><i class="fas fa-users-gear ic"></i> <span
+                    data-i18n="security.access.title">การควบคุมการเข้าถึง (Access Control)</span></h2>
+            <p data-i18n="security.access.desc">ระบบควบคุมการเข้าถึงของ Elixopay ถูกออกแบบตามหลัก Principle of Least Privilege เพื่อให้แน่ใจว่าผู้ใช้แต่ละคนมีสิทธิ์เข้าถึงเฉพาะทรัพยากรที่จำเป็นเท่านั้น</p>
+            <ul>
+                <li><strong>Role-Based Access Control (RBAC):</strong> กำหนดสิทธิ์ตามบทบาท (Role) เช่น Admin, Manager, Operator โดยแต่ละบทบาทมีสิทธิ์ที่แตกต่างกัน</li>
+                <li><strong>Multi-Factor Authentication (MFA/2FA):</strong> บังคับใช้การยืนยันตัวตนหลายปัจจัย สำหรับการเข้าถึง Dashboard และการทำธุรกรรมสำคัญ</li>
+                <li><strong>Session Management:</strong> จัดการ Session อย่างเข้มงวด รวมถึง Session Timeout อัตโนมัติ และ Single Active Session</li>
+                <li><strong>IP Whitelisting:</strong> จำกัดการเข้าถึง API เฉพาะ IP Address ที่ได้รับอนุญาต เพิ่มความปลอดภัยสำหรับ Production Environment</li>
+                <li><strong>Audit Logging:</strong> บันทึกการกระทำทั้งหมด (Audit Trail) เพื่อตรวจสอบย้อนหลัง ว่าใครทำอะไร เมื่อไหร่ จากที่ไหน</li>
+            </ul>
+        </div>
+
+        <!-- S7: Auditing & Testing -->
+        <div class="sec" id="s7">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">07</span><i class="fas fa-microscope ic"></i> <span
+                    data-i18n="security.audit.title">การตรวจสอบและการทดสอบ (Auditing & Testing)</span></h2>
+            <p data-i18n="security.audit.desc">Elixopay ดำเนินการตรวจสอบและทดสอบความปลอดภัยอย่างสม่ำเสมอ เพื่อค้นหาและแก้ไขช่องโหว่ก่อนที่ผู้ไม่ประสงค์ดีจะสามารถใช้ประโยชน์ได้</p>
+            <div class="data-info">
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-crosshairs"></i></div>
+                    <h4>Penetration Testing</h4>
+                    <p>การทดสอบเจาะระบบ (Pentest) โดยผู้เชี่ยวชาญภายนอกอย่างน้อยปีละ 2 ครั้ง</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-bug"></i></div>
+                    <h4>Vulnerability Scanning</h4>
+                    <p>สแกนหาช่องโหว่อัตโนมัติทุกสัปดาห์ ด้วยเครื่องมือระดับอุตสาหกรรม</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-code"></i></div>
+                    <h4>Code Review</h4>
+                    <p>ตรวจสอบโค้ดทุกบรรทัดก่อน Deploy พร้อม Static Application Security Testing (SAST)</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-file-shield"></i></div>
+                    <h4>SOC 2 Type II</h4>
+                    <p>ปฏิบัติตามมาตรฐาน SOC 2 Type II เพื่อรับรองการควบคุมความปลอดภัย ความพร้อมใช้งาน และความเป็นส่วนตัว</p>
+                </div>
+            </div>
+            <ul>
+                <li><strong>Annual Security Assessments:</strong> การประเมินความปลอดภัยประจำปีครอบคลุมทุกด้าน รวมถึง Physical Security, Network Security และ Application Security</li>
+            </ul>
+        </div>
+
+        <!-- S8: Regulatory Compliance -->
+        <div class="sec" id="s8">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">08</span><i class="fas fa-scale-balanced ic"></i> <span
+                    data-i18n="security.regulatory.title">การปฏิบัติตามกฎระเบียบ (Regulatory Compliance)</span></h2>
+            <p data-i18n="security.regulatory.desc">Elixopay ปฏิบัติตามกฎหมายและข้อบังคับที่เกี่ยวข้องทั้งหมด เพื่อให้มั่นใจว่าบริการของเราเป็นไปตามมาตรฐานที่หน่วยงานกำกับดูแลกำหนด</p>
+            <div class="data-info">
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-landmark"></i></div>
+                    <h4>ธนาคารแห่งประเทศไทย (BOT)</h4>
+                    <p>ปฏิบัติตามข้อบังคับของธนาคารแห่งประเทศไทยว่าด้วยผู้ให้บริการชำระเงินทางอิเล็กทรอนิกส์</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-gavel"></i></div>
+                    <h4>ปปง. (AMLO)</h4>
+                    <p>ปฏิบัติตามข้อกำหนดของสำนักงานป้องกันและปราบปรามการฟอกเงิน (AMLO) ว่าด้วย KYC/AML</p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-user-shield"></i></div>
+                    <h4>PDPA</h4>
+                    <p>ปฏิบัติตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA) อย่างเคร่งครัด ดูรายละเอียดใน <a href="privacy.html">นโยบายความเป็นส่วนตัว</a></p>
+                </div>
+                <div class="data-card">
+                    <div class="dc-icon"><i class="fas fa-credit-card"></i></div>
+                    <h4>PCI DSS Level 1</h4>
+                    <p>ได้รับการรับรองมาตรฐาน PCI DSS ระดับสูงสุด สำหรับผู้ให้บริการชำระเงินผ่านบัตร</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- S9: Responsible Disclosure -->
+        <div class="sec" id="s9">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">09</span><i class="fas fa-bug-slash ic"></i> <span
+                    data-i18n="security.disclosure.title">การรายงานช่องโหว่ (Responsible Disclosure)</span></h2>
+            <p data-i18n="security.disclosure.desc">Elixopay ให้ความสำคัญกับความปลอดภัยของระบบ และเราเชื่อว่าการทำงานร่วมกับชุมชนนักวิจัยด้านความปลอดภัยเป็นสิ่งจำเป็นในการรักษาความปลอดภัยของแพลตฟอร์ม หากคุณพบช่องโหว่ด้านความปลอดภัย กรุณาแจ้งให้เราทราบอย่างรับผิดชอบ</p>
+            <div class="highlight">
+                <i class="fas fa-trophy"></i>
+                <span><strong>Bug Bounty Program:</strong> เราเปิดรับรายงานช่องโหว่จากนักวิจัยด้านความปลอดภัย หากช่องโหว่ที่รายงานมีคุณสมบัติตรงตามเกณฑ์ ผู้รายงานจะได้รับค่าตอบแทน (Bounty) ตามระดับความรุนแรงของช่องโหว่</span>
+            </div>
+            <p><strong>วิธีรายงานช่องโหว่:</strong></p>
+            <ul>
+                <li>ส่งรายละเอียดช่องโหว่ไปที่ <a href="mailto:security@elixopay.com">security@elixopay.com</a></li>
+                <li>อธิบายขั้นตอนการทำซ้ำ (Steps to Reproduce) อย่างชัดเจน</li>
+                <li>แนบหลักฐาน เช่น Screenshot, PoC Code หรือ Video</li>
+                <li>อย่าเปิดเผยช่องโหว่ต่อสาธารณะจนกว่าเราจะแก้ไขเสร็จสิ้น</li>
+            </ul>
+            <p><strong>ระยะเวลาตอบกลับ (Response Timeline):</strong></p>
+            <ul>
+                <li><strong>ตอบรับรายงาน:</strong> ภายใน 24 ชั่วโมง</li>
+                <li><strong>การประเมินเบื้องต้น:</strong> ภายใน 72 ชั่วโมง</li>
+                <li><strong>การแก้ไข (Critical):</strong> ภายใน 7 วัน</li>
+                <li><strong>การแก้ไข (High/Medium):</strong> ภายใน 30 วัน</li>
+                <li><strong>แจ้งผลและค่าตอบแทน:</strong> ภายใน 14 วันหลังแก้ไข</li>
+            </ul>
+        </div>
+
+        <!-- S10: Contact Security Team -->
+        <div class="sec" id="s10">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h2><span class="num">10</span><i class="fas fa-headset ic"></i> <span
+                    data-i18n="security.contact.title">ติดต่อทีมความปลอดภัย (Contact Security Team)</span></h2>
+            <p data-i18n="security.contact.desc">หากคุณมีข้อกังวลด้านความปลอดภัย พบกิจกรรมที่น่าสงสัย หรือต้องการสอบถามเกี่ยวกับมาตรการรักษาความปลอดภัยของเรา กรุณาติดต่อทีมความปลอดภัยของ Elixopay</p>
+            <div class="highlight">
+                <i class="fas fa-envelope"></i>
+                <span><strong>Security Team:</strong> <a href="mailto:security@elixopay.com">security@elixopay.com</a></span>
+            </div>
+            <div class="highlight">
+                <i class="fas fa-shield-halved"></i>
+                <span><strong>Privacy Concerns:</strong> <a href="mailto:privacy@elixopay.com">privacy@elixopay.com</a></span>
+            </div>
+            <div class="highlight">
+                <i class="fas fa-life-ring"></i>
+                <span><strong>General Support:</strong> <a href="mailto:support@elixopay.com">support@elixopay.com</a></span>
+            </div>
+            <p style="margin-top: 1rem; font-size: .82rem; color: var(--dim);">บริษัท คัลเจอร์ แคปิตอล เพย์ จำกัด — ทะเบียนนิติบุคคลเลขที่ 0105565039818</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="foot">
+            <div class="foot-brand">
+                <div class="logo-m" style="width:20px;height:20px;border-radius:5px;font-size:.6rem"><span>E</span>
+                </div>
+                © 2026 Elixopay
+            </div>
+            <ul>
+                <li><a href="terms.html" data-i18n="footer.links.terms">Terms</a></li>
+                <li><a href="privacy.html" data-i18n="footer.links.privacy">Privacy</a></li>
+                <li><a href="security.html" class="active" data-i18n="footer.links.security">Security</a></li>
+                <li><a href="refund.html" data-i18n="footer.links.refund">Refund</a></li>
+                <li><a href="contact.html" data-i18n="footer.links.contact">Contact</a></li>
+            </ul>
+        </div>
+    </footer>
+
     <script>
-        document.querySelector(".mobile-menu-btn").addEventListener("click", function() {
-            document.querySelector(".nav-links").classList.toggle("show");
-        });
+        const c = document.getElementById('mesh'), x = c.getContext('2d'); let w, h, pts = [];
+        function resize() { w = c.width = innerWidth; h = c.height = innerHeight; pts = []; for (let i = 0; i < 60; i++)pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, r: Math.random() * 1.5 + .5 }) }
+        function draw() { x.clearRect(0, 0, w, h); pts.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1; x.beginPath(); x.arc(p.x, p.y, p.r, 0, Math.PI * 2); x.fillStyle = 'rgba(129,140,248,0.4)'; x.fill() }); for (let i = 0; i < pts.length; i++)for (let j = i + 1; j < pts.length; j++) { const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y); if (d < 150) { x.beginPath(); x.moveTo(pts[i].x, pts[i].y); x.lineTo(pts[j].x, pts[j].y); x.strokeStyle = `rgba(129,140,248,${.12 * (1 - d / 150)})`; x.stroke() } } requestAnimationFrame(draw) }
+        resize(); draw(); addEventListener('resize', resize);
     </script>
-
-	<header class="sec-header">
-		<div class="container">
-			<h1>ความปลอดภัยของคุณคือสิ่งสำคัญที่สุด</h1>
-			<p>เราใช้มาตรฐานความปลอดภัยระดับเดียวกับธนาคารเพื่อปกป้องทุกธุรกรรมและข้อมูลส่วนตัวของคุณ</p>
-		</div>
-	</header>
-
-	<main class="container">
-		<div class="grid-cards">
-			<div class="card">
-				<h3>
-					<div class="icon-box"><i class="fas fa-lock"></i></div> การเข้ารหัสข้อมูล
-				</h3>
-				<p>ข้อมูลทั้งหมดถูกเข้ารหัสด้วย AES-256 ระหว่างการจัดเก็บ และใช้ TLS 1.3 สำหรับการส่งข้อมูลผ่านเครือข่าย
-					เพื่อให้มั่นใจว่าข้อมูลของคุณปลอดภัยเสมอ</p>
-			</div>
-			<div class="card">
-				<h3>
-					<div class="icon-box"><i class="fas fa-server"></i></div> ระบบเซิร์ฟเวอร์
-				</h3>
-				<p>ระบบของเราทำงานบน Cloud Infrastructure ที่ได้รับมาตรฐาน ISO 27001 และ SOC 2
-					โดยมีการสำรองข้อมูลอัตโนมัติและการป้องกัน DDoS</p>
-			</div>
-			<div class="card">
-				<h3>
-					<div class="icon-box"><i class="fas fa-user-secret"></i></div> การตรวจสอบการฉ้อโกง
-				</h3>
-				<p>ระบบ AI ของเราวิเคราะห์ธุรกรรมแบบเรียลไทม์เพื่อตรวจจับและป้องกันกิจกรรมที่น่าสงสัย
-					ปกป้องคุณจากการฉ้อโกงบัตรเครดิต</p>
-			</div>
-		</div>
-
-		<div class="card" style="max-width: 800px; margin: 0 auto;">
-			<h3>มาตรฐานที่เราปฏิบัติตาม</h3>
-			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
-				<ul class="check-list">
-					<li><i class="fas fa-check-circle"></i> PCI DSS Level 1 Compliant</li>
-					<li><i class="fas fa-check-circle"></i> GDPR Compliant</li>
-					<li><i class="fas fa-check-circle"></i> 24/7 Security Monitoring</li>
-				</ul>
-				<ul class="check-list">
-					<li><i class="fas fa-check-circle"></i> Two-Factor Authentication (2FA)</li>
-					<li><i class="fas fa-check-circle"></i> Bug Bounty Program</li>
-					<li><i class="fas fa-check-circle"></i> Regular Penetration Testing</li>
-				</ul>
-			</div>
-		</div>
-	</main>
-
-	<footer>
-		<div class="container">
-			<p>&copy; 2026 Elixopay. สงวนลิขสิทธิ์</p>
-			<div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; font-size: 0.9rem;">
-				<a href="privacy.html" style="color: inherit;">นโยบายความเป็นส่วนตัว</a>
-				<a href="terms.html" style="color: inherit;">ข้อกำหนดการใช้งาน</a>
-			</div>
-		</div>
-	</footer>
-
-
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script src="js/ui-enhancements.js?v=6"></script>
+    <script>
+        const ds = document.getElementById('dataStream'); const syms = ['⬡', '◇', '△', '○', '⊕', '⊗', '⟐', '⌬', '⏣'];
+        for (let i = 0; i < 20; i++) { const p = document.createElement('span'); p.className = 'particle'; p.textContent = syms[Math.floor(Math.random() * syms.length)]; p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = 15 + Math.random() * 20 + 's'; p.style.animationDelay = Math.random() * 15 + 's'; ds.appendChild(p) }
+    </script>
+    <script src="js/i18n.js?v=8"></script>
+    <script src="js/ui.js?v=3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/ui-enhancements.js?v=6"></script>
 </body>
 
 </html>

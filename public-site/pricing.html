@@ -1,809 +1,978 @@
-ื
 <!DOCTYPE html>
 <html lang="th">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title data-i18n="pricing.page_title">Pricing - Elixopay</title>
     <meta name="description" content="แพ็กเกจราคา Elixopay - เลือกแผนที่เหมาะกับธุรกิจของคุณ">
-    <title>ราคา - Elixopay</title>
-
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        /* Modern FinTech Pricing Theme */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
         :root {
-            /* Override specifics for Pricing Page if needed, otherwise inherit from theme.css */
-            --glass-border: 1px solid rgba(78, 37, 118, 0.1);
-            --card-shadow: 0 10px 40px rgba(78, 37, 118, 0.08);
-            --card-hover-shadow: 0 20px 60px rgba(78, 37, 118, 0.15);
+            --bg: #050508;
+            --s1: #0a0a10;
+            --s2: #12121c;
+            --brd: rgba(255, 255, 255, 0.06);
+            --txt: #d4d8e0;
+            --dim: #8b92a0;
+            --w: white;
+            --pri: #818cf8;
+            --pri2: #6366f1;
+            --pri3: #c7d2fe;
+            --pri-bg: rgba(129, 140, 248, 0.06);
+            --pri-glow: rgba(129, 140, 248, 0.12);
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444
+        }
+
+        html {
+            scroll-behavior: smooth
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8faff !important;
-            /* Light Premium BG */
-            color: #2c2c2c !important;
-            /* Dark Grey Text */
-            line-height: 1.6;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased
+        }
+
+        ::selection {
+            background: rgba(129, 140, 248, 0.3)
+        }
+
+        #mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: .35;
+            pointer-events: none
+        }
+
+        .hex-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: .04;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23818cf8' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+        }
+
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, var(--pri), rgba(129, 140, 248, .6), var(--pri), transparent);
+            opacity: .5;
+            animation: scanDown 8s linear infinite
+        }
+
+        @keyframes scanDown {
+            0% { top: 0 }
+            100% { top: 100vh }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
         }
 
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 1rem 0;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            background: rgba(5, 5, 8, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--brd)
         }
 
-        nav .container {
-            max-width: 1200px;
+        .nav-in {
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #4E2A84;
+            gap: .55rem;
             text-decoration: none;
+            color: var(--w);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -.03em
         }
 
-        .nav-links {
+        .logo-m {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: .8rem;
+            color: var(--w);
+            position: relative;
+            overflow: hidden
+        }
+
+        .logo-m::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #6366f1, #818cf8)
+        }
+
+        .logo-m::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #818cf8, #a5b4fc);
+            opacity: 0;
+            animation: logoShift 4s ease-in-out infinite
+        }
+
+        @keyframes logoShift {
+            0%, 100% { opacity: 0 }
+            50% { opacity: 1 }
+        }
+
+        .logo-m span {
+            position: relative;
+            z-index: 1
+        }
+
+        .nav-r {
             display: flex;
-            list-style: none;
-            gap: 2rem;
             align-items: center;
+            gap: .15rem
         }
 
-        .nav-links a {
-            color: #555;
+        .nav-r a {
+            color: var(--dim);
             text-decoration: none;
+            font-size: .82rem;
             font-weight: 500;
-            transition: color 0.3s;
+            padding: .45rem .75rem;
+            border-radius: 8px;
+            transition: all .25s
         }
 
-        .nav-links a:hover {
-            color: var(--primary-color);
+        .nav-r a:hover,
+        .nav-r a.active {
+            color: var(--w)
         }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-block;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--secondary-color);
-            color: white;
-            box-shadow: 0 4px 15px rgba(246, 139, 31, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: #e57c15;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(246, 139, 31, 0.4);
-        }
-
-        .btn-outline {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            background: transparent;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary-color);
-            color: white;
+        .nav-cta {
+            background: rgba(255, 255, 255, .06) !important;
+            color: var(--w) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important
         }
 
         /* Hero */
-        .hero-small {
-            padding: 10rem 2rem 5rem;
+        .hero {
+            padding: 8rem 2rem 3rem;
             text-align: center;
-            background: radial-gradient(circle at top center, rgba(124, 77, 255, 0.05) 0%, transparent 70%);
+            position: relative;
+            overflow: hidden;
+            z-index: 5
         }
 
-        .hero-small h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: #1e1b4b !important;
-            font-weight: 800;
-            letter-spacing: -1px;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(99, 102, 241, .18), rgba(129, 140, 248, .06) 50%, transparent 70%);
+            pointer-events: none
         }
 
-        .hero-small p {
-            font-size: 1.25rem;
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto 2.5rem;
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--pri);
+            position: relative;
+            background: rgba(129, 140, 248, .05);
+            border: 1px solid rgba(129, 140, 248, .12)
         }
 
+        .hero-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 23px;
+            background: conic-gradient(from 0deg, transparent, var(--pri), transparent, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            padding: 1px;
+            animation: spinBorder 6s linear infinite
+        }
+
+        @keyframes spinBorder {
+            0% { transform: rotate(0deg) }
+            100% { transform: rotate(360deg) }
+        }
+
+        .hero-icon i {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 12px rgba(129, 140, 248, .5))
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -.04em;
+            color: var(--w);
+            margin-bottom: .8rem
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(90deg, #6366f1, #818cf8, #c7d2fe, #6366f1);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoShift 5s linear infinite
+        }
+
+        @keyframes holoShift {
+            0% { background-position: 0% 50% }
+            100% { background-position: 300% 50% }
+        }
+
+        .hero p {
+            color: var(--dim);
+            font-size: .9rem;
+            max-width: 550px;
+            margin: 0 auto 1.5rem
+        }
+
+        /* Billing Toggle */
         .billing-toggle {
             display: inline-flex;
-            background: white;
-            padding: 0.5rem;
+            background: rgba(10, 10, 16, .8);
+            padding: .35rem;
             border-radius: 50px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            position: relative;
-            z-index: 10;
+            border: 1px solid rgba(129, 140, 248, .1);
+            backdrop-filter: blur(12px)
         }
 
         .toggle-btn {
             background: transparent;
             border: none;
-            padding: 0.75rem 2rem;
+            padding: .6rem 1.5rem;
             border-radius: 40px;
-            color: #666;
+            color: var(--dim);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all .3s;
+            font-size: .85rem;
+            font-family: inherit
         }
 
         .toggle-btn.active {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(78, 37, 118, 0.3);
+            background: var(--pri2);
+            color: var(--w);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, .3)
         }
 
         .save-badge {
-            background: #e0f2fe;
-            color: var(--accent-blue);
-            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, .15);
+            color: var(--success);
+            padding: .2rem .6rem;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: .7rem;
             font-weight: 700;
-            margin-left: 0.5rem;
+            margin-left: .4rem
         }
 
         /* Pricing Grid */
         .pricing-section {
-            padding: 2rem 2rem 6rem;
+            padding: 2rem 2rem 4rem;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 5
         }
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            align-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            align-items: stretch
         }
 
         .pricing-card {
-            background: white;
-            padding: 3rem 2.5rem;
-            border-radius: 24px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            padding: 2.5rem 2rem;
+            border-radius: 18px;
+            border: 1px solid rgba(129, 140, 248, .06);
             position: relative;
-            transition: all 0.4s ease;
-            box-shadow: var(--card-shadow);
+            transition: all .4s;
+            overflow: hidden
         }
 
         .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--card-hover-shadow);
+            border-color: rgba(129, 140, 248, .15);
+            box-shadow: 0 0 30px rgba(129, 140, 248, .04);
+            transform: translateY(-6px)
         }
 
         .pricing-card.featured {
-            border: 2px solid var(--secondary-color);
-            transform: scale(1.05);
-            box-shadow: 0 20px 50px rgba(78, 37, 118, 0.15);
-            z-index: 2;
+            border: 1px solid rgba(129, 140, 248, .2);
+            background: rgba(10, 10, 16, .8);
+            box-shadow: 0 0 40px rgba(129, 140, 248, .06)
         }
 
-        .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-10px);
+        .pricing-card.featured::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pri2), var(--pri), var(--pri2), transparent)
         }
 
         .popular-badge {
             position: absolute;
-            top: -18px;
+            top: -1px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--gradient-2);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
+            background: linear-gradient(135deg, var(--pri2), var(--pri));
+            color: var(--w);
+            padding: .4rem 1.2rem;
+            border-radius: 0 0 12px 12px;
+            font-size: .72rem;
             font-weight: 700;
-            box-shadow: 0 5px 15px rgba(246, 139, 31, 0.4);
+            letter-spacing: .03em;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, .3)
         }
 
         .plan-name {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            margin-bottom: 0.5rem;
-            color: #4E2A84;
+            margin-bottom: .4rem;
+            color: var(--pri3);
+            letter-spacing: -.02em
         }
 
         .plan-description {
-            color: #666;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
+            color: var(--dim);
+            margin-bottom: 1.5rem;
+            font-size: .82rem
         }
 
         .price {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: #2c2c2c;
-            margin-bottom: 0.5rem;
-            letter-spacing: -2px;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--w);
+            margin-bottom: .3rem;
+            letter-spacing: -2px
         }
 
         .price-currency {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             vertical-align: super;
-            color: #888;
+            color: var(--dim)
         }
 
         .price-period {
-            color: #888;
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            font-weight: 500;
+            color: var(--dim);
+            font-size: .85rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500
+        }
+
+        .btn-card {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: .75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: .85rem;
+            transition: all .3s;
+            margin-bottom: 1.5rem
+        }
+
+        .btn-outline-card {
+            border: 1px solid rgba(129, 140, 248, .2);
+            color: var(--pri3);
+            background: transparent
+        }
+
+        .btn-outline-card:hover {
+            background: rgba(129, 140, 248, .08);
+            border-color: var(--pri)
+        }
+
+        .btn-primary-card {
+            background: linear-gradient(135deg, var(--pri2), var(--pri));
+            color: var(--w);
+            border: none;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, .3)
+        }
+
+        .btn-primary-card:hover {
+            box-shadow: 0 6px 20px rgba(99, 102, 241, .5);
+            transform: translateY(-2px)
         }
 
         .features-list {
             list-style: none;
-            margin: 2rem 0;
-            text-align: left;
+            margin: 0;
+            padding: 0
         }
 
         .features-list li {
-            padding: 0.85rem 0;
+            padding: .6rem 0;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            color: #444;
-            border-bottom: 1px solid #f0f0f0;
+            gap: .6rem;
+            color: var(--dim);
+            border-bottom: 1px solid rgba(255, 255, 255, .03);
+            font-size: .82rem
         }
 
         .features-list li:last-child {
-            border-bottom: none;
+            border-bottom: none
         }
 
         .features-list i {
-            color: var(--secondary-color);
-            font-size: 1.1rem;
+            font-size: .8rem;
+            width: 18px;
+            text-align: center
+        }
+
+        .features-list .fa-check-circle {
+            color: var(--success)
         }
 
         .features-list .not-included {
-            color: #aaa;
+            opacity: .4
         }
 
         .features-list .not-included i {
-            color: #ddd;
+            color: var(--danger)
+        }
+
+        /* Calculator */
+        .calc-section {
+            padding: 3rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5
+        }
+
+        .calc-box {
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(129, 140, 248, .08);
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .calc-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pri2), var(--pri), var(--pri2), transparent)
+        }
+
+        .calc-title {
+            text-align: center;
+            margin-bottom: 2rem
+        }
+
+        .calc-title h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--w);
+            margin-bottom: .3rem
+        }
+
+        .calc-title p {
+            color: var(--dim);
+            font-size: .85rem
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center
+        }
+
+        .calc-slider label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: .8rem;
+            color: var(--txt);
+            font-size: .85rem
+        }
+
+        .calc-slider input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(129, 140, 248, .15);
+            outline: none;
+            margin-bottom: .8rem;
+            -webkit-appearance: none;
+            appearance: none
+        }
+
+        .calc-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--pri);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(129, 140, 248, .4)
+        }
+
+        .calc-result {
+            background: rgba(129, 140, 248, .04);
+            border: 1px solid rgba(129, 140, 248, .1);
+            border-radius: 14px;
+            padding: 1.5rem
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: .8rem;
+            font-size: .85rem
+        }
+
+        .calc-row:last-child {
+            margin-bottom: 0;
+            padding-top: .8rem;
+            border-top: 1px dashed rgba(255, 255, 255, .08)
+        }
+
+        .calc-row span {
+            color: var(--dim)
+        }
+
+        .calc-row strong {
+            color: var(--w)
+        }
+
+        .calc-row .fee-val {
+            color: var(--danger)
+        }
+
+        .calc-row .net-val {
+            color: var(--success);
+            font-size: 1.4rem
         }
 
         /* Comparison Table */
-        .comparison-section {
-            padding: 6rem 2rem;
-            background: white;
+        .compare-section {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 5
         }
 
         .section-title {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             text-align: center;
-            margin-bottom: 1rem;
-            color: #1e1b4b !important;
+            margin-bottom: .5rem;
+            color: var(--w);
+            font-weight: 900;
+            letter-spacing: -.03em
         }
 
         .section-subtitle {
             text-align: center;
-            color: #666;
-            margin-bottom: 4rem;
+            color: var(--dim);
+            margin-bottom: 2.5rem;
+            font-size: .85rem
         }
 
-        .comparison-table {
+        .compare-table-wrap {
             max-width: 1000px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid #eee;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(129, 140, 248, .08);
+            border-radius: 16px;
+            overflow: hidden
         }
 
-        .comparison-table table {
+        .compare-table-wrap table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: collapse
         }
 
-        .comparison-table th,
-        .comparison-table td {
-            padding: 1.5rem;
+        .compare-table-wrap th,
+        .compare-table-wrap td {
+            padding: 1rem 1.2rem;
             text-align: left;
-            border-bottom: 1px solid #eee;
-            color: #475569;
-            /* Force dark text */
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            font-size: .82rem
         }
 
-        .comparison-table th {
-            background: #f9fafb;
-            font-weight: 800;
-            color: #4E2A84;
+        .compare-table-wrap th {
+            background: rgba(129, 140, 248, .06);
+            font-weight: 700;
+            color: var(--pri3);
             text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: .72rem;
+            letter-spacing: .06em
         }
 
-        .comparison-table tr:hover {
-            background: #f8faff;
+        .compare-table-wrap td {
+            color: var(--dim)
+        }
+
+        .compare-table-wrap tr:hover {
+            background: rgba(129, 140, 248, .03)
         }
 
         .check-icon {
-            color: #10b981;
-            /* Success Green */
-            background: rgba(16, 185, 129, 0.1);
-            width: 24px;
-            height: 24px;
-            display: flex;
+            color: var(--success);
+            background: rgba(16, 185, 129, .12);
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            font-size: 0.8rem;
+            font-size: .65rem
         }
 
         .times-icon {
-            color: #ef4444;
-            /* Error Red */
-            background: rgba(239, 68, 68, 0.1);
-            width: 24px;
-            height: 24px;
-            display: flex;
+            color: var(--danger);
+            background: rgba(239, 68, 68, .1);
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            font-size: 0.8rem;
+            font-size: .65rem
         }
 
         /* FAQ */
         .faq-section {
-            padding: 6rem 2rem;
-            max-width: 800px;
+            padding: 4rem 2rem;
+            max-width: 780px;
             margin: 0 auto;
+            position: relative;
+            z-index: 5
         }
 
         .faq-item {
-            background: white;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid #eee;
-            transition: all 0.3s;
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1rem;
+            border-radius: 14px;
+            border: 1px solid rgba(129, 140, 248, .06);
+            transition: all .3s
         }
 
         .faq-item:hover {
-            border-color: var(--primary-light);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-color: rgba(129, 140, 248, .15)
         }
 
         .faq-question {
-            font-size: 1.25rem;
+            font-size: .95rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: .6rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: #4E2A84;
+            gap: .6rem;
+            color: var(--w)
+        }
+
+        .faq-question i {
+            color: var(--pri);
+            font-size: .85rem
         }
 
         .faq-answer {
-            color: #555;
+            color: var(--dim);
             line-height: 1.8;
-            padding-left: 2.5rem;
+            padding-left: 1.8rem;
+            font-size: .84rem
         }
 
-        /* Premium Dark Footer */
+        /* Data Stream */
+        .data-stream {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .particle {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .55rem;
+            color: var(--pri);
+            opacity: .12;
+            animation: float linear infinite
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0 }
+            10% { opacity: .12 }
+            90% { opacity: .12 }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0 }
+        }
+
+        /* Footer */
         footer {
-            background: #0f172a;
-            /* Deep Navy/Purple */
-            padding: 5rem 2rem 2rem;
-            color: #f1f5f9;
-            margin-top: 4rem;
+            border-top: 1px solid var(--brd);
+            padding: 1.8rem 2rem;
+            position: relative;
+            z-index: 5
         }
 
-        .footer-content {
-            max-width: 1200px;
+        .foot {
+            max-width: 1100px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 4rem;
-        }
-
-        .footer-section h4 {
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-section p {
-            color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-section li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-section a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: all 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .footer-section a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .social-links {
             display: flex;
-            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem
         }
 
-        .social-links a {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.1);
+        .foot-brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-            color: white;
+            gap: .4rem;
+            color: var(--w);
+            font-weight: 600;
+            font-size: .9rem
         }
 
-        .social-links a:hover {
-            background: var(--secondary-color);
-            transform: translateY(-3px);
-            padding-left: 0;
+        .foot ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem
         }
 
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            color: #64748b;
-            font-size: 0.9rem;
+        .foot li a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .8rem;
+            transition: color .2s
         }
 
-        @media (max-width: 768px) {
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
+        .foot li a:hover {
+            color: var(--w)
+        }
 
-            .hero-small h1 {
-                font-size: 2.5rem;
-            }
-
-            .nav-links {
-                display: none;
-                width: 100%;
-                margin-top: 1rem;
-            }
-
-            .nav-links.show {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-                background: rgba(15, 23, 42, 0.95);
-                border-radius: 12px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .mobile-menu-btn {
-                display: block !important;
-            }
-
-            .pricing-card.featured {
-                transform: none;
-            }
-
-            .pricing-card.featured:hover {
-                transform: translateY(-5px);
-            }
+        @media(max-width:700px) {
+            .hero { padding: 7rem 1.5rem 2rem }
+            .pricing-grid { grid-template-columns: 1fr }
+            .calc-grid { grid-template-columns: 1fr }
+            .hero h1 { font-size: 2rem }
+            .nav-r { gap: 0 }
+            .nav-r a { font-size: .75rem; padding: .35rem .5rem }
+            .compare-table-wrap { overflow-x: auto }
         }
     </style>
-    <link rel="stylesheet" href="styles/theme.css">
 </head>
 
 <body>
-    <div id="page-skeleton" aria-hidden="true"></div>
+    <canvas id="mesh"></canvas>
+    <div class="hex-grid"></div>
+    <div class="scan-line"></div>
+    <div class="data-stream" id="dataStream"></div>
+
     <nav>
-        <div class="container">
+        <div class="nav-in">
             <a href="index.html" class="logo">
-                <svg width="40" height="40" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="purpleGradPricing" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <rect width="136" height="136" rx="28" fill="url(#purpleGradPricing)" />
-                    <text x="68" y="95" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800"
-                        fill="white" text-anchor="middle">E</text>
-                </svg>
-                <span>Elixopay</span>
+                <div class="logo-m"><span>E</span></div>
+                Elixopay
             </a>
-            <ul class="nav-links">
-                <li><a href="about.html" data-i18n="nav.about">เกี่ยวกับเรา</a></li>
-                <li><a href="pricing.html" data-i18n="nav.pricing">ราคา</a></li>
-                <li><a href="usecases.html" data-i18n="nav.usecases">กรณีการใช้งาน</a></li>
-                <li><a href="apidocs.html" data-i18n="nav.docs">เอกสาร</a></li>
-                <li><a href="contact.html" data-i18n="nav.contact">ติดต่อ</a></li>
-                <li><a href="https://app.elixopay.com/login.html" class="btn btn-outline"
-                        data-i18n="nav.login">เข้าสู่ระบบ</a></li>
-                <li><a href="https://app.elixopay.com/signup.html" class="btn btn-primary"
-                        data-i18n="nav.signup">ลงทะเบียน</a></li>
-                <li>
-                    <select id="langSelect" class="lang-select" aria-label="Language">
-                        <option value="th">TH</option>
-                        <option value="en">EN</option>
-                        <option value="zh">中文</option>
-                    </select>
-                </li>
-                <!-- Theme Toggle Removed -->
-            </ul>
-            <button class="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="nav-r">
+                <a href="about.html" data-i18n="nav.about">About</a>
+                <a href="pricing.html" class="active" data-i18n="nav.pricing">Pricing</a>
+                <a href="contact.html" data-i18n="nav.contact">Contact</a>
+                <a href="https://app.elixopay.com/login.html" data-i18n="nav.login">Login</a>
+                <a href="https://app.elixopay.com/signup.html" class="nav-cta" data-i18n="nav.signup">Sign Up</a>
+            </div>
         </div>
     </nav>
 
-    <div class="hero-small reveal">
-        <h1 data-i18n="pricing.title">แผนราคาที่เหมาะกับทุกธุรกิจ</h1>
-        <p data-i18n="pricing.hero.desc">เลือกแพ็กเกจที่เหมาะกับความต้องการของคุณ ไม่มีค่าธรรมเนียมแรกเข้า
-            ยกเลิกได้ทุกเมื่อ</p>
+    <section class="hero">
+        <div class="hero-icon">
+            <i class="fas fa-tags"></i>
+        </div>
+        <h1 data-i18n="pricing.title">แผนราคาที่เหมาะกับ<em>ทุกธุรกิจ</em></h1>
+        <p data-i18n="pricing.hero.desc">เลือกแพ็กเกจที่เหมาะกับความต้องการของคุณ ไม่มีค่าธรรมเนียมแรกเข้า ยกเลิกได้ทุกเมื่อ</p>
         <div class="billing-toggle">
             <button class="toggle-btn active" data-i18n="pricing.billing.monthly">รายเดือน</button>
-            <button class="toggle-btn"><span data-i18n="pricing.billing.yearly">รายปี</span> <span class="save-badge"
-                    data-i18n="pricing.billing.save20">ประหยัด 20%</span></button>
+            <button class="toggle-btn"><span data-i18n="pricing.billing.yearly">รายปี</span> <span class="save-badge" data-i18n="pricing.billing.save20">ประหยัด 20%</span></button>
         </div>
-    </div>
+    </section>
 
-    <section class="pricing-section reveal">
+    <section class="pricing-section">
         <div class="pricing-grid">
             <!-- Starter Plan -->
-            <div class="pricing-card reveal lift">
+            <div class="pricing-card">
                 <div class="plan-name" data-i18n="pricing.plan.starter">Starter</div>
                 <p class="plan-description" data-i18n="pricing.plan.starter.desc">สำหรับธุรกิจขนาดเล็กที่เริ่มต้น</p>
-                <div class="price">
-                    <span class="price-currency">฿</span>0
-                </div>
+                <div class="price"><span class="price-currency">฿</span>0</div>
                 <p class="price-period" data-i18n="pricing.price.freeForever">ฟรีตลอดกาล</p>
-                <a href="https://app.elixopay.com/signup.html" class="btn btn-outline"
-                    style="width: 100%; text-align: center;" data-i18n="pricing.cta.startFree">เริ่มใช้งานฟรี</a>
+                <a href="https://app.elixopay.com/signup.html" class="btn-card btn-outline-card" data-i18n="pricing.cta.startFree">เริ่มใช้งานฟรี</a>
                 <ul class="features-list">
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.starter.f1">ธุรกรรมสูงสุด 100 รายการ/เดือน</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.starter.f2">ค่าธรรมเนียม 2.9% + ฿10 ต่อรายการ</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.starter.f3">API Access พื้นฐาน</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.starter.f4">Dashboard สำหรับดูรายงาน</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.starter.f5">Support ผ่าน Email</span>
-                    </li>
-                    <li class="not-included">
-                        <i class="fas fa-times-circle"></i>
-                        <span data-i18n="pricing.starter.n1">ระบบ Multi-Level Agency</span>
-                    </li>
-                    <li class="not-included">
-                        <i class="fas fa-times-circle"></i>
-                        <span data-i18n="pricing.starter.n2">Webhook & Real-time Notifications</span>
-                    </li>
-                    <li class="not-included">
-                        <i class="fas fa-times-circle"></i>
-                        <span data-i18n="pricing.starter.n3">Priority Support</span>
-                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.starter.f1">ธุรกรรมสูงสุด 100 รายการ/เดือน</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.starter.f2">ค่าธรรมเนียม 2.9% + ฿10 ต่อรายการ</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.starter.f3">API Access พื้นฐาน</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.starter.f4">Dashboard สำหรับดูรายงาน</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.starter.f5">Support ผ่าน Email</span></li>
+                    <li class="not-included"><i class="fas fa-times-circle"></i> <span data-i18n="pricing.starter.n1">ระบบ Multi-Level Agency</span></li>
+                    <li class="not-included"><i class="fas fa-times-circle"></i> <span data-i18n="pricing.starter.n2">Webhook & Real-time Notifications</span></li>
+                    <li class="not-included"><i class="fas fa-times-circle"></i> <span data-i18n="pricing.starter.n3">Priority Support</span></li>
                 </ul>
             </div>
 
             <!-- Professional Plan (Featured) -->
-            <div class="pricing-card featured reveal lift">
+            <div class="pricing-card featured">
                 <div class="popular-badge" data-i18n="pricing.prof.popular">✨ ยอดนิยม</div>
                 <div class="plan-name" data-i18n="pricing.plan.professional">Professional</div>
                 <p class="plan-description" data-i18n="pricing.plan.professional.desc">สำหรับธุรกิจที่กำลังเติบโต</p>
-                <div class="price">
-                    <span class="price-currency">฿</span>2,990
-                </div>
+                <div class="price"><span class="price-currency">฿</span>2,990</div>
                 <p class="price-period" data-i18n="pricing.price.perMonth">ต่อเดือน</p>
-                <a href="https://app.elixopay.com/signup.html" class="btn btn-primary"
-                    style="width: 100%; text-align: center;" data-i18n="pricing.cta.startTrial14">เริ่มทดลองใช้ฟรี 14
-                    วัน</a>
+                <a href="https://app.elixopay.com/signup.html" class="btn-card btn-primary-card" data-i18n="pricing.cta.startTrial14">เริ่มทดลองใช้ฟรี 14 วัน</a>
                 <ul class="features-list">
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f1">ธุรกรรมไม่จำกัด</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f2">ค่าธรรมเนียม 2.4% + ฿8 ต่อรายการ</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f3">API Access แบบเต็มรูปแบบ</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f4">Dashboard ขั้นสูง + รายงานวิเคราะห์</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f5">ระบบ Multi-Level Agency</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f6">Webhook & Real-time Notifications</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f7">Priority Support 24/7</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.prof.f8">ระบบรักษาความปลอดภัยขั้นสูง</span>
-                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f1">ธุรกรรมไม่จำกัด</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f2">ค่าธรรมเนียม 2.4% + ฿8 ต่อรายการ</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f3">API Access แบบเต็มรูปแบบ</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f4">Dashboard ขั้นสูง + รายงานวิเคราะห์</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f5">ระบบ Multi-Level Agency</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f6">Webhook & Real-time Notifications</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f7">Priority Support 24/7</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.prof.f8">ระบบรักษาความปลอดภัยขั้นสูง</span></li>
                 </ul>
             </div>
 
             <!-- Enterprise Plan -->
-            <div class="pricing-card reveal lift">
+            <div class="pricing-card">
                 <div class="plan-name" data-i18n="pricing.plan.enterprise">Enterprise</div>
                 <p class="plan-description" data-i18n="pricing.plan.enterprise.desc">สำหรับองค์กรขนาดใหญ่</p>
-                <div class="price" style="font-size: 2.5rem;" data-i18n="pricing.enterprise.contactUs">ติดต่อเรา</div>
+                <div class="price" style="font-size:2.2rem;letter-spacing:-1px" data-i18n="pricing.enterprise.contactUs">ติดต่อเรา</div>
                 <p class="price-period" data-i18n="pricing.enterprise.specialPricing">ราคาพิเศษสำหรับองค์กร</p>
-                <a href="contact.html" class="btn btn-outline" style="width: 100%; text-align: center;"
-                    data-i18n="pricing.cta.contactSales">ติดต่อฝ่ายขาย</a>
+                <a href="contact.html" class="btn-card btn-outline-card" data-i18n="pricing.cta.contactSales">ติดต่อฝ่ายขาย</a>
                 <ul class="features-list">
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f1">ทุกอย่างใน Professional</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f2">ค่าธรรมเนียมพิเศษตามปริมาณ</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f3">Dedicated Account Manager</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f4">Custom Integration Support</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f5">SLA 99.99% Uptime Guarantee</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f6">White-label Solution</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f7">On-premise Deployment (Optional)</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <span data-i18n="pricing.ent.f8">การฝึกอบรมและเอกสารเฉพาะทาง</span>
-                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f1">ทุกอย่างใน Professional</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f2">ค่าธรรมเนียมพิเศษตามปริมาณ</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f3">Dedicated Account Manager</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f4">Custom Integration Support</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f5">SLA 99.99% Uptime Guarantee</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f6">White-label Solution</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f7">On-premise Deployment (Optional)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="pricing.ent.f8">การฝึกอบรมและเอกสารเฉพาะทาง</span></li>
                 </ul>
             </div>
         </div>
     </section>
 
     <!-- Dynamic Cost Calculator -->
-    <section class="calculator-section reveal" style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto;">
-        <div
-            style="background: white; border-radius: 24px; padding: 3rem 2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);">
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <h2 style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-color); font-weight: 800;"
-                    data-i18n="pricing.calc.title">
-                    คำนวณต้นทุนของคุณ</h2>
-                <p style="color: #666;" data-i18n="pricing.calc.subtitle">ดูว่าคุณต้องจ่ายเท่าไหร่ตามยอดขายจริงทางธุรกิจ
-                </p>
+    <section class="calc-section">
+        <div class="calc-box">
+            <div class="calc-title">
+                <h2 data-i18n="pricing.calc.title">คำนวณต้นทุนของคุณ</h2>
+                <p data-i18n="pricing.calc.subtitle">ดูว่าคุณต้องจ่ายเท่าไหร่ตามยอดขายจริงทางธุรกิจ</p>
             </div>
-
-            <div
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 4rem; align-items: center;">
-                <div>
-                    <label style="display: block; font-weight: 700; margin-bottom: 1rem; color: #444;"
-                        data-i18n="pricing.calc.volume">ยอดขายต่อเดือน
-                        (THB)</label>
-                    <input type="range" id="volumeSlider" min="0" max="1000000" step="10000" value="100000"
-                        style="width: 100%; height: 8px; border-radius: 5px; background: #e0e0e0; outline: none; margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #888;">
+            <div class="calc-grid">
+                <div class="calc-slider">
+                    <label data-i18n="pricing.calc.volume">ยอดขายต่อเดือน (THB)</label>
+                    <input type="range" id="volumeSlider" min="0" max="1000000" step="10000" value="100000">
+                    <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--dim)">
                         <span>0</span>
                         <span>1,000,000+</span>
                     </div>
                 </div>
-
-                <div
-                    style="background: #f8faff; padding: 2rem; border-radius: 16px; border: 1px solid rgba(78, 37, 118, 0.1);">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                        <span style="color: #666;" data-i18n="pricing.calc.total_volume">ยอดธุรกรรม:</span>
-                        <strong style="color: var(--primary-color); font-size: 1.2rem;"
-                            id="volumeDisplay">฿100,000</strong>
+                <div class="calc-result">
+                    <div class="calc-row">
+                        <span data-i18n="pricing.calc.total_volume">ยอดธุรกรรม:</span>
+                        <strong id="volumeDisplay">฿100,000</strong>
                     </div>
-                    <div
-                        style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd;">
-                        <span style="color: #666;" data-i18n="pricing.calc.fees">ค่าธรรมเนียม (2.4% + 8฿):</span>
-                        <strong style="color: #ef4444;" id="feeDisplay">฿2,408</strong>
+                    <div class="calc-row">
+                        <span data-i18n="pricing.calc.fees">ค่าธรรมเนียม (2.4% + 8฿):</span>
+                        <strong class="fee-val" id="feeDisplay">฿2,408</strong>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 700; color: #333;"
-                            data-i18n="pricing.calc.net">เงินที่คุณได้รับ:</span>
-                        <strong style="color: #10b981; font-size: 1.8rem;" id="netDisplay">฿97,592</strong>
+                    <div class="calc-row">
+                        <span style="font-weight:600;color:var(--txt)" data-i18n="pricing.calc.net">เงินที่คุณได้รับ:</span>
+                        <strong class="net-val" id="netDisplay">฿97,592</strong>
                     </div>
                 </div>
             </div>
-
-            <p style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: #999;"
-                data-i18n="pricing.calc.note">
-                *การคำนวณเป็นเพียงการประมาณการเบื้องต้น (สมมติยอดเฉลี่ย 1,000 บาท/รายการ)
-            </p>
+            <p style="text-align:center;margin-top:1.5rem;font-size:.75rem;color:var(--dim)" data-i18n="pricing.calc.note">*การคำนวณเป็นเพียงการประมาณการเบื้องต้น (สมมติยอดเฉลี่ย 1,000 บาท/รายการ)</p>
         </div>
     </section>
 
     <script>
-        // Simple Calculator Script
         document.addEventListener('DOMContentLoaded', () => {
             const slider = document.getElementById('volumeSlider');
             const volumeDisplay = document.getElementById('volumeDisplay');
             const feeDisplay = document.getElementById('feeDisplay');
             const netDisplay = document.getElementById('netDisplay');
-
             if (slider) {
                 function formatCurrency(num) {
                     return '฿' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
                 }
-
                 function calculate() {
                     const volume = parseInt(slider.value);
                     const avgTicket = 1000;
@@ -812,22 +981,21 @@
                     const fixedFee = txnCount * 8;
                     const totalFee = percentageFee + fixedFee;
                     const net = volume - totalFee;
-
                     volumeDisplay.innerText = formatCurrency(volume);
                     feeDisplay.innerText = formatCurrency(totalFee);
                     netDisplay.innerText = formatCurrency(net);
                 }
-
                 slider.addEventListener('input', calculate);
                 calculate();
             }
         });
     </script>
 
-    <section class="comparison-section reveal">
+    <!-- Comparison Table -->
+    <section class="compare-section">
         <h2 class="section-title" data-i18n="pricing.compare.title">เปรียบเทียบแพ็กเกจ</h2>
         <p class="section-subtitle" data-i18n="pricing.compare.subtitle">ดูรายละเอียดความแตกต่างของแต่ละแพ็กเกจ</p>
-        <div class="comparison-table">
+        <div class="compare-table-wrap">
             <table>
                 <thead>
                     <tr>
@@ -897,94 +1065,68 @@
         </div>
     </section>
 
-    <section class="faq-section reveal">
+    <!-- FAQ -->
+    <section class="faq-section">
         <h2 class="section-title" data-i18n="pricing.faq.title">คำถามที่พบบ่อย</h2>
+        <p class="section-subtitle" style="margin-bottom:2rem">FAQ</p>
         <div class="faq-item">
             <div class="faq-question">
-                <i class="fas fa-question-circle"></i>
+                <i class="fas fa-circle-question"></i>
                 <span data-i18n="pricing.faq.q1">สามารถเปลี่ยนแพ็กเกจได้หรือไม่?</span>
             </div>
-            <p class="faq-answer" data-i18n="pricing.faq.a1">ได้ครับ คุณสามารถอัพเกรดหรือดาวน์เกรดแพ็กเกจได้ทุกเมื่อ
-                โดยจะคิดค่าบริการตามสัดส่วนของเวลาที่เหลือ</p>
+            <p class="faq-answer" data-i18n="pricing.faq.a1">ได้ครับ คุณสามารถอัพเกรดหรือดาวน์เกรดแพ็กเกจได้ทุกเมื่อ โดยจะคิดค่าบริการตามสัดส่วนของเวลาที่เหลือ</p>
         </div>
         <div class="faq-item">
             <div class="faq-question">
-                <i class="fas fa-question-circle"></i>
+                <i class="fas fa-circle-question"></i>
                 <span data-i18n="pricing.faq.q2">มีค่าธรรมเนียมแรกเข้าหรือไม่?</span>
             </div>
-            <p class="faq-answer" data-i18n="pricing.faq.a2">ไม่มีครับ ไม่มีค่าธรรมเนียมแรกเข้าหรือค่าติดตั้ง
-                คุณจ่ายเฉพาะค่าบริการรายเดือนและค่าธรรมเนียมธุรกรรมเท่านั้น</p>
+            <p class="faq-answer" data-i18n="pricing.faq.a2">ไม่มีครับ ไม่มีค่าธรรมเนียมแรกเข้าหรือค่าติดตั้ง คุณจ่ายเฉพาะค่าบริการรายเดือนและค่าธรรมเนียมธุรกรรมเท่านั้น</p>
         </div>
         <div class="faq-item">
             <div class="faq-question">
-                <i class="fas fa-question-circle"></i>
+                <i class="fas fa-circle-question"></i>
                 <span data-i18n="pricing.faq.q3">ระยะเวลาทดลองใช้เป็นอย่างไร?</span>
             </div>
-            <p class="faq-answer" data-i18n="pricing.faq.a3">แพ็กเกจ Professional และ Enterprise มีระยะเวลาทดลองใช้ฟรี
-                14 วัน ไม่ต้องใส่บัตรเครดิต สามารถยกเลิกได้ทุกเมื่อ</p>
+            <p class="faq-answer" data-i18n="pricing.faq.a3">แพ็กเกจ Professional และ Enterprise มีระยะเวลาทดลองใช้ฟรี 14 วัน ไม่ต้องใส่บัตรเครดิต สามารถยกเลิกได้ทุกเมื่อ</p>
         </div>
         <div class="faq-item">
             <div class="faq-question">
-                <i class="fas fa-question-circle"></i>
+                <i class="fas fa-circle-question"></i>
                 <span data-i18n="pricing.faq.q4">การชำระเงินเป็นอย่างไร?</span>
             </div>
-            <p class="faq-answer" data-i18n="pricing.faq.a4">รับชำระผ่านบัตรเครดิต/เดบิต และInternet Banking
-                สำหรับแพ็กเกจ Enterprise สามารถออกใบแจ้งหนี้ได้</p>
+            <p class="faq-answer" data-i18n="pricing.faq.a4">รับชำระผ่านบัตรเครดิต/เดบิต และ Internet Banking สำหรับแพ็กเกจ Enterprise สามารถออกใบแจ้งหนี้ได้</p>
         </div>
     </section>
 
-    <footer class="reveal">
-        <div class="footer-content">
-            <div class="footer-section">
-                <a href="/" class="logo" style="margin-bottom: 1rem; display: inline-flex;">
-                    <i class="fas fa-shield-alt"></i>
-                    <span style="color: white;">Elixopay</span>
-                </a>
-                <p data-i18n="footer.tagline">ระบบชำระเงินออนไลน์ที่ปลอดภัยและเชื่อถือได้สำหรับธุรกิจยุคใหม่
-                    รองรับทุกธนาคารชั้นนำ</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+    <footer>
+        <div class="foot">
+            <div class="foot-brand">
+                <div class="logo-m" style="width:20px;height:20px;border-radius:5px;font-size:.6rem"><span>E</span></div>
+                © 2026 Elixopay
             </div>
-            <div class="footer-section">
-                <h4 data-i18n="footer.products">ผลิตภัณฑ์</h4>
-                <ul>
-                    <li><a href="pricing.html" data-i18n="footer.links.pricing">ราคา</a></li>
-                    <li><a href="apidocs.html" data-i18n="footer.links.docs">เอกสาร API</a></li>
-                    <li><a href="usecases.html" data-i18n="footer.links.usecases">กรณีการใช้งาน</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4 data-i18n="footer.company">บริษัท</h4>
-                <ul>
-                    <li><a href="about.html" data-i18n="footer.links.about">เกี่ยวกับเรา</a></li>
-                    <li><a href="contact.html" data-i18n="footer.links.contact">ติดต่อเรา</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4 data-i18n="footer.help">ช่วยเหลือ</h4>
-                <ul>
-                    <li><a href="help.html" data-i18n="footer.links.help">ศูนย์ช่วยเหลือ</a></li>
-                    <li><a href="security.html" data-i18n="footer.links.security">ความปลอดภัย</a></li>
-                    <li><a href="privacy.html" data-i18n="footer.links.privacy">นโยบายความเป็นส่วนตัว</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p data-i18n="footer.rights">&copy; 2024 Elixopay. All rights reserved.</p>
+            <ul>
+                <li><a href="terms.html" data-i18n="footer.links.terms">Terms</a></li>
+                <li><a href="privacy.html" data-i18n="footer.links.privacy">Privacy</a></li>
+                <li><a href="pricing.html" class="active" data-i18n="footer.links.pricing">Pricing</a></li>
+                <li><a href="refund.html" data-i18n="footer.links.refund">Refund</a></li>
+                <li><a href="contact.html" data-i18n="footer.links.contact">Contact</a></li>
+            </ul>
         </div>
     </footer>
+
+    <script>
+        const c = document.getElementById('mesh'), x = c.getContext('2d'); let w, h, pts = [];
+        function resize() { w = c.width = innerWidth; h = c.height = innerHeight; pts = []; for (let i = 0; i < 60; i++)pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, r: Math.random() * 1.5 + .5 }) }
+        function draw() { x.clearRect(0, 0, w, h); pts.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1; x.beginPath(); x.arc(p.x, p.y, p.r, 0, Math.PI * 2); x.fillStyle = 'rgba(129,140,248,0.4)'; x.fill() }); for (let i = 0; i < pts.length; i++)for (let j = i + 1; j < pts.length; j++) { const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y); if (d < 150) { x.beginPath(); x.moveTo(pts[i].x, pts[i].y); x.lineTo(pts[j].x, pts[j].y); x.strokeStyle = `rgba(129,140,248,${.12 * (1 - d / 150)})`; x.stroke() } } requestAnimationFrame(draw) }
+        resize(); draw(); addEventListener('resize', resize);
+    </script>
+    <script>
+        const ds = document.getElementById('dataStream'); const syms = ['⬡', '◇', '△', '○', '⊕', '⊗', '⟐', '⌬', '⏣'];
+        for (let i = 0; i < 20; i++) { const p = document.createElement('span'); p.className = 'particle'; p.textContent = syms[Math.floor(Math.random() * syms.length)]; p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = 15 + Math.random() * 20 + 's'; p.style.animationDelay = Math.random() * 15 + 's'; ds.appendChild(p) }
+    </script>
     <script src="js/i18n.js?v=8"></script>
     <script src="js/ui.js?v=3"></script>
-    <script>
-        document.querySelector('.mobile-menu-btn')?.addEventListener('click', () => {
-            document.querySelector('.nav-links')?.classList.toggle('show');
-        });
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/ui-enhancements.js?v=6"></script>
 </body>
