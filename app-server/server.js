@@ -37,6 +37,10 @@ app.use(helmet({
   }
 }));
 app.use(cookieParser());
+
+// Stripe webhook needs raw body for signature verification — must come before express.json()
+app.use('/api/v1/webhooks/stripe', express.raw({ type: 'application/json' }));
+
 app.use(express.json({ limit: '100kb' })); // Limit body size
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 

@@ -287,30 +287,81 @@ exports.processPayment = async (req, res, next) => {
 };
 
 // -- Exports for existing route file compatibility --
-exports.getPaymentStats = (req, res) => res.json({
-  success: true,
-  data: {
-    stats: {
-      totalPayments: 0,
-      completedPayments: 0,
-      pendingPayments: 0,
-      totalAmount: 0
-    }
-  }
-});
+exports.getPaymentStats = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
 
-exports.getPayments = (req, res) => res.json({
-  success: true,
-  data: {
-    payments: [],
-    pagination: {
-      total: 0,
-      offset: 0,
-      limit: 20,
-      hasMore: false
-    }
+    const result = await pool.query(
+      `SELECT 
+         COUNT(*)::int AS "totalPayments",
+         COUNT(*) FILTER (WHERE status = 'succeeded' OR status = 'completed')::int AS "completedPayments",
+         COUNT(*) FILTER (WHERE status = 'pending')::int AS "pendingPayments",
+         COUNT(*) FILTER (WHERE status = 'failed')::int AS "failedPayments",
+         COALESCE(SUM(amount) FILTER (WHERE status = 'succeeded' OR status = 'completed'), 0)::numeric AS "totalAmount",
+         COALESCE(SUM(amount) FILTER (WHERE status = 'succeeded' OR status = 'completed' AND created_at >= NOW() - INTERVAL '30 days'), 0)::numeric AS "monthlyAmount"
+       FROM payments
+       WHERE merchant_id = $1`,
+      [userId]
+    );
+
+    res.json({
+      success: true,
+      data: { stats: result.rows[0] }
+    });
+  } catch (error) {
+    next(error);
   }
-});
+};
+
+exports.getPayments = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { status, limit = 20, offset = 0, sort = 'desc' } = req.query;
+
+    let query = `SELECT id, amount, currency, status, description, payment_method_type, 
+                        token, return_url, created_at, settled_at
+                 FROM payments WHERE merchant_id = $1`;
+    const params = [userId];
+    let paramIdx = 2;
+
+    if (status) {
+      query += ` AND status = $${paramIdx}`;
+      params.push(status);
+      paramIdx++;
+    }
+
+    query += ` ORDER BY created_at ${sort === 'asc' ? 'ASC' : 'DESC'}`;
+    query += ` LIMIT $${paramIdx} OFFSET $${paramIdx + 1}`;
+    params.push(parseInt(limit), parseInt(offset));
+
+    const result = await pool.query(query, params);
+
+    // Total count
+    let countQuery = 'SELECT COUNT(*)::int FROM payments WHERE merchant_id = $1';
+    const countParams = [userId];
+    if (status) {
+      countQuery += ' AND status = $2';
+      countParams.push(status);
+    }
+    const countResult = await pool.query(countQuery, countParams);
+    const total = countResult.rows[0].count;
+
+    res.json({
+      success: true,
+      data: {
+        payments: result.rows,
+        pagination: {
+          total,
+          offset: parseInt(offset),
+          limit: parseInt(limit),
+          hasMore: parseInt(offset) + result.rows.length < total
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.getPaymentById = async (req, res, next) => {
   try {
