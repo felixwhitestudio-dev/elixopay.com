@@ -17,7 +17,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://accounts.google.com", "https://cdn.jsdelivr.net"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com", "https://cdn.jsdelivr.net"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
       frameSrc: ["'self'", "https://accounts.google.com"],
@@ -61,7 +61,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Idempotency-Key'],
 }));
 
 // Enable preflight for all routes
@@ -102,6 +102,8 @@ const merchantAccountRoutes = require('./routes/wallet'); // Route path kept as 
 const verificationRoutes = require('./routes/verification');
 const hierarchyRoutes = require('./routes/hierarchy');
 const contactRoutes = require('./routes/contact');
+const merchantSettingsRoutes = require('./routes/merchantSettings');
+const settlementsRoutes = require('./routes/settlements');
 
 // Mount Routes
 app.use('/api/v1/auth', authRoutes);
@@ -120,6 +122,8 @@ app.use('/api/v1/commission-rules', commissionRulesRoutes);
 app.use('/api/v1/verification', verificationRoutes);
 app.use('/api/v1/hierarchy', hierarchyRoutes);
 app.use('/api/v1/contact', contactRoutes);
+app.use('/api/v1/merchant-settings', merchantSettingsRoutes);
+app.use('/api/v1/settlements', settlementsRoutes);
 
 // Health Check Route
 app.get('/health', (req, res) => {
