@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Elixopay Settlement Management" />
     <title>Settlement Management - Elixopay Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/utilities.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/design-system.css?v=2">
     <script src="/js/api-config.js"></script>
@@ -485,12 +485,13 @@
         }
 
         async function approve(id) {
-            if (!confirm("Approve this settlement?")) return;
+            const confirmResult = await Swal.fire({title:'ยืนยัน',text:'Approve this settlement?',icon:'question',showCancelButton:true,confirmButtonText:'Approve',cancelButtonText:'Cancel',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+            if (!confirmResult.isConfirmed) return;
             const res = await safeFetch(`/api/v1/admin/withdrawals/${id}/approve`, { method: 'POST' });
             if (res && res.success) {
                 loadPendingSettlements();
             } else {
-                alert(res?.message || 'Failed');
+                Swal.fire({title:'ผิดพลาด',text:res?.message || 'Failed',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             }
         }
 
@@ -566,7 +567,7 @@
                 closeRejectModal();
                 loadPendingSettlements();
             } else {
-                alert(res?.message || 'Failed');
+                Swal.fire({title:'ผิดพลาด',text:res?.message || 'Failed',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             }
         }
 
@@ -622,7 +623,8 @@
         }
 
         async function toggleUserStatus(id, newStatus) {
-            if (!confirm(`Are you sure you want to ${newStatus ? 'ACTIVATE' : 'SUSPEND'} this user?`)) return;
+            const confirmResult = await Swal.fire({title:'ยืนยัน',text:`Are you sure you want to ${newStatus ? 'ACTIVATE' : 'SUSPEND'} this user?`,icon:'warning',showCancelButton:true,confirmButtonText:'Yes',cancelButtonText:'Cancel',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+            if (!confirmResult.isConfirmed) return;
             try {
                 const res = await safeFetch(`/api/v1/admin/users/${id}/status`, {
                     method: 'PATCH',
@@ -631,10 +633,10 @@
                 if (res && res.success) {
                     loadUsers();
                 } else {
-                    alert(res?.message || 'Failed');
+                    Swal.fire({title:'ผิดพลาด',text:res?.message || 'Failed',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                 }
             } catch (e) {
-                alert('Error updating status');
+                Swal.fire({title:'ผิดพลาด',text:'Error updating status',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             }
         }
 
@@ -658,7 +660,7 @@
 
             } catch (e) {
                 console.error(e);
-                alert('Failed to load settings');
+                Swal.fire({title:'ผิดพลาด',text:'Failed to load settings',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             }
         }
 
@@ -676,13 +678,13 @@
                     })
                 });
                 if (res && res.success) {
-                    alert('Settings saved successfully!');
+                    Swal.fire({title:'สำเร็จ',text:'Settings saved successfully!',icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     loadSettings(); // Reload
                 } else {
-                    alert('Failed to save settings');
+                    Swal.fire({title:'ผิดพลาด',text:'Failed to save settings',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                 }
             } catch (e) {
-                alert('Error saving settings');
+                Swal.fire({title:'ผิดพลาด',text:'Error saving settings',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             }
         }
 

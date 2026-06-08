@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KYC Verification - Elixopay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/utilities.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/design-system.css?v=2">
     <script src="/js/api-config.js"></script>
-    <script src="/js/auth-guard.js"></script>
+    <script src="/js/auth-guard.js" data-require-role="user"></script>
 
     <style>
         /* Dark overrides for Tailwind classes */
@@ -630,7 +630,7 @@
             const file = fileInput.files[0];
 
             if (file.size > 5 * 1024 * 1024) {
-                alert('ขนาดไฟล์เกิน 5MB กรุณาเลือกไฟล์ที่เล็กลง');
+                Swal.fire({title:'ไฟล์ใหญ่เกิน',text:'ขนาดไฟล์เกิน 5MB กรุณาเลือกไฟล์ที่เล็กลง',icon:'warning',background:'#1a1a2e',color:'#e2e8f0'});
                 fileInput.value = '';
                 return;
             }

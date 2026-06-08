@@ -520,17 +520,13 @@
 					document.getElementById('signupSuccess').classList.remove('hidden');
 					window.scrollTo({ top: 0, behavior: 'smooth' });
 				} else {
-					if (window.Swal) {
-						Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: result.error?.message || result.message || 'Registration failed', background: '#0f172a', color: '#f1f5f9', confirmButtonColor: '#7c3aed' });
-					} else {
-						alert(result.error?.message || result.message || 'Registration failed');
-					}
+					Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: result.error?.message || result.message || 'Registration failed', background: '#1a1a2e', color: '#e2e8f0', confirmButtonColor: '#6366f1' });
 					btn.disabled = false;
 					btn.querySelector('span').textContent = lang === 'th' ? 'สร้างบัญชี' : lang === 'en' ? 'Create Account' : '注册';
 				}
 			} catch (err) {
 				console.error('Signup error:', err);
-				alert('Something went wrong. Please try again.');
+				Swal.fire({title:'ผิดพลาด',text:'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง',icon:'error',background:'#1a1a2e',color:'#e2e8f0'});
 				btn.disabled = false;
 				btn.querySelector('span').textContent = lang === 'th' ? 'สร้างบัญชี' : lang === 'en' ? 'Create Account' : '注册';
 			}

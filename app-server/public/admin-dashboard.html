@@ -372,7 +372,8 @@
         return;
       }
 
-      if (!confirm(`Are you sure you want to ${action} this user's KYC?`)) return;
+      const confirmResult = await Swal.fire({title:'ยืนยัน',text:`Are you sure you want to ${action} this user's KYC?`,icon:'warning',showCancelButton:true,confirmButtonText:'Yes',cancelButtonText:'Cancel',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+      if (!confirmResult.isConfirmed) return;
 
       try {
         const token = localStorage.getItem('token');

@@ -555,10 +555,12 @@
 
 			let reason = null;
 			if (finalStatus === 'rejected') {
-				reason = prompt((window.t && window.t('admin.pending.rejectPrompt')) || "โปรดระบุเหตุผลที่ปฏิเสธ", "เอกสารไม่ชัดเจน/ไม่ครบถ้วน");
-				if (!reason) return; // User cancelled prompt
+				const { value: inputReason, isConfirmed } = await Swal.fire({title:(window.t && window.t('admin.pending.rejectPrompt')) || 'โปรดระบุเหตุผลที่ปฏิเสธ',input:'textarea',inputValue:'เอกสารไม่ชัดเจน/ไม่ครบถ้วน',showCancelButton:true,confirmButtonText:'ยืนยัน',cancelButtonText:'ยกเลิก',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+				if (!isConfirmed || !inputReason) return;
+				reason = inputReason;
 			} else {
-				if (!confirm((window.t && window.t('admin.pending.approveConfirm')) || "คุณรันการตรวจสอบแล้วยืนยันการอนุมัติใช่หรือไม่?")) return;
+				const confirmResult = await Swal.fire({title:'ยืนยัน',text:(window.t && window.t('admin.pending.approveConfirm')) || 'คุณรันการตรวจสอบแล้วยืนยันการอนุมัติใช่หรือไม่?',icon:'question',showCancelButton:true,confirmButtonText:'ยืนยัน',cancelButtonText:'ยกเลิก',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+				if (!confirmResult.isConfirmed) return;
 			}
 
 			try {
@@ -580,13 +582,13 @@
 
 					// Show notification
 					const msg = finalStatus === 'verified' ? ((window.t && window.t('admin.pending.approveSuccess')) || 'อนุมัติคำขอสำเร็จ') : ((window.t && window.t('admin.pending.rejectSuccess')) || 'ปฏิเสธคำขอแล้ว');
-					alert(msg);
+					Swal.fire({title:'สำเร็จ',text:msg,icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
 				} else {
-					alert('Error: ' + data.message);
+					Swal.fire({title:'ผิดพลาด',text:'Error: ' + data.message,icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
 				}
 			} catch (err) {
 				console.error("Failed to verify KYC", err);
-				alert((window.t && window.t('admin.pending.systemError')) || "ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
+				Swal.fire({title:'ผิดพลาด',text:(window.t && window.t('admin.pending.systemError')) || 'ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
 			}
 		}
 
