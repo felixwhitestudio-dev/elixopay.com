@@ -673,9 +673,14 @@ exports.revokeSession = async (req, res, next) => {
  */
 exports.getCurrentUser = async (req, res, next) => {
   try {
-    const userRes = await db.query('SELECT password, password_hash FROM users WHERE id = $1', [req.user.id]);
-    const storedHash = userRes.rows[0]?.password_hash || userRes.rows[0]?.password || '';
-    const isOAuth = storedHash.startsWith('google:');
+    let isOAuth = false;
+    try {
+      const userRes = await db.query('SELECT password FROM users WHERE id = $1', [req.user.id]);
+      const storedHash = userRes.rows[0]?.password || '';
+      isOAuth = storedHash.startsWith('google:');
+    } catch (e) {
+      console.warn('isOAuth detection failed (non-fatal):', e.message);
+    }
     
     res.json({
       success: true,
@@ -917,13 +922,13 @@ exports.verifyPassword = async (req, res, next) => {
     const { password } = req.body;
     const userId = req.user.id;
 
-    const userRes = await db.query('SELECT password, password_hash, email FROM users WHERE id = $1', [userId]);
+    const userRes = await db.query('SELECT password, email FROM users WHERE id = $1', [userId]);
     if (userRes.rows.length === 0) {
       return res.status(404).json({ success: false, error: { message: 'User not found' } });
     }
 
     const user = userRes.rows[0];
-    const storedHash = user.password_hash || user.password;
+    const storedHash = user.password;
 
     // If OAuth user, always allow
     if (storedHash && storedHash.startsWith('google:')) {
