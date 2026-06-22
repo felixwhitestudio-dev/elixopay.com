@@ -393,3 +393,152 @@ exports.getPaymentById = async (req, res, next) => {
 exports.confirmPayment = (req, res) => res.json({ success: true });
 exports.cancelPayment = (req, res) => res.json({ success: true });
 exports.refundPayment = (req, res) => res.json({ success: true });
+
+/**
+ * @route   POST /api/v1/payments/checkout-session
+ * @desc    Create a Stripe Checkout Session (Hosted Checkout — simplest integration)
+ * @access  Private (Merchant API Key)
+ */
+exports.createCheckoutSession = async (req, res, next) => {
+  const client = await pool.connect();
+  try {
+    const userId = req.user.id;
+    const { amount, currency = 'THB', description, success_url, cancel_url, metadata } = req.body;
+
+    // Validation
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ success: false, error: { message: 'Invalid amount' } });
+    }
+    if (!success_url) {
+      return res.status(400).json({ success: false, error: { message: 'success_url is required' } });
+    }
+    if (!cancel_url) {
+      return res.status(400).json({ success: false, error: { message: 'cancel_url is required' } });
+    }
+
+    // Create Stripe Checkout Session
+    const sessionRes = await stripeService.createCheckoutSession({
+      amount,
+      currency,
+      description: description || 'Payment via Elixopay',
+      successUrl: success_url + '?session_id={CHECKOUT_SESSION_ID}',
+      cancelUrl: cancel_url,
+      metadata: {
+        merchant_id: userId,
+        description: description || '',
+        ...(metadata || {})
+      }
+    });
+
+    if (!sessionRes.success) {
+      return res.status(500).json({ success: false, error: { message: 'Stripe error: ' + sessionRes.error } });
+    }
+
+    const session = sessionRes.data;
+    const token = generateToken();
+
+    await client.query('BEGIN');
+
+    const insertRes = await client.query(
+      `INSERT INTO payments (
+        merchant_id, amount, currency, status, token,
+        return_url, cancel_url, description,
+        payment_intent_id, checkout_session_id, payment_method_type,
+        created_at
+      ) VALUES ($1, $2, $3, 'pending', $4, $5, $6, $7, $8, $9, 'stripe', NOW())
+      RETURNING id, token, status, amount, currency`,
+      [userId, amount, currency.toUpperCase(), token, success_url, cancel_url, description,
+       session.payment_intent, session.id]
+    );
+
+    await client.query('COMMIT');
+
+    const payment = insertRes.rows[0];
+
+    res.status(201).json({
+      success: true,
+      data: {
+        id: payment.id,
+        status: payment.status,
+        amount: payment.amount,
+        currency: payment.currency,
+        checkout_url: session.url,
+        session_id: session.id,
+        token: payment.token
+      }
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
+/**
+ * @route   GET /api/v1/payments/checkout/:token
+ * @desc    Get payment details for Elixopay-hosted checkout page (includes clientSecret & publicKey)
+ * @access  Public
+ */
+exports.getCheckoutByToken = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+
+    const result = await pool.query(
+      `SELECT p.id, p.amount, p.currency, p.description, p.status,
+              p.return_url, p.cancel_url, p.client_secret, p.payment_method_type,
+              u.first_name as merchant_name
+       FROM payments p
+       JOIN users u ON p.merchant_id = u.id
+       WHERE p.token = $1`,
+      [token]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, error: { message: 'Payment session not found or expired' } });
+    }
+
+    const payment = result.rows[0];
+
+    if (payment.status !== 'pending') {
+      return res.json({
+        success: true,
+        data: {
+          status: payment.status === 'succeeded' || payment.status === 'completed' ? 'COMPLETED' : payment.status.toUpperCase(),
+          amount: payment.amount,
+          currency: payment.currency,
+          description: payment.description,
+          merchantName: payment.merchant_name || 'Merchant',
+          returnUrl: payment.return_url
+        }
+      });
+    }
+
+    const responseData = {
+      id: payment.id,
+      status: 'PENDING',
+      amount: payment.amount,
+      currency: payment.currency,
+      description: payment.description,
+      merchantName: payment.merchant_name || 'Merchant',
+      paymentMethodType: payment.payment_method_type || 'stripe',
+      returnUrl: payment.return_url
+    };
+
+    // If Stripe payment → include clientSecret and publishable key for Stripe Elements
+    if (payment.payment_method_type === 'stripe' || !payment.payment_method_type) {
+      responseData.clientSecret = payment.client_secret;
+      responseData.stripePublicKey = process.env.STRIPE_PUBLISHABLE_KEY;
+    }
+
+    // If KBank QR → include QR code
+    if (payment.payment_method_type === 'kbank_qr') {
+      responseData.qrCodeBase64 = payment.client_secret; // QR stored in client_secret field
+    }
+
+    res.json({ success: true, data: responseData });
+  } catch (error) {
+    next(error);
+  }
+};
+

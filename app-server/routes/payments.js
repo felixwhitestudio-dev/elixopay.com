@@ -29,8 +29,14 @@ router.post('/', authenticate, paymentController.createPayment);
 // Public route for fetching details by token (for checkout page)
 router.get('/session/:token', paymentController.getPaymentByToken);
 
+// Public route for Elixopay-hosted checkout page (includes Stripe keys)
+router.get('/checkout/:token', paymentController.getCheckoutByToken);
+
 // Private route for paying
 router.post('/session/:token/pay', authenticate, paymentController.processPayment);
+
+// Stripe Checkout Session (Hosted Checkout — simplest merchant integration)
+router.post('/checkout-session', authenticate, paymentController.createCheckoutSession);
 
 /**
  * @route   GET /api/v1/payments/:id

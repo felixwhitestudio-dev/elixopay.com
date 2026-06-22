@@ -85,6 +85,10 @@ exports.handleStripeWebhook = async (req, res) => {
         console.log('Charge Succeeded:', event.data.object.id);
         break;
 
+      case 'checkout.session.completed':
+        await handleCheckoutSessionCompleted(event.data.object);
+        break;
+
       default:
         console.log('Unhandled event type:', event.type);
     }
@@ -495,6 +499,122 @@ async function handleChargeRefunded(charge) {
     }
   } catch (error) {
     console.error('Error handling charge.refunded:', error);
+    throw error;
+  }
+}
+
+/**
+ * Handle checkout.session.completed event
+ * This fires when a customer completes a Stripe Checkout Session
+ */
+async function handleCheckoutSessionCompleted(session) {
+  try {
+    console.log('🛒 Checkout Session Completed:', session.id);
+
+    // Find payment by checkout_session_id or by payment_intent
+    let result = await db.query(
+      `UPDATE payments 
+       SET status = $1, 
+           settled_at = CURRENT_TIMESTAMP,
+           updated_at = CURRENT_TIMESTAMP,
+           payment_intent_id = COALESCE(payment_intent_id, $3)
+       WHERE (checkout_session_id = $2 OR payment_intent_id = $3)
+         AND status = 'pending'
+       RETURNING id, merchant_id, amount, currency`,
+      ['succeeded', session.id, session.payment_intent]
+    );
+
+    // Fallback: try user_id column if merchant_id doesn't exist
+    if (result.rows.length === 0) {
+      result = await db.query(
+        `UPDATE payments 
+         SET status = $1, 
+             settled_at = CURRENT_TIMESTAMP,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE payment_intent_id = $2
+           AND status = 'pending'
+         RETURNING id, merchant_id, amount, currency`,
+        ['succeeded', session.payment_intent]
+      );
+    }
+
+    if (result.rows.length > 0) {
+      const payment = result.rows[0];
+      const userId = payment.merchant_id;
+      console.log(`✅ Updated checkout payment ${payment.id} to succeeded`);
+
+      // 1. Fetch User & send email
+      const userRes = await db.query('SELECT email FROM users WHERE id = $1', [userId]);
+      const user = userRes.rows[0];
+
+      if (user && user.email) {
+        await sendEmail(
+          user.email,
+          'Payment Received - Elixopay',
+          `<h3>Payment Succeeded (Checkout)</h3>
+           <p>You received <strong>${payment.amount} ${payment.currency}</strong></p>
+           <p>ID: ${payment.id}</p>
+           <p>Status: Succeeded</p>`
+        );
+      }
+
+      // 2. Trigger merchant webhook
+      try {
+        const whRes = await db.query(
+          `SELECT url, id, enabled_events, secret FROM webhook_endpoints 
+           WHERE user_id = $1 AND is_active = true`,
+          [userId]
+        );
+
+        for (const endpoint of whRes.rows) {
+          let eventsArray = [];
+          try {
+            eventsArray = typeof endpoint.enabled_events === 'string'
+              ? JSON.parse(endpoint.enabled_events)
+              : endpoint.enabled_events;
+          } catch (e) { }
+
+          if (!eventsArray || eventsArray.includes('payment.succeeded') || eventsArray.includes('*')) {
+            sendWebhook(endpoint.url, 'payment.succeeded', {
+              id: payment.id,
+              amount: payment.amount,
+              currency: payment.currency,
+              status: 'succeeded',
+              checkout_session_id: session.id,
+              timestamp: new Date().toISOString()
+            }, endpoint.secret);
+          }
+        }
+      } catch (e) {
+        console.warn('⚠️ Webhook dispatch error:', e.message);
+      }
+
+      // 3. Audit log
+      await logAudit({
+        userId: userId,
+        action: 'payment_received_checkout',
+        entityId: payment.id,
+        entityType: 'payment',
+        details: { amount: payment.amount, currency: payment.currency, sessionId: session.id }
+      });
+
+      // 4. Accrue commission
+      try {
+        await accrueCommissionForPayment({
+          userId: userId,
+          paymentId: payment.id,
+          amount: payment.amount,
+          currency: payment.currency,
+          description: `Commission for checkout payment ${payment.id}`,
+        });
+      } catch (e) {
+        console.warn('⚠️ Commission accrual error:', e.message);
+      }
+    } else {
+      console.warn(`⚠️ Payment not found for checkout session: ${session.id}`);
+    }
+  } catch (error) {
+    console.error('Error handling checkout.session.completed:', error);
     throw error;
   }
 }

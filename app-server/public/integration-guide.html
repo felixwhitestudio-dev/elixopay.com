@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Guide - Elixopay Developer Docs</title>
+    <meta name="description" content="Complete guide for merchants to integrate Elixopay payment gateway into their website or application.">
+    <link rel="stylesheet" href="/css/utilities.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; }
+        body { background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            padding: 5rem 1.5rem 3rem;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 30% 20%, rgba(129,140,248,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(167,139,250,0.1) 0%, transparent 50%); }
+        .hero .badge { display:inline-flex; align-items:center; gap:0.4rem; background:rgba(99,102,241,0.2); border:1px solid rgba(99,102,241,0.3); color:#a5b4fc; font-size:0.75rem; font-weight:600; padding:0.35rem 0.75rem; border-radius:999px; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; }
+        .hero h1 { font-size:2.5rem; font-weight:800; color:#fff; margin-bottom:0.75rem; position:relative; }
+        .hero p { font-size:1.05rem; color:#a5b4fc; max-width:600px; margin:0 auto; position:relative; line-height:1.6; }
+
+        /* Nav */
+        .top-nav { position:fixed; top:0; left:0; right:0; z-index:50; background:rgba(15,23,42,0.85); backdrop-filter:blur(12px); border-bottom:1px solid rgba(51,65,85,0.5); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between; height:56px; }
+        .top-nav .logo { display:flex; align-items:center; gap:0.5rem; text-decoration:none; color:#fff; font-weight:700; font-size:1.1rem; }
+        .top-nav .logo-icon { width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#6366f1,#8b5cf6); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:0.9rem; }
+        .top-nav .nav-links { display:flex; gap:1.5rem; align-items:center; }
+        .top-nav .nav-links a { color:#94a3b8; text-decoration:none; font-size:0.85rem; font-weight:500; transition:color 0.2s; }
+        .top-nav .nav-links a:hover { color:#fff; }
+
+        /* Content */
+        .content { max-width:860px; margin:0 auto; padding:3rem 1.5rem 6rem; }
+
+        /* Step Cards */
+        .step-card {
+            background: rgba(30,41,59,0.6);
+            border: 1px solid rgba(51,65,85,0.6);
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .step-card:hover { border-color: rgba(99,102,241,0.4); }
+        .step-header {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(51,65,85,0.4);
+            background: rgba(15,23,42,0.4);
+        }
+        .step-num {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.9rem; color: #fff;
+            flex-shrink: 0;
+        }
+        .step-title { font-size: 1.1rem; font-weight: 700; color: #f1f5f9; }
+        .step-desc { font-size: 0.8rem; color: #94a3b8; margin-top: 0.15rem; }
+        .step-body { padding: 1.5rem; }
+        .step-body p { font-size: 0.9rem; color: #cbd5e1; line-height: 1.65; margin-bottom: 1rem; }
+        .step-body ul { padding-left: 1.25rem; margin-bottom: 1rem; }
+        .step-body li { font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 0.5rem; }
+
+        /* Code Blocks */
+        .code-block {
+            background: #0f172a;
+            border: 1px solid rgba(51,65,85,0.6);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .code-header {
+            background: rgba(30,41,59,0.8);
+            padding: 0.5rem 1rem;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(51,65,85,0.4);
+        }
+        .code-lang { font-size: 0.7rem; font-weight: 600; color: #6366f1; text-transform: uppercase; letter-spacing: 0.05em; }
+        .code-copy { background: none; border: none; color: #64748b; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; font-weight: 500; transition: color 0.2s; padding: 0.25rem 0.5rem; border-radius: 0.375rem; }
+        .code-copy:hover { color: #a5b4fc; background: rgba(99,102,241,0.1); }
+        .code-body {
+            padding: 1rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .code-body .comment { color: #64748b; }
+        .code-body .string { color: #34d399; }
+        .code-body .keyword { color: #818cf8; }
+        .code-body .key { color: #f59e0b; }
+
+        /* Tabs for code languages */
+        .lang-tabs { display: flex; gap: 0; margin-bottom: -1px; position: relative; z-index: 1; padding: 0 1rem; }
+        .lang-tab {
+            padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600;
+            color: #64748b; background: transparent; border: none;
+            cursor: pointer; transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .lang-tab.active { color: #a5b4fc; border-bottom-color: #6366f1; }
+        .lang-tab:hover:not(.active) { color: #94a3b8; }
+
+        /* Info boxes */
+        .info-box {
+            border-radius: 0.75rem; padding: 1rem 1.25rem;
+            margin: 1rem 0; font-size: 0.85rem; line-height: 1.6;
+            display: flex; gap: 0.75rem;
+        }
+        .info-box.tip { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #86efac; }
+        .info-box.warning { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.2); color: #fde68a; }
+        .info-box.info { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); color: #c7d2fe; }
+        .info-box i { flex-shrink: 0; margin-top: 0.1rem; }
+
+        /* Test cards table */
+        .test-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.8rem; }
+        .test-table th { text-align: left; padding: 0.75rem; color: #94a3b8; font-weight: 600; border-bottom: 1px solid rgba(51,65,85,0.6); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+        .test-table td { padding: 0.75rem; border-bottom: 1px solid rgba(51,65,85,0.3); color: #e2e8f0; }
+        .test-table tr:last-child td { border-bottom: none; }
+        .test-table code { background: rgba(99,102,241,0.1); padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #a5b4fc; }
+
+        /* Flow diagram */
+        .flow-diagram {
+            background: rgba(15,23,42,0.6);
+            border: 1px solid rgba(51,65,85,0.4);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .flow-step {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 0.75rem 0;
+            position: relative;
+        }
+        .flow-step:not(:last-child)::after {
+            content: ''; position: absolute;
+            left: 15px; top: 40px; bottom: -8px;
+            width: 2px; background: linear-gradient(to bottom, #6366f1, rgba(99,102,241,0.2));
+        }
+        .flow-dot {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+        }
+        .flow-detail { flex: 1; }
+        .flow-detail .flow-label { font-weight: 600; color: #f1f5f9; font-size: 0.85rem; margin-bottom: 0.15rem; }
+        .flow-detail .flow-sub { color: #94a3b8; font-size: 0.75rem; }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.75rem; }
+            .hero { padding: 4rem 1rem 2rem; }
+            .content { padding: 2rem 1rem 4rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="top-nav">
+        <a href="/" class="logo">
+            <span class="logo-icon">E</span> Elixopay
+        </a>
+        <div class="nav-links">
+            <a href="/apidocs.html">API Reference</a>
+            <a href="/developer.html">Developer</a>
+            <a href="/dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="badge"><i class="fas fa-bolt"></i> Quick Start Guide</div>
+        <h1>Integration Guide</h1>
+        <p>เชื่อมต่อ Elixopay เข้ากับเว็บไซต์หรือแอปพลิเคชันของคุณ ใน 5 ขั้นตอน เริ่มรับชำระเงินได้ภายไม่กี่นาที</p>
+    </section>
+
+    <!-- Content -->
+    <div class="content">
+
+        <!-- Payment Flow Overview -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-sitemap" style="font-size:0.8rem;"></i></div>
+                <div>
+                    <div class="step-title">ภาพรวม Payment Flow</div>
+                    <div class="step-desc">การทำงานระหว่าง Server ของคุณ → Elixopay → Stripe → ลูกค้า</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-dot">1</div>
+                        <div class="flow-detail">
+                            <div class="flow-label">Server ของคุณ → สร้าง Payment</div>
+                            <div class="flow-sub">POST /api/v1/payments ด้วย API Key → ได้ checkout_url กลับมา</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-dot">2</div>
+                        <div class="flow-detail">
+                            <div class="flow-label">Redirect ลูกค้าไปหน้า Checkout</div>
+                            <div class="flow-sub">ลูกค้าเปิด checkout_url → เห็นฟอร์มจ่ายบัตรเครดิต / QR Code</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-dot">3</div>
+                        <div class="flow-detail">
+                            <div class="flow-label">ลูกค้าชำระเงิน</div>
+                            <div class="flow-sub">กรอกบัตร หรือ สแกน QR → Stripe ดำเนินการ → ชำระสำเร็จ</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-dot">4</div>
+                        <div class="flow-detail">
+                            <div class="flow-label">Elixopay ส่ง Webhook กลับหาคุณ</div>
+                            <div class="flow-sub">POST ไปยัง Webhook URL ที่คุณตั้งไว้ พร้อมข้อมูลการชำระเงิน</div>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-dot">5</div>
+                        <div class="flow-detail">
+                            <div class="flow-label">ลูกค้า Redirect กลับมาหาคุณ</div>
+                            <div class="flow-sub">redirect ไปที่ return_url ที่คุณกำหนดไว้ตอนสร้าง Payment</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Register & API Key -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num">1</div>
+                <div>
+                    <div class="step-title">สมัครบัญชีและสร้าง API Key</div>
+                    <div class="step-desc">สร้างบัญชี Elixopay และขอรับ API Key</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <p>ไปที่ <a href="/signup.html" style="color:#818cf8;">หน้าสมัคร</a> เพื่อสร้างบัญชี Merchant จากนั้น:</p>
+                <ul>
+                    <li>ยืนยันอีเมล</li>
+                    <li>ทำ KYC verification</li>
+                    <li>ไปที่ <a href="/developer.html" style="color:#818cf8;">Developer Settings</a> → คลิก "Create New Key"</li>
+                    <li>คัดลอก <strong>Secret Key</strong> (sk_live_xxxxx) — จะแสดงเพียงครั้งเดียว!</li>
+                </ul>
+
+                <div class="info-box warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div><strong>สำคัญ:</strong> เก็บ Secret Key ไว้ฝั่ง Server เท่านั้น ห้ามนำไปใช้ในฝั่ง Frontend/Client-side</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Create Payment -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num">2</div>
+                <div>
+                    <div class="step-title">สร้าง Payment Session</div>
+                    <div class="step-desc">เรียก API เพื่อสร้างลิงก์ชำระเงิน</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <p>เรียก API จาก Server ของคุณ พร้อมส่ง Secret Key ใน Header:</p>
+
+                <!-- Language Tabs -->
+                <div class="lang-tabs">
+                    <button class="lang-tab active" onclick="showLang('curl', this)">cURL</button>
+                    <button class="lang-tab" onclick="showLang('node', this)">Node.js</button>
+                    <button class="lang-tab" onclick="showLang('php', this)">PHP</button>
+                    <button class="lang-tab" onclick="showLang('python', this)">Python</button>
+                </div>
+
+                <!-- cURL -->
+                <div class="code-block lang-block" id="lang-curl">
+                    <div class="code-header">
+                        <span class="code-lang">cURL</span>
+                        <button class="code-copy" onclick="copyCode(this)"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-body">curl -X POST https://app.elixopay.com/api/v1/payments \
+  -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 999.00,
+    "currency": "THB",
+    "description": "สินค้า #12345",
+    "return_url": "https://yoursite.com/success",
+    "cancel_url": "https://yoursite.com/cancel"
+  }'</div>
+                </div>
+
+                <!-- Node.js -->
+                <div class="code-block lang-block" id="lang-node" style="display:none;">
+                    <div class="code-header">
+                        <span class="code-lang">Node.js (Fetch)</span>
+                        <button class="code-copy" onclick="copyCode(this)"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-body"><span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'https://app.elixopay.com/api/v1/payments'</span>, {
+  <span class="key">method</span>: <span class="string">'POST'</span>,
+  <span class="key">headers</span>: {
+    <span class="string">'Authorization'</span>: <span class="string">`Bearer ${process.env.ELIXOPAY_SECRET_KEY}`</span>,
+    <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>,
+  },
+  <span class="key">body</span>: JSON.stringify({
+    <span class="key">amount</span>: 999.00,
+    <span class="key">currency</span>: <span class="string">'THB'</span>,
+    <span class="key">description</span>: <span class="string">'สินค้า #12345'</span>,
+    <span class="key">return_url</span>: <span class="string">'https://yoursite.com/success'</span>,
+    <span class="key">cancel_url</span>: <span class="string">'https://yoursite.com/cancel'</span>,
+  }),
+});
+
+<span class="keyword">const</span> { data } = <span class="keyword">await</span> response.json();
+<span class="comment">// Redirect ลูกค้าไปที่ data.checkout_url</span>
+res.redirect(data.checkout_url);</div>
+                </div>
+
+                <!-- PHP -->
+                <div class="code-block lang-block" id="lang-php" style="display:none;">
+                    <div class="code-header">
+                        <span class="code-lang">PHP (cURL)</span>
+                        <button class="code-copy" onclick="copyCode(this)"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-body"><span class="keyword">$ch</span> = curl_init(<span class="string">'https://app.elixopay.com/api/v1/payments'</span>);
+curl_setopt_array(<span class="keyword">$ch</span>, [
+    CURLOPT_RETURNTRANSFER => <span class="keyword">true</span>,
+    CURLOPT_POST => <span class="keyword">true</span>,
+    CURLOPT_HTTPHEADER => [
+        <span class="string">'Authorization: Bearer '</span> . <span class="keyword">$_ENV</span>[<span class="string">'ELIXOPAY_SECRET_KEY'</span>],
+        <span class="string">'Content-Type: application/json'</span>,
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        <span class="string">'amount'</span> => 999.00,
+        <span class="string">'currency'</span> => <span class="string">'THB'</span>,
+        <span class="string">'description'</span> => <span class="string">'สินค้า #12345'</span>,
+        <span class="string">'return_url'</span> => <span class="string">'https://yoursite.com/success'</span>,
+        <span class="string">'cancel_url'</span> => <span class="string">'https://yoursite.com/cancel'</span>,
+    ]),
+]);
+
+<span class="keyword">$response</span> = json_decode(curl_exec(<span class="keyword">$ch</span>), <span class="keyword">true</span>);
+<span class="comment">// Redirect ลูกค้าไปที่ $response['data']['checkout_url']</span>
+header(<span class="string">'Location: '</span> . <span class="keyword">$response</span>[<span class="string">'data'</span>][<span class="string">'checkout_url'</span>]);</div>
+                </div>
+
+                <!-- Python -->
+                <div class="code-block lang-block" id="lang-python" style="display:none;">
+                    <div class="code-header">
+                        <span class="code-lang">Python (requests)</span>
+                        <button class="code-copy" onclick="copyCode(this)"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-body"><span class="keyword">import</span> requests, os
+
+response = requests.post(
+    <span class="string">"https://app.elixopay.com/api/v1/payments"</span>,
+    headers={
+        <span class="string">"Authorization"</span>: f<span class="string">"Bearer {os.environ['ELIXOPAY_SECRET_KEY']}"</span>,
+        <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,
+    },
+    json={
+        <span class="string">"amount"</span>: 999.00,
+        <span class="string">"currency"</span>: <span class="string">"THB"</span>,
+        <span class="string">"description"</span>: <span class="string">"สินค้า #12345"</span>,
+        <span class="string">"return_url"</span>: <span class="string">"https://yoursite.com/success"</span>,
+        <span class="string">"cancel_url"</span>: <span class="string">"https://yoursite.com/cancel"</span>,
+    },
+)
+
+data = response.json()[<span class="string">"data"</span>]
+<span class="comment"># Redirect ลูกค้าไปที่ data["checkout_url"]</span></div>
+                </div>
+
+                <p style="margin-top:1rem;"><strong>Response ที่จะได้กลับมา:</strong></p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JSON Response</span>
+                    </div>
+                    <div class="code-body">{
+  <span class="string">"success"</span>: <span class="keyword">true</span>,
+  <span class="string">"data"</span>: {
+    <span class="string">"id"</span>: <span class="string">"550e8400-e29b-41d4-a716-446655440000"</span>,
+    <span class="string">"status"</span>: <span class="string">"pending"</span>,
+    <span class="string">"amount"</span>: <span class="string">"999.00"</span>,
+    <span class="string">"currency"</span>: <span class="string">"THB"</span>,
+    <span class="string">"token"</span>: <span class="string">"abc123def456..."</span>,
+    <span class="string">"checkout_url"</span>: <span class="string">"https://app.elixopay.com/checkout.html?token=abc123def456..."</span>,
+    <span class="string">"clientSecret"</span>: <span class="string">"pi_xxx_secret_yyy"</span>,
+    <span class="string">"paymentIntentId"</span>: <span class="string">"pi_xxx"</span>
+  }
+}</div>
+                </div>
+
+                <div class="info-box tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <div><strong>Tip:</strong> นำ <code style="background:rgba(34,197,94,0.15);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;">checkout_url</code> ไป Redirect ลูกค้า — ไม่ต้องสร้าง form เอง!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Setup Webhooks -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num">3</div>
+                <div>
+                    <div class="step-title">ตั้งค่า Webhook</div>
+                    <div class="step-desc">รับ notification เมื่อการชำระเงินสำเร็จ</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <p>สร้าง Webhook endpoint ที่ <a href="/webhooks.html" style="color:#818cf8;">หน้า Webhooks</a> หรือเรียก API:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Create Webhook</span>
+                        <button class="code-copy" onclick="copyCode(this)"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-body">curl -X POST https://app.elixopay.com/api/v1/webhooks \
+  -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://yoursite.com/webhooks/elixopay",
+    "events": ["payment.succeeded", "payment.failed"]
+  }'</div>
+                </div>
+
+                <p>เมื่อ payment สำเร็จ, Elixopay จะส่ง POST request มาที่ URL ของคุณ:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Webhook Payload</span>
+                    </div>
+                    <div class="code-body">{
+  <span class="string">"id"</span>: <span class="string">"evt_a1b2c3d4e5..."</span>,
+  <span class="string">"object"</span>: <span class="string">"event"</span>,
+  <span class="string">"type"</span>: <span class="string">"payment.succeeded"</span>,
+  <span class="string">"created"</span>: 1719014400,
+  <span class="string">"data"</span>: {
+    <span class="string">"id"</span>: <span class="string">"550e8400-e29b-41d4-a716-446655440000"</span>,
+    <span class="string">"amount"</span>: <span class="string">"999.00"</span>,
+    <span class="string">"currency"</span>: <span class="string">"THB"</span>,
+    <span class="string">"status"</span>: <span class="string">"succeeded"</span>,
+    <span class="string">"timestamp"</span>: <span class="string">"2026-06-22T02:00:00.000Z"</span>
+  }
+}</div>
+                </div>
+
+                <p><strong>Webhook Headers ที่คุณจะได้รับ:</strong></p>
+                <ul>
+                    <li><code style="background:rgba(99,102,241,0.1);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;">X-Elixopay-Event</code> — ชื่อ event (เช่น payment.succeeded)</li>
+                    <li><code style="background:rgba(99,102,241,0.1);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;">X-Elixopay-Signature</code> — HMAC-SHA256 signature สำหรับ verify</li>
+                    <li><code style="background:rgba(99,102,241,0.1);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;">X-Elixopay-Timestamp</code> — Unix timestamp</li>
+                </ul>
+
+                <div class="info-box info">
+                    <i class="fas fa-shield-alt"></i>
+                    <div><strong>Security:</strong> ตรวจสอบ signature เสมอ ใช้ webhook secret ที่ได้ตอนสร้าง endpoint เพื่อ verify ว่า request มาจาก Elixopay จริง</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Handle return_url -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num">4</div>
+                <div>
+                    <div class="step-title">จัดการหน้า Success / Cancel</div>
+                    <div class="step-desc">แสดงผลเมื่อลูกค้ากลับมาจากหน้า checkout</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <p>เมื่อลูกค้าชำระเงินเสร็จ จะถูก redirect มาที่ <code style="background:rgba(99,102,241,0.1);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;">return_url</code> ที่คุณกำหนดไว้ พร้อม query parameter <code style="background:rgba(99,102,241,0.1);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;">?status=success</code></p>
+
+                <div class="info-box warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div><strong>สำคัญ:</strong> อย่าใช้ return_url เป็นตัวยืนยันว่าจ่ายเงินสำเร็จ! ลูกค้าอาจไม่ได้ redirect กลับ ใช้ <strong>Webhook</strong> เป็นตัวยืนยันเสมอ</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Test -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num">5</div>
+                <div>
+                    <div class="step-title">ทดสอบด้วย Test Cards</div>
+                    <div class="step-desc">ใช้หมายเลขบัตรทดสอบของ Stripe</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <p>ใช้บัตรทดสอบเหล่านี้ (Stripe Test Mode):</p>
+
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Card Number</th>
+                            <th>ผลลัพธ์</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>4242 4242 4242 4242</code></td>
+                            <td><span style="color:#4ade80;">✅ ชำระสำเร็จ</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>4000 0000 0000 9995</code></td>
+                            <td><span style="color:#f87171;">❌ บัตรถูกปฏิเสธ</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>4000 0025 0000 3155</code></td>
+                            <td><span style="color:#fbbf24;">🔐 ต้อง 3D Secure</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="color:#94a3b8; font-size:0.8rem;">
+                    <strong>Exp:</strong> วันหมดอายุอะไรก็ได้ที่อยู่ในอนาคต (เช่น 12/34) &nbsp;|&nbsp;
+                    <strong>CVC:</strong> เลข 3 หลักอะไรก็ได้ (เช่น 123)
+                </p>
+            </div>
+        </div>
+
+        <!-- API Reference Quick Links -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-book" style="font-size:0.8rem;"></i></div>
+                <div>
+                    <div class="step-title">API Endpoints ทั้งหมด</div>
+                    <div class="step-desc">Endpoints ที่ใช้ได้สำหรับ Merchant</div>
+                </div>
+            </div>
+            <div class="step-body">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code style="background:rgba(34,197,94,0.15);color:#4ade80;">POST</code></td>
+                            <td><code>/api/v1/payments</code></td>
+                            <td>สร้าง Payment + ได้ checkout_url</td>
+                        </tr>
+                        <tr>
+                            <td><code style="background:rgba(34,197,94,0.15);color:#4ade80;">POST</code></td>
+                            <td><code>/api/v1/payments/checkout-session</code></td>
+                            <td>สร้าง Stripe Checkout Session (Hosted)</td>
+                        </tr>
+                        <tr>
+                            <td><code style="background:rgba(59,130,246,0.15);color:#60a5fa;">GET</code></td>
+                            <td><code>/api/v1/payments</code></td>
+                            <td>ดูรายการ Payments ทั้งหมด</td>
+                        </tr>
+                        <tr>
+                            <td><code style="background:rgba(59,130,246,0.15);color:#60a5fa;">GET</code></td>
+                            <td><code>/api/v1/payments/:id</code></td>
+                            <td>ดูรายละเอียด Payment</td>
+                        </tr>
+                        <tr>
+                            <td><code style="background:rgba(59,130,246,0.15);color:#60a5fa;">GET</code></td>
+                            <td><code>/api/v1/payments/stats</code></td>
+                            <td>สถิติ Payments</td>
+                        </tr>
+                        <tr>
+                            <td><code style="background:rgba(34,197,94,0.15);color:#4ade80;">POST</code></td>
+                            <td><code>/api/v1/webhooks</code></td>
+                            <td>สร้าง Webhook Endpoint</td>
+                        </tr>
+                        <tr>
+                            <td><code style="background:rgba(59,130,246,0.15);color:#60a5fa;">GET</code></td>
+                            <td><code>/api/v1/webhooks</code></td>
+                            <td>ดู Webhooks ทั้งหมด</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box tip">
+                    <i class="fas fa-code"></i>
+                    <div>ดู API Reference ฉบับเต็ม: <a href="/apidocs.html" style="color:#86efac;font-weight:600;">API Documentation →</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Need Help -->
+        <div style="text-align:center; padding:2rem 0;">
+            <p style="color:#64748b; font-size:0.9rem; margin-bottom:1rem;">ต้องการความช่วยเหลือ?</p>
+            <a href="/contact.html" style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;padding:0.75rem 1.5rem;border-radius:0.75rem;text-decoration:none;font-weight:600;font-size:0.85rem;transition:all 0.2s;">
+                <i class="fas fa-headset"></i> ติดต่อทีม Support
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Language tabs
+        function showLang(lang, btn) {
+            document.querySelectorAll('.lang-block').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.lang-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById('lang-' + lang).style.display = '';
+            btn.classList.add('active');
+        }
+
+        // Copy code
+        function copyCode(btn) {
+            const codeBody = btn.closest('.code-block').querySelector('.code-body');
+            navigator.clipboard.writeText(codeBody.textContent).then(() => {
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.style.color = '#4ade80';
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.style.color = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

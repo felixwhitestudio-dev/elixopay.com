@@ -168,6 +168,54 @@ exports.getBalance = async () => {
   }
 };
 
+/**
+ * Create a Stripe Checkout Session (Hosted Checkout)
+ * This creates a full Stripe-hosted payment page — simplest integration for merchants.
+ */
+exports.createCheckoutSession = async ({ amount, currency, description, successUrl, cancelUrl, metadata = {} }) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card', 'promptpay'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: currency.toLowerCase(),
+            product_data: {
+              name: description || 'Payment via Elixopay',
+            },
+            unit_amount: Math.round(amount * 100), // Convert to satangs/cents
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: { platform: 'elixopay', ...metadata },
+      expires_after: 30 * 60, // 30 minutes
+    });
+    return { success: true, data: session };
+  } catch (error) {
+    console.error('Stripe Checkout Session Error:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+/**
+ * Retrieve a Checkout Session
+ */
+exports.retrieveCheckoutSession = async (sessionId) => {
+  if (!stripe) return { success: false, error: 'Stripe not configured' };
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return { success: true, data: session };
+  } catch (error) {
+    console.error('Stripe Retrieve Session Error:', error);
+    return { success: false, error: error.message };
+  }
+};
+
 module.exports = {
   stripe,
   ...exports
