@@ -102,4 +102,11 @@ router.post('/2fa/enable', authenticate, authController.enable2FA);
  */
 router.post('/2fa/verify', authenticate, authController.verify2FA);
 
+/**
+ * @route   POST /api/v1/auth/verify-password
+ * @desc    Verify password for sensitive actions
+ * @access  Private
+ */
+router.post('/verify-password', authenticate, authController.verifyPassword);
+
 module.exports = router;

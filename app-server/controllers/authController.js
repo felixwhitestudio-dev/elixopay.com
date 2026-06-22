@@ -98,7 +98,8 @@ exports.googleOAuth = async (req, res) => {
           name: `${user.first_name || firstName} ${user.last_name || lastName}`.trim(),
           role: user.account_type,
           isVerified: user.email_verified,
-          kycStatus: user.verification_status
+          kycStatus: user.verification_status,
+          isOAuth: true
         },
         token: access,
         refreshToken: refresh,
@@ -453,7 +454,8 @@ exports.login = async (req, res, next) => {
           role: user.account_type,
           isVerified: user.email_verified,
           createdAt: user.created_at,
-          kycStatus: user.verification_status
+          kycStatus: user.verification_status,
+          isOAuth: !!(user.password_hash || user.password || '').startsWith('google:')
         }, token: access, refreshToken: refresh, csrf
       }
     });
@@ -517,7 +519,8 @@ exports.devLogin = async (req, res, next) => {
           name: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
           role: user.account_type,
           isVerified: user.email_verified,
-          createdAt: user.created_at
+          createdAt: user.created_at,
+          isOAuth: !!(user.password_hash || user.password || '').startsWith('google:')
         },
         token: access,
         refreshToken: refresh,
@@ -670,10 +673,17 @@ exports.revokeSession = async (req, res, next) => {
  */
 exports.getCurrentUser = async (req, res, next) => {
   try {
+    const userRes = await db.query('SELECT password, password_hash FROM users WHERE id = $1', [req.user.id]);
+    const storedHash = userRes.rows[0]?.password_hash || userRes.rows[0]?.password || '';
+    const isOAuth = storedHash.startsWith('google:');
+    
     res.json({
       success: true,
       data: {
-        user: req.user
+        user: {
+          ...req.user,
+          isOAuth
+        }
       }
     });
   } catch (error) {
@@ -892,6 +902,48 @@ exports.verify2FA = async (req, res, next) => {
       success: true,
       message: '2FA verified and enabled successfully'
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @route   POST /api/v1/auth/verify-password
+ * @desc    Verify password for sensitive actions (Re-auth)
+ * @access  Private
+ */
+exports.verifyPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const userId = req.user.id;
+
+    const userRes = await db.query('SELECT password, password_hash, email FROM users WHERE id = $1', [userId]);
+    if (userRes.rows.length === 0) {
+      return res.status(404).json({ success: false, error: { message: 'User not found' } });
+    }
+
+    const user = userRes.rows[0];
+    const storedHash = user.password_hash || user.password;
+
+    // If OAuth user, always allow
+    if (storedHash && storedHash.startsWith('google:')) {
+      const actionToken = generateCsrfToken(); // simple random string
+      return res.json({ success: true, data: { actionToken } });
+    }
+
+    if (!password) {
+      return res.status(400).json({ success: false, error: { message: 'Password is required' } });
+    }
+
+    const valid = await verifyPassword(password, storedHash, userId);
+    if (!valid) {
+      recordFailedAttempt(user.email);
+      return res.status(401).json({ success: false, error: { message: 'Incorrect password' } });
+    }
+
+    resetLoginAttempts(user.email);
+    const actionToken = generateCsrfToken();
+    res.json({ success: true, data: { actionToken } });
   } catch (error) {
     next(error);
   }

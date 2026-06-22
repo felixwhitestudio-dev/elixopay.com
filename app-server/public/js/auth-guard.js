@@ -92,28 +92,43 @@ window.ElixopaySecurity = {
      */
     promptReauth: function (actionDescription = 'perform this sensitive action') {
         return new Promise(async (resolve, reject) => {
-            const titleText = window.ElixopayI18n ? window.ElixopayI18n.t('security.reauth_title') || 'Security Verification' : 'Security Verification';
-            const descText = window.ElixopayI18n
-                ? window.ElixopayI18n.t('security.reauth_desc') || `Please verify your password to ${actionDescription}.`
-                : `Please verify your password to ${actionDescription}.`;
-            const pwdPlaceholder = window.ElixopayI18n ? window.ElixopayI18n.t('auth.password') || 'Password' : 'Password';
-            const btnConfirm = window.ElixopayI18n ? window.ElixopayI18n.t('common.verify') || 'Verify' : 'Verify';
-            const btnCancel = window.ElixopayI18n ? window.ElixopayI18n.t('common.cancel') || 'Cancel' : 'Cancel';
+            let isOAuth = false;
+            try {
+                const userObj = JSON.parse(localStorage.getItem('user'));
+                if (userObj && userObj.isOAuth) isOAuth = true;
+            } catch(e) {}
+
+            // Handle missing translation keys by providing a fallback logic
+            const getT = (key, defaultText) => {
+                if (!window.ElixopayI18n) return defaultText;
+                const translated = window.ElixopayI18n.t(key);
+                return translated && translated !== key ? translated : defaultText;
+            };
+
+            const titleText = getT('security.reauth_title', 'Security Verification');
+            const descText = getT('security.reauth_desc', `Please verify your password to ${actionDescription}.`);
+            const pwdPlaceholder = getT('auth.password', 'Password');
+            const btnConfirm = getT('common.verify', 'Verify');
+            const btnConfirmOAuth = getT('common.confirm', 'Confirm');
+            const btnCancel = getT('common.cancel', 'Cancel');
+
+            const htmlContent = isOAuth 
+                ? `<p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Please confirm that you want to ${actionDescription}.</p>`
+                : `<p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">${descText}</p>
+                   <input type="password" id="reauth-password" class="swal2-input" placeholder="${pwdPlaceholder}" style="background: rgba(15, 23, 42, 0.5); border-color: #334155; color: white;">`;
 
             const { value: password, isConfirmed } = await Swal.fire({
                 title: `<span style="color: #f1f5f9;">${titleText}</span>`,
-                html: `
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">${descText}</p>
-                    <input type="password" id="reauth-password" class="swal2-input" placeholder="${pwdPlaceholder}" style="background: rgba(15, 23, 42, 0.5); border-color: #334155; color: white;">
-                `,
+                html: htmlContent,
                 background: '#1e293b',
                 showCancelButton: true,
-                confirmButtonText: btnConfirm,
+                confirmButtonText: isOAuth ? btnConfirmOAuth : btnConfirm,
                 cancelButtonText: btnCancel,
                 confirmButtonColor: '#6366f1', // Indigo primary
                 cancelButtonColor: '#475569',
                 focusConfirm: false,
                 preConfirm: () => {
+                    if (isOAuth) return 'oauth-bypass';
                     const pwd = Swal.getPopup().querySelector('#reauth-password').value;
                     if (!pwd) {
                         Swal.showValidationMessage(`Please enter your password`);
@@ -130,7 +145,7 @@ window.ElixopaySecurity = {
                     const response = await window.apiFetch('/api/v1/auth/verify-password', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ password })
+                        body: JSON.stringify({ password: isOAuth ? '' : password })
                     });
 
                     const result = await response.json();
