@@ -581,6 +581,7 @@ async function handleCheckoutSessionCompleted(session) {
               currency: payment.currency,
               status: 'succeeded',
               checkout_session_id: session.id,
+              metadata: session.metadata || {},
               timestamp: new Date().toISOString()
             }, endpoint.secret);
           }
