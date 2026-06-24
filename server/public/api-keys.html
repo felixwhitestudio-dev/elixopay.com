@@ -387,16 +387,21 @@
 				webhooks.forEach(w => {
 					const div = document.createElement('div');
 					div.className = 'glass-panel-light p-4 rounded-xl border border-white/5 flex flex-col gap-2';
-					div.innerHTML = `
+                    div.innerHTML = `
                         <div class="flex justify-between items-start">
                             <div class="font-mono text-xs text-indigo-300 truncate max-w-[200px] sm:max-w-xs" title="${w.url}">${w.url}</div>
                             <button onclick="deleteWebhook('${w.id}')" class="text-slate-500 hover:text-red-400 transition" title="Delete">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Secret:</span>
-                            <code class="text-xs text-slate-400 font-mono blur-[4px] hover:blur-none transition-all cursor-pointer select-all" title="Click to reveal">${w.secret.substring(0, 16)}...</code>
+                        <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Secret:</span>
+                                <code id="secret-${w.id}" class="text-xs text-slate-300 font-mono select-all bg-black/20 px-2 py-1 rounded">${w.secret || 'N/A'}</code>
+                            </div>
+                            <button onclick="copyToClipboard('secret-${w.id}')" class="text-slate-500 hover:text-indigo-400 transition" title="Copy Secret">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         </div>
                     `;
 					container.appendChild(div);
