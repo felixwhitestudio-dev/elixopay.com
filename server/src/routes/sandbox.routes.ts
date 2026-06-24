@@ -34,9 +34,9 @@ router.get('/', (req: Request, res: Response) => {
                     timeout: '888.88 — จำลอง timeout',
                 },
                 endpoints: {
-                    createCharge: 'POST /api/v1/checkout/create (ใช้ X-API-Key: ep_test_xxx)',
+                    createCharge: 'POST /api/v1/payments (ใช้ Authorization: Bearer ep_test_xxx)',
                     simulatePay: 'POST /api/v1/checkout/:id/simulate-pay',
-                    checkStatus: 'GET /api/v1/payments/:id',
+                    checkStatus: 'GET /api/v1/checkout/payments/:id',
                 },
                 notes: [
                     'รายการ Sandbox จะไม่ปรากฏในรายงานยอดขายจริง',

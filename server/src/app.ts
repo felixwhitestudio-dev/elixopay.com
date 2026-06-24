@@ -77,15 +77,27 @@ app.post('/api/v1/stripe-connect/webhook', express.raw({ type: 'application/json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: [
-        /http:\/\/localhost:\d+/,
-        /http:\/\/127\.0\.0\.1:\d+/,
-        'https://elixopay.com',
-        'https://www.elixopay.com',
-        'https://api.elixopay.com',
-        'https://app.elixopay.com',
-        'https://elixopay-com.onrender.com'
-    ],
+    origin: function (origin, callback) {
+        // Allow all origins for public API endpoints if they use Server-to-Server or Client-side calls
+        // Since we are a payment gateway, public API endpoints should not be blocked by CORS
+        if (!origin) return callback(null, true);
+        
+        const allowedOrigins = [
+            /http:\/\/localhost:\d+/,
+            /http:\/\/127\.0\.0\.1:\d+/,
+            'https://elixopay.com',
+            'https://www.elixopay.com',
+            'https://api.elixopay.com',
+            'https://app.elixopay.com',
+            'https://elixopay-com.onrender.com'
+        ];
+
+        // For this basic setup, if it's an API call, we can just allow it,
+        // or we check if the origin matches our internal ones.
+        // Actually, to be safe and let merchants integrate from their frontends (like checkout buttons),
+        // we should allow any origin for the public APIs.
+        return callback(null, true);
+    },
     credentials: true
 }));
 app.use(helmet({
