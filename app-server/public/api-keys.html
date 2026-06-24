@@ -242,7 +242,7 @@
 
 		async function loadKeys() {
 			try {
-				const resp = await apiFetch('/api/v1/apikeys');
+				const resp = await apiFetch('/api/v1/api-keys');
 				const data = await resp.json();
 				const keys = data.data?.apiKeys || [];
 
@@ -255,10 +255,10 @@
 				}
 
 				keys.forEach(k => {
-					if (!k.isActive) return; // Hide revoked keys
+					if (k.status !== 'active') return; // Hide revoked keys
 
-					const date = new Date(k.createdAt).toLocaleDateString();
-					const modeBadge = k.mode === 'live'
+					const date = new Date(k.created_at).toLocaleDateString();
+					const modeBadge = (k.public_key && k.public_key.includes('live'))
 						? '<span class="px-2 py-0.5 rounded text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/20">Live</span>'
 						: '<span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-500/20 text-slate-400 border border-slate-500/20">Test</span>';
 
@@ -266,7 +266,7 @@
 					tr.className = 'hover:bg-white/5 transition';
 					tr.innerHTML = `
                         <td class="py-3 pl-2 font-medium text-slate-300">${k.name}</td>
-                        <td class="py-3 font-mono text-xs text-slate-400">${k.keyPrefix}••••</td>
+                        <td class="py-3 font-mono text-xs text-slate-400">${k.public_key ? k.public_key.substring(0, 14) : ''}••••</td>
                         <td class="py-3">${modeBadge}</td>
                         <td class="py-3 text-slate-400 text-sm">${date}</td>
                         <td class="py-3 text-right pr-2">
@@ -302,7 +302,7 @@
 			// -----------------------------------
 
 			try {
-				const resp = await apiFetch('/api/v1/apikeys', {
+				const resp = await apiFetch('/api/v1/api-keys', {
 					method: 'POST',
 					body: JSON.stringify({ name, mode })
 				});
@@ -312,7 +312,7 @@
 					const newKey = data.data.apiKey;
 
 					// Show secret banner
-					document.getElementById('secret-key-display').textContent = newKey.secretKey;
+					document.getElementById('secret-key-display').textContent = newKey.secret_key;
 					document.getElementById('secret-key-banner').classList.remove('hidden');
 
 					// Reset form
@@ -322,7 +322,8 @@
 					loadKeys();
 				} else {
 					const err = await resp.json();
-					showToast(err.message || 'Failed to create key', 'error');
+					const errorMsg = err.error?.message || err.error || err.message || 'Failed to create key';
+					showToast(errorMsg, 'error');
 				}
 			} catch (error) {
 				showToast('Network error occurred', 'error');
@@ -354,7 +355,7 @@
 				// -----------------------------------
 
 				try {
-					const resp = await apiFetch(`/api/v1/apikeys/${id}`, { method: 'DELETE' });
+					const resp = await apiFetch(`/api/v1/api-keys/${id}`, { method: 'DELETE' });
 					if (resp.ok) {
 						showToast('Key revoked', 'success');
 						loadKeys();
