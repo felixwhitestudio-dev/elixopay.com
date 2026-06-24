@@ -27,6 +27,7 @@ import refundRouter from './routes/refund.routes';
 import sandboxRouter from './routes/sandbox.routes';
 import notificationRouter from './routes/notification.routes';
 import contactRouter from './routes/contact.routes';
+import stripeConnectRouter from './routes/stripe-connect.routes';
 import path from 'path';
 
 const app = express();
@@ -34,6 +35,7 @@ app.set('trust proxy', 1);
 
 // 🛡️ [PHASE 1] LINE Webhook (Priority Handler)
 import * as lineController from './controllers/line.controller';
+import * as stripeWebhookController from './controllers/stripe-webhook.controller';
 import crypto from 'crypto';
 
 app.post(['/line', '/api/v1/line/webhook'], express.raw({ type: 'application/json' }), async (req: Request, res: Response, next) => {
@@ -67,6 +69,9 @@ app.post(['/line', '/api/v1/line/webhook'], express.raw({ type: 'application/jso
         return res.status(200).send('OK');
     }
 });
+
+// 💳 [PHASE 1b] Stripe Connect Webhook (must be before express.json())
+app.post('/api/v1/stripe-connect/webhook', express.raw({ type: 'application/json' }), stripeWebhookController.handleStripeWebhook);
 
 // 🛡️ [PHASE 2] Global Middlewares
 app.use(express.json());
@@ -179,6 +184,7 @@ app.use('/api/v1/refund', merchantLimiter, refundRouter);
 app.use('/api/v1/sandbox', sandboxRouter);
 app.use('/api/v1/notifications', notificationRouter);
 app.use('/api/v1/contact', contactRouter);
+app.use('/api/v1/stripe-connect', stripeConnectRouter);
 
 // Serve static files (KYC documents)
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));

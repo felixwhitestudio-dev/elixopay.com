@@ -25,7 +25,7 @@ LOGIN_RESPONSE=$(curl -s -X POST "$BASE_URL/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@elixopay.com",
-    "password": "StrongPassword123!"
+    "password": "Elixopay2026!"
   }')
 
 TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.data.token')

@@ -8,6 +8,7 @@ import {
 } from '../providers/PaymentProvider';
 import { KBankProvider } from '../providers/KBankProvider';
 import { OmiseProvider } from '../providers/OmiseProvider';
+import { StripeConnectProvider } from '../providers/StripeConnectProvider';
 import { TestProvider } from '../providers/TestProvider';
 import logger from '../utils/logger';
 
@@ -28,10 +29,12 @@ export class PaymentOrchestrator {
         // Register all available providers
         const kbank = new KBankProvider();
         const omise = new OmiseProvider();
+        const stripe = new StripeConnectProvider();
         this.testProvider = new TestProvider();
 
         this.registerProvider(kbank);
         this.registerProvider(omise);
+        this.registerProvider(stripe);
         this.registerProvider(this.testProvider);
 
         logger.info(`[Orchestrator] Initialized with ${this.providers.size} providers: ${[...this.providers.keys()].join(', ')}`);

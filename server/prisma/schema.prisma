@@ -50,6 +50,14 @@ model User {
   twoFactorSecret   String?  // Encrypted TOTP secret
   twoFactorEnabled  Boolean  @default(false)
 
+  // Stripe Connect Fields
+  stripeAccountId        String?   @unique  // Stripe Connected Account ID (acct_xxx)
+  stripeAccountStatus    String    @default("none") // none, onboarding, restricted, enabled
+  stripeDetailsSubmitted Boolean   @default(false)
+  stripePayoutsEnabled   Boolean   @default(false)
+  stripeChargesEnabled   Boolean   @default(false)
+  stripeConnectedAt      DateTime?
+
   wallet          Wallet?    // Merchant settlement balance
   transactions    Transaction[]
   auditLogs       AuditLog[]
@@ -60,6 +68,29 @@ model User {
   products        Product[]
   gatewayConfigs  MerchantGatewayConfig[]
   notifications   Notification[]
+  stripePayouts   StripePayout[]
+}
+
+model StripeEvent {
+  id          String   @id // Stripe event ID (evt_xxx) — used for deduplication
+  type        String   // e.g. "account.updated", "payment_intent.succeeded"
+  processed   Boolean  @default(false)
+  data        String?  // Raw JSON event data for audit
+  createdAt   DateTime @default(now())
+}
+
+model StripePayout {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  stripeTransferId String?  @unique // Stripe Transfer ID (tr_xxx)
+  amount           Decimal
+  currency         String   @default("THB")
+  status           String   @default("pending") // pending, paid, failed
+  method           String   @default("stripe_transfer")
+  description      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model BankAccountChangeRequest {
