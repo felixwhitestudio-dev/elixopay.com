@@ -137,14 +137,15 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Deploy to EC2 via SSH
+      - name: Deploy to Vultr via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.VULTR_HOST }}
+          username: ${{ secrets.VULTR_USER }}
+          password: ${{ secrets.VULTR_PASSWORD }}
+          key: ${{ secrets.VULTR_SSH_KEY }}
           script: |
-            cd /home/${{ secrets.EC2_USER }}/elixopay
+            cd /opt/elixopay.com
             git pull origin main
             
             # Update server (TypeScript backend)
