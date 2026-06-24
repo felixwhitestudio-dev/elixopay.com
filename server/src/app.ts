@@ -173,7 +173,7 @@ app.use('/api/v1/bbl', bblRouter);
 app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/kyc', kycRouter);
 app.use('/api/v1/bank', bankRouter);
-app.use('/api/v1/apikeys', apiKeyRouter);
+app.use('/api/v1/api-keys', apiKeyRouter);
 app.use('/api/v1/webhooks', webhookRouter);
 app.use('/api/v1/checkout', merchantLimiter, checkoutRouter);
 app.use('/api/v1/billing', billingRouter);
@@ -197,7 +197,16 @@ const possibleFrontendPaths = [
 const frontendPath = possibleFrontendPaths.find(p => require('fs').existsSync(p)) || possibleFrontendPaths[0];
 logger.info(`[STATIC] Serving frontend from: ${frontendPath}`);
 // Enable HTML extensions so /login resolves to login.html
-app.use(express.static(frontendPath, { extensions: ['html'] }));
+app.use(express.static(frontendPath, { 
+    extensions: ['html'],
+    setHeaders: (res, path) => {
+        if (path.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
+}));
 
 // Explicit route for the login page to bypass static middleware flakiness
 app.get('/login.html', (req, res) => {
