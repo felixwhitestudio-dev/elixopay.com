@@ -18,6 +18,7 @@ export const globalErrorHandler = (
 
     // Operational, trusted error: send message to client
     if (err.isOperational) {
+        Logger.warn(`[Operational Error] ${req.method} ${req.originalUrl} - ${err.message}`);
         const errorResponse: any = {
             success: false,
             status: err.status,

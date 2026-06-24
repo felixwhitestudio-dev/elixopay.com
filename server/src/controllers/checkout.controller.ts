@@ -30,7 +30,10 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
     }
 
     const { user, mode } = authData;
-    const { amount, currency, referenceId, description, returnUrl, method: requestedMethod, provider: preferredProvider } = req.body;
+    const { amount, currency, referenceId, reference_id, description, returnUrl, return_url, cancel_url, method: requestedMethod, provider: preferredProvider } = req.body;
+
+    const actualReturnUrl = returnUrl || return_url;
+    const actualReferenceId = referenceId || reference_id;
 
     if (!amount || amount <= 0) {
         return next(new AppError('Invalid amount', 400));
@@ -54,10 +57,10 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
                 currency: currency || 'THB',
                 method,
                 description: description || 'API Checkout',
-                returnUrl,
+                returnUrl: actualReturnUrl,
                 token: req.body.token,       // For card payments (Omise token)
-                orderId: referenceId || `ORD-${Date.now()}`,
-                metadata: { referenceId },
+                orderId: actualReferenceId || `ORD-${Date.now()}`,
+                metadata: { referenceId: actualReferenceId },
             },
             {
                 isTestMode,
@@ -76,13 +79,13 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
             amount: amount,
             type: 'DEPOSIT',
             status: chargeResult.result.status === 'completed' ? 'COMPLETED' : 'PENDING',
-            reference: referenceId || `API-${Date.now()}`,
+            reference: actualReferenceId || `API-${Date.now()}`,
             provider: chargeResult.provider,
             providerChargeId: chargeResult.result.providerChargeId,
             paymentMethod: method,
             metadata: JSON.stringify({
                 description: description || 'API Checkout',
-                returnUrl: returnUrl,
+                returnUrl: actualReturnUrl,
                 mode: mode,
             }),
         }
