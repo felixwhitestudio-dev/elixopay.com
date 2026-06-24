@@ -312,7 +312,7 @@
 					const newKey = data.data.apiKey;
 
 					// Show secret banner
-					document.getElementById('secret-key-display').textContent = newKey.secret_key;
+					document.getElementById('secret-key-display').textContent = newKey.secretKey || newKey.secret_key;
 					document.getElementById('secret-key-banner').classList.remove('hidden');
 
 					// Reset form
