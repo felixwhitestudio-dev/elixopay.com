@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="/css/design-system.css?v=2">
     <script src="/js/api-config.js"></script>
     <script src="/js/i18n.js"></script>
-    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <script src="/js/auth-guard.js?v=1.2" data-require-role="user"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .wh-intro {
             display: flex;
@@ -279,10 +280,7 @@ function verifyWebhook(payload, signature, secret) {
                 <label>Endpoint URL</label>
                 <input type="url" id="endpointUrl" placeholder="https://yoursite.com/webhook">
             </div>
-            <div class="wh-field">
-                <label>Description (optional)</label>
-                <input type="text" id="endpointDesc" placeholder="e.g. Production server webhook">
-            </div>
+
             <div class="wh-field">
                 <label>Events to listen</label>
                 <div class="wh-event-checks" id="eventChecks">
@@ -317,11 +315,12 @@ function verifyWebhook(payload, signature, secret) {
     </div>
 
     <script>
-    // Webhook management logic
-    let endpoints = JSON.parse(localStorage.getItem('ep-webhooks') || '[]');
-    let editingIdx = -1;
-    let deletingIdx = -1;
+    // Webhook management logic — API-backed
+    const SWAL_THEME = { background: '#1a1a2e', color: '#e2e8f0' };
+    let endpoints = [];
+    let deletingId = null;
 
+    // ── Render ──────────────────────────────────────────────
     function renderEndpoints() {
         const list = document.getElementById('endpointList');
         const empty = document.getElementById('emptyState');
@@ -334,60 +333,128 @@ function verifyWebhook(payload, signature, secret) {
             return;
         }
         empty.style.display = 'none';
-        list.innerHTML = endpoints.map((ep, i) => `
+        list.innerHTML = endpoints.map(ep => `
             <div class="wh-endpoint">
                 <div class="wh-endpoint-top">
-                    <div><span class="wh-status active"></span><span class="wh-endpoint-url">${ep.url}</span></div>
+                    <div><span class="wh-status ${ep.status === 'active' ? 'active' : 'inactive'}"></span><span class="wh-endpoint-url">${ep.url}</span></div>
                     <div class="wh-endpoint-actions">
-                        <button onclick="editEndpoint(${i})"><i class="fas fa-pen"></i></button>
-                        <button class="delete" onclick="confirmDelete(${i})"><i class="fas fa-trash"></i></button>
+                        <button class="delete" onclick="confirmDelete('${ep.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
-                ${ep.desc ? `<div class="wh-endpoint-desc">${ep.desc}</div>` : ''}
                 <div class="wh-endpoint-events">
-                    ${ep.events.map(e => `<span class="wh-event-tag ${e.includes('failed') || e.includes('dispute') ? 'red' : e.includes('refund') ? 'amber' : 'green'}">${e}</span>`).join('')}
+                    ${(ep.events || []).map(e => `<span class="wh-event-tag ${e.includes('failed') || e.includes('dispute') ? 'red' : e.includes('refund') ? 'amber' : 'green'}">${e}</span>`).join('')}
                 </div>
             </div>
         `).join('');
     }
 
-    function openAddModal() { editingIdx = -1; document.getElementById('modalTitle').textContent = 'Add Webhook Endpoint'; document.getElementById('endpointUrl').value = ''; document.getElementById('endpointDesc').value = ''; document.querySelectorAll('#eventChecks input').forEach((c,i) => c.checked = i < 2); document.getElementById('addModal').classList.add('open'); }
-    function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
-
-    function editEndpoint(i) {
-        editingIdx = i;
-        const ep = endpoints[i];
-        document.getElementById('modalTitle').textContent = 'Edit Endpoint';
-        document.getElementById('endpointUrl').value = ep.url;
-        document.getElementById('endpointDesc').value = ep.desc || '';
-        document.querySelectorAll('#eventChecks input').forEach(c => c.checked = ep.events.includes(c.value));
-        document.getElementById('addModal').classList.add('open');
-    }
-
-    function saveEndpoint() {
-        const url = document.getElementById('endpointUrl').value.trim();
-        if (!url) return alert('Please enter a URL');
-        const desc = document.getElementById('endpointDesc').value.trim();
-        const events = [...document.querySelectorAll('#eventChecks input:checked')].map(c => c.value);
-        if (events.length === 0) return alert('Select at least one event');
-
-        if (editingIdx >= 0) { endpoints[editingIdx] = { url, desc, events }; }
-        else { endpoints.push({ url, desc, events }); }
-        localStorage.setItem('ep-webhooks', JSON.stringify(endpoints));
-        closeAddModal();
+    // ── Load webhooks from API ──────────────────────────────
+    async function loadWebhooks() {
+        try {
+            const res = await apiFetch('/api/v1/webhooks');
+            const json = await res.json();
+            if (json.success) {
+                endpoints = json.data.webhooks || [];
+            } else {
+                throw new Error(json.message || 'Failed to load webhooks');
+            }
+        } catch (err) {
+            Swal.fire({ icon: 'error', title: 'Load Error', text: err.message, ...SWAL_THEME });
+            endpoints = [];
+        }
         renderEndpoints();
     }
 
-    function confirmDelete(i) { deletingIdx = i; document.getElementById('deleteModal').classList.add('open'); }
-    function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); }
-    document.getElementById('deleteConfirm').onclick = () => { endpoints.splice(deletingIdx, 1); localStorage.setItem('ep-webhooks', JSON.stringify(endpoints)); closeDeleteModal(); renderEndpoints(); };
+    // ── Add modal ──────────────────────────────────────────
+    function openAddModal() {
+        document.getElementById('modalTitle').textContent = 'Add Webhook Endpoint';
+        document.getElementById('endpointUrl').value = '';
+        document.querySelectorAll('#eventChecks input').forEach((c, i) => c.checked = i < 2);
+        document.getElementById('addModal').classList.add('open');
+    }
+    function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
 
+    // ── Save (create only — no edit) ───────────────────────
+    async function saveEndpoint() {
+        const url = document.getElementById('endpointUrl').value.trim();
+        if (!url) return Swal.fire({ icon: 'warning', title: 'Missing URL', text: 'Please enter a webhook URL', ...SWAL_THEME });
+        const events = [...document.querySelectorAll('#eventChecks input:checked')].map(c => c.value);
+        if (events.length === 0) return Swal.fire({ icon: 'warning', title: 'No Events', text: 'Select at least one event', ...SWAL_THEME });
+
+        try {
+            const res = await apiFetch('/api/v1/webhooks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, events })
+            });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message || 'Failed to create webhook');
+
+            closeAddModal();
+            await loadWebhooks();
+
+            // Show the signing secret (only revealed once)
+            if (json.data && json.data.secret) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Webhook Created',
+                    html: `<p style="margin-bottom:12px">Save this signing secret — it is <strong>only shown once</strong>:</p><code style="display:block;padding:12px;background:#0a0b10;border-radius:8px;font-size:0.85rem;word-break:break-all;color:#a78bfa">${json.data.secret}</code>`,
+                    ...SWAL_THEME,
+                    confirmButtonColor: '#7c3aed'
+                });
+            }
+        } catch (err) {
+            Swal.fire({ icon: 'error', title: 'Create Error', text: err.message, ...SWAL_THEME });
+        }
+    }
+
+    // ── Delete ─────────────────────────────────────────────
+    function confirmDelete(id) { deletingId = id; document.getElementById('deleteModal').classList.add('open'); }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); }
+    document.getElementById('deleteConfirm').onclick = async () => {
+        try {
+            const res = await apiFetch(`/api/v1/webhooks/${deletingId}`, { method: 'DELETE' });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message || 'Failed to delete webhook');
+            closeDeleteModal();
+            await loadWebhooks();
+        } catch (err) {
+            closeDeleteModal();
+            Swal.fire({ icon: 'error', title: 'Delete Error', text: err.message, ...SWAL_THEME });
+        }
+    };
+
+    // ── Copy payload example ──────────────────────────────
     function copyPayload() {
         const code = document.getElementById('payloadCode').textContent;
         navigator.clipboard.writeText(code).then(() => { const btn = document.querySelector('.wh-copy-btn'); btn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => btn.innerHTML = '<i class="far fa-copy"></i> Copy', 2000); });
     }
 
-    renderEndpoints();
+    // ── One-time migration from localStorage ──────────────
+    async function migrateFromLocalStorage() {
+        const raw = localStorage.getItem('ep-webhooks');
+        if (!raw) return;
+        try {
+            const old = JSON.parse(raw);
+            if (!Array.isArray(old) || old.length === 0) { localStorage.removeItem('ep-webhooks'); return; }
+            for (const ep of old) {
+                await apiFetch('/api/v1/webhooks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: ep.url, events: ep.events || [] })
+                });
+            }
+            localStorage.removeItem('ep-webhooks');
+        } catch (e) {
+            console.warn('Webhook migration from localStorage failed:', e);
+        }
+    }
+
+    // ── Init ──────────────────────────────────────────────
+    (async () => {
+        await migrateFromLocalStorage();
+        await loadWebhooks();
+    })();
     </script>
     <script src="/js/sidebar.js"></script>
 </body>

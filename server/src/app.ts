@@ -196,7 +196,8 @@ const possibleFrontendPaths = [
 ];
 const frontendPath = possibleFrontendPaths.find(p => require('fs').existsSync(p)) || possibleFrontendPaths[0];
 logger.info(`[STATIC] Serving frontend from: ${frontendPath}`);
-app.use(express.static(frontendPath));
+// Enable HTML extensions so /login resolves to login.html
+app.use(express.static(frontendPath, { extensions: ['html'] }));
 
 // Explicit route for the login page to bypass static middleware flakiness
 app.get('/login.html', (req, res) => {
@@ -208,13 +209,22 @@ app.get('/index.html', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
+// Fallback for frontend routes (like SPA behavior) - ONLY for non-API routes
+app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.originalUrl.startsWith('/api/')) {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    } else {
+        next(); // Let the API 404 handler catch it
+    }
+});
+
 // Explicit route for the dashboard page to bypass static middleware flakiness
 app.get('/dashboard.html', (req, res) => {
     res.sendFile(path.join(frontendPath, 'dashboard.html'));
 });
 
 // 404 Handler
-app.all(/(.*)/, (req, res, next) => {
+app.use((req, res, next) => {
     // Root domain → Landing Page
     if (req.originalUrl === '/') {
         return res.sendFile(path.join(frontendPath, 'index.html'));

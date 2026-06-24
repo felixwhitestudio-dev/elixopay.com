@@ -509,7 +509,7 @@
 
         <div class="endpoint">
             <span class="method post">POST</span>
-            <span class="path">/v1/wallet/withdraw</span>
+            <span class="path">/v1/merchant/settlement</span>
         </div>
 
         <h3>Request Parameters</h3>
@@ -535,7 +535,7 @@
         </table>
 
         <div class="code-title">Request Example</div>
-        <pre><code>curl -X POST https://api.elixopay.com/v1/wallet/withdraw \
+        <pre><code>curl -X POST https://api.elixopay.com/v1/merchant/settlement \
   -H "Authorization: Bearer sk_live_xxxx" \
   -H "Content-Type: application/json" \
   -d '{
@@ -547,7 +547,7 @@
   "success": true,
   "transaction": {
     "id": "txn_89012cd",
-    "type": "TRANSFER",
+    "type": "SETTLEMENT",
     "amount": 500.00,
     "fee": 15.00,
     "netAmount": 485.00,

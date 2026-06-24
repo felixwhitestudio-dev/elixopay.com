@@ -10,44 +10,73 @@
         window.location.replace('/login.html');
     };
 
-    apiFetch(API_CONFIG.ENDPOINTS.auth.me)
-        .then(resp => {
-            if (!resp || !resp.ok) throw new Error('Auth check failed');
-            return resp.json();
-        })
-        .then(data => {
-            const user = data && data.data && data.data.user;
-            if (!user) throw new Error('User missing in response');
-            localStorage.setItem('user', JSON.stringify(user));
-
-            if (requiredRole) {
-                if (user.role?.toLowerCase() === 'admin') {
-                    // Admin can access everything
-                } else if (user.role === requiredRole) {
-                    // Exact match
-                } else if (requiredRole === 'user' && ['merchant', 'partner', 'organizer', 'agent'].includes(user.role)) {
-                    // Hierarchy roles can access basic user pages
-                } else {
-                    console.warn('Role mismatch. Required:', requiredRole, 'Got:', user.role);
-                    return redirectLogin();
-                }
+    const showPage = (user) => {
+        if (requiredRole) {
+            if (user.role?.toLowerCase() === 'admin') {
+                // Admin can access everything
+            } else if (user.role === requiredRole) {
+                // Exact match
+            } else if (requiredRole === 'user' && ['merchant', 'partner', 'organizer', 'agent'].includes(user.role)) {
+                // Hierarchy roles can access basic user pages
+            } else {
+                console.warn('Role mismatch. Required:', requiredRole, 'Got:', user.role);
+                return redirectLogin();
             }
+        }
 
-            const nameEl = document.getElementById('user-name');
-            if (nameEl) nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
+        const nameEl = document.getElementById('user-name');
+        if (nameEl) nameEl.textContent = `👋 ${user.name || user.email || 'User'}`;
 
-            // Notify page scripts that auth is ready
-            try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch (_) { }
-        })
-        .catch(err => {
-            console.warn('Auth guard redirecting:', err.message);
-            return redirectLogin();
-        })
-        .finally(() => {
-            // Reveal page content if we didn't redirect
-            // If redirecting, the navigation will replace document soon
-            root.style.visibility = prevVisibility || 'visible';
-        });
+        // Notify page scripts that auth is ready
+        try { window.dispatchEvent(new CustomEvent('auth:ready', { detail: user })); } catch (_) { }
+
+        // Reveal page
+        root.style.visibility = prevVisibility || 'visible';
+    };
+
+    // Try to use cached user from localStorage as fallback
+    const tryLocalFallback = () => {
+        const cached = localStorage.getItem('user');
+        const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+        if (cached && token) {
+            try {
+                const user = JSON.parse(cached);
+                if (user && (user.email || user.name)) {
+                    console.info('Auth guard: Using cached user (backend unreachable)');
+                    showPage(user);
+                    return true;
+                }
+            } catch (_) { /* invalid JSON */ }
+        }
+        return false;
+    };
+
+    // Primary: verify with backend API
+    if (typeof apiFetch === 'function' && typeof API_CONFIG !== 'undefined') {
+        apiFetch(API_CONFIG.ENDPOINTS.auth.me)
+            .then(resp => {
+                if (!resp || !resp.ok) throw new Error('Auth check failed');
+                return resp.json();
+            })
+            .then(data => {
+                const user = data && data.data && data.data.user;
+                if (!user) throw new Error('User missing in response');
+                localStorage.setItem('user', JSON.stringify(user));
+                showPage(user);
+            })
+            .catch(err => {
+                console.warn('Auth guard: Backend unreachable -', err.message);
+                // Fallback to cached localStorage data
+                if (!tryLocalFallback()) {
+                    redirectLogin();
+                }
+            });
+    } else {
+        // apiFetch/API_CONFIG not loaded — try local fallback
+        if (!tryLocalFallback()) {
+            redirectLogin();
+        }
+    }
 })();
 /**
  * security-utils.js
@@ -63,28 +92,47 @@ window.ElixopaySecurity = {
      */
     promptReauth: function (actionDescription = 'perform this sensitive action') {
         return new Promise(async (resolve, reject) => {
-            const titleText = window.ElixopayI18n ? window.ElixopayI18n.t('security.reauth_title') || 'Security Verification' : 'Security Verification';
-            const descText = window.ElixopayI18n
-                ? window.ElixopayI18n.t('security.reauth_desc') || `Please verify your password to ${actionDescription}.`
-                : `Please verify your password to ${actionDescription}.`;
-            const pwdPlaceholder = window.ElixopayI18n ? window.ElixopayI18n.t('auth.password') || 'Password' : 'Password';
-            const btnConfirm = window.ElixopayI18n ? window.ElixopayI18n.t('common.verify') || 'Verify' : 'Verify';
-            const btnCancel = window.ElixopayI18n ? window.ElixopayI18n.t('common.cancel') || 'Cancel' : 'Cancel';
+            let isOAuth = false;
+            try {
+                if (localStorage.getItem('isOAuth') === 'true') {
+                    isOAuth = true;
+                } else {
+                    const userObj = JSON.parse(localStorage.getItem('user'));
+                    if (userObj && userObj.isOAuth) isOAuth = true;
+                }
+            } catch(e) {}
+
+            // Handle missing translation keys by providing a fallback logic
+            const getT = (key, defaultText) => {
+                if (!window.ElixopayI18n) return defaultText;
+                const translated = window.ElixopayI18n.t(key);
+                return translated && translated !== key ? translated : defaultText;
+            };
+
+            const titleText = getT('security.reauth_title', 'Security Verification');
+            const descText = getT('security.reauth_desc', `Please verify your password to ${actionDescription}.`);
+            const pwdPlaceholder = getT('auth.password', 'Password');
+            const btnConfirm = getT('common.verify', 'Verify');
+            const btnConfirmOAuth = getT('common.confirm', 'Confirm');
+            const btnCancel = getT('common.cancel', 'Cancel');
+
+            const htmlContent = isOAuth 
+                ? `<p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Please confirm that you want to ${actionDescription}.</p>`
+                : `<p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">${descText}</p>
+                   <input type="password" id="reauth-password" class="swal2-input" placeholder="${pwdPlaceholder}" style="background: rgba(15, 23, 42, 0.5); border-color: #334155; color: white;">`;
 
             const { value: password, isConfirmed } = await Swal.fire({
                 title: `<span style="color: #f1f5f9;">${titleText}</span>`,
-                html: `
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">${descText}</p>
-                    <input type="password" id="reauth-password" class="swal2-input" placeholder="${pwdPlaceholder}" style="background: rgba(15, 23, 42, 0.5); border-color: #334155; color: white;">
-                `,
+                html: htmlContent,
                 background: '#1e293b',
                 showCancelButton: true,
-                confirmButtonText: btnConfirm,
+                confirmButtonText: isOAuth ? btnConfirmOAuth : btnConfirm,
                 cancelButtonText: btnCancel,
                 confirmButtonColor: '#6366f1', // Indigo primary
                 cancelButtonColor: '#475569',
                 focusConfirm: false,
                 preConfirm: () => {
+                    if (isOAuth) return 'oauth-bypass';
                     const pwd = Swal.getPopup().querySelector('#reauth-password').value;
                     if (!pwd) {
                         Swal.showValidationMessage(`Please enter your password`);
@@ -93,7 +141,11 @@ window.ElixopaySecurity = {
                 }
             });
 
-            if (isConfirmed && password) {
+            if (isConfirmed && (password || isOAuth)) {
+                if (isOAuth) {
+                    return resolve('oauth-bypass');
+                }
+
                 Swal.showLoading();
 
                 try {

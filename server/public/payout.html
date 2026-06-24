@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/css/design-system.css?v=2">
     <script src="/js/api-config.js"></script>
     <script src="/js/i18n.js"></script>
-    <script src="/js/auth-guard.js?v=1.1" data-require-role="user"></script>
+    <script src="/js/auth-guard.js?v=1.2" data-require-role="user"></script>
     <style>
         /* ─── Payment Flow Diagram ─── */
         .st-flow {
@@ -314,62 +314,112 @@
     </div>
     </div>
 
+    <style>
+        /* ─── Settlement History Status Icons ─── */
+        .st-history-icon.status-completed { background: rgba(34,197,94,0.1); color: var(--ep-success); }
+        .st-history-icon.status-pending    { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .st-history-icon.status-processing { background: rgba(59,130,246,0.1); color: var(--ep-blue); }
+        .st-history-icon.status-failed     { background: rgba(239,68,68,0.1);  color: #ef4444; }
+        .st-status-badge {
+            display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 2px 8px;
+            border-radius: var(--ep-radius-full); margin-left: 6px; vertical-align: middle;
+        }
+        .st-status-badge.completed  { background: rgba(34,197,94,0.12); color: #22c55e; }
+        .st-status-badge.pending    { background: rgba(245,158,11,0.12); color: #f59e0b; }
+        .st-status-badge.processing { background: rgba(59,130,246,0.12); color: #3b82f6; }
+        .st-status-badge.failed     { background: rgba(239,68,68,0.12);  color: #ef4444; }
+    </style>
     <script>
-    // Settlement page logic — fetch from API when available
-    (function() {
-        // Load bank info from localStorage (synced from KYC/dashboard)
-        const bankInfo = JSON.parse(localStorage.getItem('ep-bank') || 'null');
-        if (bankInfo) {
-            document.getElementById('stBankName').textContent = bankInfo.bank;
-            document.getElementById('stBankAccount').textContent = bankInfo.number + ' — ' + bankInfo.holder;
-            const badge = document.getElementById('stBankBadge');
-            badge.textContent = 'Verified';
-            badge.classList.remove('not-set');
-            badge.classList.add('verified');
+    // Settlement page logic — live API data
+    (async function initSettlement() {
+        const fmt = (n) => '฿' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // ── 1. Load bank info from API ──
+        try {
+            const bankRes = await apiFetch('/api/v1/users/bank-accounts');
+            const bankData = await bankRes.json();
+            if (bankData.success && bankData.data?.bankAccounts?.length) {
+                const accounts = bankData.data.bankAccounts;
+                const bank = accounts.find(a => a.is_primary) || accounts[0];
+                document.getElementById('stBankName').textContent = bank.bank_name;
+                document.getElementById('stBankAccount').textContent = bank.account_number + ' — ' + bank.account_name;
+                const badge = document.getElementById('stBankBadge');
+                badge.textContent = 'Verified';
+                badge.classList.remove('not-set');
+                badge.classList.add('verified');
+            }
+        } catch (e) {
+            console.error('[Settlement] Failed to load bank info:', e);
+            // Keep default "ยังไม่ได้ตั้งค่า" state
         }
 
-        // In a production system, these would come from the API
-        // For now, show zeros until real bank integration is set up
-        const stats = {
-            totalProcessed: 0,
-            totalFees: 0,
-            netReceived: 0,
-            feeRate: '2.90%'
-        };
+        // ── 2. Load fee stats from API ──
+        try {
+            const statsRes = await apiFetch('/api/v1/settlements/stats');
+            const statsData = await statsRes.json();
+            if (statsData.success && statsData.data?.stats) {
+                const s = statsData.data.stats;
+                document.getElementById('stTotalProcessed').textContent = fmt(s.totalProcessed);
+                document.getElementById('stTotalFees').textContent = fmt(s.totalFees);
+                document.getElementById('stNetReceived').textContent = fmt(s.netReceived);
+                document.getElementById('stFeeRate').textContent = s.feeRate || '2.90%';
+            }
+        } catch (e) {
+            console.error('[Settlement] Failed to load stats:', e);
+            // Keep ฿0.00 defaults already in HTML
+        }
 
-        const fmt = (n) => '฿' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('stTotalProcessed').textContent = fmt(stats.totalProcessed);
-        document.getElementById('stTotalFees').textContent = fmt(stats.totalFees);
-        document.getElementById('stNetReceived').textContent = fmt(stats.netReceived);
-        document.getElementById('stFeeRate').textContent = stats.feeRate;
-
-        // Settlement history — empty for now
-        const list = document.getElementById('stHistoryList');
+        // ── 3. Load settlement history from API ──
+        const list  = document.getElementById('stHistoryList');
         const empty = document.getElementById('stHistoryEmpty');
         const count = document.getElementById('stHistoryCount');
 
-        // Placeholder: when API provides settlement data, render items here
-        const settlements = [];
-        count.textContent = settlements.length + ' รายการ';
-        if (settlements.length === 0) {
+        const statusConfig = {
+            completed:  { icon: 'fa-check',          cls: 'status-completed' },
+            pending:    { icon: 'fa-clock',           cls: 'status-pending' },
+            processing: { icon: 'fa-spinner fa-spin', cls: 'status-processing' },
+            failed:     { icon: 'fa-times',           cls: 'status-failed' }
+        };
+
+        try {
+            const histRes = await apiFetch('/api/v1/settlements');
+            const histData = await histRes.json();
+
+            if (histData.success && histData.data?.settlements?.length) {
+                const settlements = histData.data.settlements;
+                count.textContent = settlements.length + ' รายการ';
+                empty.style.display = 'none';
+
+                list.innerHTML = settlements.map(s => {
+                    const cfg = statusConfig[s.status] || statusConfig.completed;
+                    const dateStr = s.created_at
+                        ? new Date(s.created_at).toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' })
+                        : '';
+                    const badgeLabel = s.status ? s.status.charAt(0).toUpperCase() + s.status.slice(1) : '';
+                    return `
+                    <div class="st-history-item">
+                        <div class="st-history-icon ${cfg.cls}"><i class="fas ${cfg.icon}"></i></div>
+                        <div class="st-history-meta">
+                            <strong>${s.reference_id || s.id}${badgeLabel ? `<span class="st-status-badge ${s.status}">${badgeLabel}</span>` : ''}</strong>
+                            <span>${dateStr}${s.bank_name ? ' · ' + s.bank_name : ''}</span>
+                        </div>
+                        <div class="st-history-amounts">
+                            <span class="st-history-gross">${fmt(s.amount)}</span>
+                            <span class="st-history-fee">Fee: ${fmt(s.fee)}</span>
+                            <span class="st-history-net">Net: ${fmt(s.net_amount)}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            } else {
+                count.textContent = '0 รายการ';
+                empty.style.display = 'block';
+                list.innerHTML = '';
+            }
+        } catch (e) {
+            console.error('[Settlement] Failed to load history:', e);
+            count.textContent = '0 รายการ';
             empty.style.display = 'block';
             list.innerHTML = '';
-        } else {
-            empty.style.display = 'none';
-            list.innerHTML = settlements.map(s => `
-                <div class="st-history-item">
-                    <div class="st-history-icon"><i class="fas fa-check"></i></div>
-                    <div class="st-history-meta">
-                        <strong>${s.description}</strong>
-                        <span>${s.date}</span>
-                    </div>
-                    <div class="st-history-amounts">
-                        <span class="st-history-gross">${fmt(s.gross)}</span>
-                        <span class="st-history-fee">Fee: ${fmt(s.fee)}</span>
-                        <span class="st-history-net">Net: ${fmt(s.net)}</span>
-                    </div>
-                </div>
-            `).join('');
         }
     })();
     </script>

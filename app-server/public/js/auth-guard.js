@@ -94,8 +94,12 @@ window.ElixopaySecurity = {
         return new Promise(async (resolve, reject) => {
             let isOAuth = false;
             try {
-                const userObj = JSON.parse(localStorage.getItem('user'));
-                if (userObj && userObj.isOAuth) isOAuth = true;
+                if (localStorage.getItem('isOAuth') === 'true') {
+                    isOAuth = true;
+                } else {
+                    const userObj = JSON.parse(localStorage.getItem('user'));
+                    if (userObj && userObj.isOAuth) isOAuth = true;
+                }
             } catch(e) {}
 
             // Handle missing translation keys by providing a fallback logic
@@ -137,7 +141,11 @@ window.ElixopaySecurity = {
                 }
             });
 
-            if (isConfirmed && password) {
+            if (isConfirmed && (password || isOAuth)) {
+                if (isOAuth) {
+                    return resolve('oauth-bypass');
+                }
+
                 Swal.showLoading();
 
                 try {
@@ -145,7 +153,7 @@ window.ElixopaySecurity = {
                     const response = await window.apiFetch('/api/v1/auth/verify-password', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ password: isOAuth ? '' : password })
+                        body: JSON.stringify({ password })
                     });
 
                     const result = await response.json();

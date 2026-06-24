@@ -148,6 +148,7 @@
                     if (data.data?.user) {
                         localStorage.setItem('user', JSON.stringify(data.data.user));
                     }
+                    localStorage.setItem('isOAuth', 'true');
                     window.location.href = '/dashboard.html';
                 } else {
                     errorMsg.textContent = data.message || data.error?.message || 'An error occurred. Please try again.';

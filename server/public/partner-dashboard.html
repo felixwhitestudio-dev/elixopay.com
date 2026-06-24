@@ -316,7 +316,7 @@
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" id="nav-payouts" onclick="switchView('payouts')">
-                    <i class="fas fa-money-bill-transfer"></i> <span data-i18n="partner.menu.payouts">การโอนเงิน</span>
+                    <i class="fas fa-university"></i> <span data-i18n="partner.menu.settlements">การ Settlement</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -350,8 +350,8 @@
         <div id="view-overview" class="view-section active">
             <header>
                 <h1 data-i18n="partner.overview.title">ภาพรวมพาร์ทเนอร์</h1>
-                <button class="btn btn-primary" onclick="openWithdrawModal()"
-                    data-i18n="partner.overview.withdraw">โอนเงินเข้าบัญชี</button>
+                <button class="btn btn-primary" onclick="openSettlementModal()"
+                    data-i18n="partner.overview.settlement">ขอ Settlement</button>
             </header>
 
             <div class="stats-grid">
@@ -383,7 +383,7 @@
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 1rem;" data-i18n="partner.payouts.title">การโอนเงินล่าสุด</h3>
+            <h3 style="margin-bottom: 1rem;" data-i18n="partner.payouts.title">การ Settlementล่าสุด</h3>
             <div class="table-container">
                 <table>
                     <thead>
@@ -435,7 +435,7 @@
         <!-- View: Payouts -->
         <div id="view-payouts" class="view-section">
             <header>
-                <h1 data-i18n="partner.menu.payouts">ประวัติการโอนเงิน</h1>
+                <h1 data-i18n="partner.menu.settlements">ประวัติการ Settlement</h1>
             </header>
             <div class="table-container">
                 <table>
@@ -551,7 +551,7 @@
             </header>
             <div class="ref-section">
                 <h3 style="margin-top: 0;">ข้อมูลบัญชีรับเงิน (ค่าเริ่มต้น)</h3>
-                <form onsubmit="event.preventDefault(); alert('บันทึกข้อมูลเรียบร้อย');">
+                <form onsubmit="event.preventDefault(); Swal.fire({title:'สำเร็จ',text:'บันทึกข้อมูลเรียบร้อย',icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});">
                     <div style="margin-bottom: 1rem;">
                         <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">ธนาคาร</label>
                         <select class="ref-input" style="width: 100%;">
@@ -576,36 +576,36 @@
 
 
     <!-- Transfer Modal -->
-    <div id="withdrawModal"
+    <div id="settlementModal"
         style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
         <div
             style="background: white; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px; position: relative;">
             <button onclick="closeModal()"
                 style="position: absolute; top: 1rem; right: 1rem; border: none; background: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
-            <h2 style="margin-top: 0;" data-i18n="partner.withdraw.title">โอนเงินเข้าบัญชี</h2>
-            <div id="withdrawAlert"
+            <h2 style="margin-top: 0;" data-i18n="partner.settlement.title">ขอ Settlement</h2>
+            <div id="settlementAlert"
                 style="display: none; padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
             </div>
 
-            <form id="withdrawForm" onsubmit="submitWithdrawal(event)">
+            <form id="settlementForm" onsubmit="submitSettlement(event)">
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
-                        data-i18n="partner.withdraw.amount">จำนวนเงิน</label>
-                    <input type="number" id="withdrawAmount" step="0.01" min="1" required class="ref-input"
+                        data-i18n="partner.settlement.amount">จำนวนเงิน</label>
+                    <input type="number" id="settlementAmount" step="0.01" min="1" required class="ref-input"
                         style="width: 100%;">
                     <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
-                        <span data-i18n="partner.withdraw.available">ยอดที่โอนได้:</span> <span
+                        <span data-i18n="partner.settlement.available">ยอดที่ขอได้:</span> <span
                             id="modalAvailable">0.00</span>
                     </div>
                 </div>
 
-                <h4 style="margin-bottom: 0.5rem;" data-i18n="partner.withdraw.bankDetails">รายละเอียดบัญชีรับเงิน</h4>
+                <h4 style="margin-bottom: 0.5rem;" data-i18n="partner.settlement.bankDetails">รายละเอียดบัญชีรับเงิน</h4>
 
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
-                        data-i18n="partner.withdraw.bankName">ธนาคาร</label>
-                    <select id="withdrawBank" required class="ref-input" style="width: 100%;">
-                        <option value="" data-i18n="partner.withdraw.selectBank">-- เลือกธนาคาร --</option>
+                        data-i18n="partner.settlement.bankName">ธนาคาร</label>
+                    <select id="settlementBank" required class="ref-input" style="width: 100%;">
+                        <option value="" data-i18n="partner.settlement.selectBank">-- เลือกธนาคาร --</option>
                         <option value="KBANK">Kasikornbank</option>
                         <option value="SCB">SCB</option>
                         <option value="BBL">Bangkok Bank</option>
@@ -618,20 +618,20 @@
 
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
-                        data-i18n="partner.withdraw.accountNo">เลขที่บัญชี</label>
-                    <input type="text" id="withdrawAccountNo" required class="ref-input" style="width: 100%;"
+                        data-i18n="partner.settlement.accountNo">เลขที่บัญชี</label>
+                    <input type="text" id="settlementAccountNo" required class="ref-input" style="width: 100%;"
                         placeholder="xxx-x-xxxxx-x">
                 </div>
 
                 <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;"
-                        data-i18n="partner.withdraw.accountName">ชื่อบัญชี</label>
-                    <input type="text" id="withdrawAccountName" required class="ref-input" style="width: 100%;"
+                        data-i18n="partner.settlement.accountName">ชื่อบัญชี</label>
+                    <input type="text" id="settlementAccountName" required class="ref-input" style="width: 100%;"
                         placeholder="Name Surname">
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%;" id="withdrawSubmitBtn"
-                    data-i18n="partner.withdraw.submit">ยืนยันการโอนเงิน</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="settlementSubmitBtn"
+                    data-i18n="partner.settlement.submit">ยืนยันการ Settlement</button>
             </form>
         </div>
     </div>
@@ -688,7 +688,7 @@
             copyText.select();
             copyText.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(copyText.value);
-            alert("Copied: " + copyText.value);
+            Swal.fire({title:'สำเร็จ',text:'Copied: ' + copyText.value,icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
         }
 
         // Tab Switching
@@ -755,39 +755,39 @@
         }
 
         // Modal Functions
-        function openWithdrawModal() {
-            document.getElementById('withdrawModal').style.display = 'flex';
-            document.getElementById('withdrawAmount').value = currentBalance > 0 ? currentBalance : '';
+        function openSettlementModal() {
+            document.getElementById('settlementModal').style.display = 'flex';
+            document.getElementById('settlementAmount').value = currentBalance > 0 ? currentBalance : '';
             document.getElementById('modalAvailable').textContent = balanceCurrency + ' ' + currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
-            document.getElementById('withdrawAlert').style.display = 'none';
+            document.getElementById('settlementAlert').style.display = 'none';
         }
 
         function closeModal() {
-            document.getElementById('withdrawModal').style.display = 'none';
+            document.getElementById('settlementModal').style.display = 'none';
         }
 
         // Close modal on outside click
         window.onclick = function (event) {
-            const modal = document.getElementById('withdrawModal');
+            const modal = document.getElementById('settlementModal');
             if (event.target == modal) {
                 closeModal();
             }
         }
 
-        async function submitWithdrawal(e) {
+        async function submitSettlement(e) {
             e.preventDefault();
-            const btn = document.getElementById('withdrawSubmitBtn');
+            const btn = document.getElementById('settlementSubmitBtn');
             const originalText = btn.textContent;
             btn.disabled = true;
             btn.textContent = 'Processing...';
 
-            const alertBox = document.getElementById('withdrawAlert');
+            const alertBox = document.getElementById('settlementAlert');
             alertBox.style.display = 'none';
 
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const bankName = document.getElementById('withdrawBank').value;
-            const accountNumber = document.getElementById('withdrawAccountNo').value;
-            const accountName = document.getElementById('withdrawAccountName').value;
+            const amount = parseFloat(document.getElementById('settlementAmount').value);
+            const bankName = document.getElementById('settlementBank').value;
+            const accountNumber = document.getElementById('settlementAccountNo').value;
+            const accountName = document.getElementById('settlementAccountName').value;
 
             try {
                 const res = await window.apiFetch('/api/v1/partners/withdraw', {
@@ -799,7 +799,7 @@
 
                 if (data.success) {
                     currentBalance = data.data.newBalance; // Update local balance
-                    alert('Transfer requested successfully!');
+                    Swal.fire({title:'สำเร็จ',text:'Transfer requested successfully!',icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     closeModal();
                     // Refresh Dashboard Data
                     loadDashboardData();
@@ -1011,14 +1011,14 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    alert('Upload successful');
+                    Swal.fire({title:'สำเร็จ',text:'Upload successful',icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     document.getElementById('uploadDocForm').reset();
                     loadVerificationStatus();
                 } else {
-                    alert('Error: ' + data.message);
+                    Swal.fire({title:'ผิดพลาด',text:'Error: ' + data.message,icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                 }
             } catch (e) {
-                alert('Upload failed');
+                Swal.fire({title:'ผิดพลาด',text:'Upload failed',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             } finally {
                 btn.textContent = 'อัปโหลด (Upload)';
                 btn.disabled = false;
@@ -1026,7 +1026,8 @@
         }
 
         async function submitVerificationRequest() {
-            if (!confirm('ยืนยันส่งขออนุมัติ? (Confirm Submit?)')) return;
+            const confirmResult = await Swal.fire({title:'ยืนยัน',text:'ยืนยันส่งขออนุมัติ? (Confirm Submit?)',icon:'question',showCancelButton:true,confirmButtonText:'ยืนยัน',cancelButtonText:'ยกเลิก',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+            if (!confirmResult.isConfirmed) return;
             const btn = document.getElementById('btn-submit-verification');
             btn.disabled = true;
             try {
@@ -1035,14 +1036,14 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    alert('ส่งคำขอเรียบร้อยแล้ว');
+                    Swal.fire({title:'สำเร็จ',text:'ส่งคำขอเรียบร้อยแล้ว',icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     loadVerificationStatus();
                 } else {
-                    alert('Error: ' + data.message);
+                    Swal.fire({title:'ผิดพลาด',text:'Error: ' + data.message,icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     btn.disabled = false;
                 }
             } catch (e) {
-                alert('Connection error');
+                Swal.fire({title:'ผิดพลาด',text:'Connection error',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                 btn.disabled = false;
             }
         }
@@ -1059,7 +1060,7 @@
                 const res = await window.apiFetch('/api/v1/auth/me');
                 const data = await res.json();
                 if (!data.success) {
-                    alert('Error fetching user permissions');
+                    Swal.fire({title:'ผิดพลาด',text:'Error fetching user permissions',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     return;
                 }
                 const myRole = data.data.user.role; // partner, organizer, agent
@@ -1085,7 +1086,7 @@
 
                 const allowed = roles[myRole] || [];
                 if (allowed.length === 0) {
-                    alert('You do not have permission to add members.');
+                    Swal.fire({title:'ผิดพลาด',text:'You do not have permission to add members.',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     return;
                 }
 
@@ -1103,7 +1104,7 @@
 
             } catch (e) {
                 console.error(e);
-                alert('Connection error');
+                Swal.fire({title:'ผิดพลาด',text:'Connection error',icon:'error',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
             }
         }
 
@@ -1132,7 +1133,7 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    alert('Member created successfully!');
+                    Swal.fire({title:'สำเร็จ',text:'Member created successfully!',icon:'success',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
                     closeAddMemberModal();
                     loadDashboardData(); // Refresh table
                 } else {

@@ -5,178 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="billing.title">Billing & Subscriptions | Elixopay</title>
-    <!-- Tailwind CSS (compiled static - no CDN dependency) -->
-    <link rel="stylesheet" href="/css/tailwind.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="/css/utilities.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/design-system.css?v=2">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/auth-guard.js?v=1.2" data-require-role="user"></script>
 </head>
 
-<body class="bg-slate-900 text-slate-200 font-sans min-h-screen flex selection:bg-purple-500/30">
-
-    <!-- Dark Glassmorphism Navigation -->
-    <nav
-        class="bg-slate-900/70 backdrop-blur-lg border-b border-slate-700 fixed w-full z-40 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="https://www.elixopay.com/" class="flex items-center group">
-                        <div
-                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl mr-2 shadow-lg group-hover:scale-110 transition-transform">
-                            E</div>
-                        <span
-                            class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-300">Elixopay</span>
-                    </a>
-                    <div class="hidden md:flex ml-8 space-x-1">
-                        <a href="/dashboard.html"
-                            class="px-3 py-1 bg-slate-800 text-slate-400 hover:text-purple-300 text-xs font-semibold rounded-full border border-transparent hover:border-purple-800 flex items-center transition">
-                            <i class="fas fa-layer-group mr-1.5"></i> <span data-i18n="nav.dashboard">Dashboard</span>
-                        </a>
-                        <span
-                            class="ml-1 px-3 py-1 bg-purple-900/50 text-purple-300 text-xs font-semibold rounded-full border border-purple-800 flex items-center">
-                            <i class="fas fa-sync-alt mr-1.5"></i> <span data-i18n="nav.billing">Billing</span>
-                        </span>
-                        <a href="/partner-portal.html"
-                            class="ml-1 px-3 py-1 bg-slate-800 text-slate-400 hover:text-purple-300 text-xs font-semibold rounded-full border border-transparent hover:border-purple-800 flex items-center transition">
-                            <i class="fas fa-handshake mr-1.5"></i> Partner Portal
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Side Actions -->
-            <div class="flex items-center space-x-4">
-                <!-- Language Switcher -->
-                <button onclick="changeLanguage('th')"
-                    class="text-sm font-medium text-slate-400 hover:text-purple-300 transition">TH</button>
-                <span class="text-slate-600">|</span>
-                <button onclick="changeLanguage('en')"
-                    class="text-sm font-medium text-slate-400 hover:text-purple-300 transition">EN</button>
-                <span class="text-slate-600">|</span>
-                <button onclick="changeLanguage('zh')"
-                    class="text-sm font-medium text-slate-400 hover:text-purple-300 transition">ZH</button>
-
-                <div class="hidden md:flex items-center mr-4 ml-4">
-                    <!-- Notification Center -->
-                    <div class="relative group mr-4">
-                        <button
-                            class="p-2 text-slate-400 hover:text-purple-300 transition-colors rounded-full hover:bg-purple-900/20 relative cursor-pointer focus:outline-none">
-                            <i class="fas fa-bell text-lg"></i>
-                            <span id="notification-dot"
-                                class="hidden absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-slate-900 shadow-sm animate-pulse"></span>
-                        </button>
-                        <!-- Notification Dropdown -->
-                        <div
-                            class="absolute right-0 mt-2 w-80 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right scale-95 group-hover:scale-100">
-                            <div class="px-4 py-3 border-b border-slate-700 flex justify-between items-center">
-                                <h3 class="font-bold text-slate-200" data-i18n="nav.notifications">Notifications
-                                </h3>
-                                <span class="text-xs text-purple-400 cursor-pointer hover:text-purple-300"
-                                    onclick="markAllNotificationsRead()" data-i18n="nav.notifications_mark_read">Mark
-                                    all as read</span>
-                            </div>
-                            <div id="notification-list" class="max-h-64 overflow-y-auto">
-                                <!-- Empty State -->
-                                <div class="px-4 py-8 text-center bg-slate-800">
-                                    <i class="fas fa-bell-slash text-slate-600 text-3xl mb-3"></i>
-                                    <p class="text-sm text-slate-400">No new notifications</p>
-                                </div>
-                            </div>
-                            <div class="px-4 py-2 border-t border-slate-700 text-center">
-                                <span class="text-xs text-purple-400 cursor-pointer hover:text-purple-300 font-medium"
-                                    onclick="viewAllNotifications()" data-i18n="nav.notifications_view_all">View All
-                                    Notifications</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-right mr-3">
-                        <p class="text-sm font-semibold text-slate-100" id="user-name">Loading...</p>
-                        <p class="text-xs text-slate-400" id="user-email">...</p>
-                    </div>
-                    <div
-                        class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-900 to-blue-900 border border-slate-700 shadow-sm flex items-center justify-center text-purple-300 font-bold text-lg">
-                        <span id="user-initial">U</span>
-                    </div>
-                </div>
-
-                <button onclick="logout()"
-                    class="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-full hover:bg-red-900/20"
-                    title="Sign Out">
-                    <i class="fas fa-sign-out-alt text-lg"></i>
-                </button>
-                <div class="-mr-2 flex md:hidden ml-2">
-                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
-                        class="bg-slate-800 inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-purple-300 hover:bg-purple-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                        <span class="sr-only">Open main menu</span>
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        </div>
-
-        <!-- Mobile menu, show/hide based on menu state. -->
-        <div class="hidden md:hidden bg-slate-900/90 backdrop-blur-xl border-t border-slate-700 absolute w-full left-0 shadow-lg"
-            id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="/"
-                    class="text-slate-300 hover:bg-purple-900/20 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium transition">
-                    <i class="fas fa-home mr-2 w-5 text-center"></i> <span data-i18n="nav.home">Home</span>
-                </a>
-                <a href="/dashboard.html"
-                    class="text-slate-300 hover:bg-purple-900/20 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium transition">
-                    <i class="fas fa-layer-group mr-2 w-5 text-center"></i> <span
-                        data-i18n="nav.dashboard">Dashboard</span>
-                </a>
-                <a href="/billing.html"
-                    class="text-slate-300 hover:bg-purple-900/20 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium transition">
-                    <i class="fas fa-sync-alt mr-2 w-5 text-center"></i> <span data-i18n="nav.billing">Billing</span>
-                </a>
-                <a href="/partner-portal.html"
-                    class="text-slate-300 hover:bg-purple-900/20 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium transition">
-                    <i class="fas fa-handshake mr-2 w-5 text-center"></i> Partner Portal
-                </a>
-                <!-- User Info Mobile -->
-                <div class="border-t border-slate-700 pt-3 mt-3 pb-3">
-                    <div class="flex items-center px-3 mb-3">
-                        <div
-                            class="w-8 h-8 rounded-full bg-purple-900/50 flex items-center justify-center text-purple-300 font-bold mr-3">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div>
-                            <div class="text-sm font-medium text-slate-100" id="mobile-user-name">User</div>
-                            <div class="text-xs text-slate-400" id="mobile-user-email">email@example.com</div>
-                        </div>
-                    </div>
-                    <button onclick="logout()"
-                        class="w-full text-left text-red-400 hover:bg-red-900/20 block px-3 py-2 rounded-md text-base font-medium transition">
-                        <i class="fas fa-sign-out-alt mr-2 w-5 text-center"></i> Sign out
-                    </button>
-                </div>
-            </div>
-            <script>
-                // Sync mobile user info
-                document.addEventListener('DOMContentLoaded', () => {
-                    const userStr = localStorage.getItem('user');
-                    if (userStr) {
-                        try {
-                            const user = JSON.parse(userStr);
-                            document.getElementById('mobile-user-name').textContent = user.name || 'User';
-                            document.getElementById('mobile-user-email').textContent = user.email || '';
-                        } catch (e) { }
-                    }
-                });
-            </script>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<body class="ep-body">
+    <div class="ep-layout">
+    <div class="ep-main-wrap">
+    <main class="ep-content">
 
         <!-- Main Dashboard Content -->
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
+        <div>
             <!-- Header Section -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                 <div>
@@ -219,7 +62,7 @@
                         </div>
                     </div>
                     <div class="flex items-center text-xs text-green-400">
-                        <i class="fas fa-arrow-up mr-1"></i> <span>MRR Contributor</span>
+                        <i class="fas fa-arrow-up mr-1"></i> <span data-i18n="billing.stats.mrr_contributor">MRR Contributor</span>
                     </div>
                 </div>
 
@@ -241,7 +84,7 @@
                         </div>
                     </div>
                     <div class="flex items-center text-xs text-slate-400">
-                        <span>Projected this month</span>
+                        <span data-i18n="billing.stats.projected">Projected this month</span>
                     </div>
                 </div>
 
@@ -263,7 +106,7 @@
                         </div>
                     </div>
                     <div class="flex items-center text-xs text-slate-400">
-                        <a href="#products-section" class="hover:text-emerald-400 transition-colors">View Catalog <i
+                        <a href="#products-section" class="hover:text-emerald-400 transition-colors"><span data-i18n="billing.stats.view_catalog">View Catalog</span> <i
                                 class="fas fa-arrow-right ml-1"></i></a>
                     </div>
                 </div>
@@ -305,7 +148,7 @@
                             <tr>
                                 <td colspan="4" class="px-6 py-12 text-center text-slate-500">
                                     <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
-                                    <p>Loading catalog...</p>
+                                    <p data-i18n="billing.products.loading">Loading catalog...</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -350,8 +193,6 @@
                 </div>
             </div>
 
-        </main>
-    </div>
 
     <!-- Modals -->
     <!-- Add Product Modal -->
@@ -364,7 +205,7 @@
             <div
                 class="inline-block align-bottom bg-slate-800 border border-slate-700 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
                 <div class="px-6 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80">
-                    <h3 class="text-lg font-bold text-slate-100">Create New Product</h3>
+                    <h3 class="text-lg font-bold text-slate-100" data-i18n="billing.modal.create_product">Create New Product</h3>
                     <button type="button"
                         class="text-slate-400 hover:text-slate-200 transition-colors focus:outline-none"
                         onclick="closeProductModal()"><i class="fas fa-times text-xl"></i></button>
@@ -372,13 +213,13 @@
                 <form id="create-product-form" onsubmit="submitCreateProduct(event)">
                     <div class="px-6 py-6 space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Product Name</label>
+                            <label class="block text-sm font-medium text-slate-300 mb-1" data-i18n="billing.modal.product_name">Product Name</label>
                             <input type="text" id="prod-name" required
                                 class="focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-slate-600 bg-slate-900/50 text-slate-100 rounded-xl py-2.5 px-3 outline-none transition-colors border"
                                 placeholder="e.g. Premium SaaS Plan">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1">Description (Optional)</label>
+                            <label class="block text-sm font-medium text-slate-300 mb-1" data-i18n="billing.modal.product_desc">Description (Optional)</label>
                             <textarea id="prod-desc" rows="3"
                                 class="focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-slate-600 bg-slate-900/50 text-slate-100 rounded-xl py-2.5 px-3 outline-none transition-colors border"
                                 placeholder="Marketing description of the product..."></textarea>
@@ -386,9 +227,9 @@
                     </div>
                     <div class="px-6 py-4 border-t border-slate-700/50 bg-slate-800/80 sm:flex sm:flex-row-reverse">
                         <button type="submit" id="btn-submit-prod"
-                            class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-base font-medium text-white hover:from-purple-500 hover:to-blue-500 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-all">Submit</button>
+                            class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-base font-medium text-white hover:from-purple-500 hover:to-blue-500 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-all" data-i18n="billing.modal.submit">Submit</button>
                         <button type="button" onclick="closeProductModal()"
-                            class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-600 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-slate-200 hover:bg-slate-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all">Cancel</button>
+                            class="mt-3 w-full inline-flex justify-center rounded-xl border border-slate-600 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-slate-200 hover:bg-slate-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all" data-i18n="billing.modal.cancel">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -396,9 +237,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/api-config.js"></script>
-    <script src="js/i18n.js"></script>
-    <script src="js/auth.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/ui-enhancements.js?v=6"></script>
 
@@ -685,6 +524,11 @@
             });
         }
     </script>
+        </div><!-- close content div -->
+    </main>
+    </div><!-- /ep-main-wrap -->
+    </div><!-- /ep-layout -->
+    <script src="/js/sidebar.js"></script>
 </body>
 
 </html>

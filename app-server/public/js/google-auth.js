@@ -79,6 +79,7 @@ function handleGoogleCallback(accessToken) {
 				if (result.data.user) {
 					localStorage.setItem('user', JSON.stringify(result.data.user));
 				}
+                localStorage.setItem('isOAuth', 'true');
 			}
 
 			const role = result.data?.user?.role || 'user';

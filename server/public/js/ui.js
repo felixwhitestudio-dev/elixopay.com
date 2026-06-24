@@ -1,19 +1,5 @@
-// Global mobile menu toggle (used by login.html, signup.html via onclick)
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobileMenu');
-    if (menu) {
-        menu.classList.toggle('hidden');
-        // Also toggle flex display
-        if (!menu.classList.contains('hidden')) {
-            menu.style.display = 'flex';
-        } else {
-            menu.style.display = 'none';
-        }
-    }
-}
-
 // UI utilities: theme toggle, reveal animations, skeleton hide, mobile menu
-// v1.1.2 - Added global toggleMobileMenu function
+// v1.1.1 - Cleanup debug logs; keep multi-language theme toggle
 (function () {
   const STORAGE_KEY = 'elixopay-theme';
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;

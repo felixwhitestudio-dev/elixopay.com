@@ -110,6 +110,7 @@ window.handleLogin = async function (event) {
                     if (twoFaData.data && twoFaData.data.user) {
                         localStorage.setItem('user', JSON.stringify(twoFaData.data.user));
                     }
+                    localStorage.removeItem('isOAuth');
                     window.location.href = '/dashboard.html';
                 } else {
                     errorMsg.textContent = twoFaData.message || 'รหัส 2FA ไม่ถูกต้อง';
@@ -128,6 +129,7 @@ window.handleLogin = async function (event) {
                 if (user) {
                     localStorage.setItem('user', JSON.stringify(user));
                 }
+                localStorage.removeItem('isOAuth');
 
                 // Redirect
                 const urlParams = new URLSearchParams(window.location.search);

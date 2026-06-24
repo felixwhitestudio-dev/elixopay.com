@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/css/design-system.css?v=2">
   <script src="/js/api-config.js"></script>
-  <script src="/js/auth-guard.js?v=1.1" data-require-role="admin"></script>
+  <script src="/js/auth-guard.js?v=1.2" data-require-role="admin"></script>
   <style>
     /* Dark mode overrides for legacy admin classes */
     .sidebar { display: none; }
@@ -67,8 +67,8 @@
           <span class="stat-card-subtitle" data-i18n="admin.stat.verifiedAccounts">Verified Accounts</span>
         </div>
         <div class="stat-card" style="border-left: 4px solid #3b82f6;">
-          <span class="stat-card-title" data-i18n="admin.stat.totalWithdrawals">Total Transfers</span>
-          <span class="stat-card-value" id="stat-withdrawals">--</span>
+          <span class="stat-card-title" data-i18n="admin.stat.totalSettlements">Total Settlements</span>
+          <span class="stat-card-value" id="stat-settlements">--</span>
           <span class="stat-card-subtitle" data-i18n="admin.stat.completedVolume">Completed Volume (THB)</span>
         </div>
       </div>
@@ -187,7 +187,7 @@
           document.getElementById('stat-pending-kyc').textContent = stats.pendingKyc.toLocaleString();
           // Show total users/merchants. The API returns stats.totalUsers
           document.getElementById('stat-active-merchants').textContent = stats.totalUsers || '--';
-          document.getElementById('stat-withdrawals').textContent = '฿ ' + stats.totalWithdrawVolume.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          document.getElementById('stat-settlements').textContent = '฿ ' + (stats.totalSettlementVolume || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
           // Render Chart
           const chartData = data.data.chartData.userSignupsByDate;
@@ -266,7 +266,7 @@
                         <td>${user.firstName || ''} ${user.lastName || ''}</td>
                         <td>${user.email}</td>
                         <td><span class="status-badge status-pending">${user.kycStatus}</span></td>
-                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;" class="btn btn-primary" data-i18n="transfer.step2.review">Review</button></td>
+                        <td><button onclick="openReview('${user.id}')" style="padding:0.5rem 1rem; cursor:pointer;" class="btn btn-primary" data-i18n="admin.common.review">Review</button></td>
                     `;
           tbody.appendChild(tr);
         });
@@ -372,7 +372,8 @@
         return;
       }
 
-      if (!confirm(`Are you sure you want to ${action} this user's KYC?`)) return;
+      const confirmResult = await Swal.fire({title:'ยืนยัน',text:`Are you sure you want to ${action} this user's KYC?`,icon:'warning',showCancelButton:true,confirmButtonText:'Yes',cancelButtonText:'Cancel',confirmButtonColor:'#6366f1',background:'#1a1a2e',color:'#e2e8f0'});
+      if (!confirmResult.isConfirmed) return;
 
       try {
         const token = localStorage.getItem('token');
