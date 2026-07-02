@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Webhooks — Elixopay</title>
+    <meta name="description" content="Manage Elixopay webhook endpoints to receive real-time payment notifications.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/webhooks.css">
+</head>
+
+<body class="zd-body">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="zd-sidebar" id="sidebar">
+        <div class="zd-sidebar-top">
+            <a href="index.html" class="zd-logo">
+                <div class="zd-logo-icon">Z</div>
+                <span class="zd-logo-text">Elixopay</span>
+            </a>
+        </div>
+
+        <nav class="zd-sidebar-nav">
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.menu">MENU</span>
+                <a href="dashboard.html" class="zd-nav-item">
+                    <i class="fas fa-th-large"></i><span data-i18n="nav.dashboard">Dashboard</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-exchange-alt"></i><span data-i18n="nav.transactions">Transactions</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-university"></i><span data-i18n="nav.payout">Payout</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-file-invoice"></i><span data-i18n="nav.billing">Billing</span>
+                </a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.developer">DEVELOPER</span>
+                <a href="api-keys.html" class="zd-nav-item">
+                    <i class="fas fa-key"></i><span data-i18n="nav.api_keys">API Keys</span>
+                </a>
+                <a href="docs.html" class="zd-nav-item">
+                    <i class="fas fa-book"></i><span data-i18n="nav.documentation">Documentation</span>
+                </a>
+                <a href="webhooks.html" class="zd-nav-item active">
+                    <i class="fas fa-plug"></i><span data-i18n="nav.webhooks">Webhooks</span>
+                </a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.settings_label">SETTINGS</span>
+                <a href="security.html" class="zd-nav-item">
+                    <i class="fas fa-shield-alt"></i><span data-i18n="nav.security">Security</span>
+                </a>
+                <a href="settings.html" class="zd-nav-item">
+                    <i class="fas fa-cog"></i><span data-i18n="nav.settings">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="zd-sidebar-bottom">
+            <div class="zd-sidebar-user">
+                <div class="zd-user-avatar" id="userInitial">M</div>
+                <div class="zd-user-meta">
+                    <span class="zd-user-name" id="userName">Merchant</span>
+                    <span class="zd-user-email" id="userEmail">Elixopay Account</span>
+                </div>
+                <button class="zd-btn-icon" onclick="dashLogout()" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN AREA ═══ -->
+    <div class="zd-main-wrap">
+
+        <header class="zd-topbar">
+            <button class="zd-mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="zd-topbar-left">
+                <h1><i class="fas fa-plug"></i> <span data-i18n="wh.title">Webhooks</span></h1>
+            </div>
+            <div class="zd-topbar-right">
+                <div class="zd-lang-switch">
+                    <button onclick="changeLanguage('th')" class="active" title="ภาษาไทย">🇹🇭</button>
+                    <button onclick="changeLanguage('en')" title="English">🇺🇸</button>
+                    <button onclick="changeLanguage('zh')" title="中文">🇨🇳</button>
+                </div>
+                <button class="zd-btn-icon"><i class="fas fa-bell"></i></button>
+            </div>
+        </header>
+
+        <main class="zd-content">
+
+            <!-- Intro -->
+            <div class="wh-intro zd-rv">
+                <div class="wh-intro-icon"><i class="fas fa-bolt"></i></div>
+                <div>
+                    <h2>Webhook Endpoints</h2>
+                    <p data-i18n="wh.subtitle">ตั้งค่า URL เพื่อให้ Elixopay ส่ง Event แจ้งเตือนแบบ Real-time
+                        เมื่อมีรายการธุรกรรมเกิดขึ้น</p>
+                </div>
+                <button class="wh-btn primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> <span data-i18n="wh.addEndpoint">Add Endpoint</span>
+                </button>
+            </div>
+
+            <!-- ═══ ENDPOINTS LIST ═══ -->
+            <section class="wh-section zd-rv">
+                <div class="wh-section-header">
+                    <h2 data-i18n="wh.yourEndpoints">Your Endpoints</h2>
+                    <span class="wh-count" id="endpointCount">0 endpoints</span>
+                </div>
+
+                <div id="endpointList" class="wh-endpoint-list">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div id="emptyState" class="wh-empty">
+                    <i class="fas fa-plug"></i>
+                    <strong data-i18n="wh.noEndpoints">No Endpoints Yet</strong>
+                    <p data-i18n="wh.noEndpointsDesc">กด "Add Endpoint" เพื่อเพิ่ม URL รับแจ้งเตือน</p>
+                </div>
+            </section>
+
+            <!-- ═══ EVENTS REFERENCE ═══ -->
+            <section class="wh-section zd-rv">
+                <div class="wh-section-header">
+                    <h2><i class="fas fa-list-alt"></i> Events ที่รองรับ</h2>
+                </div>
+
+                <div class="wh-events-grid">
+                    <div class="wh-event">
+                        <div class="wh-event-head">
+                            <code>payment.success</code>
+                            <span class="wh-event-tag green">Common</span>
+                        </div>
+                        <p>เมื่อลูกค้าชำระเงินสำเร็จ</p>
+                    </div>
+                    <div class="wh-event">
+                        <div class="wh-event-head">
+                            <code>payment.failed</code>
+                            <span class="wh-event-tag red">Important</span>
+                        </div>
+                        <p>เมื่อการชำระเงินล้มเหลวหรือถูกปฏิเสธ</p>
+                    </div>
+                    <div class="wh-event">
+                        <div class="wh-event-head">
+                            <code>payment.refund</code>
+                            <span class="wh-event-tag amber">Finance</span>
+                        </div>
+                        <p>เมื่อมีการคืนเงินให้ลูกค้า</p>
+                    </div>
+                    <div class="wh-event">
+                        <div class="wh-event-head">
+                            <code>payout.completed</code>
+                            <span class="wh-event-tag green">Finance</span>
+                        </div>
+                        <p>เมื่อถอนเงินเข้าบัญชีธนาคารสำเร็จ</p>
+                    </div>
+                    <div class="wh-event">
+                        <div class="wh-event-head">
+                            <code>payout.failed</code>
+                            <span class="wh-event-tag red">Finance</span>
+                        </div>
+                        <p>เมื่อการถอนเงินล้มเหลว</p>
+                    </div>
+                    <div class="wh-event">
+                        <div class="wh-event-head">
+                            <code>charge.dispute</code>
+                            <span class="wh-event-tag amber">Risk</span>
+                        </div>
+                        <p>เมื่อลูกค้าเปิดข้อพิพาท (Chargeback)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ PAYLOAD EXAMPLE ═══ -->
+            <section class="wh-section zd-rv">
+                <div class="wh-section-header">
+                    <h2><i class="fas fa-code"></i> Webhook Payload Example</h2>
+                </div>
+
+                <div class="wh-code-block">
+                    <div class="wh-code-header">
+                        <span>POST https://yoursite.com/webhook</span>
+                        <button onclick="copyPayload()" class="wh-copy-code"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code id="payloadCode">{
+  "id": "evt_ZNX8f3k2m1a9b7c4",
+  "type": "payment.success",
+  "created": "2026-03-03T11:50:00Z",
+  "data": {
+    "payment_id": "pay_a1b2c3d4e5f6",
+    "amount": 1500.00,
+    "currency": "THB",
+    "status": "succeeded",
+    "description": "Order #1234",
+    "customer_email": "customer@example.com",
+    "metadata": {
+      "order_id": "ORD-1234"
+    }
+  },
+  "signature": "whsec_sha256_..."
+}</code></pre>
+                </div>
+
+                <div class="wh-verify-block">
+                    <div class="wh-verify-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Verify Webhook Signature</strong>
+                            <p>ตรวจสอบ signature ทุกครั้งเพื่อป้องกันการปลอมแปลง</p>
+                        </div>
+                    </div>
+                    <div class="wh-code-block small">
+                        <div class="wh-code-header">
+                            <span>Node.js — Verification</span>
+                        </div>
+                        <pre><code>const crypto = require('crypto');
+
+function verifyWebhook(payload, signature, secret) {
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from('whsec_sha256_' + expected)
+  );
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="zd-footer">
+            <span>© 2026 Elixopay</span>
+            <div class="zd-footer-links">
+                <a href="developer.html">Docs</a>
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ═══ ADD / EDIT ENDPOINT MODAL ═══ -->
+    <div class="wh-modal-overlay" id="addModal">
+        <div class="wh-modal">
+            <div class="wh-modal-header">
+                <h3 id="modalTitle">Add Webhook Endpoint</h3>
+                <button onclick="closeAddModal()" class="wh-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="wh-form">
+                <div class="wh-field">
+                    <label for="endpointUrl">Endpoint URL</label>
+                    <input type="url" id="endpointUrl" placeholder="https://yoursite.com/webhook">
+                </div>
+                <div class="wh-field">
+                    <label for="endpointDesc">Description (optional)</label>
+                    <input type="text" id="endpointDesc" placeholder="e.g. Production server webhook">
+                </div>
+                <div class="wh-field">
+                    <label>Events to listen</label>
+                    <div class="wh-event-checks" id="eventChecks">
+                        <label class="wh-check"><input type="checkbox" value="payment.success"
+                                checked><span>payment.success</span></label>
+                        <label class="wh-check"><input type="checkbox" value="payment.failed"
+                                checked><span>payment.failed</span></label>
+                        <label class="wh-check"><input type="checkbox"
+                                value="payment.refund"><span>payment.refund</span></label>
+                        <label class="wh-check"><input type="checkbox"
+                                value="payout.completed"><span>payout.completed</span></label>
+                        <label class="wh-check"><input type="checkbox"
+                                value="payout.failed"><span>payout.failed</span></label>
+                        <label class="wh-check"><input type="checkbox"
+                                value="charge.dispute"><span>charge.dispute</span></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wh-modal-actions">
+                <button class="wh-btn outline" onclick="closeAddModal()">Cancel</button>
+                <button class="wh-btn primary" id="modalSave" onclick="saveEndpoint()">
+                    <i class="fas fa-plus"></i> Add Endpoint
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm -->
+    <div class="wh-modal-overlay" id="deleteModal">
+        <div class="wh-modal small">
+            <div class="wh-modal-header">
+                <h3>Delete Endpoint</h3>
+                <button onclick="closeDeleteModal()" class="wh-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="wh-modal-desc">ลบ endpoint นี้? จะไม่ได้รับ webhook event อีกต่อไป</p>
+            <div class="wh-modal-actions">
+                <button class="wh-btn outline" onclick="closeDeleteModal()">Cancel</button>
+                <button class="wh-btn danger" id="deleteConfirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/webhooks.js"></script>
+</body>
+
+</html>

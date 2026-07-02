@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Payout — Elixopay</title>
+    <meta name="description" content="Manage your payouts and withdrawals.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/payout.css">
+</head>
+
+<body class="zd-body">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="zd-sidebar" id="sidebar">
+        <div class="zd-sidebar-top">
+            <a href="index.html" class="zd-logo">
+                <div class="zd-logo-icon">Z</div><span class="zd-logo-text">Elixopay</span>
+            </a>
+        </div>
+        <nav class="zd-sidebar-nav">
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.menu">MENU</span>
+                <a href="dashboard.html" class="zd-nav-item"><i class="fas fa-th-large"></i><span
+                        data-i18n="nav.dashboard">Dashboard</span></a>
+                <a href="transactions.html" class="zd-nav-item"><i class="fas fa-exchange-alt"></i><span
+                        data-i18n="nav.transactions">Transactions</span></a>
+                <a href="payout.html" class="zd-nav-item active"><i class="fas fa-university"></i><span
+                        data-i18n="nav.payout">Payout</span></a>
+                <a href="billing.html" class="zd-nav-item"><i class="fas fa-file-invoice"></i><span
+                        data-i18n="nav.billing">Billing</span></a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.developer">DEVELOPER</span>
+                <a href="api-keys.html" class="zd-nav-item"><i class="fas fa-key"></i><span data-i18n="nav.api_keys">API
+                        Keys</span></a>
+                <a href="docs.html" class="zd-nav-item"><i class="fas fa-book"></i><span
+                        data-i18n="nav.documentation">Documentation</span></a>
+                <a href="webhooks.html" class="zd-nav-item"><i class="fas fa-plug"></i><span
+                        data-i18n="nav.webhooks">Webhooks</span></a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.settings_label">SETTINGS</span>
+                <a href="security.html" class="zd-nav-item"><i class="fas fa-shield-alt"></i><span
+                        data-i18n="nav.security">Security</span></a>
+                <a href="settings.html" class="zd-nav-item"><i class="fas fa-cog"></i><span
+                        data-i18n="nav.settings">Settings</span></a>
+            </div>
+        </nav>
+        <div class="zd-sidebar-bottom">
+            <div class="zd-sidebar-user">
+                <div class="zd-user-avatar" id="userInitial">M</div>
+                <div class="zd-user-meta"><span class="zd-user-name" id="userName">Merchant</span><span
+                        class="zd-user-email" id="userEmail">Elixopay Account</span></div>
+                <button class="zd-btn-icon" onclick="dashLogout()" title="Sign Out"><i
+                        class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="zd-main-wrap">
+        <header class="zd-topbar">
+            <button class="zd-mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i
+                    class="fas fa-bars"></i></button>
+            <div class="zd-topbar-left">
+                <h1><i class="fas fa-university"></i> <span data-i18n="payout.title">Payout</span></h1>
+            </div>
+            <div class="zd-topbar-right">
+                <div class="zd-lang-switch"><button onclick="changeLanguage('th')" class="active"
+                        title="ภาษาไทย">🇹🇭</button><button onclick="changeLanguage('en')"
+                        title="English">🇺🇸</button><button onclick="changeLanguage('zh')" title="中文">🇨🇳</button>
+                </div>
+                <button class="zd-btn-icon"><i class="fas fa-bell"></i></button>
+            </div>
+        </header>
+
+        <main class="zd-content">
+
+            <!-- BALANCE OVERVIEW -->
+            <div class="po-balance zd-rv">
+                <div class="po-balance-main">
+                    <div class="po-balance-icon"><i class="fas fa-wallet"></i></div>
+                    <div>
+                        <span class="po-balance-label" data-i18n="payout.balance">ยอดเงินคงเหลือ</span>
+                        <strong class="po-balance-amount" id="balanceAmount">฿0.00</strong>
+                        <span class="po-balance-sub" data-i18n="payout.readyToWithdraw">พร้อมถอน</span>
+                    </div>
+                    <button class="po-withdraw-btn" onclick="openWithdraw()"><i class="fas fa-paper-plane"></i>
+                        <span data-i18n="payout.withdrawBtn">ถอนเงิน</span></button>
+                </div>
+                <div class="po-balance-stats">
+                    <div class="po-stat">
+                        <span class="po-stat-label" data-i18n="payout.totalWithdrawn">ถอนแล้วทั้งหมด</span>
+                        <strong class="po-stat-value" id="totalWithdrawn">฿0.00</strong>
+                    </div>
+                    <div class="po-stat">
+                        <span class="po-stat-label" data-i18n="payout.pendingLabel">รอดำเนินการ</span>
+                        <strong class="po-stat-value amber" id="pendingAmount">฿0.00</strong>
+                    </div>
+                    <div class="po-stat">
+                        <span class="po-stat-label" data-i18n="payout.lastPayout">ถอนครั้งล่าสุด</span>
+                        <strong class="po-stat-value" id="lastPayout">—</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BANK ACCOUNT -->
+            <div class="po-section zd-rv">
+                <div class="po-section-header">
+                    <h2><i class="fas fa-building-columns"></i> <span data-i18n="payout.bankAccount">บัญชีธนาคาร</span>
+                    </h2>
+                    <button class="po-btn outline sm" onclick="editBank()"><i class="fas fa-pen"></i> <span
+                            data-i18n="payout.editBtn">แก้ไข</span></button>
+                </div>
+                <div class="po-bank-card" id="bankCard">
+                    <div class="po-bank-logo"><i class="fas fa-university"></i></div>
+                    <div class="po-bank-info">
+                        <strong id="bankName" data-i18n="payout.notConfigured">ยังไม่ได้ตั้งค่า</strong>
+                        <span id="bankAccount" data-i18n="payout.addBank">กรุณาเพิ่มบัญชีธนาคาร</span>
+                    </div>
+                    <span class="po-bank-badge" id="bankBadge"
+                        data-i18n="payout.notConfiguredBadge">ไม่ได้ตั้งค่า</span>
+                </div>
+            </div>
+
+            <!-- PAYOUT SCHEDULE -->
+            <div class="po-section zd-rv">
+                <div class="po-section-header">
+                    <h2><i class="fas fa-calendar-alt"></i> <span data-i18n="payout.schedule">ตารางการถอนเงิน</span>
+                    </h2>
+                </div>
+                <div class="po-schedule-grid">
+                    <div class="po-schedule-item">
+                        <div class="po-schedule-icon"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <strong data-i18n="payout.autoSchedule">รอบถอนอัตโนมัติ</strong>
+                            <span data-i18n="payout.autoScheduleDesc">ทุกวันจันทร์ (T+2 วันทำการ)</span>
+                        </div>
+                    </div>
+                    <div class="po-schedule-item">
+                        <div class="po-schedule-icon blue"><i class="fas fa-bolt"></i></div>
+                        <div>
+                            <strong data-i18n="payout.instantWithdraw">ถอนเงินทันที</strong>
+                            <span data-i18n="payout.instantDesc">รอยืนยันค่าธรรมเนียม</span>
+                        </div>
+                    </div>
+                    <div class="po-schedule-item">
+                        <div class="po-schedule-icon green"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <strong data-i18n="payout.minWithdraw">ขั้นต่ำถอน</strong>
+                            <span>฿100.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYOUT HISTORY -->
+            <div class="po-section zd-rv">
+                <div class="po-section-header">
+                    <h2><i class="fas fa-history"></i> <span data-i18n="payout.history">ประวัติการถอนเงิน</span></h2>
+                    <span class="po-count" id="payoutCount">0 รายการ</span>
+                </div>
+                <div id="payoutList">
+                    <!-- Rendered by JS -->
+                </div>
+                <div class="po-empty" id="payoutEmpty">
+                    <i class="fas fa-inbox"></i>
+                    <strong data-i18n="payout.noHistory">ยังไม่มีประวัติการถอนเงิน</strong>
+                    <p data-i18n="payout.noHistoryDesc">เมื่อถอนเงินครั้งแรก ประวัติจะแสดงที่นี่</p>
+                </div>
+            </div>
+
+        </main>
+        <footer class="zd-footer"><span>© 2026 Elixopay</span>
+            <div class="zd-footer-links"><a href="docs.html">Docs</a><a href="about.html">About</a><a
+                    href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+        </footer>
+    </div>
+
+    <!-- WITHDRAW MODAL -->
+    <div class="po-modal-overlay" id="withdrawModal">
+        <div class="po-modal">
+            <div class="po-modal-header">
+                <h3><i class="fas fa-paper-plane"></i> ถอนเงิน</h3>
+                <button class="po-modal-close" onclick="closeWithdraw()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="po-form">
+                <div class="po-field">
+                    <label>จำนวนเงินที่ต้องการถอน (บาท)</label>
+                    <div class="po-amount-input">
+                        <span class="po-currency">฿</span>
+                        <input type="number" id="withdrawAmount" placeholder="0.00" step="0.01" min="100">
+                    </div>
+                    <span class="po-field-hint">ยอดคงเหลือ: <strong id="modalBalance">฿0.00</strong> | ขั้นต่ำ:
+                        ฿100</span>
+                </div>
+                <div class="po-field">
+                    <label>ถอนไปยัง</label>
+                    <div class="po-withdraw-dest" id="modalDest">
+                        <i class="fas fa-university"></i>
+                        <span id="modalBankName">กรุณาตั้งค่าบัญชีธนาคาร</span>
+                    </div>
+                </div>
+                <div class="po-field">
+                    <label>ประเภทการถอน</label>
+                    <div class="po-type-options">
+                        <label class="po-type-option">
+                            <input type="radio" name="withdrawType" value="normal" checked>
+                            <div class="po-type-content">
+                                <strong>ปกติ (T+2)</strong>
+                                <span>ฟรี — 2 วันทำการ</span>
+                            </div>
+                        </label>
+                        <label class="po-type-option">
+                            <input type="radio" name="withdrawType" value="instant">
+                            <div class="po-type-content">
+                                <strong>ทันที <span class="po-instant-badge">INSTANT</span></strong>
+                                <span>มีค่าธรรมเนียม (รอยืนยัน)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="po-modal-actions">
+                <button class="po-btn outline" onclick="closeWithdraw()">ยกเลิก</button>
+                <button class="po-btn primary" onclick="submitWithdraw()"><i class="fas fa-paper-plane"></i>
+                    ยืนยันถอนเงิน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BANK EDIT MODAL -->
+    <div class="po-modal-overlay" id="bankModal">
+        <div class="po-modal">
+            <div class="po-modal-header">
+                <h3><i class="fas fa-university"></i> ตั้งค่าบัญชีธนาคาร</h3>
+                <button class="po-modal-close" onclick="closeBankModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="po-form">
+                <div class="po-field">
+                    <label>ธนาคาร</label>
+                    <select id="bankSelect">
+                        <option value="">เลือกธนาคาร</option>
+                        <option value="กสิกรไทย (KBANK)">กสิกรไทย (KBANK)</option>
+                        <option value="ไทยพาณิชย์ (SCB)">ไทยพาณิชย์ (SCB)</option>
+                        <option value="กรุงเทพ (BBL)">กรุงเทพ (BBL)</option>
+                        <option value="กรุงไทย (KTB)">กรุงไทย (KTB)</option>
+                        <option value="ทหารไทยธนชาต (TTB)">ทหารไทยธนชาต (TTB)</option>
+                        <option value="กรุงศรีอยุธยา (BAY)">กรุงศรีอยุธยา (BAY)</option>
+                    </select>
+                </div>
+                <div class="po-field">
+                    <label>เลขที่บัญชี</label>
+                    <input type="text" id="bankNumber" placeholder="xxx-x-xxxxx-x" maxlength="15">
+                </div>
+                <div class="po-field">
+                    <label>ชื่อบัญชี</label>
+                    <input type="text" id="bankHolder" placeholder="ชื่อ-นามสกุล">
+                </div>
+            </div>
+            <div class="po-modal-actions">
+                <button class="po-btn outline" onclick="closeBankModal()">ยกเลิก</button>
+                <button class="po-btn primary" onclick="saveBank()"><i class="fas fa-save"></i> บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/payout.js"></script>
+</body>
+
+</html>

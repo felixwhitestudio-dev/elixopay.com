@@ -1,0 +1,654 @@
+/* ═══════════════════════════════════════════════════════
+   Elixopay Payout Page Styles
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── BALANCE OVERVIEW ─── */
+.po-balance {
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.po-balance-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--z-border);
+    margin-bottom: 1rem;
+}
+
+.po-balance-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+    display: grid;
+    place-items: center;
+    color: var(--z-blue);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.po-balance-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--z-text3);
+    margin-bottom: 0.1rem;
+}
+
+.po-balance-amount {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--z-white);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.2;
+}
+
+.po-balance-sub {
+    font-size: 0.65rem;
+    color: var(--z-green);
+    font-weight: 600;
+}
+
+.po-withdraw-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 8px;
+    background: var(--z-blue);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.po-withdraw-btn:hover {
+    background: #2563eb;
+}
+
+.po-balance-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.po-stat-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--z-text3);
+    margin-bottom: 0.1rem;
+}
+
+.po-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--z-white);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.po-stat-value.amber {
+    color: var(--z-amber);
+}
+
+/* ─── SECTIONS ─── */
+.po-section {
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.po-section:hover {
+    border-color: var(--z-border-hover);
+}
+
+.po-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+}
+
+.po-section-header h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--z-white);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.po-section-header h2 i {
+    color: var(--z-blue);
+    font-size: 0.85rem;
+}
+
+.po-count {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--z-text3);
+    padding: 0.15rem 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+}
+
+/* ─── BANK CARD ─── */
+.po-bank-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 8px;
+}
+
+.po-bank-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
+    background: rgba(59, 130, 246, 0.1);
+    display: grid;
+    place-items: center;
+    color: var(--z-blue);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.po-bank-info {
+    flex: 1;
+}
+
+.po-bank-info strong {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--z-white);
+    margin-bottom: 0.1rem;
+}
+
+.po-bank-info span {
+    font-size: 0.72rem;
+    color: var(--z-text3);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.po-bank-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.po-bank-badge.verified {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--z-green);
+}
+
+.po-bank-badge {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--z-amber);
+}
+
+/* ─── SCHEDULE ─── */
+.po-schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
+}
+
+.po-schedule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.85rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+}
+
+.po-schedule-item:hover {
+    border-color: var(--z-border-hover);
+}
+
+.po-schedule-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background: rgba(139, 92, 246, 0.1);
+    display: grid;
+    place-items: center;
+    color: var(--z-purple);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.po-schedule-icon.blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--z-blue);
+}
+
+.po-schedule-icon.green {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--z-green);
+}
+
+.po-schedule-item strong {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--z-white);
+    margin-bottom: 0.1rem;
+}
+
+.po-schedule-item span {
+    font-size: 0.68rem;
+    color: var(--z-text3);
+}
+
+/* ─── PAYOUT LIST ─── */
+.po-payout-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.po-payout-item:last-child {
+    border-bottom: none;
+}
+
+.po-payout-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+.po-payout-icon.completed {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--z-green);
+}
+
+.po-payout-icon.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--z-amber);
+}
+
+.po-payout-icon.failed {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--z-red);
+}
+
+.po-payout-info {
+    flex: 1;
+}
+
+.po-payout-info strong {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--z-white);
+}
+
+.po-payout-info span {
+    font-size: 0.68rem;
+    color: var(--z-text3);
+}
+
+.po-payout-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--z-white);
+    text-align: right;
+}
+
+.po-payout-status {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.po-payout-status.completed {
+    color: var(--z-green);
+}
+
+.po-payout-status.pending {
+    color: var(--z-amber);
+}
+
+.po-payout-status.failed {
+    color: var(--z-red);
+}
+
+/* Empty state */
+.po-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--z-text3);
+}
+
+.po-empty i {
+    font-size: 1.5rem;
+    opacity: 0.3;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.po-empty strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--z-text2);
+    margin-bottom: 0.2rem;
+}
+
+.po-empty p {
+    font-size: 0.72rem;
+    margin: 0;
+}
+
+/* ─── MODAL ─── */
+.po-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: none;
+    place-items: center;
+}
+
+.po-modal-overlay.show {
+    display: grid;
+}
+
+.po-modal {
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 480px;
+    width: 92%;
+    animation: poSlide 0.2s ease;
+}
+
+@keyframes poSlide {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+.po-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.15rem;
+}
+
+.po-modal-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--z-white);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.po-modal-header h3 i {
+    color: var(--z-blue);
+}
+
+.po-modal-close {
+    background: none;
+    border: none;
+    color: var(--z-text3);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.po-modal-close:hover {
+    color: var(--z-text);
+}
+
+.po-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+}
+
+/* ─── FORM ─── */
+.po-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.po-field label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--z-text2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+}
+
+.po-field input,
+.po-field select {
+    width: 100%;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 6px;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--z-text);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.po-field input:focus,
+.po-field select:focus {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.06);
+}
+
+.po-field input::placeholder {
+    color: var(--z-text3);
+}
+
+.po-amount-input {
+    position: relative;
+}
+
+.po-currency {
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--z-text3);
+}
+
+.po-amount-input input {
+    padding-left: 1.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.po-field-hint {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--z-text3);
+    margin-top: 0.2rem;
+}
+
+.po-field-hint strong {
+    color: var(--z-green);
+}
+
+.po-withdraw-dest {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--z-text2);
+}
+
+.po-withdraw-dest i {
+    color: var(--z-blue);
+}
+
+/* Type options */
+.po-type-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.po-type-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.75rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.po-type-option:hover {
+    border-color: var(--z-border-hover);
+}
+
+.po-type-option:has(input:checked) {
+    border-color: rgba(59, 130, 246, 0.4);
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.po-type-option input {
+    accent-color: var(--z-blue);
+}
+
+.po-type-content strong {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--z-white);
+}
+
+.po-type-content span {
+    font-size: 0.68rem;
+    color: var(--z-text3);
+}
+
+.po-instant-badge {
+    font-size: 0.55rem;
+    font-weight: 800;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--z-blue);
+    vertical-align: middle;
+}
+
+/* ─── BUTTONS ─── */
+.po-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.12s;
+}
+
+.po-btn.primary {
+    background: var(--z-blue);
+    color: white;
+    border-color: var(--z-blue);
+}
+
+.po-btn.primary:hover {
+    background: #2563eb;
+}
+
+.po-btn.outline {
+    background: transparent;
+    color: var(--z-text2);
+    border-color: var(--z-border);
+}
+
+.po-btn.outline:hover {
+    border-color: var(--z-border-hover);
+    color: var(--z-text);
+}
+
+.po-btn.sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.72rem;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+    .po-balance-main {
+        flex-wrap: wrap;
+    }
+
+    .po-withdraw-btn {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .po-balance-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .po-schedule-grid {
+        grid-template-columns: 1fr;
+    }
+}

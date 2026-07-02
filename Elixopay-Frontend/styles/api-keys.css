@@ -1,0 +1,488 @@
+/* ═══════════════════════════════════════════════════════
+   Elixopay API Keys Page Styles
+   Extends dashboard.css
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── INTRO ─── */
+.ak-intro {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 10px;
+    padding: 1.15rem 1.35rem;
+    margin-bottom: 1.25rem;
+}
+
+.ak-intro-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(59, 130, 246, 0.1);
+    display: grid;
+    place-items: center;
+    color: var(--z-blue);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.ak-intro h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--z-white);
+    margin-bottom: 0.15rem;
+}
+
+.ak-intro p {
+    font-size: 0.75rem;
+    color: var(--z-text3);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ─── SECTIONS ─── */
+.ak-section {
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 10px;
+    padding: 1.35rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.ak-section:hover {
+    border-color: var(--z-border-hover);
+}
+
+.ak-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.ak-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ak-section-title h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--z-white);
+}
+
+.ak-section-title h2 i {
+    color: var(--z-blue);
+    margin-right: 0.2rem;
+}
+
+.ak-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ak-dot.green {
+    background: var(--z-green);
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+}
+
+.ak-dot.amber {
+    background: var(--z-amber);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.ak-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+}
+
+.ak-tag.green {
+    color: var(--z-green);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.ak-tag.amber {
+    color: var(--z-amber);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+/* ─── KEY BLOCK ─── */
+.ak-key-block {
+    margin-bottom: 1.15rem;
+}
+
+.ak-key-block:last-child {
+    margin-bottom: 0;
+}
+
+.ak-key-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-bottom: 0.5rem;
+}
+
+.ak-key-label>i {
+    color: var(--z-text3);
+    font-size: 0.8rem;
+    margin-top: 0.15rem;
+}
+
+.ak-key-label strong {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--z-white);
+    margin-bottom: 0.05rem;
+}
+
+.ak-key-label span {
+    font-size: 0.7rem;
+    color: var(--z-text3);
+}
+
+.ak-key-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 7px;
+}
+
+.ak-key-row code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--z-text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: all;
+    letter-spacing: 0.01em;
+}
+
+.ak-key-row code.masked {
+    color: var(--z-text3);
+    letter-spacing: 0.15em;
+}
+
+.ak-copy,
+.ak-toggle {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 1px solid var(--z-border);
+    border-radius: 5px;
+    color: var(--z-text3);
+    cursor: pointer;
+    font-size: 0.72rem;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.ak-copy:hover {
+    color: var(--z-blue);
+    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(59, 130, 246, 0.06);
+}
+
+.ak-toggle:hover {
+    color: var(--z-amber);
+    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(245, 158, 11, 0.06);
+}
+
+/* Warning */
+.ak-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.12);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    color: var(--z-red);
+}
+
+.ak-warning i {
+    flex-shrink: 0;
+}
+
+/* ─── BUTTONS ─── */
+.ak-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+
+.ak-btn.primary {
+    background: var(--z-blue);
+    color: white;
+    border-color: var(--z-blue);
+}
+
+.ak-btn.primary:hover {
+    background: #2563eb;
+}
+
+.ak-btn.outline {
+    background: transparent;
+    color: var(--z-text2);
+    border-color: var(--z-border);
+}
+
+.ak-btn.outline:hover {
+    border-color: var(--z-border-hover);
+    color: var(--z-text);
+}
+
+.ak-btn.danger {
+    background: var(--z-red);
+    color: white;
+    border-color: var(--z-red);
+}
+
+.ak-btn.danger:hover {
+    background: #dc2626;
+}
+
+/* ─── QUICK START GUIDE ─── */
+.ak-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.ak-step {
+    display: flex;
+    gap: 0.55rem;
+    padding: 0.85rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+}
+
+.ak-step:hover {
+    border-color: var(--z-border-hover);
+}
+
+.ak-step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--z-blue);
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.ak-step-body strong {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--z-white);
+    margin-bottom: 0.1rem;
+}
+
+.ak-step-body p {
+    font-size: 0.68rem;
+    color: var(--z-text3);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ─── CODE BLOCK ─── */
+.ak-code-block {
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+
+.ak-code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55rem 0.85rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--z-border);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--z-text2);
+}
+
+.ak-code-header i {
+    color: var(--z-blue);
+    margin-right: 0.25rem;
+}
+
+.ak-copy-code {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    background: transparent;
+    border: 1px solid var(--z-border);
+    color: var(--z-text3);
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.12s;
+}
+
+.ak-copy-code:hover {
+    border-color: var(--z-border-hover);
+    color: var(--z-text);
+}
+
+.ak-code-block pre {
+    padding: 1rem;
+    margin: 0;
+    overflow-x: auto;
+}
+
+.ak-code-block code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--z-text);
+    line-height: 1.65;
+}
+
+/* Guide footer */
+.ak-guide-footer {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ─── MODAL (reuse settings pattern) ─── */
+.st-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: none;
+    place-items: center;
+}
+
+.st-modal-overlay.show {
+    display: grid;
+}
+
+.st-modal {
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 420px;
+    width: 90%;
+    animation: modalSlide 0.2s ease;
+}
+
+@keyframes modalSlide {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+.st-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.st-modal-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--z-white);
+}
+
+.st-modal-close {
+    background: none;
+    border: none;
+    color: var(--z-text3);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    transition: color 0.12s;
+}
+
+.st-modal-close:hover {
+    color: var(--z-text);
+}
+
+.st-modal-desc {
+    font-size: 0.82rem;
+    color: var(--z-text2);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+.st-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+    .ak-steps {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ak-key-row {
+        flex-wrap: wrap;
+    }
+
+    .ak-key-row code {
+        width: 100%;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ak-steps {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Dashboard — Elixopay</title>
+    <meta name="description"
+        content="Elixopay Merchant Dashboard — manage payments, view analytics, and control your account.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="zd-body">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="zd-sidebar" id="sidebar">
+        <div class="zd-sidebar-top">
+            <a href="index.html" class="zd-logo">
+                <div class="zd-logo-icon">Z</div>
+                <span class="zd-logo-text">Elixopay</span>
+            </a>
+        </div>
+
+        <nav class="zd-sidebar-nav">
+            <div class="zd-nav-group">
+                <span class="zd-nav-label">MENU</span>
+                <a href="dashboard.html" class="zd-nav-item active">
+                    <i class="fas fa-th-large"></i>
+                    <span data-i18n="nav.dashboard">Dashboard</span>
+                </a>
+                <a href="transactions.html" class="zd-nav-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span data-i18n="dashboard.recent_activity">Transactions</span>
+                </a>
+                <a href="payout.html" class="zd-nav-item">
+                    <i class="fas fa-university"></i>
+                    <span data-i18n="dashboard.actions.payout">Payout</span>
+                </a>
+                <a href="billing.html" class="zd-nav-item">
+                    <i class="fas fa-file-invoice"></i>
+                    <span data-i18n="nav.billing">Billing</span>
+                </a>
+            </div>
+
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="dashboard.merchant.title">DEVELOPER</span>
+                <a href="api-keys.html" class="zd-nav-item">
+                    <i class="fas fa-key"></i>
+                    <span data-i18n="dashboard.merchant.api">API Keys</span>
+                </a>
+                <a href="docs.html" class="zd-nav-item">
+                    <i class="fas fa-book"></i>
+                    <span data-i18n="dashboard.merchant.docs">Documentation</span>
+                </a>
+                <a href="webhooks.html" class="zd-nav-item">
+                    <i class="fas fa-plug"></i>
+                    <span>Webhooks</span>
+                </a>
+            </div>
+
+            <div class="zd-nav-group">
+                <span class="zd-nav-label">SETTINGS</span>
+                <a href="security.html" class="zd-nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-i18n="dashboard.merchant.security">Security</span>
+                </a>
+                <a href="settings.html" class="zd-nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="zd-sidebar-bottom">
+            <div class="zd-sidebar-user">
+                <div class="zd-user-avatar" id="userInitial">M</div>
+                <div class="zd-user-meta">
+                    <span class="zd-user-name" id="userName">Merchant</span>
+                    <span class="zd-user-email" id="userEmail">Elixopay Account</span>
+                </div>
+                <button class="zd-btn-icon" onclick="dashLogout()" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN AREA ═══ -->
+    <div class="zd-main-wrap">
+
+        <!-- Top bar -->
+        <header class="zd-topbar">
+            <button class="zd-mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="zd-topbar-left">
+                <h1 data-i18n="dashboard.welcome">Welcome back! 👋</h1>
+            </div>
+            <div class="zd-topbar-right">
+                <div class="zd-lang-switch">
+                    <button onclick="changeLanguage('th')" class="active" title="ภาษาไทย">🇹🇭</button>
+                    <button onclick="changeLanguage('en')" title="English">🇺🇸</button>
+                    <button onclick="changeLanguage('zh')" title="中文">🇨🇳</button>
+                </div>
+                <button class="zd-btn-icon">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="zd-content">
+
+            <!-- Row 1: Stats cards -->
+            <div class="zd-stats-row zd-rv">
+                <div class="zd-stat-card primary">
+                    <div class="zd-stat-top">
+                        <span class="zd-stat-label" data-i18n="dashboard.totalRevenue">Total Revenue</span>
+                        <div class="zd-stat-icon blue"><i class="fas fa-wallet"></i></div>
+                    </div>
+                    <div class="zd-stat-value" id="walletBalance">฿0.00</div>
+                    <div class="zd-stat-sub">THB</div>
+                </div>
+                <div class="zd-stat-card">
+                    <div class="zd-stat-top">
+                        <span class="zd-stat-label" data-i18n="dashboard.stats.success_rate">Success Rate</span>
+                        <div class="zd-stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                    <div class="zd-stat-value" id="statsSuccessRate">—</div>
+                    <div class="zd-stat-sub" data-i18n="dashboard.stats.success_rate">Success Rate</div>
+                </div>
+                <div class="zd-stat-card">
+                    <div class="zd-stat-top">
+                        <span class="zd-stat-label" data-i18n="dashboard.stats.txns">Transactions</span>
+                        <div class="zd-stat-icon amber"><i class="fas fa-receipt"></i></div>
+                    </div>
+                    <div class="zd-stat-value" id="statsTxns">—</div>
+                    <div class="zd-stat-sub" data-i18n="dashboard.stats.txns">Total</div>
+                </div>
+                <div class="zd-stat-card">
+                    <div class="zd-stat-top">
+                        <span class="zd-stat-label" data-i18n="dashboard.stats.customers">Customers</span>
+                        <div class="zd-stat-icon purple"><i class="fas fa-users"></i></div>
+                    </div>
+                    <div class="zd-stat-value" id="statsCustomers">—</div>
+                    <div class="zd-stat-sub" data-i18n="dashboard.stats.customers">Active</div>
+                </div>
+            </div>
+
+            <!-- Row 2: Chart + Account -->
+            <div class="zd-row-2 zd-rv">
+                <!-- Revenue Chart -->
+                <div class="zd-card zd-chart-card">
+                    <div class="zd-card-header">
+                        <h2 data-i18n="dashboard.revenue_overview">Revenue Overview</h2>
+                        <select id="chartDateFilter" onchange="updateChartFilter()" class="zd-select">
+                            <option value="7" data-i18n="dashboard.filter.7days">Last 7 Days</option>
+                            <option value="30" data-i18n="dashboard.filter.30days">Last 30 Days</option>
+                            <option value="365" data-i18n="dashboard.filter.year">This Year</option>
+                        </select>
+                    </div>
+                    <div class="zd-chart-wrap">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Account Overview -->
+                <div class="zd-card zd-account-card">
+                    <div class="zd-card-header">
+                        <h2 data-i18n="dashboard.merchantAccount">Merchant Account</h2>
+                        <span class="zd-badge green">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </span>
+                    </div>
+
+                    <!-- Merchant ID -->
+                    <div class="zd-info-block">
+                        <span class="zd-info-label" data-i18n="dashboard.wallet.address">Merchant ID</span>
+                        <div class="zd-id-row">
+                            <code id="merchantId">—</code>
+                            <button onclick="copyMerchantId()" class="zd-copy-btn" title="Copy">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="zd-info-block">
+                        <span class="zd-info-label" data-i18n="dashboard.quick_actions">Quick Actions</span>
+                        <div class="zd-quick-grid">
+                            <a href="javascript:void(0)" class="zd-quick-btn" onclick="comingSoon(event)">
+                                <i class="fas fa-arrow-up"></i>
+                                <span data-i18n="dashboard.actions.payout">Payout</span>
+                            </a>
+                            <a href="javascript:void(0)" class="zd-quick-btn" onclick="comingSoon(event)">
+                                <i class="fas fa-university"></i>
+                                <span data-i18n="modal.manage_bank">Bank</span>
+                            </a>
+                            <a href="javascript:void(0)" class="zd-quick-btn" onclick="comingSoon(event)">
+                                <i class="fas fa-key"></i>
+                                <span>API</span>
+                            </a>
+                            <a href="security.html" class="zd-quick-btn">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Security</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Uptime -->
+                    <div class="zd-uptime">
+                        <div class="zd-uptime-dots">
+                            <span class="dot green"></span><span class="dot green"></span><span
+                                class="dot green"></span>
+                            <span class="dot green"></span><span class="dot green"></span><span
+                                class="dot green"></span>
+                            <span class="dot green"></span><span class="dot green"></span><span
+                                class="dot green"></span>
+                            <span class="dot green"></span><span class="dot green"></span><span
+                                class="dot green"></span>
+                            <span class="dot green"></span><span class="dot green"></span>
+                        </div>
+                        <div class="zd-uptime-info">
+                            <span class="zd-uptime-pct">100%</span>
+                            <span class="zd-uptime-label" data-i18n="dashboard.stats.uptime">uptime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Transactions -->
+            <div class="zd-card zd-rv">
+                <div class="zd-card-header">
+                    <div class="zd-header-left">
+                        <h2 data-i18n="dashboard.recent_activity">Recent Activity</h2>
+                        <button class="zd-chip-btn">
+                            <i class="fas fa-file-export"></i>
+                            <span data-i18n="dashboard.actions.export_csv">Export CSV</span>
+                        </button>
+                    </div>
+                    <a href="javascript:void(0)" class="zd-link" onclick="comingSoon(event)">
+                        <span data-i18n="dashboard.view_all">View All</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="zd-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="dashboard.activity.type">Type</th>
+                                <th data-i18n="dashboard.activity.amount">Amount</th>
+                                <th data-i18n="dashboard.activity.status">Status</th>
+                                <th data-i18n="dashboard.activity.date">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentActivityList">
+                            <tr>
+                                <td class="zd-empty" colspan="4">
+                                    <i class="fas fa-inbox"></i>
+                                    <span data-i18n="dashboard.no_transactions">No transactions yet</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Row 4: Security -->
+            <div class="zd-security-strip zd-rv">
+                <div class="zd-security-left">
+                    <i class="fas fa-lock"></i>
+                    <div>
+                        <strong data-i18n="dashboard.security.shield_title">Protected by Elixopay Shield</strong>
+                        <div class="zd-sec-tags">
+                            <span>TLS</span><span>PCI-DSS</span><span>DDoS</span><span>2FA</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="security.html" class="zd-sec-link" data-i18n="dashboard.security.view_audit">
+                    Security Audit →
+                </a>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="zd-footer">
+            <span>© 2026 Elixopay</span>
+            <div class="zd-footer-links">
+                <a href="developer.html">Docs</a>
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

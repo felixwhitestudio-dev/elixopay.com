@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Elixopay — เริ่มต้นใช้งาน</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #050508;
+            --s1: #0a0a10;
+            --s2: #12121c;
+            --brd: rgba(255, 255, 255, 0.06);
+            --txt: #d4d8e0;
+            --dim: #8b92a0;
+            --w: white;
+            --acc: #7877c6;
+            --acc2: #64c8ff;
+            --acc3: #c084fc
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
+
+        ::selection {
+            background: rgba(120, 119, 198, 0.3)
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+        }
+
+        #orb {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9997;
+            transform: translate(-50%, -50%);
+            transition: width .4s, height .4s;
+            background: radial-gradient(circle, rgba(120, 119, 198, 0.08) 0%, rgba(100, 200, 255, 0.04) 40%, transparent 70%)
+        }
+
+        #orb.expand {
+            width: 500px;
+            height: 500px
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            background: rgba(5, 5, 8, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--brd)
+        }
+
+        .nav-in {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            text-decoration: none;
+            color: var(--w);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -.03em
+        }
+
+        .logo-m {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: .8rem;
+            color: var(--w);
+            position: relative;
+            overflow: hidden
+        }
+
+        .logo-m::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #7877c6, #64c8ff)
+        }
+
+        .logo-m::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #64c8ff, #c084fc);
+            opacity: 0;
+            animation: logoShift 4s ease-in-out infinite
+        }
+
+        @keyframes logoShift {
+
+            0%,
+            100% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        .logo-m span {
+            position: relative;
+            z-index: 1
+        }
+
+        .nav-r {
+            display: flex;
+            align-items: center;
+            gap: .15rem
+        }
+
+        .nav-r a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .82rem;
+            font-weight: 500;
+            padding: .45rem .75rem;
+            border-radius: 8px;
+            transition: all .25s
+        }
+
+        .nav-r a:hover,
+        .nav-r a.active {
+            color: var(--w)
+        }
+
+        .nav-cta {
+            background: rgba(255, 255, 255, .06) !important;
+            color: var(--w) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important
+        }
+
+        /* HEX GRID */
+        .hex-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            opacity: .03;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%237877c6'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7rem 2rem 4rem;
+            position: relative
+        }
+
+        #mesh {
+            position: absolute;
+            inset: 0;
+            z-index: 0
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            max-width: 1000px;
+            width: 100%;
+            align-items: center
+        }
+
+        @media(max-width:768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 3rem
+            }
+        }
+
+        /* LEFT */
+        .left h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -.04em;
+            color: var(--w);
+            margin-bottom: 1rem
+        }
+
+        .holo {
+            background: linear-gradient(90deg, #7877c6, #64c8ff, #c084fc, #7877c6);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoShift 5s linear infinite
+        }
+
+        @keyframes holoShift {
+            0% {
+                background-position: 0% 50%
+            }
+
+            100% {
+                background-position: 300% 50%
+            }
+        }
+
+        .left p {
+            color: var(--dim);
+            font-size: .95rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 420px
+        }
+
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem
+        }
+
+        .ben {
+            display: flex;
+            align-items: center;
+            gap: .8rem
+        }
+
+        .ben .bi {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-size: .75rem;
+            flex-shrink: 0
+        }
+
+        .ben span {
+            font-size: .88rem;
+            color: var(--txt);
+            font-weight: 500
+        }
+
+        /* FORM CARD */
+        .form-card {
+            position: relative;
+            background: var(--s1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            overflow: hidden
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 21px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(120, 119, 198, .2), rgba(100, 200, 255, .1), rgba(192, 132, 252, .2), rgba(120, 119, 198, .2));
+            background-size: 300% 300%;
+            animation: borderShift 4s ease infinite;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude
+        }
+
+        @keyframes borderShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+        }
+
+        /* Corner brackets */
+        .form-card::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 18px;
+            height: 18px;
+            border-top: 1px solid var(--acc);
+            border-left: 1px solid var(--acc);
+            opacity: .3
+        }
+
+        .corner-br {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 18px;
+            height: 18px;
+            border-bottom: 1px solid var(--acc);
+            border-right: 1px solid var(--acc);
+            opacity: .3
+        }
+
+        .form-card .glow {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .4s;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(120, 119, 198, .06), transparent 60%)
+        }
+
+        .form-card:hover .glow {
+            opacity: 1
+        }
+
+        .form-head {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: 1.8rem
+        }
+
+        .form-head .fh-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--acc);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(120, 119, 198, .4)
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(120, 119, 198, 0)
+            }
+        }
+
+        .form-head span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            color: var(--acc);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-weight: 600
+        }
+
+        .field {
+            margin-bottom: 1.2rem;
+            position: relative
+        }
+
+        .field label {
+            display: block;
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: .4rem
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: .8rem 1rem;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid var(--brd);
+            border-radius: 10px;
+            color: var(--w);
+            font-size: .88rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color .3s, background .3s;
+            -webkit-appearance: none;
+            appearance: none
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: rgba(120, 119, 198, .4);
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .field input::placeholder {
+            color: rgba(255, 255, 255, .2)
+        }
+
+        .field select {
+            cursor: pointer;
+            color: var(--dim)
+        }
+
+        .field select option {
+            background: var(--s1);
+            color: var(--txt)
+        }
+
+        /* Select arrow */
+        .field.sel::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 14px;
+            bottom: 12px;
+            color: var(--dim);
+            font-size: .75rem;
+            pointer-events: none
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: .9rem;
+            background: var(--w);
+            color: var(--bg);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: .92rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all .3s;
+            position: relative;
+            overflow: hidden;
+            margin-top: .5rem
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, .15), transparent);
+            transform: translateX(-100%);
+            transition: transform .6s
+        }
+
+        .submit-btn:hover::before {
+            transform: translateX(100%)
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 0 40px rgba(120, 119, 198, .25);
+            transform: translateY(-1px)
+        }
+
+        .submit-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .submit-btn:disabled:hover {
+            box-shadow: none
+        }
+
+        .submit-btn:disabled::before {
+            display: none
+        }
+
+        .form-note {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: .72rem;
+            color: var(--dim)
+        }
+
+        .form-note a {
+            color: var(--acc2);
+            text-decoration: none
+        }
+
+        /* SUCCESS STATE */
+        .success-msg {
+            display: none;
+            text-align: center;
+            padding: 2rem 0
+        }
+
+        .success-msg .check {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--acc), var(--acc2));
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.2rem;
+            font-size: 1.5rem;
+            color: var(--w);
+            animation: scaleIn .4s cubic-bezier(.175, .885, .32, 1.275)
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0)
+            }
+
+            100% {
+                transform: scale(1)
+            }
+        }
+
+        .success-msg h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--w);
+            margin-bottom: .5rem
+        }
+
+        .success-msg p {
+            color: var(--dim);
+            font-size: .88rem;
+            line-height: 1.6
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--brd);
+            padding: 1.8rem 2rem
+        }
+
+        .foot {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem
+        }
+
+        .foot-brand {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            color: var(--w);
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .foot ul {
+            display: flex;
+            gap: 1.2rem;
+            list-style: none
+        }
+
+        .foot a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .78rem;
+            transition: color .2s
+        }
+
+        .foot a:hover {
+            color: var(--w)
+        }
+
+        .foot-c {
+            color: var(--dim);
+            font-size: .75rem
+        }
+
+        .rv {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .9s cubic-bezier(.22, 1, .36, 1), transform .9s cubic-bezier(.22, 1, .36, 1)
+        }
+
+        .rv.vis {
+            opacity: 1;
+            transform: none
+        }
+
+        .rv-d1 {
+            transition-delay: .1s
+        }
+
+        .rv-d2 {
+            transition-delay: .2s
+        }
+
+        .rv-d3 {
+            transition-delay: .3s
+        }
+    </style>
+</head>
+
+<body>
+    <div id="orb"></div>
+    <div class="hex-bg"></div>
+
+    <nav>
+        <div class="nav-in">
+            <a href="index.html" class="logo">
+                <div class="logo-m"><span>Z</span></div>Elixopay
+            </a>
+            <div class="nav-r">
+                <a href="developer.html">Docs</a><a href="about.html">About</a><a href="get-started.html"
+                    class="nav-cta active">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main">
+        <canvas id="mesh"></canvas>
+        <div class="container">
+            <div class="left rv">
+                <h1>เริ่มต้นกับ<br><span class="holo">Elixopay</span></h1>
+                <p>ลงทะเบียนเพื่อเข้าถึงระบบชำระเงินออนไลน์ที่ออกแบบมาสำหรับธุรกิจในประเทศไทย
+                    เราจะติดต่อกลับเมื่อระบบพร้อมให้บริการ</p>
+                <div class="benefits">
+                    <div class="ben">
+                        <div class="bi" style="background:rgba(120,119,198,.1);color:#7877c6"><i
+                                class="fas fa-bolt"></i></div><span>PromptPay, บัตรเครดิต, Mobile Banking</span>
+                    </div>
+                    <div class="ben">
+                        <div class="bi" style="background:rgba(100,200,255,.1);color:#64c8ff"><i
+                                class="fas fa-shield-alt"></i></div><span>PCI-DSS Level 1 & 3D Secure 2.0</span>
+                    </div>
+                    <div class="ben">
+                        <div class="bi" style="background:rgba(192,132,252,.1);color:#c084fc"><i
+                                class="fas fa-code"></i></div><span>REST API & SDK พร้อมใช้งาน</span>
+                    </div>
+                    <div class="ben">
+                        <div class="bi" style="background:rgba(134,239,172,.1);color:#86efac"><i
+                                class="fas fa-clock"></i></div><span>เข้าถึง Dashboard ภายใน 24 ชม.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card rv rv-d1">
+                <div class="glow"></div>
+                <div class="corner-br"></div>
+                <div class="form-head">
+                    <div class="fh-dot"></div><span>Registration</span>
+                </div>
+
+                <form id="regForm">
+                    <div class="field">
+                        <label>ชื่อ-นามสกุล</label>
+                        <input type="text" id="fname" placeholder="สมชาย ใจดี" required>
+                    </div>
+                    <div class="field">
+                        <label>อีเมลธุรกิจ</label>
+                        <input type="email" id="femail" placeholder="you@company.com" required>
+                    </div>
+                    <div class="field">
+                        <label>ชื่อบริษัท / ร้านค้า</label>
+                        <input type="text" id="fcompany" placeholder="บริษัท ABC จำกัด">
+                    </div>
+                    <div class="field sel">
+                        <label>ประเภทธุรกิจ</label>
+                        <select id="fbiz" required>
+                            <option value="" disabled selected>เลือกประเภทธุรกิจ</option>
+                            <option>E-commerce / ร้านค้าออนไลน์</option>
+                            <option>SaaS / แพลตฟอร์ม</option>
+                            <option>Marketplace</option>
+                            <option>อาหาร & เครื่องดื่ม</option>
+                            <option>การศึกษา</option>
+                            <option>สุขภาพ & ความงาม</option>
+                            <option>อสังหาริมทรัพย์</option>
+                            <option>ท่องเที่ยว & โรงแรม</option>
+                            <option>อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="field sel">
+                        <label>ยอดธุรกรรมต่อเดือน (โดยประมาณ)</label>
+                        <select id="fvol">
+                            <option value="" disabled selected>เลือกช่วงยอดธุรกรรม</option>
+                            <option>น้อยกว่า 100,000 บาท</option>
+                            <option>100,000 - 500,000 บาท</option>
+                            <option>500,000 - 1,000,000 บาท</option>
+                            <option>1,000,000 - 5,000,000 บาท</option>
+                            <option>มากกว่า 5,000,000 บาท</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span id="btnText">ลงทะเบียน</span>
+                    </button>
+                </form>
+
+                <div class="success-msg" id="successMsg">
+                    <div class="check"><i class="fas fa-check"></i></div>
+                    <h3>ลงทะเบียนสำเร็จ!</h3>
+                    <p>ขอบคุณที่สนใจ Elixopay<br>ทีมงานจะติดต่อกลับทาง <strong
+                            id="emailConfirm"></strong><br>เมื่อระบบพร้อมให้บริการ</p>
+                </div>
+
+                <p class="form-note">เมื่อลงทะเบียน ถือว่าคุณยอมรับ <a href="terms.html">เงื่อนไขการใช้งาน</a> และ <a
+                        href="privacy.html">นโยบายความเป็นส่วนตัว</a></p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="foot">
+            <div class="foot-brand">
+                <div class="logo-m" style="width:20px;height:20px;font-size:.6rem;border-radius:5px"><span>Z</span>
+                </div>Elixopay
+            </div>
+            <ul>
+                <li><a href="developer.html">Docs</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+            </ul>
+            <span class="foot-c">© 2026 Elixopay</span>
+        </div>
+    </footer>
+
+    <script>
+        // MESH
+        (() => {
+            const c = document.getElementById('mesh'), x = c.getContext('2d'); let w, h, t = 0, mx = .5, my = .5;
+            function rs() { w = c.width = innerWidth; h = c.height = innerHeight } addEventListener('resize', rs); rs();
+            addEventListener('mousemove', e => { mx = e.clientX / w; my = e.clientY / h });
+            function draw() {
+                t += .003; x.clearRect(0, 0, w, h);
+                for (let i = 0; i < 3; i++) {
+                    const cx = w * (.3 + i * .2 + Math.sin(t + i * 2) * .1 + mx * .05);
+                    const cy = h * (.3 + Math.cos(t * 1.3 + i * 1.5) * .15 + my * .05);
+                    const r = Math.min(w, h) * (.2 + Math.sin(t * .7 + i) * .06);
+                    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+                    const colors = [['rgba(120,119,198,', 'rgba(100,200,255,'], ['rgba(100,200,255,', 'rgba(192,132,252,'], ['rgba(192,132,252,', 'rgba(120,119,198,']];
+                    g.addColorStop(0, colors[i][0] + (.05 + Math.sin(t + i) * .015) + ')'); g.addColorStop(1, colors[i][1] + '0)');
+                    x.fillStyle = g; x.fillRect(0, 0, w, h)
+                } requestAnimationFrame(draw)
+            } draw()
+        })();
+
+        // ORB
+        const orb = document.getElementById('orb');
+        document.addEventListener('mousemove', e => { orb.style.left = e.clientX + 'px'; orb.style.top = e.clientY + 'px' });
+        document.querySelectorAll('.form-card,.submit-btn,.ben').forEach(el => {
+            el.addEventListener('mouseenter', () => orb.classList.add('expand'));
+            el.addEventListener('mouseleave', () => orb.classList.remove('expand'))
+        });
+
+        // CARD GLOW
+        document.querySelectorAll('.form-card').forEach(c => {
+            c.addEventListener('mousemove', e => {
+                const r = c.getBoundingClientRect(); const g = c.querySelector('.glow'); if (g) {
+                    g.style.setProperty('--mx', (e.clientX - r.left) / r.width * 100 + '%');
+                    g.style.setProperty('--my', (e.clientY - r.top) / r.height * 100 + '%')
+                }
+            })
+        });
+
+        // REVEAL
+        const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target) } }), { threshold: .1 });
+        document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+        // FORM SUBMIT
+        document.getElementById('regForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('fname').value;
+            const email = document.getElementById('femail').value;
+            const company = document.getElementById('fcompany').value;
+            const biz = document.getElementById('fbiz').value;
+            const vol = document.getElementById('fvol').value;
+
+            if (!name || !email || !biz) { return }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            document.getElementById('btnText').textContent = 'กำลังส่ง...';
+
+            // Simulate API call
+            setTimeout(() => {
+                this.style.display = 'none';
+                document.getElementById('emailConfirm').textContent = email;
+                document.getElementById('successMsg').style.display = 'block';
+
+                // Also send via mailto as fallback
+                const subject = encodeURIComponent('Elixopay Registration: ' + company);
+                const body = encodeURIComponent('ชื่อ: ' + name + '\nอีเมล: ' + email + '\nบริษัท: ' + company + '\nประเภทธุรกิจ: ' + biz + '\nยอดธุรกรรม: ' + vol);
+                const link = document.createElement('a');
+                link.href = 'mailto:support@elixopay.com?subject=' + subject + '&body=' + body;
+                link.click();
+            }, 1200);
+        });
+    </script>
+</body>
+
+</html>

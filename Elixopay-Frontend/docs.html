@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Documentation — Elixopay</title>
+    <meta name="description"
+        content="API Documentation for integrating Elixopay payment gateway into your application.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/docs.css">
+</head>
+
+<body class="zd-body">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="zd-sidebar" id="sidebar">
+        <div class="zd-sidebar-top">
+            <a href="index.html" class="zd-logo">
+                <div class="zd-logo-icon">Z</div>
+                <span class="zd-logo-text">Elixopay</span>
+            </a>
+        </div>
+        <nav class="zd-sidebar-nav">
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.menu">MENU</span>
+                <a href="dashboard.html" class="zd-nav-item"><i class="fas fa-th-large"></i><span
+                        data-i18n="nav.dashboard">Dashboard</span></a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)"><i
+                        class="fas fa-exchange-alt"></i><span data-i18n="nav.transactions">Transactions</span></a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)"><i
+                        class="fas fa-university"></i><span data-i18n="nav.payout">Payout</span></a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)"><i
+                        class="fas fa-file-invoice"></i><span data-i18n="nav.billing">Billing</span></a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.developer">DEVELOPER</span>
+                <a href="api-keys.html" class="zd-nav-item"><i class="fas fa-key"></i><span data-i18n="nav.api_keys">API
+                        Keys</span></a>
+                <a href="docs.html" class="zd-nav-item active"><i class="fas fa-book"></i><span
+                        data-i18n="nav.documentation">Documentation</span></a>
+                <a href="webhooks.html" class="zd-nav-item"><i class="fas fa-plug"></i><span
+                        data-i18n="nav.webhooks">Webhooks</span></a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.settings_label">SETTINGS</span>
+                <a href="security.html" class="zd-nav-item"><i class="fas fa-shield-alt"></i><span
+                        data-i18n="nav.security">Security</span></a>
+                <a href="settings.html" class="zd-nav-item"><i class="fas fa-cog"></i><span
+                        data-i18n="nav.settings">Settings</span></a>
+            </div>
+        </nav>
+        <div class="zd-sidebar-bottom">
+            <div class="zd-sidebar-user">
+                <div class="zd-user-avatar" id="userInitial">M</div>
+                <div class="zd-user-meta">
+                    <span class="zd-user-name" id="userName">Merchant</span>
+                    <span class="zd-user-email" id="userEmail">Elixopay Account</span>
+                </div>
+                <button class="zd-btn-icon" onclick="dashLogout()" title="Sign Out"><i
+                        class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN AREA ═══ -->
+    <div class="zd-main-wrap">
+
+        <header class="zd-topbar">
+            <button class="zd-mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i
+                    class="fas fa-bars"></i></button>
+            <div class="zd-topbar-left">
+                <h1><i class="fas fa-book"></i> API Documentation</h1>
+            </div>
+            <div class="zd-topbar-right">
+                <div class="zd-lang-switch">
+                    <button onclick="changeLanguage('th')" class="active" title="ภาษาไทย">🇹🇭</button>
+                    <button onclick="changeLanguage('en')" title="English">🇺🇸</button>
+                    <button onclick="changeLanguage('zh')" title="中文">🇨🇳</button>
+                </div>
+                <button class="zd-btn-icon"><i class="fas fa-bell"></i></button>
+            </div>
+        </header>
+
+        <main class="zd-content doc-layout">
+
+            <!-- ─── DOC SIDEBAR NAV ─── -->
+            <nav class="doc-nav" id="docNav">
+                <div class="doc-nav-group">
+                    <span class="doc-nav-label">Getting Started</span>
+                    <a href="#overview" class="doc-nav-link active">ภาพรวม</a>
+                    <a href="#authentication" class="doc-nav-link">Authentication</a>
+                    <a href="#base-url" class="doc-nav-link">Base URL</a>
+                </div>
+                <div class="doc-nav-group">
+                    <span class="doc-nav-label">Payments</span>
+                    <a href="#create-payment" class="doc-nav-link">สร้างรายการชำระ</a>
+                    <a href="#get-payment" class="doc-nav-link">ดึงรายละเอียด</a>
+                    <a href="#list-payments" class="doc-nav-link">แสดงรายการทั้งหมด</a>
+                </div>
+                <div class="doc-nav-group">
+                    <span class="doc-nav-label">QR / PromptPay</span>
+                    <a href="#qr-payment" class="doc-nav-link">สร้าง QR Code</a>
+                </div>
+                <div class="doc-nav-group">
+                    <span class="doc-nav-label">Webhooks</span>
+                    <a href="#webhook-events" class="doc-nav-link">Events</a>
+                    <a href="#webhook-verify" class="doc-nav-link">Verify Signature</a>
+                </div>
+                <div class="doc-nav-group">
+                    <span class="doc-nav-label">Other</span>
+                    <a href="#errors" class="doc-nav-link">Error Codes</a>
+                    <a href="#rate-limits" class="doc-nav-link">Rate Limits</a>
+                    <a href="#sdks" class="doc-nav-link">SDKs</a>
+                </div>
+            </nav>
+
+            <!-- ─── DOC CONTENT ─── -->
+            <div class="doc-content">
+
+                <!-- OVERVIEW -->
+                <section id="overview" class="doc-section zd-rv">
+                    <h2>ภาพรวม Elixopay API</h2>
+                    <p>Elixopay API ใช้ RESTful architecture รองรับการชำระเงินผ่าน QR Code, PromptPay, บัตรเครดิต/เดบิต
+                        และช่องทางอื่นๆ ข้อมูลทั้งหมดรับ-ส่งในรูปแบบ JSON</p>
+
+                    <div class="doc-info-card">
+                        <div class="doc-info-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div>
+                            <strong>ทดสอบก่อน Go Live</strong>
+                            <p>ใช้ Test Keys (<code>pk_test_</code> / <code>sk_test_</code>) เพื่อทดสอบ Integration
+                                โดยไม่มีการเรียกเก็บเงินจริง สลับเป็น Live Keys เมื่อพร้อม</p>
+                        </div>
+                    </div>
+
+                    <div class="doc-features">
+                        <div class="doc-feature">
+                            <i class="fas fa-qrcode"></i>
+                            <strong>QR / PromptPay</strong>
+                            <span>รองรับ Thai QR Payment</span>
+                        </div>
+                        <div class="doc-feature">
+                            <i class="fas fa-credit-card"></i>
+                            <strong>บัตรเครดิต/เดบิต</strong>
+                            <span>Visa, Mastercard, JCB</span>
+                        </div>
+                        <div class="doc-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <strong>Secure</strong>
+                            <span>PCI DSS Compliant</span>
+                        </div>
+                        <div class="doc-feature">
+                            <i class="fas fa-bolt"></i>
+                            <strong>Real-time</strong>
+                            <span>Webhook Notifications</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AUTHENTICATION -->
+                <section id="authentication" class="doc-section zd-rv">
+                    <h2>Authentication</h2>
+                    <p>ทุก API request ต้องมี <strong>Secret Key</strong> ใน Header เพื่อยืนยันตัวตน</p>
+
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>HTTP Header</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>Authorization: Bearer sk_live_YOUR_SECRET_KEY
+Content-Type: application/json</code></pre>
+                    </div>
+
+                    <div class="doc-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>ห้ามใช้ Secret Key ในโค้ดฝั่ง Frontend หรือ Mobile App — ใช้ผ่าน Server เท่านั้น</span>
+                    </div>
+
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Key Type</th>
+                                <th>Prefix</th>
+                                <th>ใช้ที่</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Publishable Key</code></td>
+                                <td><code>pk_live_</code></td>
+                                <td>Frontend (checkout form)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Secret Key</code></td>
+                                <td><code>sk_live_</code></td>
+                                <td>Backend (server-side only)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Test Publishable</code></td>
+                                <td><code>pk_test_</code></td>
+                                <td>Frontend (sandbox)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Test Secret</code></td>
+                                <td><code>sk_test_</code></td>
+                                <td>Backend (sandbox)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- BASE URL -->
+                <section id="base-url" class="doc-section zd-rv">
+                    <h2>Base URL</h2>
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>Production</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>https://api.elixopay.com/v1</code></pre>
+                    </div>
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>Sandbox (Test)</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>https://sandbox.elixopay.com/v1</code></pre>
+                    </div>
+                </section>
+
+                <!-- CREATE PAYMENT -->
+                <section id="create-payment" class="doc-section zd-rv">
+                    <h2>สร้างรายการชำระเงิน</h2>
+                    <div class="doc-endpoint">
+                        <span class="doc-method post">POST</span>
+                        <code>/v1/payments</code>
+                    </div>
+                    <p>สร้างรายการชำระเงินใหม่ ระบบจะส่ง URL สำหรับลูกค้าชำระเงินกลับมา</p>
+
+                    <h3>Parameters</h3>
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>amount</code></td>
+                                <td>number</td>
+                                <td>✅</td>
+                                <td>จำนวนเงิน (หน่วยบาท เช่น 150.00)</td>
+                            </tr>
+                            <tr>
+                                <td><code>currency</code></td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>สกุลเงิน: <code>THB</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>คำอธิบายรายการ เช่น "Order #1234"</td>
+                            </tr>
+                            <tr>
+                                <td><code>callback_url</code></td>
+                                <td>string</td>
+                                <td>✅</td>
+                                <td>URL รับ webhook เมื่อชำระสำเร็จ</td>
+                            </tr>
+                            <tr>
+                                <td><code>return_url</code></td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>URL redirect หลังชำระเงินเสร็จ</td>
+                            </tr>
+                            <tr>
+                                <td><code>metadata</code></td>
+                                <td>object</td>
+                                <td>❌</td>
+                                <td>ข้อมูลเพิ่มเติม (key-value)</td>
+                            </tr>
+                            <tr>
+                                <td><code>customer_email</code></td>
+                                <td>string</td>
+                                <td>❌</td>
+                                <td>อีเมลลูกค้า (ส่งใบเสร็จ)</td>
+                            </tr>
+                            <tr>
+                                <td><code>expires_in</code></td>
+                                <td>integer</td>
+                                <td>❌</td>
+                                <td>หมดอายุ (วินาที) default: 1800</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Request</h3>
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>cURL</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>curl -X POST https://api.elixopay.com/v1/payments \
+  -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1500.00,
+    "currency": "THB",
+    "description": "Order #1234",
+    "callback_url": "https://yoursite.com/webhook",
+    "return_url": "https://yoursite.com/thank-you",
+    "customer_email": "customer@example.com",
+    "metadata": {
+      "order_id": "ORD-1234"
+    }
+  }'</code></pre>
+                    </div>
+
+                    <h3>Response <span class="doc-status green">200 OK</span></h3>
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>JSON Response</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>{
+  "id": "pay_a1b2c3d4e5f6",
+  "object": "payment",
+  "amount": 1500.00,
+  "currency": "THB",
+  "status": "pending",
+  "description": "Order #1234",
+  "checkout_url": "https://checkout.elixopay.com/pay/pay_a1b2c3d4e5f6",
+  "qr_code_url": "https://api.elixopay.com/v1/qr/pay_a1b2c3d4e5f6.png",
+  "expires_at": "2026-03-03T12:30:00Z",
+  "created_at": "2026-03-03T12:00:00Z",
+  "metadata": {
+    "order_id": "ORD-1234"
+  }
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- GET PAYMENT -->
+                <section id="get-payment" class="doc-section zd-rv">
+                    <h2>ดึงรายละเอียดการชำระ</h2>
+                    <div class="doc-endpoint">
+                        <span class="doc-method get">GET</span>
+                        <code>/v1/payments/{payment_id}</code>
+                    </div>
+                    <p>ดึงรายละเอียดรายการชำระเงินจาก Payment ID</p>
+
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>cURL</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>curl https://api.elixopay.com/v1/payments/pay_a1b2c3d4e5f6 \
+  -H "Authorization: Bearer sk_live_YOUR_SECRET_KEY"</code></pre>
+                    </div>
+
+                    <h3>Response <span class="doc-status green">200 OK</span></h3>
+                    <div class="doc-code">
+                        <div class="doc-code-head"><span>JSON Response</span></div>
+                        <pre><code>{
+  "id": "pay_a1b2c3d4e5f6",
+  "object": "payment",
+  "amount": 1500.00,
+  "currency": "THB",
+  "status": "succeeded",
+  "paid_at": "2026-03-03T12:05:23Z",
+  "payment_method": "promptpay",
+  "fee": 3.75,
+  "net": 1496.25
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- LIST PAYMENTS -->
+                <section id="list-payments" class="doc-section zd-rv">
+                    <h2>แสดงรายการชำระทั้งหมด</h2>
+                    <div class="doc-endpoint">
+                        <span class="doc-method get">GET</span>
+                        <code>/v1/payments</code>
+                    </div>
+
+                    <h3>Query Parameters</h3>
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>limit</code></td>
+                                <td>integer</td>
+                                <td>จำนวนผลลัพธ์ (default: 20, max: 100)</td>
+                            </tr>
+                            <tr>
+                                <td><code>offset</code></td>
+                                <td>integer</td>
+                                <td>ข้ามรายการ (pagination)</td>
+                            </tr>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>string</td>
+                                <td><code>pending</code> | <code>succeeded</code> | <code>failed</code> |
+                                    <code>expired</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>from</code></td>
+                                <td>string</td>
+                                <td>เริ่มต้น (ISO 8601)</td>
+                            </tr>
+                            <tr>
+                                <td><code>to</code></td>
+                                <td>string</td>
+                                <td>สิ้นสุด (ISO 8601)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- QR PAYMENT -->
+                <section id="qr-payment" class="doc-section zd-rv">
+                    <h2>สร้าง QR Code / PromptPay</h2>
+                    <div class="doc-endpoint">
+                        <span class="doc-method post">POST</span>
+                        <code>/v1/payments/qr</code>
+                    </div>
+                    <p>สร้าง QR Code สำหรับให้ลูกค้าสแกนชำระเงินผ่าน PromptPay หรือ Mobile Banking</p>
+
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>Node.js</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>const elixopay = require('elixopay');
+elixopay.configure({ secretKey: 'sk_live_YOUR_KEY' });
+
+const qr = await elixopay.payments.createQR({
+  amount: 350.00,
+  currency: 'THB',
+  description: 'สินค้า A',
+  callback_url: 'https://yoursite.com/webhook'
+});
+
+console.log(qr.qr_code_url);
+// => https://api.elixopay.com/v1/qr/pay_xxx.png</code></pre>
+                    </div>
+
+                    <div class="doc-info-card">
+                        <div class="doc-info-icon"><i class="fas fa-qrcode"></i></div>
+                        <div>
+                            <strong>QR Code แสดงผลอัตโนมัติ</strong>
+                            <p>ใช้ <code>qr_code_url</code> จาก response โดยตรง — สามารถ embed เป็น
+                                <code>&lt;img&gt;</code> ในหน้าเว็บ หรือส่งให้ลูกค้าทาง LINE/Email
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- WEBHOOK EVENTS -->
+                <section id="webhook-events" class="doc-section zd-rv">
+                    <h2>Webhook Events</h2>
+                    <p>Elixopay จะส่ง POST request ไปยัง endpoint ของคุณเมื่อมี event เกิดขึ้น</p>
+
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>payment.success</code></td>
+                                <td>ลูกค้าชำระเงินสำเร็จ</td>
+                            </tr>
+                            <tr>
+                                <td><code>payment.failed</code></td>
+                                <td>การชำระเงินล้มเหลว / ถูกปฏิเสธ</td>
+                            </tr>
+                            <tr>
+                                <td><code>payment.expired</code></td>
+                                <td>รายการหมดอายุ (ไม่ชำระทันเวลา)</td>
+                            </tr>
+                            <tr>
+                                <td><code>payment.refund</code></td>
+                                <td>คืนเงินให้ลูกค้า</td>
+                            </tr>
+                            <tr>
+                                <td><code>payout.completed</code></td>
+                                <td>ถอนเงินเข้าบัญชีธนาคารสำเร็จ</td>
+                            </tr>
+                            <tr>
+                                <td><code>payout.failed</code></td>
+                                <td>การถอนเงินล้มเหลว</td>
+                            </tr>
+                            <tr>
+                                <td><code>charge.dispute</code></td>
+                                <td>ลูกค้าเปิดข้อพิพาท (Chargeback)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- WEBHOOK VERIFY -->
+                <section id="webhook-verify" class="doc-section zd-rv">
+                    <h2>Verify Webhook Signature</h2>
+                    <p>ทุก webhook request จะมี header <code>X-Elixopay-Signature</code> ใช้ตรวจสอบว่า request มาจาก
+                        Elixopay จริง</p>
+
+                    <div class="doc-code">
+                        <div class="doc-code-head">
+                            <span>Node.js</span>
+                            <button onclick="copyBlock(this)" class="doc-copy"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>const crypto = require('crypto');
+
+app.post('/webhook', (req, res) => {
+  const signature = req.headers['x-elixopay-signature'];
+  const payload = JSON.stringify(req.body);
+  
+  const expected = crypto
+    .createHmac('sha256', 'whsec_YOUR_SIGNING_SECRET')
+    .update(payload)
+    .digest('hex');
+
+  if (signature === expected) {
+    // ✅ Verified — process the event
+    const event = req.body;
+    
+    switch (event.type) {
+      case 'payment.success':
+        // อัปเดตสถานะ order
+        break;
+      case 'payment.failed':
+        // แจ้ง admin
+        break;
+    }
+    
+    res.status(200).json({ received: true });
+  } else {
+    res.status(401).json({ error: 'Invalid signature' });
+  }
+});</code></pre>
+                    </div>
+                </section>
+
+                <!-- ERRORS -->
+                <section id="errors" class="doc-section zd-rv">
+                    <h2>Error Codes</h2>
+                    <p>เมื่อเกิดข้อผิดพลาด API จะส่ง HTTP status code พร้อมรายละเอียด</p>
+
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>400</code></td>
+                                <td>Bad Request</td>
+                                <td>ข้อมูลไม่ถูกต้อง หรือขาด parameter</td>
+                            </tr>
+                            <tr>
+                                <td><code>401</code></td>
+                                <td>Unauthorized</td>
+                                <td>API Key ไม่ถูกต้อง หรือหมดอายุ</td>
+                            </tr>
+                            <tr>
+                                <td><code>403</code></td>
+                                <td>Forbidden</td>
+                                <td>ไม่มีสิทธิ์ดำเนินการนี้</td>
+                            </tr>
+                            <tr>
+                                <td><code>404</code></td>
+                                <td>Not Found</td>
+                                <td>ไม่พบรายการที่ร้องขอ</td>
+                            </tr>
+                            <tr>
+                                <td><code>422</code></td>
+                                <td>Unprocessable</td>
+                                <td>ข้อมูลรูปแบบถูกต้อง แต่ไม่สามารถดำเนินการ</td>
+                            </tr>
+                            <tr>
+                                <td><code>429</code></td>
+                                <td>Rate Limited</td>
+                                <td>เกินจำนวน request ที่อนุญาต</td>
+                            </tr>
+                            <tr>
+                                <td><code>500</code></td>
+                                <td>Server Error</td>
+                                <td>เกิดข้อผิดพลาดฝั่ง server</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="doc-code">
+                        <div class="doc-code-head"><span>Error Response Example</span></div>
+                        <pre><code>{
+  "error": {
+    "code": "invalid_amount",
+    "message": "Amount must be greater than 0",
+    "param": "amount",
+    "status": 400
+  }
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- RATE LIMITS -->
+                <section id="rate-limits" class="doc-section zd-rv">
+                    <h2>Rate Limits</h2>
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Limit</th>
+                                <th>Window</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Standard</td>
+                                <td>100 requests</td>
+                                <td>per minute</td>
+                            </tr>
+                            <tr>
+                                <td>Pro</td>
+                                <td>500 requests</td>
+                                <td>per minute</td>
+                            </tr>
+                            <tr>
+                                <td>Enterprise</td>
+                                <td>Custom</td>
+                                <td>ติดต่อ Sales</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>เมื่อเกิน limit จะได้รับ response <code>429 Too Many Requests</code> พร้อม header
+                        <code>Retry-After</code>
+                    </p>
+                </section>
+
+                <!-- SDKs -->
+                <section id="sdks" class="doc-section zd-rv">
+                    <h2>SDKs & Libraries</h2>
+                    <p>Elixopay มี SDK สำหรับภาษาที่นิยม</p>
+
+                    <div class="doc-sdk-grid">
+                        <div class="doc-sdk">
+                            <div class="doc-sdk-icon"><i class="fab fa-node-js"></i></div>
+                            <div>
+                                <strong>Node.js</strong>
+                                <code>npm install elixopay</code>
+                            </div>
+                        </div>
+                        <div class="doc-sdk">
+                            <div class="doc-sdk-icon"><i class="fab fa-python"></i></div>
+                            <div>
+                                <strong>Python</strong>
+                                <code>pip install elixopay</code>
+                            </div>
+                        </div>
+                        <div class="doc-sdk">
+                            <div class="doc-sdk-icon"><i class="fab fa-php"></i></div>
+                            <div>
+                                <strong>PHP</strong>
+                                <code>composer require elixopay/sdk</code>
+                            </div>
+                        </div>
+                        <div class="doc-sdk">
+                            <div class="doc-sdk-icon"><i class="fab fa-java"></i></div>
+                            <div>
+                                <strong>Java / Kotlin</strong>
+                                <code>Maven: com.elixopay:sdk</code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div><!-- /doc-content -->
+        </main>
+
+        <footer class="zd-footer">
+            <span>© 2026 Elixopay</span>
+            <div class="zd-footer-links">
+                <a href="developer.html">Docs</a>
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/docs.js"></script>
+</body>
+
+</html>

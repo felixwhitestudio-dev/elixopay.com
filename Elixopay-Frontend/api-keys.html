@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>API Keys — Elixopay</title>
+    <meta name="description" content="Manage your Elixopay API keys for payment integration.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/api-keys.css">
+</head>
+
+<body class="zd-body">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="zd-sidebar" id="sidebar">
+        <div class="zd-sidebar-top">
+            <a href="index.html" class="zd-logo">
+                <div class="zd-logo-icon">Z</div>
+                <span class="zd-logo-text">Elixopay</span>
+            </a>
+        </div>
+
+        <nav class="zd-sidebar-nav">
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.menu">MENU</span>
+                <a href="dashboard.html" class="zd-nav-item">
+                    <i class="fas fa-th-large"></i>
+                    <span data-i18n="nav.dashboard">Dashboard</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span data-i18n="nav.transactions">Transactions</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-university"></i>
+                    <span data-i18n="nav.payout">Payout</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-file-invoice"></i>
+                    <span data-i18n="nav.billing">Billing</span>
+                </a>
+            </div>
+
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.developer">DEVELOPER</span>
+                <a href="api-keys.html" class="zd-nav-item active">
+                    <i class="fas fa-key"></i>
+                    <span data-i18n="nav.api_keys">API Keys</span>
+                </a>
+                <a href="docs.html" class="zd-nav-item">
+                    <i class="fas fa-book"></i>
+                    <span data-i18n="nav.documentation">Documentation</span>
+                </a>
+                <a href="javascript:void(0)" class="zd-nav-item" onclick="comingSoon(event)">
+                    <i class="fas fa-plug"></i>
+                    <span data-i18n="nav.webhooks">Webhooks</span>
+                </a>
+            </div>
+
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.settings_label">SETTINGS</span>
+                <a href="security.html" class="zd-nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span data-i18n="nav.security">Security</span>
+                </a>
+                <a href="settings.html" class="zd-nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span data-i18n="nav.settings">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="zd-sidebar-bottom">
+            <div class="zd-sidebar-user">
+                <div class="zd-user-avatar" id="userInitial">M</div>
+                <div class="zd-user-meta">
+                    <span class="zd-user-name" id="userName">Merchant</span>
+                    <span class="zd-user-email" id="userEmail">Elixopay Account</span>
+                </div>
+                <button class="zd-btn-icon" onclick="dashLogout()" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN AREA ═══ -->
+    <div class="zd-main-wrap">
+
+        <!-- Top bar -->
+        <header class="zd-topbar">
+            <button class="zd-mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="zd-topbar-left">
+                <h1><i class="fas fa-key"></i> API Keys</h1>
+            </div>
+            <div class="zd-topbar-right">
+                <div class="zd-lang-switch">
+                    <button onclick="changeLanguage('th')" class="active" title="ภาษาไทย">🇹🇭</button>
+                    <button onclick="changeLanguage('en')" title="English">🇺🇸</button>
+                    <button onclick="changeLanguage('zh')" title="中文">🇨🇳</button>
+                </div>
+                <button class="zd-btn-icon">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="zd-content">
+
+            <!-- Intro -->
+            <div class="ak-intro zd-rv">
+                <div class="ak-intro-icon"><i class="fas fa-lock"></i></div>
+                <div>
+                    <h2>Your API Credentials</h2>
+                    <p>ใช้ API Key เหล่านี้เพื่อเชื่อมต่อ Elixopay กับเว็บไซต์หรือแอปของคุณ ห้ามเปิดเผย Secret Key
+                        ให้ผู้อื่น</p>
+                </div>
+            </div>
+
+            <!-- ═══ LIVE KEYS ═══ -->
+            <section class="ak-section zd-rv">
+                <div class="ak-section-header">
+                    <div class="ak-section-title">
+                        <span class="ak-dot green"></span>
+                        <h2>Live Keys</h2>
+                        <span class="ak-tag green">Production</span>
+                    </div>
+                    <button class="ak-btn outline" onclick="generateNewKey('live')">
+                        <i class="fas fa-plus"></i> Generate New Key
+                    </button>
+                </div>
+
+                <!-- Live Keys Container -->
+                <div id="liveKeysContainer">
+                    <!-- Keys will be injected here via JS -->
+                </div>
+
+
+            </section>
+
+            <!-- ═══ TEST KEYS ═══ -->
+            <section class="ak-section zd-rv">
+                <div class="ak-section-header">
+                    <div class="ak-section-title">
+                        <span class="ak-dot amber"></span>
+                        <h2>Test Keys</h2>
+                        <span class="ak-tag amber">Sandbox</span>
+                    </div>
+                    <button class="ak-btn outline" onclick="generateNewKey('test')">
+                        <i class="fas fa-plus"></i> Generate New Key
+                    </button>
+                </div>
+
+                <!-- Test Keys Container -->
+                <div id="testKeysContainer">
+                    <!-- Keys will be injected here via JS -->
+                </div>
+            </section>
+
+            <!-- ═══ QUICK START GUIDE ═══ -->
+            <section class="ak-section ak-guide zd-rv">
+                <div class="ak-section-header">
+                    <div class="ak-section-title">
+                        <h2><i class="fas fa-rocket"></i> Quick Start Guide</h2>
+                    </div>
+                </div>
+
+                <div class="ak-steps">
+                    <div class="ak-step">
+                        <div class="ak-step-num">1</div>
+                        <div class="ak-step-body">
+                            <strong>Copy API Keys</strong>
+                            <p>คัดลอก Publishable Key และ Secret Key ด้านบน</p>
+                        </div>
+                    </div>
+                    <div class="ak-step">
+                        <div class="ak-step-num">2</div>
+                        <div class="ak-step-body">
+                            <strong>Install SDK</strong>
+                            <p>ติดตั้ง Elixopay SDK ลงในโปรเจกต์ของคุณ</p>
+                        </div>
+                    </div>
+                    <div class="ak-step">
+                        <div class="ak-step-num">3</div>
+                        <div class="ak-step-body">
+                            <strong>Configure Keys</strong>
+                            <p>ตั้งค่า API Key ในโค้ดของคุณ</p>
+                        </div>
+                    </div>
+                    <div class="ak-step">
+                        <div class="ak-step-num">4</div>
+                        <div class="ak-step-body">
+                            <strong>Go Live!</strong>
+                            <p>ทดสอบด้วย Test Keys แล้วเปลี่ยนเป็น Live Keys เมื่อพร้อม</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Example -->
+                <div class="ak-code-block">
+                    <div class="ak-code-header">
+                        <span><i class="fas fa-code"></i> Example: Initialize Elixopay</span>
+                        <button onclick="copyCodeExample()" class="ak-copy-code" title="Copy Code">
+                            <i class="far fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code id="codeExample">// Server-side (Node.js)
+const elixopay = require('elixopay');
+
+elixopay.configure({
+  secretKey: 'sk_live_YOUR_SECRET_KEY',
+  version: '2026-03-01'
+});
+
+// Create a payment
+const payment = await elixopay.payments.create({
+  amount: 1500.00,     // THB
+  currency: 'THB',
+  description: 'Order #1234',
+  callback_url: 'https://yoursite.com/webhook'
+});</code></pre>
+                </div>
+
+                <div class="ak-guide-footer">
+                    <a href="developer.html" class="ak-btn primary">
+                        <i class="fas fa-book"></i> Full Documentation
+                    </a>
+                    <a href="developer.html" class="ak-btn outline">
+                        <i class="fas fa-code"></i> API Reference
+                    </a>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="zd-footer">
+            <span>© 2026 Elixopay</span>
+            <div class="zd-footer-links">
+                <a href="developer.html">Docs</a>
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Regenerate Confirm -->
+    <div class="st-modal-overlay" id="regenModal">
+        <div class="st-modal">
+            <div class="st-modal-header">
+                <h3 id="regenTitle">Regenerate API Keys</h3>
+                <button onclick="closeRegenModal()" class="st-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="st-modal-desc" id="regenDesc"></p>
+            <div class="st-modal-actions">
+                <button class="ak-btn outline" onclick="closeRegenModal()">Cancel</button>
+                <button class="ak-btn danger" id="regenConfirm">Regenerate</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/api-keys.js"></script>
+</body>
+
+</html>

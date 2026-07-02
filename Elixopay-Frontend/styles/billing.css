@@ -1,0 +1,494 @@
+/* ═══════════════════════════════════════════════════════
+   Elixopay Billing Page Styles
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── CURRENT PLAN ─── */
+.bi-plan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.bi-plan:hover {
+    border-color: var(--z-border-hover);
+}
+
+.bi-plan-info {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.bi-plan-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.15));
+    display: grid;
+    place-items: center;
+    color: var(--z-amber);
+    font-size: 1.1rem;
+}
+
+.bi-plan-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--z-text3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.bi-plan-name {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--z-white);
+}
+
+.bi-plan-desc {
+    font-size: 0.72rem;
+    color: var(--z-text3);
+}
+
+/* ─── FEE SUMMARY ─── */
+.bi-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.bi-sum-card {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 10px;
+    padding: 1rem;
+    transition: border-color 0.15s;
+}
+
+.bi-sum-card:hover {
+    border-color: var(--z-border-hover);
+}
+
+.bi-sum-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.bi-sum-icon.blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--z-blue);
+}
+
+.bi-sum-icon.green {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--z-green);
+}
+
+.bi-sum-icon.purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--z-purple);
+}
+
+.bi-sum-icon.amber {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--z-amber);
+}
+
+.bi-sum-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--z-text3);
+    margin-bottom: 0.1rem;
+}
+
+.bi-sum-value {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--z-white);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ─── SECTIONS ─── */
+.bi-section {
+    background: var(--z-card);
+    border: 1px solid var(--z-border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.bi-section:hover {
+    border-color: var(--z-border-hover);
+}
+
+.bi-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+}
+
+.bi-section-header h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--z-white);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.bi-section-header h2 i {
+    color: var(--z-blue);
+    font-size: 0.85rem;
+}
+
+.bi-count {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--z-text3);
+    padding: 0.15rem 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+}
+
+/* ─── FEE TABLE ─── */
+.bi-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+
+.bi-table th {
+    text-align: left;
+    font-weight: 700;
+    color: var(--z-text3);
+    padding: 0.55rem 0.65rem;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--z-border);
+}
+
+.bi-table td {
+    padding: 0.65rem;
+    color: var(--z-text2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+}
+
+.bi-table tr:last-child td {
+    border-bottom: none;
+}
+
+.bi-table tr:hover td {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.bi-method {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 500;
+}
+
+.bi-method i {
+    color: var(--z-blue);
+    font-size: 0.8rem;
+}
+
+/* ─── INVOICE LIST ─── */
+.bi-invoice-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.bi-invoice-item:last-child {
+    border-bottom: none;
+}
+
+.bi-inv-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+    background: rgba(59, 130, 246, 0.1);
+    display: grid;
+    place-items: center;
+    color: var(--z-blue);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.bi-inv-info {
+    flex: 1;
+}
+
+.bi-inv-info strong {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--z-white);
+    margin-bottom: 0.1rem;
+}
+
+.bi-inv-info span {
+    font-size: 0.68rem;
+    color: var(--z-text3);
+}
+
+.bi-inv-right {
+    text-align: right;
+}
+
+.bi-inv-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--z-white);
+    display: block;
+}
+
+.bi-inv-status {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.bi-inv-status.paid {
+    color: var(--z-green);
+}
+
+.bi-inv-status.pending {
+    color: var(--z-amber);
+}
+
+.bi-inv-download {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 1px solid var(--z-border);
+    border-radius: 5px;
+    color: var(--z-text3);
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.bi-inv-download:hover {
+    color: var(--z-blue);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Empty */
+.bi-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--z-text3);
+}
+
+.bi-empty i {
+    font-size: 1.5rem;
+    opacity: 0.3;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.bi-empty strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--z-text2);
+    margin-bottom: 0.2rem;
+}
+
+.bi-empty p {
+    font-size: 0.72rem;
+    margin: 0;
+}
+
+/* ─── PLANS GRID ─── */
+.bi-plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+}
+
+.bi-plan-card {
+    position: relative;
+    padding: 1.25rem;
+    background: var(--z-bg);
+    border: 1px solid var(--z-border);
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.bi-plan-card:hover {
+    border-color: var(--z-border-hover);
+    transform: translateY(-2px);
+}
+
+.bi-plan-card.current {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.bi-plan-card.pro {
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.bi-plan-tag {
+    display: inline-block;
+    font-size: 0.55rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--z-blue);
+    margin-bottom: 0.5rem;
+}
+
+.bi-plan-tag.pro {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--z-purple);
+}
+
+.bi-plan-card h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--z-white);
+    margin-bottom: 0.25rem;
+}
+
+.bi-plan-price {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--z-white);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 0.75rem;
+}
+
+.bi-plan-price span {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--z-text3);
+}
+
+.bi-plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    text-align: left;
+}
+
+.bi-plan-features li {
+    font-size: 0.75rem;
+    color: var(--z-text2);
+    padding: 0.2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.bi-plan-features li i {
+    color: var(--z-green);
+    font-size: 0.65rem;
+    flex-shrink: 0;
+}
+
+/* ─── BUTTONS ─── */
+.bi-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.12s;
+    width: 100%;
+    justify-content: center;
+}
+
+.bi-btn.primary {
+    background: var(--z-blue);
+    color: white;
+    border-color: var(--z-blue);
+}
+
+.bi-btn.primary:hover {
+    background: #2563eb;
+}
+
+.bi-btn.outline {
+    background: transparent;
+    color: var(--z-text2);
+    border-color: var(--z-border);
+}
+
+.bi-btn.outline:hover {
+    border-color: var(--z-border-hover);
+    color: var(--z-text);
+}
+
+.bi-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.bi-plan-actions .bi-btn {
+    width: auto;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+    .bi-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bi-plans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bi-plan {
+        flex-wrap: wrap;
+    }
+
+    .bi-plan-actions {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .bi-plan-actions .bi-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .bi-summary {
+        grid-template-columns: 1fr;
+    }
+}

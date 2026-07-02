@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Billing — Elixopay</title>
+    <meta name="description" content="Billing — Coming Soon">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <style>
+        /* ═══ COMING SOON — BILLING ═══ */
+        .cs-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated grid background */
+        .cs-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: csGridFloat 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes csGridFloat {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(40px, 40px);
+            }
+        }
+
+        /* Glow orbs */
+        .cs-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .cs-orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #3b82f6, transparent 70%);
+            top: -100px;
+            right: -80px;
+            animation: csOrb1 8s ease-in-out infinite alternate;
+        }
+
+        .cs-orb-2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #8b5cf6, transparent 70%);
+            bottom: -80px;
+            left: -60px;
+            animation: csOrb2 10s ease-in-out infinite alternate;
+        }
+
+        .cs-orb-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #06b6d4, transparent 70%);
+            top: 40%;
+            left: 60%;
+            animation: csOrb3 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes csOrb1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(-30px, 20px) scale(1.15);
+            }
+        }
+
+        @keyframes csOrb2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(20px, -25px) scale(1.1);
+            }
+        }
+
+        @keyframes csOrb3 {
+            0% {
+                transform: translate(0, 0) scale(0.9);
+                opacity: 0.1;
+            }
+
+            100% {
+                transform: translate(-15px, 10px) scale(1.1);
+                opacity: 0.2;
+            }
+        }
+
+        /* Icon pulse ring */
+        .cs-icon-wrap {
+            position: relative;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+        }
+
+        .cs-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(139, 92, 246, 0.12));
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            display: grid;
+            place-items: center;
+            font-size: 1.8rem;
+            color: var(--z-blue);
+            position: relative;
+            z-index: 2;
+        }
+
+        .cs-pulse {
+            position: absolute;
+            inset: -8px;
+            border-radius: 24px;
+            border: 1px solid rgba(59, 130, 246, 0.08);
+            animation: csPulse 2.5s ease-in-out infinite;
+        }
+
+        .cs-pulse:nth-child(2) {
+            inset: -18px;
+            border-radius: 28px;
+            animation-delay: 0.5s;
+        }
+
+        .cs-pulse:nth-child(3) {
+            inset: -30px;
+            border-radius: 34px;
+            animation-delay: 1s;
+        }
+
+        @keyframes csPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.08;
+                transform: scale(1.03);
+            }
+        }
+
+        /* Text */
+        .cs-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.12);
+            color: var(--z-blue);
+            margin-bottom: 1rem;
+            z-index: 1;
+        }
+
+        .cs-tag-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--z-blue);
+            animation: csDot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes csDot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .cs-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--z-white);
+            line-height: 1.15;
+            margin-bottom: 0.6rem;
+            z-index: 1;
+        }
+
+        .cs-title span {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cs-desc {
+            font-size: 0.88rem;
+            color: var(--z-text3);
+            max-width: 420px;
+            line-height: 1.55;
+            margin-bottom: 2rem;
+            z-index: 1;
+        }
+
+        /* Feature cards */
+        .cs-features {
+            display: flex;
+            gap: 0.65rem;
+            margin-bottom: 2rem;
+            z-index: 1;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cs-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.55rem 0.85rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--z-border);
+            border-radius: 8px;
+            font-size: 0.72rem;
+            color: var(--z-text2);
+            transition: all 0.2s;
+        }
+
+        .cs-feature:hover {
+            border-color: rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.03);
+            transform: translateY(-1px);
+        }
+
+        .cs-feature i {
+            color: var(--z-blue);
+            font-size: 0.7rem;
+        }
+
+        /* Progress bar */
+        .cs-progress-wrap {
+            width: 280px;
+            z-index: 1;
+            margin-bottom: 1.25rem;
+        }
+
+        .cs-progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--z-text3);
+            margin-bottom: 0.35rem;
+        }
+
+        .cs-progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .cs-progress-fill {
+            height: 100%;
+            width: 65%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            position: relative;
+            animation: csProgressShimmer 2s ease-in-out infinite;
+        }
+
+        .cs-progress-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: csShimmer 1.5s ease-in-out infinite;
+        }
+
+        @keyframes csProgressShimmer {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes csShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Notify button */
+        .cs-notify-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.15rem;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+        }
+
+        .cs-notify-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+        }
+
+        .cs-notify-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Floating particles */
+        .cs-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .cs-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            animation: csFloat linear infinite;
+        }
+
+        @keyframes csFloat {
+            0% {
+                transform: translateY(0) rotate(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cs-title {
+                font-size: 1.5rem;
+            }
+
+            .cs-features {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body class="zd-body">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="zd-sidebar" id="sidebar">
+        <div class="zd-sidebar-top">
+            <a href="index.html" class="zd-logo">
+                <div class="zd-logo-icon">Z</div><span class="zd-logo-text">Elixopay</span>
+            </a>
+        </div>
+        <nav class="zd-sidebar-nav">
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.menu">MENU</span>
+                <a href="dashboard.html" class="zd-nav-item"><i class="fas fa-th-large"></i><span
+                        data-i18n="nav.dashboard">Dashboard</span></a>
+                <a href="transactions.html" class="zd-nav-item"><i class="fas fa-exchange-alt"></i><span
+                        data-i18n="nav.transactions">Transactions</span></a>
+                <a href="payout.html" class="zd-nav-item"><i class="fas fa-university"></i><span
+                        data-i18n="nav.payout">Payout</span></a>
+                <a href="billing.html" class="zd-nav-item active"><i class="fas fa-file-invoice"></i><span
+                        data-i18n="nav.billing">Billing</span></a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.developer">DEVELOPER</span>
+                <a href="api-keys.html" class="zd-nav-item"><i class="fas fa-key"></i><span data-i18n="nav.api_keys">API
+                        Keys</span></a>
+                <a href="docs.html" class="zd-nav-item"><i class="fas fa-book"></i><span
+                        data-i18n="nav.documentation">Documentation</span></a>
+                <a href="webhooks.html" class="zd-nav-item"><i class="fas fa-plug"></i><span
+                        data-i18n="nav.webhooks">Webhooks</span></a>
+            </div>
+            <div class="zd-nav-group">
+                <span class="zd-nav-label" data-i18n="nav.settings_label">SETTINGS</span>
+                <a href="security.html" class="zd-nav-item"><i class="fas fa-shield-alt"></i><span
+                        data-i18n="nav.security">Security</span></a>
+                <a href="settings.html" class="zd-nav-item"><i class="fas fa-cog"></i><span
+                        data-i18n="nav.settings">Settings</span></a>
+            </div>
+        </nav>
+        <div class="zd-sidebar-bottom">
+            <div class="zd-sidebar-user">
+                <div class="zd-user-avatar" id="userInitial">M</div>
+                <div class="zd-user-meta"><span class="zd-user-name" id="userName">Merchant</span><span
+                        class="zd-user-email" id="userEmail">Elixopay Account</span></div>
+                <button class="zd-btn-icon" onclick="dashLogout()" title="Sign Out"><i
+                        class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="zd-main-wrap">
+        <header class="zd-topbar">
+            <button class="zd-mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i
+                    class="fas fa-bars"></i></button>
+            <div class="zd-topbar-left">
+                <h1><i class="fas fa-file-invoice"></i> <span data-i18n="billing.title">Billing</span></h1>
+            </div>
+            <div class="zd-topbar-right">
+                <div class="zd-lang-switch"><button onclick="changeLanguage('th')" class="active"
+                        title="ภาษาไทย">🇹🇭</button><button onclick="changeLanguage('en')"
+                        title="English">🇺🇸</button><button onclick="changeLanguage('zh')" title="中文">🇨🇳</button>
+                </div>
+                <button class="zd-btn-icon"><i class="fas fa-bell"></i></button>
+            </div>
+        </header>
+
+        <main class="zd-content">
+            <div class="cs-wrap">
+                <!-- Background effects -->
+                <div class="cs-grid"></div>
+                <div class="cs-orb cs-orb-1"></div>
+                <div class="cs-orb cs-orb-2"></div>
+                <div class="cs-orb cs-orb-3"></div>
+                <div class="cs-particles" id="csParticles"></div>
+
+                <!-- Icon with pulse -->
+                <div class="cs-icon-wrap">
+                    <div class="cs-pulse"></div>
+                    <div class="cs-pulse"></div>
+                    <div class="cs-pulse"></div>
+                    <div class="cs-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                </div>
+
+                <!-- Tag -->
+                <div class="cs-tag"><span class="cs-tag-dot"></span> กำลังพัฒนา</div>
+
+                <!-- Title -->
+                <h2 class="cs-title">Billing <span>Coming Soon</span></h2>
+                <p class="cs-desc">ระบบ Billing กำลังอยู่ระหว่างการพัฒนา เราจะเพิ่มฟีเจอร์จัดการค่าธรรมเนียม ใบแจ้งหนี้
+                    และแผนบริการที่ตรงกับความต้องการของคุณ</p>
+
+                <!-- Feature preview pills -->
+                <div class="cs-features">
+                    <div class="cs-feature"><i class="fas fa-receipt"></i> ใบแจ้งหนี้อัตโนมัติ</div>
+                    <div class="cs-feature"><i class="fas fa-chart-pie"></i> สรุปค่าธรรมเนียม</div>
+                    <div class="cs-feature"><i class="fas fa-gem"></i> แผนบริการ</div>
+                    <div class="cs-feature"><i class="fas fa-download"></i> Export Invoice PDF</div>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="cs-progress-wrap">
+                    <div class="cs-progress-label">
+                        <span>Development Progress</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="cs-progress-bar">
+                        <div class="cs-progress-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Notify button -->
+                <button class="cs-notify-btn" onclick="notifyMe()">
+                    <i class="fas fa-bell"></i> แจ้งเตือนเมื่อพร้อมใช้งาน
+                </button>
+            </div>
+        </main>
+        <footer class="zd-footer"><span>© 2026 Elixopay</span>
+            <div class="zd-footer-links"><a href="docs.html">Docs</a><a href="about.html">About</a><a
+                    href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+        </footer>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script>
+        // Particles
+        (function () {
+            const container = document.getElementById('csParticles');
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'cs-particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.width = (Math.random() * 3 + 1) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.background = ['rgba(59,130,246,0.3)', 'rgba(139,92,246,0.3)', 'rgba(6,182,212,0.25)'][Math.floor(Math.random() * 3)];
+                container.appendChild(p);
+            }
+        })();
+
+        // Notify
+        function notifyMe() {
+            const existing = document.querySelector('.dash-toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'dash-toast success';
+            toast.innerHTML = '<i class="fas fa-check-circle"></i> เราจะแจ้งเตือนคุณเมื่อ Billing พร้อมใช้งาน!';
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 250); }, 2500);
+        }
+
+        // Utils
+        function dashLogout() { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'index.html'; }
+
+        // User info
+        document.addEventListener('DOMContentLoaded', () => {
+            const u = localStorage.getItem('user');
+            if (u) {
+                try {
+                    const user = JSON.parse(u);
+                    if (user.name) { document.getElementById('userName').textContent = user.name; document.getElementById('userInitial').textContent = user.name.charAt(0).toUpperCase(); }
+                    if (user.email) document.getElementById('userEmail').textContent = user.email;
+                } catch (e) { }
+            }
+        });
+    </script>
+</body>
+
+</html>

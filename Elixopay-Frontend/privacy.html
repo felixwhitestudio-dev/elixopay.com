@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Elixopay — นโยบายความเป็นส่วนตัว</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #050508;
+            --s1: #0a0a10;
+            --s2: #12121c;
+            --brd: rgba(255, 255, 255, 0.06);
+            --txt: #d4d8e0;
+            --dim: #8b92a0;
+            --w: white;
+            --pri: #64c8ff;
+            --pri2: #38bdf8;
+            --pri3: #a5f3fc;
+            --pri-bg: rgba(100, 200, 255, 0.06);
+            --pri-glow: rgba(100, 200, 255, 0.12)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased
+        }
+
+        ::selection {
+            background: rgba(100, 200, 255, 0.3)
+        }
+
+        /* MESH CANVAS */
+        #mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: .35;
+            pointer-events: none
+        }
+
+        /* HEX GRID */
+        .hex-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: .04;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2364c8ff' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+        }
+
+        /* SCAN LINE */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, var(--pri), rgba(100, 200, 255, .6), var(--pri), transparent);
+            opacity: .5;
+            animation: scanDown 8s linear infinite
+        }
+
+        @keyframes scanDown {
+            0% {
+                top: 0
+            }
+
+            100% {
+                top: 100vh
+            }
+        }
+
+        /* NOISE */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            background: rgba(5, 5, 8, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--brd)
+        }
+
+        .nav-in {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            text-decoration: none;
+            color: var(--w);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -.03em
+        }
+
+        .logo-m {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: .8rem;
+            color: var(--w);
+            position: relative;
+            overflow: hidden
+        }
+
+        .logo-m::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #7877c6, #64c8ff)
+        }
+
+        .logo-m::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #64c8ff, #c084fc);
+            opacity: 0;
+            animation: logoShift 4s ease-in-out infinite
+        }
+
+        @keyframes logoShift {
+
+            0%,
+            100% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        .logo-m span {
+            position: relative;
+            z-index: 1
+        }
+
+        .nav-r {
+            display: flex;
+            align-items: center;
+            gap: .15rem
+        }
+
+        .nav-r a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .82rem;
+            font-weight: 500;
+            padding: .45rem .75rem;
+            border-radius: 8px;
+            transition: all .25s
+        }
+
+        .nav-r a:hover,
+        .nav-r a.active {
+            color: var(--w)
+        }
+
+        .nav-cta {
+            background: rgba(255, 255, 255, .06) !important;
+            color: var(--w) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important
+        }
+
+        /* HERO — PRIVACY (Cyan/Shield) */
+        .hero {
+            padding: 8rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 5
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(56, 189, 248, .18), rgba(100, 200, 255, .06) 50%, transparent 70%);
+            pointer-events: none
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(100, 200, 255, .2), transparent);
+            pointer-events: none
+        }
+
+        /* ANIMATED ICON */
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--pri);
+            position: relative;
+            background: rgba(100, 200, 255, .05);
+            border: 1px solid rgba(100, 200, 255, .12)
+        }
+
+        .hero-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 23px;
+            background: conic-gradient(from 0deg, transparent, var(--pri), transparent, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            padding: 1px;
+            animation: spinBorder 6s linear infinite
+        }
+
+        @keyframes spinBorder {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .hero-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 28px;
+            border: 1px solid rgba(100, 200, 255, .05);
+            animation: iconPulse 3s ease infinite
+        }
+
+        @keyframes iconPulse {
+
+            0%,
+            100% {
+                opacity: .3;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 0;
+                transform: scale(1.12)
+            }
+        }
+
+        .hero-icon i {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 12px rgba(100, 200, 255, .5))
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -.04em;
+            color: var(--w);
+            margin-bottom: .8rem
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(90deg, #38bdf8, #64c8ff, #a5f3fc, #38bdf8);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: holoShift 5s linear infinite
+        }
+
+        @keyframes holoShift {
+            0% {
+                background-position: 0% 50%
+            }
+
+            100% {
+                background-position: 300% 50%
+            }
+        }
+
+        .hero p {
+            color: var(--dim);
+            font-size: .9rem;
+            max-width: 500px;
+            margin: 0 auto
+        }
+
+        .hero .meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap
+        }
+
+        .hero .updated {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            color: var(--pri);
+            display: flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .hero .updated .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pri);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(100, 200, 255, .4)
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(100, 200, 255, 0)
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .32rem .85rem;
+            background: var(--pri-bg);
+            border: 1px solid rgba(100, 200, 255, .1);
+            border-radius: 50px;
+            font-size: .7rem;
+            color: var(--pri);
+            font-weight: 600;
+            letter-spacing: .02em
+        }
+
+        /* CONTENT */
+        .content {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+            position: relative;
+            z-index: 5
+        }
+
+        /* TOC — GLOWING CARD */
+        .toc {
+            background: rgba(10, 10, 16, .8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 200, 255, .1);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .toc::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pri2), var(--pri), var(--pri2), transparent)
+        }
+
+        .toc::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg, transparent 60%, rgba(100, 200, 255, .03) 80%, transparent 100%);
+            animation: tocGlow 10s linear infinite
+        }
+
+        @keyframes tocGlow {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .toc h3 {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--w);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .toc h3 i {
+            color: var(--pri);
+            font-size: .75rem
+        }
+
+        .toc ol {
+            padding-left: 1.4rem;
+            position: relative;
+            z-index: 1;
+            columns: 2;
+            column-gap: 2rem
+        }
+
+        .toc li {
+            margin-bottom: .45rem;
+            break-inside: avoid
+        }
+
+        .toc a {
+            color: var(--pri3);
+            text-decoration: none;
+            font-size: .82rem;
+            transition: all .2s;
+            position: relative
+        }
+
+        .toc a:hover {
+            color: var(--w);
+            text-shadow: 0 0 12px rgba(100, 200, 255, .3)
+        }
+
+        /* SECTION CARDS */
+        .sec {
+            margin-bottom: 1.5rem;
+            padding: 1.8rem 2rem;
+            background: rgba(10, 10, 16, .6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 200, 255, .06);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .4s, box-shadow .4s
+        }
+
+        .sec:hover {
+            border-color: rgba(100, 200, 255, .15);
+            box-shadow: 0 0 30px rgba(100, 200, 255, .04)
+        }
+
+        /* Animated border on hover */
+        .sec::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pri), transparent);
+            transition: left 1s
+        }
+
+        .sec:hover::before {
+            left: 100%
+        }
+
+        /* Section number glow */
+        .sec h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--w);
+            letter-spacing: -.02em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .sec h2 .num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .65rem;
+            color: var(--pri);
+            font-weight: 600;
+            background: var(--pri-bg);
+            padding: .25rem .55rem;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 200, 255, .12);
+            position: relative;
+            min-width: 30px;
+            text-align: center
+        }
+
+        .sec h2 .num::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(100, 200, 255, .15);
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .sec:hover h2 .num::after {
+            opacity: 1
+        }
+
+        .sec h2 .ic {
+            color: var(--pri);
+            font-size: .85rem;
+            filter: drop-shadow(0 0 6px rgba(100, 200, 255, .3))
+        }
+
+        .sec h3 {
+            font-size: .92rem;
+            font-weight: 700;
+            color: var(--w);
+            margin: 1.2rem 0 .5rem;
+            padding-left: .6rem;
+            border-left: 2px solid rgba(100, 200, 255, .3)
+        }
+
+        .sec p,
+        .sec li {
+            font-size: .86rem;
+            color: var(--dim);
+            line-height: 1.8
+        }
+
+        .sec ul,
+        .sec ol {
+            padding-left: 1.2rem;
+            margin: .5rem 0
+        }
+
+        .sec ul li,
+        .sec ol li {
+            margin-bottom: .3rem
+        }
+
+        .sec ul li::marker {
+            color: var(--pri)
+        }
+
+        .sec strong {
+            color: var(--txt);
+            font-weight: 600
+        }
+
+        .sec a {
+            color: var(--pri3);
+            text-decoration: none
+        }
+
+        .sec a:hover {
+            text-decoration: underline
+        }
+
+        /* HIGHLIGHT BOX */
+        .highlight {
+            background: rgba(100, 200, 255, .04);
+            border: 1px solid rgba(100, 200, 255, .1);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            font-size: .84rem;
+            color: var(--txt);
+            line-height: 1.7;
+            position: relative;
+            overflow: hidden
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--pri2), var(--pri), transparent)
+        }
+
+        .highlight i {
+            color: var(--pri);
+            margin-right: .4rem
+        }
+
+        /* CONTACT BOX */
+        .contact-box {
+            background: rgba(10, 10, 16, .8);
+            border: 1px solid rgba(100, 200, 255, .08);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(100, 200, 255, .06), transparent);
+            pointer-events: none
+        }
+
+        .contact-box h4 {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--w);
+            margin-bottom: .6rem
+        }
+
+        .contact-box p {
+            font-size: .82rem;
+            color: var(--dim);
+            line-height: 1.7
+        }
+
+        /* DATA STREAM (floating particles) */
+        .data-stream {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .particle {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .55rem;
+            color: var(--pri);
+            opacity: .12;
+            animation: float linear infinite
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0
+            }
+
+            10% {
+                opacity: .12
+            }
+
+            90% {
+                opacity: .12
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0
+            }
+        }
+
+        /* CORNER BRACKETS */
+        .corner-bracket {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            z-index: 2
+        }
+
+        .corner-bracket.tl {
+            top: -1px;
+            left: -1px;
+            border-top: 2px solid var(--pri);
+            border-left: 2px solid var(--pri);
+            border-radius: 3px 0 0 0
+        }
+
+        .corner-bracket.tr {
+            top: -1px;
+            right: -1px;
+            border-top: 2px solid var(--pri);
+            border-right: 2px solid var(--pri);
+            border-radius: 0 3px 0 0
+        }
+
+        .corner-bracket.bl {
+            bottom: -1px;
+            left: -1px;
+            border-bottom: 2px solid var(--pri);
+            border-left: 2px solid var(--pri);
+            border-radius: 0 0 0 3px
+        }
+
+        .corner-bracket.br {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 2px solid var(--pri);
+            border-right: 2px solid var(--pri);
+            border-radius: 0 0 3px 0
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--brd);
+            padding: 1.8rem 2rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .foot {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem
+        }
+
+        .foot-brand {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            color: var(--w);
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .foot ul {
+            display: flex;
+            gap: 1.2rem;
+            list-style: none
+        }
+
+        .foot a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .78rem;
+            transition: color .2s
+        }
+
+        .foot a:hover {
+            color: var(--w)
+        }
+
+        .foot-c {
+            color: var(--dim);
+            font-size: .75rem
+        }
+
+        .rv {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .9s cubic-bezier(.22, 1, .36, 1), transform .9s cubic-bezier(.22, 1, .36, 1)
+        }
+
+        .rv.vis {
+            opacity: 1;
+            transform: none
+        }
+
+        .rv-d1 {
+            transition-delay: .1s
+        }
+
+        .rv-d2 {
+            transition-delay: .2s
+        }
+
+        .rv-d3 {
+            transition-delay: .3s
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MESH CANVAS BG -->
+    <canvas id="mesh"></canvas>
+    <div class="hex-grid"></div>
+    <div class="scan-line"></div>
+
+    <!-- DATA STREAM PARTICLES -->
+    <div class="data-stream" id="dataStream"></div>
+
+    <nav>
+        <div class="nav-in">
+            <a href="index.html" class="logo">
+                <div class="logo-m"><span>Z</span></div>Elixopay
+            </a>
+            <div class="nav-r">
+                <a href="developer.html">Docs</a><a href="about.html">About</a><a href="get-started.html"
+                    class="nav-cta">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-icon rv"><i class="fas fa-shield-alt"></i></div>
+        <h1 class="rv rv-d1"><em>นโยบายความเป็นส่วนตัว</em></h1>
+        <p class="rv rv-d2">Privacy Policy — Elixopay by S.P. Development Co., Ltd.</p>
+        <div class="meta-row rv rv-d3">
+            <div class="updated"><span class="dot"></span> อัปเดตล่าสุด: 1 มีนาคม 2569</div>
+            <div class="badge"><i class="fas fa-check-circle"></i> PDPA Compliant</div>
+            <div class="badge"><i class="fas fa-fingerprint"></i> Data Protected</div>
+        </div>
+    </section>
+
+    <div class="content">
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc rv">
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+            <h3><i class="fas fa-shield-alt"></i> สารบัญ — การคุ้มครองข้อมูล</h3>
+            <ol>
+                <li><a href="#s1">ข้อมูลที่เราเก็บรวบรวม</a></li>
+                <li><a href="#s2">วัตถุประสงค์ในการเก็บข้อมูล</a></li>
+                <li><a href="#s3">การแบ่งปันข้อมูล</a></li>
+                <li><a href="#s4">การรักษาความปลอดภัยข้อมูล</a></li>
+                <li><a href="#s5">สิทธิ์ของเจ้าของข้อมูล (PDPA)</a></li>
+                <li><a href="#s6">คุกกี้และเทคโนโลยีการติดตาม</a></li>
+                <li><a href="#s7">ระยะเวลาการเก็บรักษาข้อมูล</a></li>
+                <li><a href="#s8">การเปลี่ยนแปลงนโยบาย</a></li>
+                <li><a href="#s9">ช่องทางการติดต่อ</a></li>
+            </ol>
+        </div>
+
+        <!-- SECTIONS -->
+        <div class="sec rv" id="s1">
+            <h2><span class="num">01</span> <i class="ic fas fa-database"></i> ข้อมูลที่เราเก็บรวบรวม</h2>
+            <p>เราเก็บรวบรวมข้อมูลส่วนบุคคลเท่าที่จำเป็นสำหรับการให้บริการ Payment Gateway ดังนี้:</p>
+            <h3>ข้อมูลที่คุณให้โดยตรง</h3>
+            <ul>
+                <li><strong>ข้อมูลระบุตัวตน:</strong> ชื่อ-นามสกุล, อีเมล, เบอร์โทรศัพท์</li>
+                <li><strong>ข้อมูลธุรกิจ:</strong> ชื่อบริษัท, ประเภทธุรกิจ, เลขทะเบียนนิติบุคคล</li>
+                <li><strong>ข้อมูลทางการเงิน:</strong> เลขบัญชีธนาคารสำหรับการรับเงิน</li>
+                <li><strong>เอกสาร KYC:</strong> สำเนาบัตรประชาชน, ทะเบียนการค้า (สำหรับ Merchant)</li>
+            </ul>
+            <h3>ข้อมูลที่เก็บโดยอัตโนมัติ</h3>
+            <ul>
+                <li><strong>ข้อมูลธุรกรรม:</strong> จำนวนเงิน, สถานะ, วิธีชำระเงิน, Timestamp</li>
+                <li><strong>ข้อมูลเทคนิค:</strong> IP Address, ประเภทเบราว์เซอร์, ระบบปฏิบัติการ</li>
+                <li><strong>ข้อมูลการใช้งาน:</strong> Log การเข้าใช้ Dashboard, API Calls</li>
+            </ul>
+        </div>
+
+        <div class="sec rv" id="s2">
+            <h2><span class="num">02</span> <i class="ic fas fa-bullseye"></i> วัตถุประสงค์ในการเก็บข้อมูล</h2>
+            <p>เราใช้ข้อมูลของคุณเพื่อ:</p>
+            <ul>
+                <li><strong>ให้บริการ:</strong> ประมวลผลธุรกรรมการชำระเงิน, จัดการบัญชี Merchant</li>
+                <li><strong>ยืนยันตัวตน (KYC/AML):</strong> ปฏิบัติตามกฎหมายป้องกันการฟอกเงิน</li>
+                <li><strong>ปรับปรุงบริการ:</strong> วิเคราะห์การใช้งานเพื่อพัฒนาระบบให้ดีขึ้น</li>
+                <li><strong>ติดต่อสื่อสาร:</strong> แจ้งข้อมูลสำคัญเกี่ยวกับบัญชีและบริการ</li>
+                <li><strong>ความปลอดภัย:</strong> ตรวจจับและป้องกันการทุจริต</li>
+                <li><strong>ปฏิบัติตามกฎหมาย:</strong> รายงานต่อหน่วยงานกำกับดูแลตามที่กฎหมายกำหนด</li>
+            </ul>
+        </div>
+
+        <div class="sec rv" id="s3">
+            <h2><span class="num">03</span> <i class="ic fas fa-share-alt"></i> การแบ่งปันข้อมูล</h2>
+            <div class="highlight"><i class="fas fa-info-circle"></i> เราจะ <strong>ไม่ขาย</strong>
+                ข้อมูลส่วนบุคคลของคุณ ไม่ว่าในกรณีใดๆ</div>
+            <p>เราอาจแบ่งปันข้อมูลกับ:</p>
+            <ul>
+                <li><strong>ธนาคารพาณิชย์:</strong> เพื่อประมวลผลธุรกรรมการชำระเงิน</li>
+                <li><strong>ผู้ให้บริการ:</strong> Cloud Hosting, ระบบตรวจจับการทุจริต (ภายใต้สัญญารักษาความลับ)</li>
+                <li><strong>หน่วยงานราชการ:</strong> เมื่อมีคำสั่งศาลหรือตามที่กฎหมายกำหนด</li>
+            </ul>
+            <p>ผู้ให้บริการทุกรายจะต้องลงนามในสัญญาคุ้มครองข้อมูล (Data Processing Agreement) ก่อนเข้าถึงข้อมูล</p>
+        </div>
+
+        <div class="sec rv" id="s4">
+            <h2><span class="num">04</span> <i class="ic fas fa-lock"></i> การรักษาความปลอดภัยข้อมูล</h2>
+            <p>เราใช้มาตรการรักษาความปลอดภัยระดับสูง:</p>
+            <ul>
+                <li><strong>การเข้ารหัส:</strong> AES-256 Encryption สำหรับข้อมูลที่จัดเก็บ, TLS 1.3
+                    สำหรับข้อมูลระหว่างทาง</li>
+                <li><strong>มาตรฐาน PCI-DSS Level 1:</strong> การจัดการข้อมูลบัตรเครดิตตามมาตรฐานสากล</li>
+                <li><strong>3D Secure 2.0:</strong> การยืนยันตัวตนเพิ่มเติมสำหรับธุรกรรมบัตรเครดิต</li>
+                <li><strong>Two-Factor Authentication:</strong> การยืนยันตัวตน 2 ชั้นสำหรับบัญชี Merchant</li>
+                <li><strong>การตรวจสอบ:</strong> Penetration Testing และ Security Audit เป็นประจำ</li>
+            </ul>
+        </div>
+
+        <div class="sec rv" id="s5">
+            <h2><span class="num">05</span> <i class="ic fas fa-user-shield"></i> สิทธิ์ของเจ้าของข้อมูล (PDPA)</h2>
+            <p>ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) คุณมีสิทธิ์:</p>
+            <ul>
+                <li><strong>สิทธิ์ในการเข้าถึง:</strong> ขอดูข้อมูลส่วนบุคคลที่เราเก็บเกี่ยวกับคุณ</li>
+                <li><strong>สิทธิ์ในการแก้ไข:</strong> ขอแก้ไขข้อมูลที่ไม่ถูกต้องหรือไม่สมบูรณ์</li>
+                <li><strong>สิทธิ์ในการลบ:</strong> ขอให้ลบข้อมูลของคุณ (ภายใต้ข้อยกเว้นทางกฎหมาย)</li>
+                <li><strong>สิทธิ์ในการคัดค้าน:</strong> คัดค้านการเก็บหรือใช้ข้อมูลบางประเภท</li>
+                <li><strong>สิทธิ์ในการเพิกถอนความยินยอม:</strong> ถอนความยินยอมเมื่อใดก็ได้</li>
+                <li><strong>สิทธิ์ในการโอนย้ายข้อมูล:</strong> ขอรับข้อมูลในรูปแบบที่อ่านได้ด้วยเครื่อง</li>
+                <li><strong>สิทธิ์ในการร้องเรียน:</strong> ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล</li>
+            </ul>
+            <div class="highlight"><i class="fas fa-envelope"></i> ต้องการใช้สิทธิ์? ติดต่อ <a
+                    href="mailto:support@elixopay.com">support@elixopay.com</a> — เราจะดำเนินการภายใน 30 วัน</div>
+        </div>
+
+        <div class="sec rv" id="s6">
+            <h2><span class="num">06</span> <i class="ic fas fa-cookie-bite"></i> คุกกี้และเทคโนโลยีการติดตาม</h2>
+            <p>เว็บไซต์ของเราใช้คุกกี้เพื่อ:</p>
+            <ul>
+                <li><strong>คุกกี้ที่จำเป็น:</strong> เพื่อให้ระบบทำงานได้ (Session, CSRF Protection)</li>
+                <li><strong>คุกกี้วิเคราะห์:</strong> วัดผลการใช้งานเว็บไซต์ (สามารถปิดได้)</li>
+            </ul>
+            <div class="highlight"><i class="fas fa-ban"></i> เราจะ <strong>ไม่ใช้</strong>
+                คุกกี้สำหรับโฆษณาหรือการติดตามข้ามเว็บไซต์</div>
+        </div>
+
+        <div class="sec rv" id="s7">
+            <h2><span class="num">07</span> <i class="ic fas fa-clock"></i> ระยะเวลาการเก็บรักษาข้อมูล</h2>
+            <ul>
+                <li><strong>ข้อมูลธุรกรรม:</strong> 10 ปี ตามกฎหมายป้องกันการฟอกเงิน</li>
+                <li><strong>ข้อมูลบัญชี:</strong> ตลอดระยะเวลาที่ใช้บริการ + 5 ปีหลังปิดบัญชี</li>
+                <li><strong>ข้อมูล KYC:</strong> 5 ปีหลังสิ้นสุดความสัมพันธ์ทางธุรกิจ</li>
+                <li><strong>Log การใช้งาน:</strong> 1 ปี</li>
+            </ul>
+            <p>หลังครบกำหนด ข้อมูลจะถูกลบหรือทำให้ไม่สามารถระบุตัวตนได้ (Anonymization)</p>
+        </div>
+
+        <div class="sec rv" id="s8">
+            <h2><span class="num">08</span> <i class="ic fas fa-sync-alt"></i> การเปลี่ยนแปลงนโยบาย</h2>
+            <p>เราอาจปรับปรุงนโยบายนี้เป็นครั้งคราว โดยจะแจ้งให้ทราบผ่าน:</p>
+            <ul>
+                <li>อีเมลที่ลงทะเบียนไว้</li>
+                <li>ประกาศบนเว็บไซต์และ Dashboard</li>
+            </ul>
+            <p>การใช้บริการต่อหลังวันที่มีผลบังคับ ถือว่าคุณยอมรับนโยบายฉบับปรับปรุง</p>
+        </div>
+
+        <div class="sec rv" id="s9">
+            <h2><span class="num">09</span> <i class="ic fas fa-headset"></i> ช่องทางการติดต่อ</h2>
+            <p>หากมีคำถามเกี่ยวกับนโยบายนี้ หรือต้องการใช้สิทธิ์ตาม PDPA:</p>
+            <div class="contact-box">
+                <div class="corner-bracket tl"></div>
+                <div class="corner-bracket tr"></div>
+                <div class="corner-bracket bl"></div>
+                <div class="corner-bracket br"></div>
+                <h4><i class="fas fa-building" style="color:var(--pri);margin-right:.4rem"></i> บริษัท
+                    เอส.พี.ดีเวลลอปเม้นท์ จำกัด</h4>
+                <p>
+                    117/19 หมู่บ้านนันทนาการ์เด้นปาร์คเพลส หมู่ที่ 1<br>
+                    ตำบลบางคูวัด อำเภอเมืองปทุมธานี จังหวัดปทุมธานี<br><br>
+                    <strong>อีเมล:</strong> <a href="mailto:support@elixopay.com"
+                        style="color:var(--pri);text-decoration:none">support@elixopay.com</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="foot">
+            <div class="foot-brand">
+                <div class="logo-m" style="width:20px;height:20px;font-size:.6rem;border-radius:5px"><span>Z</span>
+                </div>Elixopay
+            </div>
+            <ul>
+                <li><a href="developer.html">Docs</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+                <li><a href="terms.html">Terms</a></li>
+            </ul>
+            <span class="foot-c">© 2026 Elixopay</span>
+        </div>
+    </footer>
+
+    <script>
+        // MESH CANVAS
+        const c = document.getElementById('mesh'), ctx = c.getContext('2d');
+        let w, h, pts = [];
+        function resize() {
+            w = c.width = innerWidth; h = c.height = innerHeight; pts = [];
+            for (let i = 0; i < 40; i++)pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3 })
+        }
+        resize(); window.addEventListener('resize', resize);
+        function drawMesh() {
+            ctx.clearRect(0, 0, w, h);
+            pts.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2); ctx.fillStyle = 'rgba(100,200,255,0.3)'; ctx.fill()
+            });
+            for (let i = 0; i < pts.length; i++)for (let j = i + 1; j < pts.length; j++) {
+                const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+                if (d < 160) {
+                    ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
+                    ctx.strokeStyle = `rgba(100,200,255,${.08 * (1 - d / 160)})`; ctx.stroke()
+                }
+            }
+            requestAnimationFrame(drawMesh)
+        }
+        drawMesh();
+
+        // DATA STREAM PARTICLES
+        const ds = document.getElementById('dataStream');
+        const symbols = ['⊕', '⊗', '∞', 'Δ', 'Σ', 'λ', '⟨', '⟩', '§', '¶', '∫', '≡', '⊙'];
+        for (let i = 0; i < 15; i++) {
+            const p = document.createElement('div'); p.className = 'particle';
+            p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = (12 + Math.random() * 18) + 's';
+            p.style.animationDelay = Math.random() * 15 + 's'; ds.appendChild(p)
+        }
+
+        // REVEAL ON SCROLL
+        const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target) } }), { threshold: .08 });
+        document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>
