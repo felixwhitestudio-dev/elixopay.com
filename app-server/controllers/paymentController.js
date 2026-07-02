@@ -119,7 +119,7 @@ exports.createPayment = async (req, res, next) => {
     });
 
   } catch (error) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK'); console.error("CheckoutSession Error: ", error);
     next(error);
   } finally {
     client.release();
@@ -219,7 +219,7 @@ exports.processPayment = async (req, res, next) => {
     const payerWallet = payerWalletRes.rows[0];
 
     if (!payerWallet || parseFloat(payerWallet.balance) < amount) {
-      await client.query('ROLLBACK');
+      await client.query('ROLLBACK'); console.error("CheckoutSession Error: ", error);
       return res.status(400).json({ success: false, error: { message: 'Insufficient balance' } });
     }
 
@@ -233,7 +233,7 @@ exports.processPayment = async (req, res, next) => {
     if (!merchantWallet) {
       // Should exist, but create if fail safe
       // simplified for speed
-      await client.query('ROLLBACK');
+      await client.query('ROLLBACK'); console.error("CheckoutSession Error: ", error);
       return res.status(500).json({ success: false, error: { message: 'Merchant wallet error' } });
     }
 
@@ -279,7 +279,7 @@ exports.processPayment = async (req, res, next) => {
     });
 
   } catch (error) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK'); console.error("CheckoutSession Error: ", error);
     next(error);
   } finally {
     client.release();
@@ -468,7 +468,7 @@ exports.createCheckoutSession = async (req, res, next) => {
       }
     });
   } catch (error) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK'); console.error("CheckoutSession Error: ", error);
     next(error);
   } finally {
     client.release();

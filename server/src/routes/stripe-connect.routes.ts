@@ -18,5 +18,6 @@ router.get('/payouts', protect, stripeConnectController.getPayouts);
 
 // Admin-only routes
 router.post('/payout', protect, restrictTo('admin'), stripeConnectController.createPayout);
+router.get('/health', protect, restrictTo('admin'), stripeConnectController.healthCheck);
 
 export default router;

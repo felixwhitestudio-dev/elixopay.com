@@ -94,8 +94,15 @@
                     <label data-i18n="profile.account">Bank Account Number</label>
                     <input type="text" name="bank_account" id="bank_account" maxlength="20" required placeholder="Account number">
                 </div>
-                <button type="submit" class="pf-btn" data-i18n="profile.save">
-                    <i class="fas fa-save" style="margin-right:6px;"></i>Save Profile
+                <div class="pf-group">
+                    <label>Reason for Change (Required)</label>
+                    <input type="text" name="reason" id="reason" required placeholder="Why are you changing your bank account?">
+                </div>
+                <div id="pending-notice" class="hidden" style="background: rgba(245,158,11,0.1); border: 1px solid #f59e0b; color: #f59e0b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                    You have a pending bank account change request. Please wait for admin approval before submitting another one.
+                </div>
+                <button type="submit" class="pf-btn" id="save-btn" data-i18n="profile.save">
+                    <i class="fas fa-save" style="margin-right:6px;"></i>Submit Change Request
                 </button>
                 <div id="kyc-message"></div>
             </form>
@@ -111,10 +118,31 @@
             try {
                 const response = await window.apiFetch(window.API_CONFIG.ENDPOINTS.auth.me);
                 const data = await response.json();
-                if (data.success && data.data && data.data.user) {
-                    const user = data.data.user;
-                    document.getElementById('fullname').value = (user.first_name || '') + ' ' + (user.last_name || '');
+                if (data.success && data.data && (data.data.user || data.user)) {
+                    const user = data.data.user || data.user;
+                    document.getElementById('fullname').value = (user.first_name || user.firstName || '') + ' ' + (user.last_name || user.lastName || '');
                 }
+
+                // Fetch bank info
+                const bankRes = await window.apiFetch('/api/v1/bank/me');
+                if (bankRes.ok) {
+                    const bankData = await bankRes.json();
+                    if (bankData.data) {
+                        const bank = bankData.data.bank;
+                        if (bank) {
+                            document.getElementById('bank').value = bank.bankName || '';
+                            document.getElementById('bank_account').value = bank.bankAccountNumber || '';
+                        }
+                        const pendingRequest = bankData.data.pendingRequest;
+                        if (pendingRequest) {
+                            document.getElementById('pending-notice').classList.remove('hidden');
+                            document.getElementById('save-btn').disabled = true;
+                            document.getElementById('save-btn').style.opacity = '0.5';
+                            document.getElementById('save-btn').style.cursor = 'not-allowed';
+                        }
+                    }
+                }
+
             } catch (error) {
                 console.error("Failed to load profile", error);
             }
@@ -122,19 +150,46 @@
 
         document.getElementById('kyc-form').onsubmit = async function (e) {
             e.preventDefault();
-            const submitBtn = this.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('save-btn');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
-            setTimeout(() => {
-                const msg = window.ElixopayI18n ? window.ElixopayI18n.t('profile.saved') : 'Profile saved successfully';
+            const bank = document.getElementById('bank').value;
+            const bankAccount = document.getElementById('bank_account').value;
+            const fullname = document.getElementById('fullname').value;
+            const reason = document.getElementById('reason').value;
+
+            try {
+                const res = await window.apiFetch('/api/v1/bank/change-request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        newBankName: bank,
+                        newAccountNumber: bankAccount,
+                        newAccountName: fullname,
+                        reason: reason
+                    })
+                });
+
+                const data = await res.json();
                 const msgEl = document.getElementById('kyc-message');
-                msgEl.textContent = '✅ ' + msg;
-                msgEl.className = 'text-green-500';
+
+                if (res.ok && data.success) {
+                    msgEl.textContent = '✅ ' + data.message;
+                    msgEl.className = 'text-green-500';
+                    document.getElementById('pending-notice').classList.remove('hidden');
+                } else {
+                    msgEl.textContent = '❌ ' + (data.message || 'Failed to submit request');
+                    msgEl.style.color = '#ef4444';
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                document.getElementById('kyc-message').textContent = '❌ Network error';
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            }, 1000);
+            }
+
+            submitBtn.innerHTML = originalText;
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -10,5 +10,6 @@ router.use(protect);
 router.post('/', webhookController.createEndpoint);
 router.get('/', webhookController.getEndpoints);
 router.delete('/:id', webhookController.deleteEndpoint);
+router.post('/test', webhookController.testWebhook);
 
 export default router;

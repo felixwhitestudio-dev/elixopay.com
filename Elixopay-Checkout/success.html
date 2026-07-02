@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ชำระเงินสำเร็จ - Elixopay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/checkout.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .success-icon {
+            color: #10b981;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-wrapper">
+        <div class="checkout-container glass-panel" style="text-align: center;">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h2 style="margin-bottom: 0.5rem; font-weight: 800;">ชำระเงินสำเร็จ!</h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">ขอบคุณที่ใช้บริการ ระบบกำลังพากลับไปยังหน้าร้านค้า...</p>
+            
+            <button class="pay-btn" onclick="window.history.back()">กลับหน้าร้านค้า</button>
+        </div>
+    </div>
+
+</body>
+</html>

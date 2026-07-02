@@ -24,6 +24,8 @@ export interface ChargeParams {
     token?: string;
     /** Unique order/reference ID from the merchant */
     orderId?: string;
+    /** Connected Stripe Account ID (if applicable) */
+    stripeAccountId?: string;
 }
 
 export interface ChargeResult {

@@ -118,14 +118,20 @@
                 class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4"></div>
             <h3 id="status-title" class="text-xl font-bold text-gray-800 mb-2"></h3>
             <p id="status-desc" class="text-sm text-gray-500 mb-6 max-w-sm mx-auto"></p>
-            <button onclick="window.location.href='/dashboard.html'"
-                class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition">
-                <i class="fas fa-home mr-2"></i>กลับสู่แดชบอร์ด
-            </button>
+            <div class="flex justify-center gap-3 flex-col sm:flex-row max-w-xs mx-auto sm:max-w-none">
+                <button onclick="window.location.href='/dashboard.html'"
+                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition">
+                    <i class="fas fa-home mr-2"></i>กลับสู่แดชบอร์ด
+                </button>
+                <button id="manage-bank-btn" onclick="window.location.href='/profile.html'"
+                    class="hidden px-6 py-2.5 bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 font-bold rounded-xl transition">
+                    <i class="fas fa-university mr-2"></i>จัดการบัญชีธนาคาร
+                </button>
+            </div>
         </div>
 
         <!-- Progress Steps -->
-        <div class="mb-8">
+        <div id="kyc-progress-steps" class="mb-8">
             <div class="flex items-center justify-between relative">
                 <!-- Line -->
                 <div class="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 z-0"></div>
@@ -515,16 +521,18 @@
             }
         });
 
-        // Show a status-only page instead of the form
         function showKycStatusPage(status, reason) {
             const form = document.getElementById('kycForm');
             const container = document.getElementById('kyc-status-overlay');
+            const progress = document.getElementById('kyc-progress-steps');
             const iconEl = document.getElementById('status-icon');
             const titleEl = document.getElementById('status-title');
             const descEl = document.getElementById('status-desc');
+            const manageBankBtn = document.getElementById('manage-bank-btn');
 
             if (!container || !form) return;
             form.classList.add('hidden');
+            if (progress) progress.classList.add('hidden');
             container.classList.remove('hidden');
 
             if (status === 'pending') {
@@ -532,11 +540,13 @@
                 iconEl.innerHTML = '<i class="fas fa-hourglass-half text-3xl animate-pulse"></i>';
                 titleEl.textContent = 'อยู่ระหว่างการตรวจสอบ';
                 descEl.textContent = 'เจ้าหน้าที่ได้รับเอกสารของคุณแล้ว กำลังดำเนินการตรวจสอบภายใน 1-2 วันทำการ คุณจะได้รับแจ้งผลทาง Email';
+                if (manageBankBtn) manageBankBtn.classList.add('hidden');
             } else if (status === 'verified') {
                 iconEl.className = 'w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-500 mx-auto mb-4';
                 iconEl.innerHTML = '<i class="fas fa-check-circle text-3xl"></i>';
                 titleEl.textContent = 'ยืนยันตัวตนสำเร็จแล้ว ✅';
                 descEl.textContent = 'KYC ของคุณได้รับการอนุมัติแล้ว คุณสามารถใช้งานระบบได้เต็มรูปแบบ';
+                if (manageBankBtn) manageBankBtn.classList.remove('hidden');
             }
         }
 

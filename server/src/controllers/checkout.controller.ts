@@ -61,6 +61,7 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
                 token: req.body.token,       // For card payments (Omise token)
                 orderId: actualReferenceId || `ORD-${Date.now()}`,
                 metadata: { referenceId: actualReferenceId },
+                stripeAccountId: user.stripeAccountId || undefined,
             },
             {
                 isTestMode,
@@ -87,6 +88,9 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
                 description: description || 'API Checkout',
                 returnUrl: actualReturnUrl,
                 mode: mode,
+                clientSecret: chargeResult.result.rawResponse?.clientSecret,
+                qrCodeBase64: chargeResult.result.qrCode,
+                stripeAccountId: user.stripeAccountId || undefined
             }),
         }
     });
@@ -99,7 +103,7 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
         status: transaction.status.toLowerCase(),
         method,
         provider: chargeResult.provider,
-        checkoutUrl: `${process.env.APP_URL || 'http://localhost:8080'}/checkout.html?ref=${transaction.id}`,
+        checkoutUrl: `${process.env.CHECKOUT_URL || 'http://localhost:3000'}/pay.html?ref=${transaction.id}`,
         expiresAt: new Date(Date.now() + 15 * 60000).toISOString(),
     };
 
@@ -223,30 +227,16 @@ export const getCheckoutDetails = catchAsync(async (req: Request, res: Response,
         }
     } catch (e) { }
 
-    // Regenerate QR for display using orchestrator
+    // Extract saved payment details from metadata
+    let clientSecret = '';
     let qrImage = '';
-    if (transaction.status === 'PENDING') {
-        try {
-            const provider = transaction.provider || 'kbank';
-            const method = (transaction.paymentMethod as PaymentMethod) || 'qr';
-            // Determine if this is test mode
-            let isTestMode = false;
-            try {
-                if (transaction.metadata) {
-                    const meta = JSON.parse(transaction.metadata);
-                    isTestMode = meta.mode === 'test';
-                }
-            } catch (e) { }
-
-            const chargeResult = await orchestrator.createCharge(
-                { amount: Number(transaction.amount), currency: 'THB', method, orderId: `K${Date.now()}` },
-                { isTestMode, preferredProvider: provider }
-            );
-            qrImage = chargeResult.result.qrCode || '';
-        } catch (err) {
-            qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=PROMPTPAY-DEMO-${transaction.amount}`;
+    try {
+        if (transaction.metadata) {
+            const meta = JSON.parse(transaction.metadata);
+            if (meta.qrCodeBase64) qrImage = meta.qrCodeBase64;
+            if (meta.clientSecret) clientSecret = meta.clientSecret;
         }
-    }
+    } catch (e) { }
 
     res.status(200).json({
         success: true,
@@ -256,6 +246,9 @@ export const getCheckoutDetails = catchAsync(async (req: Request, res: Response,
             status: transaction.status,
             description,
             merchantName: `${transaction.user.firstName || ''} ${transaction.user.lastName || ''}`.trim() || transaction.user.email,
+            method: transaction.paymentMethod,
+            provider: transaction.provider,
+            clientSecret,
             qrCodeBase64: qrImage,
             createdAt: transaction.createdAt
         }

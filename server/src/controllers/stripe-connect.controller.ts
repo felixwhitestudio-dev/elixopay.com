@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import { StripeConnectService } from '../services/stripe-connect.service';
+import { runStripeHealthCheck } from '../scripts/stripe-health-check';
 import logger from '../utils/logger';
 
 /**
@@ -122,5 +123,21 @@ export const getPayouts = catchAsync(async (req: Request, res: Response, next: N
     res.status(200).json({
         success: true,
         data: payouts,
+    });
+});
+
+/**
+ * GET /api/v1/stripe-connect/health
+ * Runs a 5-level health check against the Stripe API.
+ * Admin-only — used to verify the platform's Stripe integration is working.
+ */
+export const healthCheck = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const report = await runStripeHealthCheck();
+
+    const httpStatus = report.overall === 'unhealthy' ? 503 : 200;
+
+    res.status(httpStatus).json({
+        success: report.overall !== 'unhealthy',
+        data: report,
     });
 });
