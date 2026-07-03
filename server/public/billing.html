@@ -130,16 +130,16 @@
                         <thead class="bg-slate-900/40">
                             <tr>
                                 <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.products.name">Product Name</th>
                                 <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.products.desc">Description</th>
                                 <th scope="col"
-                                    class="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-right text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.products.prices">Pricing Plans</th>
                                 <th scope="col"
-                                    class="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-right text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.products.action">Action</th>
                             </tr>
                         </thead>
@@ -173,16 +173,16 @@
                         <thead class="bg-slate-900/40">
                             <tr>
                                 <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.customers.name">Name</th>
                                 <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.customers.email">Email</th>
                                 <th scope="col"
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-left text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.customers.subs">Active Subs</th>
                                 <th scope="col"
-                                    class="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                                    class="px-6 py-4 text-right text-sm font-semibold text-slate-400 uppercase tracking-wider"
                                     data-i18n="billing.products.action">Action</th>
                             </tr>
                         </thead>
@@ -211,18 +211,30 @@
                         onclick="closeProductModal()"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 <form id="create-product-form" onsubmit="submitCreateProduct(event)">
-                    <div class="px-6 py-6 space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1" data-i18n="billing.modal.product_name">Product Name</label>
-                            <input type="text" id="prod-name" required
-                                class="focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-slate-600 bg-slate-900/50 text-slate-100 rounded-xl py-2.5 px-3 outline-none transition-colors border"
-                                placeholder="e.g. Premium SaaS Plan">
+                    <div class="px-6 py-6">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Product Name <span class="text-red-400">*</span></label>
+                            <input type="text" id="prod-name" required class="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition" placeholder="e.g. Premium SaaS Plan">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-1" data-i18n="billing.modal.product_desc">Description (Optional)</label>
-                            <textarea id="prod-desc" rows="3"
-                                class="focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-slate-600 bg-slate-900/50 text-slate-100 rounded-xl py-2.5 px-3 outline-none transition-colors border"
-                                placeholder="Marketing description of the product..."></textarea>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description (Optional)</label>
+                            <textarea id="prod-desc" rows="2" class="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition" placeholder="Marketing description of the product..."></textarea>
+                        </div>
+                        <hr class="border-slate-700/50 my-5">
+                        <h4 class="text-md font-semibold text-slate-200 mb-3">Initial Pricing (Optional)</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Amount (THB)</label>
+                                <input type="number" id="prod-price-amount" step="0.01" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white text-base placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition" placeholder="0.00">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Interval</label>
+                                <select id="prod-price-interval" class="w-full px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white text-base focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition">
+                                    <option value="one_time">One-time (จ่ายครั้งเดียว)</option>
+                                    <option value="month">Monthly (รายเดือน)</option>
+                                    <option value="year">Yearly (รายปี)</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="px-6 py-4 border-t border-slate-700/50 bg-slate-800/80 sm:flex sm:flex-row-reverse">
@@ -283,11 +295,11 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10 bg-indigo-900/40 rounded-xl flex items-center justify-center text-indigo-400 border border-indigo-700/30">
-                                <i class="fas fa-cube"></i>
+                                <i class="fas fa-cube text-lg"></i>
                             </div>
                             <div class="ml-4">
-                                <div class="text-sm font-medium text-white">${p.name}</div>
-                                <div class="text-xs text-slate-500 font-mono">ID: ${p.id}</div>
+                                <div class="text-base font-medium text-white">${p.name}</div>
+                                <div class="text-sm text-slate-500 font-mono">ID: ${p.id}</div>
                             </div>
                         </div>
                     </td>
@@ -295,12 +307,14 @@
                         <div class="text-sm text-slate-400 truncate max-w-xs">${p.description || 'No description'}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-700/50 text-slate-300 border border-slate-600/50">
+                        <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-slate-700/50 text-slate-300 border border-slate-600/50">
                             ${p.prices ? p.prices.length : 0} Plans
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="addPrice('${p.id}')" class="text-purple-400 hover:text-purple-300 mr-3" title="Add Price Plan"><i class="fas fa-plus-circle"></i> Price</button>
+                        ${p.prices && p.prices.length > 0 ? `<button onclick="copyPaymentLink('${p.prices[0].id}')" class="inline-flex items-center justify-center px-4 py-1.5 bg-slate-100/10 text-blue-400 hover:bg-slate-100/20 hover:text-blue-300 rounded-lg font-medium shadow-sm transition-colors mr-2" title="Copy Payment Link"><i class="fas fa-link mr-1.5"></i> Link</button>` : ''}
+                        <button onclick="addPrice('${p.id}')" class="inline-flex items-center justify-center px-4 py-1.5 bg-slate-100/10 text-purple-400 hover:bg-slate-100/20 hover:text-purple-300 rounded-lg font-medium shadow-sm transition-colors mr-2" title="Add Price Plan"><i class="fas fa-plus mr-1.5"></i> Price</button>
+                        <button onclick="deleteProduct('${p.id}')" class="inline-flex items-center justify-center p-2 bg-slate-100/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 rounded-lg transition-colors" title="Delete Product"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -359,16 +373,18 @@
 
             const name = document.getElementById('prod-name').value;
             const description = document.getElementById('prod-desc').value;
+            const amount = document.getElementById('prod-price-amount').value;
+            const interval = document.getElementById('prod-price-interval').value;
 
             try {
                 const res = await apiFetch('/api/v1/billing/products', {
                     method: 'POST',
-                    body: JSON.stringify({ name, description })
+                    body: JSON.stringify({ name, description, amount, interval })
                 });
                 const data = await res.json();
 
                 if (data.success) {
-                    Swal.fire({ icon: 'success', title: 'Product Created', text: 'You can now assign Pricing Plans to this product.', background: '#1e293b', color: '#f8fafc', confirmButtonColor: '#8b5cf6' });
+                    Swal.fire({ icon: 'success', title: 'Product Created', text: 'Product has been created successfully.', background: '#1e293b', color: '#f8fafc', confirmButtonColor: '#8b5cf6' });
                     closeProductModal();
                     loadBillingData();
                 } else {
@@ -382,17 +398,62 @@
             }
         }
 
+        async function deleteProduct(productId) {
+            const confirm = await Swal.fire({
+                title: 'Delete Product?',
+                text: "This will remove the product and its pricing plans from the catalog. This action cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                background: '#1e293b',
+                color: '#f8fafc',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (confirm.isConfirmed) {
+                try {
+                    const res = await apiFetch(`/api/v1/billing/products/${productId}`, { method: 'DELETE' });
+                    const data = await res.json();
+                    if (data.success) {
+                        Swal.fire({ icon: 'success', title: 'Deleted!', text: 'Product has been deleted.', background: '#1e293b', color: '#f8fafc' });
+                        loadBillingData();
+                    } else throw new Error(data.message);
+                } catch (err) {
+                    Swal.fire({ icon: 'error', title: 'Error', text: err.message, background: '#1e293b', color: '#f8fafc' });
+                }
+            }
+        }
+
+        async function copyPaymentLink(priceId) {
+            const link = window.location.origin + '/api/v1/checkout/link/' + priceId;
+            try {
+                await navigator.clipboard.writeText(link);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Payment link copied to clipboard: ' + link,
+                    background: '#1e293b',
+                    color: '#f8fafc',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Could not copy link', background: '#1e293b', color: '#f8fafc' });
+            }
+        }
+
         function addPrice(productId) {
             Swal.fire({
                 title: 'Add Pricing Plan',
                 html: `
-                    <div class="text-left">
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Amount (THB)</label>
-                        <input type="number" id="swal-amount" class="w-full mb-4 px-3 py-2 bg-slate-900 border border-slate-600 rounded text-white" placeholder="e.g. 500.00" step="0.01">
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Interval</label>
-                        <select id="swal-interval" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded text-white">
-                            <option value="month">Monthly</option>
-                            <option value="year">Yearly</option>
+                    <div class="text-left mt-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Amount (THB)</label>
+                        <input type="number" id="swal-amount" class="w-full mb-5 px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white text-base focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition" placeholder="e.g. 500.00" step="0.01">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Interval</label>
+                        <select id="swal-interval" class="w-full mb-2 px-4 py-2.5 bg-slate-800 border border-slate-600 rounded-xl text-white text-base focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition">
+                            <option value="one_time">One-time (จ่ายครั้งเดียว)</option>
+                            <option value="month">Monthly (รายเดือน)</option>
+                            <option value="year">Yearly (รายปี)</option>
                         </select>
                     </div>
                 `,
@@ -431,10 +492,10 @@
                 title: 'New Customer',
                 html: `
                     <div class="text-left">
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Full Name</label>
-                        <input type="text" id="swal-cus-name" class="w-full mb-4 px-3 py-2 bg-slate-900 border border-slate-600 rounded text-white" placeholder="e.g. John Doe">
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Email Address</label>
-                        <input type="email" id="swal-cus-email" class="w-full mb-4 px-3 py-2 bg-slate-900 border border-slate-600 rounded text-white" placeholder="e.g. john@example.com">
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Full Name</label>
+                        <input type="text" id="swal-cus-name" class="w-full mb-5 px-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition" placeholder="e.g. John Doe">
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Email Address</label>
+                        <input type="email" id="swal-cus-email" class="w-full mb-2 px-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition" placeholder="e.g. john@example.com">
                     </div>
                 `,
                 background: '#1e293b',
@@ -491,8 +552,8 @@
                 title: 'Subscribe Customer',
                 html: `
                     <div class="text-left">
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Select Pricing Plan</label>
-                        <select id="swal-price-id" class="w-full mb-4 px-3 py-2 bg-slate-900 border border-slate-600 rounded text-white">
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Select Pricing Plan</label>
+                        <select id="swal-price-id" class="w-full mb-2 px-4 py-3 bg-slate-900 border border-slate-600 rounded-xl text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 transition">
                             ${priceOptions}
                         </select>
                     </div>

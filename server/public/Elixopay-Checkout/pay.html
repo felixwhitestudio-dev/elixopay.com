@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elixopay Checkout</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/checkout.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Optional for icons -->
+</head>
+<body>
+
+    <div class="checkout-wrapper">
+        <div class="checkout-container glass-panel">
+            
+            <!-- Header -->
+            <div class="checkout-header">
+                <div class="merchant-info">
+                    <div class="merchant-logo" id="merchantLogo">
+                        <!-- Initial will be placed here -->
+                    </div>
+                    <div>
+                        <p class="merchant-name" id="merchantName">Loading...</p>
+                        <p class="transaction-desc" id="transactionDesc">Secure Payment</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amount Display -->
+            <div class="amount-display">
+                <span class="currency">THB</span>
+                <span class="amount" id="paymentAmount">0.00</span>
+            </div>
+
+            <!-- Payment Element Container -->
+            <div class="payment-section" id="paymentSection">
+                <div id="loadingState" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>กำลังโหลดช่องทางการชำระเงิน...</p>
+                </div>
+
+                <form id="payment-form" style="display: none;">
+                    <div id="payment-element">
+                        <!-- Stripe Elements will be inserted here -->
+                    </div>
+                    <button id="submit-button" class="pay-btn">
+                        <span id="button-text">ชำระเงินตอนนี้</span>
+                        <div class="spinner hidden" id="spinner"></div>
+                    </button>
+                    <div id="payment-message" class="hidden"></div>
+                </form>
+                
+                <div id="qr-container" style="display: none;" class="qr-container">
+                    <p>สแกน QR Code ด้วยแอปธนาคารของคุณ</p>
+                    <img id="qr-image" src="" alt="PromptPay QR Code">
+                    <p class="qr-hint">รองรับทุกธนาคารในประเทศไทย</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="checkout-footer">
+                <p>Powered by <strong>Elixopay</strong></p>
+                <div class="secure-badges">
+                    <i class="fas fa-lock"></i> 256-bit SSL Secure
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/checkout.js"></script>
+</body>
+</html>

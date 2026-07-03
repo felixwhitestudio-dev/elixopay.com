@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Links - Elixopay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/design-system.css?v=4">
+    <link rel="stylesheet" href="/css/utilities.css">
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/js/api-config.js"></script>
+    <script src="/js/i18n.js?v=5"></script>
+    <script src="/js/auth-guard.js?v=1.3" data-require-role="user"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar will be injected via JS or backend, for now we assume standard layout -->
+        
+        <div class="flex flex-col flex-1 w-full overflow-y-auto">
+            <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900" data-i18n="nav.paymentLinks">Payment Links</h1>
+                        <p class="text-gray-500 mt-1">สร้างลิงก์สำหรับรับชำระเงินจากลูกค้า</p>
+                    </div>
+                    <div>
+                        <button onclick="openCreateModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium shadow transition">
+                            <i class="fas fa-plus mr-2"></i> สร้างลิงก์ชำระเงิน
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">วันที่สร้าง</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">รายละเอียด</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ยอดเงิน</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">สถานะ</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ลิงก์</th>
+                            </tr>
+                        </thead>
+                        <tbody id="links-table-body" class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">กำลังโหลด...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create Modal -->
+    <div id="create-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeCreateModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <form id="create-form" onsubmit="createLink(event)">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">สร้างลิงก์รับชำระเงิน</h3>
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">จำนวนเงิน (THB)</label>
+                                <input type="number" id="amount" required min="1" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">รายละเอียดสินค้า/บริการ</label>
+                                <input type="text" id="description" required placeholder="เช่น ค่าเสื้อยืดสีดำ" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 sm:ml-3 sm:w-auto sm:text-sm">สร้างลิงก์</button>
+                        <button type="button" onclick="closeCreateModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeSuccessModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                        <i class="fas fa-check text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">สร้างลิงก์สำเร็จ!</h3>
+                    <p class="text-sm text-gray-500 mb-4">คุณสามารถคัดลอกลิงก์ด้านล่างเพื่อส่งให้ลูกค้าได้เลย</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <input type="text" id="generated-link" readonly class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-50 text-gray-600 sm:text-sm">
+                        <button onclick="copyLink()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-md transition" title="คัดลอก">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="closeSuccessModal()" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:w-auto sm:text-sm">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load sidebar layout from a generic loader if needed, or assume it's loaded via patch_nav
+        // Let's implement loadLinks
+        async function loadLinks() {
+            try {
+                const res = await window.apiFetch('/api/v1/payments?limit=50');
+                if (res && res.data && res.data.payments) {
+                    const links = res.data.payments.filter(p => p.type === 'PAYMENT_LINK' || p.type === 'DEPOSIT');
+                    const tbody = document.getElementById('links-table-body');
+                    tbody.innerHTML = '';
+                    
+                    if (links.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">ยังไม่มีประวัติการสร้างลิงก์</td></tr>';
+                        return;
+                    }
+
+                    links.forEach(p => {
+                        let metadata = {};
+                        try { if(p.metadata) metadata = JSON.parse(p.metadata); } catch(e){}
+                        
+                        const date = new Date(p.createdAt).toLocaleString('th-TH');
+                        const statusColor = p.status === 'COMPLETED' ? 'text-green-600 bg-green-100' : (p.status === 'PENDING' ? 'text-yellow-600 bg-yellow-100' : 'text-red-600 bg-red-100');
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">${metadata.description || 'รับชำระเงิน'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${parseFloat(p.amount).toLocaleString()} THB</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">${p.status}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <button onclick="copyToClipboard('${process.env.CHECKOUT_URL || window.location.origin}/Elixopay-Checkout/pay.html?ref=${p.id}')" class="text-purple-600 hover:text-purple-900"><i class="far fa-copy"></i> Copy</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function openCreateModal() { document.getElementById('create-modal').classList.remove('hidden'); }
+        function closeCreateModal() { document.getElementById('create-modal').classList.add('hidden'); }
+        function closeSuccessModal() { document.getElementById('success-modal').classList.add('hidden'); }
+        
+        async function createLink(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = 'กำลังสร้าง...';
+            
+            try {
+                const amount = document.getElementById('amount').value;
+                const description = document.getElementById('description').value;
+                
+                const res = await window.apiFetch('/api/v1/payments/link', {
+                    method: 'POST',
+                    body: JSON.stringify({ amount: parseFloat(amount), description })
+                });
+                
+                if (res && res.success) {
+                    closeCreateModal();
+                    document.getElementById('generated-link').value = res.data.checkoutUrl;
+                    document.getElementById('success-modal').classList.remove('hidden');
+                    e.target.reset();
+                    loadLinks();
+                }
+            } catch (err) {
+                alert('เกิดข้อผิดพลาด: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'สร้างลิงก์';
+            }
+        }
+
+        function copyLink() {
+            const input = document.getElementById('generated-link');
+            input.select();
+            document.execCommand('copy');
+            alert('คัดลอกลิงก์แล้ว!');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => alert('คัดลอกลิงก์แล้ว!'));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadLinks);
+    </script>
+</body>
+</html>

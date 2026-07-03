@@ -48,7 +48,15 @@ export class TestProvider implements PaymentProvider {
 
         // Add method-specific test data
         if (params.method === 'qr') {
-            result.qrCode = `00020101021129370016A000000677010111011300660000000005802TH530376463041${params.amount.toFixed(2)}`;
+            const payload = `00020101021129370016A000000677010111011300660000000005802TH530376463041${params.amount.toFixed(2)}`;
+            try {
+                // Generate a data URI image so frontend can display it in an <img> tag directly
+                const QRCode = require('qrcode');
+                result.qrCode = await QRCode.toDataURL(payload, { width: 300, margin: 2 });
+            } catch (err) {
+                logger.error('[TestProvider] Failed to generate test QR code', err);
+                result.qrCode = payload;
+            }
         } else if (params.method === 'card') {
             const baseUrl = process.env.APP_URL || 'https://app.elixopay.com';
             result.redirectUrl = `${baseUrl}/checkout.html?ref=${chargeId}&test=true`;

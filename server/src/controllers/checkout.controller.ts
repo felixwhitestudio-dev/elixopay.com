@@ -12,6 +12,71 @@ import { PaymentMethod } from '../providers/PaymentProvider';
  * Public Endpoint for Merchants to create a payment request.
  * Expected Header: Authorization: Bearer <Secret_Key>
  */
+export const createPaymentFromLink = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { priceId } = req.params;
+
+    logger.info(`[CheckoutLink] Starting request for priceId: ${priceId}`);
+    const t0 = Date.now();
+
+    const price = await prisma.price.findUnique({
+        where: { id: priceId },
+        include: { product: { include: { merchant: true } } }
+    });
+
+    const t1 = Date.now();
+    logger.info(`[CheckoutLink] findUnique took ${t1 - t0}ms`);
+
+    if (!price || !price.isActive) {
+        logger.info(`[CheckoutLink] Price not found or inactive`);
+        return res.status(404).send('Payment link not found or inactive');
+    }
+
+    const merchant = price.product.merchant;
+    const isTestMode = true; // Defaulting to test mode
+
+    const chargeResult = await orchestrator.createCharge(
+        {
+            amount: Number(price.amount),
+            currency: price.currency,
+            method: 'qr',
+            description: price.product.name,
+            orderId: `LINK_${Date.now()}`,
+            stripeAccountId: merchant.stripeAccountId || undefined,
+        },
+        {
+            isTestMode,
+        }
+    );
+
+    const t2 = Date.now();
+    logger.info(`[CheckoutLink] orchestrator.createCharge took ${t2 - t1}ms`);
+
+    const transaction = await prisma.transaction.create({
+        data: {
+            userId: merchant.id,
+            amount: price.amount,
+            type: 'DEPOSIT',
+            status: chargeResult.result.status === 'completed' ? 'COMPLETED' : 'PENDING',
+            reference: `LINK_${Date.now()}`,
+            provider: chargeResult.provider,
+            providerChargeId: chargeResult.result.providerChargeId,
+            paymentMethod: 'qr',
+            metadata: JSON.stringify({
+                description: price.product.name,
+                mode: 'test',
+                clientSecret: chargeResult.result.rawResponse?.clientSecret,
+                qrCodeBase64: chargeResult.result.qrCode,
+                stripeAccountId: merchant.stripeAccountId || undefined
+            }),
+        }
+    });
+
+    const t3 = Date.now();
+    logger.info(`[CheckoutLink] transaction.create took ${t3 - t2}ms`);
+
+    logger.info(`[CheckoutLink] Total time ${t3 - t0}ms. Redirecting...`);
+    res.redirect(`https://app.elixopay.com/checkout.html?ref=${transaction.id}`);
+});
 export const createPayment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // 1. Extract API Key from Bearer token
     let token;

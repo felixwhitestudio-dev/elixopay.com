@@ -281,7 +281,7 @@
         // --- Fetch Payment Details ---
         async function fetchPaymentDetails() {
             try {
-                const res = await fetch(`${API_BASE}/api/v1/payments/checkout/${paymentToken}`);
+                const res = await fetch(`${API_BASE}/api/v1/checkout/${paymentToken}`);
                 const json = await res.json();
 
                 if (!res.ok || !json.success) {
@@ -321,14 +321,21 @@
             const hasQR = paymentData.paymentMethodType === 'kbank_qr' || paymentData.qrCodeBase64;
 
             // Setup tabs visibility
-            if (!hasQR) {
-                document.getElementById('tabQR').style.display = 'none';
-            }
-            if (!isStripe) {
+            if (paymentData.method === 'qr') {
+                // Strictly QR transaction
                 document.getElementById('tabCard').style.display = 'none';
-                // If only QR, activate QR tab
-                if (hasQR) {
-                    switchTab('qr');
+                document.getElementById('paymentTabs').style.display = 'none';
+                switchTab('qr');
+            } else {
+                if (!hasQR) {
+                    document.getElementById('tabQR').style.display = 'none';
+                }
+                if (!isStripe) {
+                    document.getElementById('tabCard').style.display = 'none';
+                    // If only QR, activate QR tab
+                    if (hasQR) {
+                        switchTab('qr');
+                    }
                 }
             }
 
@@ -479,7 +486,7 @@
             if (pollInterval) clearInterval(pollInterval);
             pollInterval = setInterval(async () => {
                 try {
-                    const res = await fetch(`${API_BASE}/api/v1/payments/checkout/${paymentToken}`);
+                    const res = await fetch(`${API_BASE}/api/v1/checkout/${paymentToken}`);
                     const json = await res.json();
                     if (json.success && json.data && json.data.status === 'COMPLETED') {
                         clearInterval(pollInterval);

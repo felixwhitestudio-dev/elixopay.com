@@ -3,17 +3,32 @@ import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import prisma from '../utils/prisma';
 import { ApiKeyService } from '../services/apikey.service';
+import jwt from 'jsonwebtoken';
 
 /**
- * Helper to validate merchant API key
+ * Helper to validate merchant API key or Dashboard JWT session
  */
 const getMerchantFromKey = async (req: Request) => {
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
     }
-    if (!token) throw new AppError('Unauthorized: Missing API Key', 401);
+    if (!token) throw new AppError('Unauthorized: Missing API Key or Session', 401);
 
+    // 1. Try JWT Token (Dashboard usage - token has 3 parts)
+    if (token.split('.').length === 3) {
+        try {
+            const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'super-secret-dev-key');
+            const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+            if (user) return user;
+        } catch(e) {
+            // Ignore and fall through just in case, or throw?
+            // Actually, if it looks like a JWT but fails, it's definitely an invalid session.
+            throw new AppError('Unauthorized: Invalid or expired session', 401);
+        }
+    }
+
+    // 2. Try Bearer API Key (External Integration usage)
     const authData = await ApiKeyService.validateKey(token);
     if (!authData) throw new AppError('Unauthorized: Invalid API Key', 401);
 
@@ -25,7 +40,7 @@ const getMerchantFromKey = async (req: Request) => {
 // -------------------------------------------------------------
 export const createProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const merchant = await getMerchantFromKey(req);
-    const { name, description } = req.body;
+    const { name, description, amount, interval, currency } = req.body;
 
     if (!name) return next(new AppError('Product name is required', 400));
 
@@ -33,11 +48,51 @@ export const createProduct = catchAsync(async (req: Request, res: Response, next
         data: {
             merchantId: merchant.id,
             name,
-            description
-        }
+            description,
+            ...(amount && interval ? {
+                prices: {
+                    create: [{
+                        amount: Number(amount),
+                        interval,
+                        currency: currency || 'THB'
+                    }]
+                }
+            } : {})
+        },
+        include: { prices: true }
     });
 
     res.status(201).json({ success: true, data: product });
+});
+
+export const getProducts = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const merchant = await getMerchantFromKey(req);
+    const products = await prisma.product.findMany({
+        where: { merchantId: merchant.id, isActive: true },
+        include: { prices: { where: { isActive: true } } },
+        orderBy: { createdAt: 'desc' }
+    });
+    res.status(200).json({ success: true, data: { products } });
+});
+
+export const deleteProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const merchant = await getMerchantFromKey(req);
+    const { id } = req.params;
+
+    const product = await prisma.product.findFirst({
+        where: { id, merchantId: merchant.id }
+    });
+
+    if (!product) {
+        return next(new AppError('Product not found', 404));
+    }
+
+    await prisma.product.update({
+        where: { id },
+        data: { isActive: false }
+    });
+
+    res.status(200).json({ success: true, message: 'Product deleted successfully' });
 });
 
 // -------------------------------------------------------------
@@ -64,6 +119,15 @@ export const createPrice = catchAsync(async (req: Request, res: Response, next: 
     res.status(201).json({ success: true, data: price });
 });
 
+export const getPrices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const merchant = await getMerchantFromKey(req);
+    const prices = await prisma.price.findMany({
+        where: { product: { merchantId: merchant.id } },
+        orderBy: { createdAt: 'desc' }
+    });
+    res.status(200).json({ success: true, data: prices });
+});
+
 // -------------------------------------------------------------
 // 3. CUSTOMERS
 // -------------------------------------------------------------
@@ -86,6 +150,16 @@ export const createCustomer = catchAsync(async (req: Request, res: Response, nex
     });
 
     res.status(201).json({ success: true, data: customer });
+});
+
+export const getCustomers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const merchant = await getMerchantFromKey(req);
+    const customers = await prisma.customer.findMany({
+        where: { merchantId: merchant.id },
+        include: { subscriptions: true },
+        orderBy: { createdAt: 'desc' }
+    });
+    res.status(200).json({ success: true, data: { customers } });
 });
 
 // -------------------------------------------------------------
@@ -131,4 +205,14 @@ export const createSubscription = catchAsync(async (req: Request, res: Response,
     });
 
     res.status(201).json({ success: true, data: subscription });
+});
+
+export const getSubscriptions = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const merchant = await getMerchantFromKey(req);
+    const subscriptions = await prisma.subscription.findMany({
+        where: { customer: { merchantId: merchant.id } },
+        include: { customer: true, price: { include: { product: true } } },
+        orderBy: { createdAt: 'desc' }
+    });
+    res.status(200).json({ success: true, data: { subscriptions } });
 });

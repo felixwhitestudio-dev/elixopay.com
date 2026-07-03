@@ -42,6 +42,10 @@
             <i class="fas fa-arrow-right-arrow-left"></i>
             <span data-i18n="nav.transactions">Transactions</span>
           </a>
+          <a href="/payment-links.html" class="ep-sidebar-link" data-page="payment-links">
+            <i class="fas fa-link"></i>
+            <span data-i18n="nav.paymentLinks">Payment Links</span>
+          </a>
           <a href="/billing.html" class="ep-sidebar-link" data-page="billing">
             <i class="fas fa-file-invoice-dollar"></i>
             <span data-i18n="nav.billing">Billing</span>

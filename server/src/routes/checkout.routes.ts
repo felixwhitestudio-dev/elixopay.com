@@ -15,6 +15,7 @@ router.get('/payments/:id', checkoutController.getPaymentStatus);
 router.post('/payments/:id/refund', verifyIdempotency, checkoutController.refundPayment);
 
 // Public Checkout UI Routes
+router.get('/link/:priceId', checkoutController.createPaymentFromLink);
 router.get('/:id', checkoutController.getCheckoutDetails);
 router.post('/:id/simulate-pay', checkoutController.simulatePaymentCompletion);
 

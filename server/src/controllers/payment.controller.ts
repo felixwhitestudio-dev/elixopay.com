@@ -2,6 +2,81 @@ import { Request, Response, NextFunction } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import prisma from '../utils/prisma';
+import logger from '../utils/logger';
+import { orchestrator } from '../services/orchestrator.service';
+import { PaymentMethod } from '../providers/PaymentProvider';
+
+export const createPaymentLink = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore
+    const userId = req.user.id;
+    const { amount, description } = req.body;
+
+    if (!amount || amount <= 0) {
+        return next(new AppError('Invalid amount', 400));
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+        return next(new AppError('User not found', 404));
+    }
+
+    const method: PaymentMethod = 'qr';
+    const referenceId = `LINK-${Date.now()}`;
+
+    let chargeResult;
+    try {
+        chargeResult = await orchestrator.createCharge(
+            {
+                amount,
+                currency: 'THB',
+                method,
+                description: description || 'Payment Link',
+                orderId: referenceId,
+                metadata: { isPaymentLink: true },
+                stripeAccountId: user.stripeAccountId || undefined,
+            },
+            {
+                isTestMode: false,
+            }
+        );
+    } catch (err: any) {
+        logger.error('[PaymentLink] Orchestrator charge failed:', err.message);
+        return next(new AppError(`Payment creation failed: ${err.message}`, 502));
+    }
+
+    const transaction = await prisma.transaction.create({
+        data: {
+            userId: user.id,
+            amount: amount,
+            type: 'PAYMENT_LINK',
+            status: chargeResult.result.status === 'completed' ? 'COMPLETED' : 'PENDING',
+            reference: referenceId,
+            provider: chargeResult.provider,
+            providerChargeId: chargeResult.result.providerChargeId,
+            paymentMethod: method,
+            metadata: JSON.stringify({
+                description: description || 'Payment Link',
+                mode: 'live',
+                clientSecret: chargeResult.result.rawResponse?.clientSecret,
+                qrCodeBase64: chargeResult.result.qrCode,
+                stripeAccountId: user.stripeAccountId || undefined
+            }),
+        }
+    });
+
+    const checkoutUrl = `${process.env.CHECKOUT_URL || 'http://localhost:3000'}/pay.html?ref=${transaction.id}`;
+
+    res.status(201).json({
+        success: true,
+        data: {
+            id: transaction.id,
+            amount,
+            checkoutUrl,
+            reference: referenceId,
+            description: description || 'Payment Link'
+        }
+    });
+});
 
 export const getPayments = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore

@@ -19,6 +19,7 @@ router.get('/stats', paymentController.getPaymentStats);
 router.get('/export/csv', paymentController.exportPaymentsCSV);
 
 // Write/Action Routes (Need KYC + Idempotency)
+router.post('/link', requireKyc, verifyIdempotency, paymentController.createPaymentLink);
 router.post('/:id/refund', requireKyc, verifyIdempotency, paymentController.refundPayment);
 
 export default router;

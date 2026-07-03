@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
@@ -12,138 +9,120 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  merchantId String   @unique          // e.g. "ELXP-A7K2M9" — unique, non-guessable merchant identifier
-  email      String   @unique
-  password  String
-  firstName String?
-  lastName  String?
-  role            String    @default("user") // user, admin
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  isActive        Boolean   @default(true)
-  
-  // Security / Email Verification
-  isEmailVerified    Boolean   @default(false)
-  verifyToken        String?
-  verifyTokenExpires DateTime?
-  resetPasswordToken String?
-  resetPasswordExpires DateTime?
-  
-  // KYC Fields
-  kycStatus       String    @default("unverified") // unverified, pending, verified, rejected
-  kycIdCardUrl    String?
-  kycStatementUrl String?
-  kycSelfieUrl    String?  // Selfie with document (BOT required)
-  kycRejectionReason String? // Admin rejection note shown to user
-  kycSubmittedAt  DateTime?
-  kycVerifiedAt   DateTime?
-  kycReviewedBy   String?  // Email of admin who approved/rejected — BOT audit trail
-
-  // Bank Account Fields (BOT-compliant: locked after KYC approval)
-  bankName          String?  // e.g. KBANK, SCB, BBL, KTB, BAY, TTB
-  bankAccountNumber String?
-  bankAccountName   String?  // Must match KYC name
-  bankVerified      Boolean  @default(false) // Locked to true after admin KYC approval
-
-  // Two-Factor Authentication
-  twoFactorSecret   String?  // Encrypted TOTP secret
-  twoFactorEnabled  Boolean  @default(false)
-
-  // Stripe Connect Fields
-  stripeAccountId        String?   @unique  // Stripe Connected Account ID (acct_xxx)
-  stripeAccountStatus    String    @default("none") // none, onboarding, restricted, enabled
-  stripeDetailsSubmitted Boolean   @default(false)
-  stripePayoutsEnabled   Boolean   @default(false)
-  stripeChargesEnabled   Boolean   @default(false)
+  id                     Int                        @id @default(autoincrement())
+  merchantId             String                     @unique
+  email                  String                     @unique
+  password               String
+  firstName              String?
+  lastName               String?
+  role                   String                     @default("user")
+  createdAt              DateTime                   @default(now())
+  updatedAt              DateTime                   @updatedAt
+  isActive               Boolean                    @default(true)
+  isEmailVerified        Boolean                    @default(false)
+  verifyToken            String?
+  verifyTokenExpires     DateTime?
+  resetPasswordToken     String?
+  resetPasswordExpires   DateTime?
+  kycStatus              String                     @default("unverified")
+  kycIdCardUrl           String?
+  kycStatementUrl        String?
+  kycSelfieUrl           String?
+  kycRejectionReason     String?
+  kycSubmittedAt         DateTime?
+  kycVerifiedAt          DateTime?
+  kycReviewedBy          String?
+  bankName               String?
+  bankAccountNumber      String?
+  bankAccountName        String?
+  bankVerified           Boolean                    @default(false)
+  twoFactorSecret        String?
+  twoFactorEnabled       Boolean                    @default(false)
+  stripeAccountId        String?                    @unique
+  stripeAccountStatus    String                     @default("none")
+  stripeDetailsSubmitted Boolean                    @default(false)
+  stripePayoutsEnabled   Boolean                    @default(false)
+  stripeChargesEnabled   Boolean                    @default(false)
   stripeConnectedAt      DateTime?
-
-  wallet          Wallet?    // Merchant settlement balance
-  transactions    Transaction[]
-  auditLogs       AuditLog[]
-  bankChangeRequests BankAccountChangeRequest[]
-  apiKeys         ApiKey[]
-  webhooks        WebhookEndpoint[]
-  customers       Customer[]
-  products        Product[]
-  gatewayConfigs  MerchantGatewayConfig[]
-  notifications   Notification[]
-  stripePayouts   StripePayout[]
+  apiKeys                ApiKey[]
+  auditLogs              AuditLog[]
+  bankChangeRequests     BankAccountChangeRequest[]
+  customers              Customer[]
+  gatewayConfigs         MerchantGatewayConfig[]
+  notifications          Notification[]
+  products               Product[]
+  stripePayouts          StripePayout[]
+  transactions           Transaction[]
+  wallet                 Wallet?
+  webhooks               WebhookEndpoint[]
 }
 
 model StripeEvent {
-  id          String   @id // Stripe event ID (evt_xxx) — used for deduplication
-  type        String   // e.g. "account.updated", "payment_intent.succeeded"
-  processed   Boolean  @default(false)
-  data        String?  // Raw JSON event data for audit
-  createdAt   DateTime @default(now())
+  id        String   @id
+  type      String
+  processed Boolean  @default(false)
+  data      String?
+  createdAt DateTime @default(now())
 }
 
 model StripePayout {
   id               Int      @id @default(autoincrement())
   userId           Int
-  user             User     @relation(fields: [userId], references: [id])
-  stripeTransferId String?  @unique // Stripe Transfer ID (tr_xxx)
+  stripeTransferId String?  @unique
   amount           Decimal
   currency         String   @default("THB")
-  status           String   @default("pending") // pending, paid, failed
+  status           String   @default("pending")
   method           String   @default("stripe_transfer")
   description      String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id])
 }
 
 model BankAccountChangeRequest {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id])
-  // New requested values
-  newBankName          String
-  newAccountNumber     String
-  newAccountName       String
-  reason               String  // Reason for requesting the change
-  status               String  @default("pending") // pending, approved, rejected
-  adminNote            String? // Admin's response note
-  createdAt            DateTime @default(now())
-  resolvedAt           DateTime?
+  id               Int       @id @default(autoincrement())
+  userId           Int
+  newBankName      String
+  newAccountNumber String
+  newAccountName   String
+  reason           String
+  status           String    @default("pending")
+  adminNote        String?
+  createdAt        DateTime  @default(now())
+  resolvedAt       DateTime?
+  user             User      @relation(fields: [userId], references: [id])
 }
 
-model Wallet {  // Merchant settlement balance — not a crypto wallet
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  balance   Decimal  @default(0.00)
-  testBalance Decimal @default(0.00)
-  currency  String   @default("THB")
-  updatedAt DateTime @updatedAt
+model Wallet {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique
+  balance     Decimal  @default(0.00)
+  testBalance Decimal  @default(0.00)
+  currency    String   @default("THB")
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model Transaction {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id])
-  amount         Decimal
-  type           String   // PAYMENT, REFUND, SETTLEMENT, FEE
-  status         String   // PENDING, COMPLETED, FAILED
-  reference      String?  // Bank reference or Slip ID
-  idempotencyKey String?  @unique // Critical for stability
-  metadata       String?  // JSON string
-  
-  // Payment Orchestrator Fields
-  provider        String?  // 'kbank', 'omise', 'bbl', 'mock' — which gateway processed this
-  providerChargeId String? // Charge/Transaction ID from the gateway
-  paymentMethod   String?  // 'qr', 'card', 'bank_transfer'
-
-  // Tracking Fields for Refunds
-  refundedAmount Decimal  @default(0.00) // Tracks how much has been refunded
-  parentId       Int?     // Links a REFUND transaction to its original PAYMENT
-  parent         Transaction?  @relation("TransactionRefunds", fields: [parentId], references: [id])
-  refunds        Transaction[] @relation("TransactionRefunds")
-  
-  invoice        Invoice?
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id               Int           @id @default(autoincrement())
+  userId           Int
+  amount           Decimal
+  type             String
+  status           String
+  reference        String?
+  idempotencyKey   String?       @unique
+  metadata         String?
+  provider         String?
+  providerChargeId String?
+  paymentMethod    String?
+  refundedAmount   Decimal       @default(0.00)
+  parentId         Int?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  invoice          Invoice?
+  parent           Transaction?  @relation("TransactionRefunds", fields: [parentId], references: [id])
+  refunds          Transaction[] @relation("TransactionRefunds")
+  user             User          @relation(fields: [userId], references: [id])
 }
 
 model SystemSetting {
@@ -154,131 +133,131 @@ model SystemSetting {
 }
 
 model AuditLog {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  action    String
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  action     String
   entityType String?
   entityId   String?
   details    String?
   ipAddress  String?
   userAgent  String?
   createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model ApiKey {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  name      String   // e.g., "Production Key", "Test Key"
-  keyPrefix String   // To show in UI (e.g., ep_prod_xxxx...)
-  keyHash   String   // Hashed version of the secret key for security
-  mode      String   @default("test") // test, live
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+  name      String
+  keyPrefix String
+  keyHash   String
+  mode      String    @default("test")
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
   lastUsed  DateTime?
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model WebhookEndpoint {
-  id          String   @id @default(uuid())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  url         String
-  secret      String   // Used to sign webhook payloads so merchant can verify
-  events      String   // JSON array of subscribed events: ["payment.success", "payment.failed"]
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    Int
+  url       String
+  secret    String
+  events    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model IdempotencyKey {
-  id              Int      @id @default(autoincrement())
-  key             String   @unique
-  userId          Int?
-  requestPath     String
-  requestMethod   String
-  requestPayload  String?  // Storing as JSON string
-  responseStatus  Int?
-  responseBody    String?  // Storing as JSON string
-  isLocked        Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  key            String   @unique
+  userId         Int?
+  requestPath    String
+  requestMethod  String
+  requestPayload String?
+  responseStatus Int?
+  responseBody   String?
+  isLocked       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Customer {
-  id             String   @id @default(uuid())
-  merchantId     Int
-  merchant       User     @relation(fields: [merchantId], references: [id])
-  name           String
-  email          String
-  phone          String?
-  subscriptions  Subscription[]
-  invoices       Invoice[]
-  metadata       String?
-  createdAt      DateTime @default(now())
+  id            String         @id @default(uuid())
+  merchantId    Int
+  name          String
+  email         String
+  phone         String?
+  metadata      String?
+  createdAt     DateTime       @default(now())
+  merchant      User           @relation(fields: [merchantId], references: [id])
+  invoices      Invoice[]
+  subscriptions Subscription[]
 }
 
 model Product {
   id          String   @id @default(uuid())
   merchantId  Int
-  merchant    User     @relation(fields: [merchantId], references: [id])
   name        String
   description String?
-  prices      Price[]
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
+  prices      Price[]
+  merchant    User     @relation(fields: [merchantId], references: [id])
 }
 
 model Price {
-  id            String   @id @default(uuid())
+  id            String         @id @default(uuid())
   productId     String
-  product       Product  @relation(fields: [productId], references: [id])
   amount        Decimal
-  currency      String   @default("THB")
-  interval      String   // "month", "year", "week"
-  intervalCount Int      @default(1)
-  isActive      Boolean  @default(true)
+  currency      String         @default("THB")
+  interval      String
+  intervalCount Int            @default(1)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  product       Product        @relation(fields: [productId], references: [id])
   subscriptions Subscription[]
-  createdAt     DateTime @default(now())
 }
 
 model Subscription {
-  id                   String   @id @default(uuid())
-  customerId           String
-  customer             Customer @relation(fields: [customerId], references: [id])
-  priceId              String
-  price                Price    @relation(fields: [priceId], references: [id])
-  status               String   @default("active") // active, past_due, canceled
-  currentPeriodStart   DateTime @default(now())
-  currentPeriodEnd     DateTime
-  cancelAtPeriodEnd    Boolean  @default(false)
-  invoices             Invoice[]
-  createdAt            DateTime @default(now())
+  id                 String    @id @default(uuid())
+  customerId         String
+  priceId            String
+  status             String    @default("active")
+  currentPeriodStart DateTime  @default(now())
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  invoices           Invoice[]
+  customer           Customer  @relation(fields: [customerId], references: [id])
+  price              Price     @relation(fields: [priceId], references: [id])
 }
 
 model Invoice {
-  id              String   @id @default(uuid())
-  subscriptionId  String
-  subscription    Subscription @relation(fields: [subscriptionId], references: [id])
-  customerId      String
-  customer        Customer @relation(fields: [customerId], references: [id])
-  transactionId   Int?     @unique // Links to the actual Elixopay Transaction for payment
-  transaction     Transaction? @relation(fields: [transactionId], references: [id])
-  amountDue       Decimal
-  status          String   @default("open") // open, paid, void, uncollectible
-  dueDate         DateTime
-  paidAt          DateTime?
-  createdAt       DateTime @default(now())
+  id             String       @id @default(uuid())
+  subscriptionId String
+  customerId     String
+  transactionId  Int?         @unique
+  amountDue      Decimal
+  status         String       @default("open")
+  dueDate        DateTime
+  paidAt         DateTime?
+  createdAt      DateTime     @default(now())
+  customer       Customer     @relation(fields: [customerId], references: [id])
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  transaction    Transaction? @relation(fields: [transactionId], references: [id])
 }
 
 model MerchantGatewayConfig {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  provider    String   // 'kbank', 'omise', 'bbl'
-  isActive    Boolean  @default(true)
-  config      String   // Encrypted JSON: { clientId, clientSecret, ... }
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  provider  String
+  isActive  Boolean  @default(true)
+  config    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, provider])
 }
@@ -286,11 +265,529 @@ model MerchantGatewayConfig {
 model Notification {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  type      String   // payment, kyc, payout, system, security
+  type      String
   title     String
   message   String
   isRead    Boolean  @default(false)
-  metadata  String?  // JSON: { transactionId, amount, etc. }
+  metadata  String?
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model agencies {
+  id                                                        String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  parent_id                                                 String?                @db.Uuid
+  name                                                      String                 @db.VarChar(255)
+  code                                                      String                 @unique @db.VarChar(50)
+  status                                                    String?                @default("active") @db.VarChar(30)
+  metadata                                                  Json?
+  created_at                                                DateTime?              @default(now()) @db.Timestamp(6)
+  updated_at                                                DateTime?              @default(now()) @db.Timestamp(6)
+  agencies                                                  agencies?              @relation("agenciesToagencies", fields: [parent_id], references: [id], onUpdate: NoAction)
+  other_agencies                                            agencies[]             @relation("agenciesToagencies")
+  agency_balances                                           agency_balances[]
+  agency_members                                            agency_members[]
+  commission_overrides                                      commission_overrides[]
+  commission_rules                                          commission_rules[]
+  ledger_entries_ledger_entries_agency_idToagencies         ledger_entries[]       @relation("ledger_entries_agency_idToagencies")
+  ledger_entries_ledger_entries_related_agency_idToagencies ledger_entries[]       @relation("ledger_entries_related_agency_idToagencies")
+  merchant_sites                                            merchant_sites[]
+  payout_accounts                                           payout_accounts[]
+  withdrawal_requests                                       withdrawal_requests[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model agency_balances {
+  id               Int       @id @default(autoincrement())
+  agency_id        String    @db.Uuid
+  currency         String    @default("THB") @db.VarChar(3)
+  available_amount Decimal   @default(0) @db.Decimal(18, 2)
+  pending_amount   Decimal   @default(0) @db.Decimal(18, 2)
+  reserved_amount  Decimal   @default(0) @db.Decimal(18, 2)
+  updated_at       DateTime? @default(now()) @db.Timestamp(6)
+  agencies         agencies  @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([agency_id, currency], map: "uniq_agency_balances_agency_currency")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model agency_members {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  agency_id      String    @db.Uuid
+  user_id        String    @db.Uuid
+  role_in_agency String    @db.VarChar(30)
+  is_active      Boolean?  @default(true)
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  agencies       agencies  @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users          users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([agency_id, user_id], map: "agency_members_unique")
+  @@index([role_in_agency], map: "idx_agency_members_role")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model api_keys {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id         String    @db.Uuid
+  name            String    @db.VarChar(255)
+  public_key      String    @unique @db.VarChar(255)
+  secret_key_hash String    @db.VarChar(255)
+  status          String?   @default("active") @db.VarChar(50)
+  last_used_at    DateTime? @db.Timestamp(6)
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+  users           users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([public_key], map: "idx_api_keys_public_key")
+  @@index([user_id], map: "idx_api_keys_user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model audit_logs {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id       String?   @db.Uuid
+  action        String    @db.VarChar(100)
+  resource_type String?   @db.VarChar(100)
+  resource_id   String?   @db.Uuid
+  ip_address    String?   @db.Inet
+  user_agent    String?
+  metadata      Json?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  users         users?    @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+
+  @@index([created_at(sort: Desc)], map: "idx_audit_logs_created_at")
+  @@index([user_id], map: "idx_audit_logs_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model commission_overrides {
+  id               Int            @id @default(autoincrement())
+  agency_id        String         @db.Uuid
+  merchant_site_id String         @db.Uuid
+  rule_type        String         @db.VarChar(30)
+  rate             Decimal        @db.Decimal(10, 4)
+  active           Boolean        @default(true)
+  created_at       DateTime?      @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?      @default(now()) @db.Timestamp(6)
+  agencies         agencies       @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  merchant_sites   merchant_sites @relation(fields: [merchant_site_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([agency_id], map: "idx_commission_overrides_agency")
+  @@index([merchant_site_id], map: "idx_commission_overrides_merchant")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model commission_rules {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  agency_id      String    @db.Uuid
+  level          String    @db.VarChar(20)
+  model          String    @db.VarChar(20)
+  percent_value  Decimal?  @db.Decimal(7, 4)
+  flat_amount    Decimal?  @db.Decimal(12, 2)
+  min_amount     Decimal?  @db.Decimal(12, 2)
+  max_amount     Decimal?  @db.Decimal(12, 2)
+  tier_json      Json?
+  effective_from DateTime? @default(now()) @db.Timestamp(6)
+  effective_to   DateTime? @db.Timestamp(6)
+  is_active      Boolean?  @default(true)
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  agencies       agencies  @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([is_active], map: "idx_commission_rules_active")
+  @@index([agency_id], map: "idx_commission_rules_agency")
+}
+
+model documents {
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id          String    @db.Uuid
+  type             String    @db.VarChar(50)
+  file_path        String
+  status           String?   @default("pending") @db.VarChar(20)
+  rejection_reason String?
+  created_at       DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime? @default(now()) @db.Timestamptz(6)
+  users            users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_documents_user_id")
+}
+
+model fee_configs {
+  id                                 String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id                            String    @db.Uuid
+  set_by_id                          String    @db.Uuid
+  rate_percent                       Decimal   @db.Decimal(5, 4)
+  fixed_fee                          Decimal?  @default(0.00) @db.Decimal(10, 2)
+  created_at                         DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                         DateTime? @default(now()) @db.Timestamptz(6)
+  users_fee_configs_set_by_idTousers users     @relation("fee_configs_set_by_idTousers", fields: [set_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_fee_configs_user_idTousers   users     @relation("fee_configs_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, set_by_id])
+  @@index([user_id], map: "idx_fee_configs_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ledger_entries {
+  id                                                  BigInt               @id @default(autoincrement())
+  agency_id                                           String               @db.Uuid
+  type                                                String               @db.VarChar(50)
+  direction                                           String               @db.Char(1)
+  amount                                              Decimal              @db.Decimal(18, 2)
+  currency                                            String               @default("THB") @db.VarChar(3)
+  status                                              String               @default("PENDING") @db.VarChar(20)
+  payment_id                                          String?              @db.Uuid
+  withdrawal_request_id                               BigInt?
+  related_agency_id                                   String?              @db.Uuid
+  description                                         String?
+  available_at                                        DateTime?            @db.Timestamp(6)
+  created_at                                          DateTime?            @default(now()) @db.Timestamp(6)
+  agencies_ledger_entries_agency_idToagencies         agencies             @relation("ledger_entries_agency_idToagencies", fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  agencies_ledger_entries_related_agency_idToagencies agencies?            @relation("ledger_entries_related_agency_idToagencies", fields: [related_agency_id], references: [id], onUpdate: NoAction)
+  withdrawal_requests                                 withdrawal_requests? @relation(fields: [withdrawal_request_id], references: [id], onUpdate: NoAction)
+
+  @@index([agency_id], map: "idx_ledger_entries_agency")
+  @@index([created_at(sort: Desc)], map: "idx_ledger_entries_created")
+  @@index([payment_id], map: "idx_ledger_entries_payment")
+  @@index([status], map: "idx_ledger_entries_status")
+}
+
+model merchant_settings {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String    @unique(map: "unique_merchant_settings_user") @db.Uuid
+  business_name         String?   @db.VarChar(255)
+  business_type         String?   @db.VarChar(100)
+  business_email        String?   @db.VarChar(255)
+  business_phone        String?   @db.VarChar(50)
+  business_website      String?   @db.VarChar(500)
+  business_address      String?
+  default_currency      String?   @default("THB") @db.VarChar(10)
+  auto_payout           String?   @default("manual") @db.VarChar(20)
+  payment_description   String?
+  test_mode             Boolean?  @default(true)
+  auto_capture          Boolean?  @default(true)
+  notify_email_success  Boolean?  @default(true)
+  notify_email_fail     Boolean?  @default(true)
+  notify_email_payout   Boolean?  @default(true)
+  notify_daily_summary  Boolean?  @default(false)
+  notify_sms_high_value Boolean?  @default(false)
+  notify_sms_security   Boolean?  @default(true)
+  timezone              String?   @default("Asia/Bangkok") @db.VarChar(50)
+  date_format           String?   @default("DD/MM/YYYY") @db.VarChar(20)
+  number_format         String?   @default("th-TH") @db.VarChar(20)
+  created_at            DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime? @default(now()) @db.Timestamptz(6)
+  users                 users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_merchant_settings_user")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model merchant_sites {
+  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  agency_id            String                 @db.Uuid
+  name                 String                 @db.VarChar(255)
+  domain               String?                @db.VarChar(255)
+  contact_email        String?                @db.VarChar(255)
+  status               String?                @default("active") @db.VarChar(30)
+  metadata             Json?
+  created_at           DateTime?              @default(now()) @db.Timestamp(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamp(6)
+  commission_overrides commission_overrides[]
+  agencies             agencies               @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([agency_id], map: "idx_merchant_sites_agency")
+  @@index([status], map: "idx_merchant_sites_status")
+}
+
+model payments {
+  id                                String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  merchant_id                       String?   @db.Uuid
+  payer_id                          String?   @db.Uuid
+  amount                            Decimal   @db.Decimal(20, 2)
+  currency                          String?   @default("THB") @db.VarChar(10)
+  status                            String?   @default("pending") @db.VarChar(50)
+  token                             String    @unique @db.VarChar(255)
+  payment_intent_id                 String?   @unique @db.VarChar(255)
+  client_secret                     String?   @db.VarChar(255)
+  payment_method_type               String?   @default("stripe") @db.VarChar(50)
+  return_url                        String?
+  cancel_url                        String?
+  description                       String?
+  created_at                        DateTime? @default(now()) @db.Timestamp(6)
+  paid_at                           DateTime? @db.Timestamp(6)
+  refund_amount                     Decimal?  @db.Decimal(10, 2)
+  updated_at                        DateTime? @default(now()) @db.Timestamp(6)
+  payment_method                    String?   @db.VarChar(50)
+  metadata                          Json?
+  user_id                           String?   @db.Uuid
+  checkout_session_id               String?   @db.VarChar(255)
+  settled_at                        DateTime? @db.Timestamp(6)
+  users_payments_merchant_idTousers users?    @relation("payments_merchant_idTousers", fields: [merchant_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_payments_payer_idTousers    users?    @relation("payments_payer_idTousers", fields: [payer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_payments_user_idTousers     users?    @relation("payments_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([checkout_session_id], map: "idx_payments_checkout_session")
+  @@index([payment_intent_id], map: "idx_payments_intent")
+  @@index([merchant_id], map: "idx_payments_merchant")
+  @@index([token], map: "idx_payments_token")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model payout_accounts {
+  id                  Int                   @id @default(autoincrement())
+  agency_id           String                @db.Uuid
+  type                String                @db.VarChar(30)
+  label               String                @db.VarChar(100)
+  account_details     Json
+  is_default          Boolean               @default(false)
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?             @default(now()) @db.Timestamp(6)
+  agencies            agencies              @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  withdrawal_requests withdrawal_requests[]
+
+  @@index([agency_id], map: "idx_payout_accounts_agency")
+}
+
+model schema_migrations {
+  id         Int       @id @default(autoincrement())
+  filename   String    @unique @db.VarChar(255)
+  applied_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sessions {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id       String    @db.Uuid
+  refresh_token String    @db.VarChar(500)
+  ip_address    String?   @db.Inet
+  user_agent    String?
+  expires_at    DateTime  @db.Timestamp(6)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([refresh_token], map: "idx_sessions_refresh_token")
+  @@index([user_id], map: "idx_sessions_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model settlements {
+  id                                   String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                              String              @db.Uuid
+  bank_account_id                      String?             @db.Uuid
+  amount                               Decimal             @db.Decimal(18, 2)
+  fee                                  Decimal?            @default(0) @db.Decimal(18, 2)
+  net_amount                           Decimal             @db.Decimal(18, 2)
+  currency                             String?             @default("THB") @db.VarChar(10)
+  status                               String?             @default("pending") @db.VarChar(20)
+  reference_id                         String?             @db.VarChar(100)
+  bank_name                            String?             @db.VarChar(50)
+  account_number                       String?             @db.VarChar(50)
+  account_name                         String?             @db.VarChar(255)
+  period_start                         DateTime?           @db.Timestamptz(6)
+  period_end                           DateTime?           @db.Timestamptz(6)
+  notes                                String?
+  completed_at                         DateTime?           @db.Timestamptz(6)
+  failure_reason                       String?
+  approved_by                          String?             @db.Uuid
+  approved_at                          DateTime?           @db.Timestamptz(6)
+  created_at                           DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at                           DateTime?           @default(now()) @db.Timestamptz(6)
+  users_settlements_approved_byTousers users?              @relation("settlements_approved_byTousers", fields: [approved_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_bank_accounts                   user_bank_accounts? @relation(fields: [bank_account_id], references: [id], onUpdate: NoAction)
+  users_settlements_user_idTousers     users               @relation("settlements_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([created_at(sort: Desc)], map: "idx_settlements_created")
+  @@index([status], map: "idx_settlements_status")
+  @@index([user_id], map: "idx_settlements_user")
+}
+
+model system_settings {
+  key        String    @id @db.VarChar(50)
+  value      String
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model transaction_logs {
+  id                     String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wallet_id              String    @db.Uuid
+  user_id                String    @db.Uuid
+  type                   String    @db.VarChar(20)
+  amount                 Decimal   @db.Decimal(18, 6)
+  currency               String?   @default("THB") @db.VarChar(10)
+  related_wallet_address String?   @db.VarChar(255)
+  description            String?
+  created_at             DateTime? @default(now()) @db.Timestamp(6)
+  users                  users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  wallets                wallets   @relation(fields: [wallet_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model user_bank_accounts {
+  id             String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id        String        @db.Uuid
+  bank_name      String        @db.VarChar(100)
+  account_name   String        @db.VarChar(255)
+  account_number String        @db.VarChar(50)
+  is_primary     Boolean?      @default(false)
+  created_at     DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?     @default(now()) @db.Timestamp(6)
+  settlements    settlements[]
+  users          users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_user_bank_accounts_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model users {
+  id                                                          String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                                                       String                @unique @db.VarChar(255)
+  password                                                    String                @db.VarChar(255)
+  name                                                        String                @db.VarChar(255)
+  role                                                        String?               @default("user") @db.VarChar(50)
+  is_active                                                   Boolean?              @default(true)
+  is_verified                                                 Boolean?              @default(false)
+  two_factor_enabled                                          Boolean?              @default(false)
+  two_factor_secret                                           String?               @db.VarChar(255)
+  failed_login_attempts                                       Int?                  @default(0)
+  locked_until                                                DateTime?             @db.Timestamp(6)
+  last_login                                                  DateTime?             @db.Timestamp(6)
+  created_at                                                  DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at                                                  DateTime?             @default(now()) @db.Timestamp(6)
+  first_name                                                  String?               @db.VarChar(255)
+  last_name                                                   String?               @db.VarChar(255)
+  company_name                                                String?               @db.VarChar(255)
+  account_type                                                String?               @default("merchant") @db.VarChar(50)
+  status                                                      String?               @default("active") @db.VarChar(50)
+  email_verified                                              Boolean?              @default(false)
+  invite_code                                                 String?               @db.VarChar(50)
+  parent_id                                                   String?               @db.Uuid
+  verification_status                                         String?               @default("unverified") @db.VarChar(20)
+  risk_level                                                  String?               @default("low") @db.VarChar(20)
+  agency_members                                              agency_members[]
+  api_keys                                                    api_keys[]
+  audit_logs                                                  audit_logs[]
+  documents                                                   documents[]
+  fee_configs_fee_configs_set_by_idTousers                    fee_configs[]         @relation("fee_configs_set_by_idTousers")
+  fee_configs_fee_configs_user_idTousers                      fee_configs[]         @relation("fee_configs_user_idTousers")
+  merchant_settings                                           merchant_settings?
+  payments_payments_merchant_idTousers                        payments[]            @relation("payments_merchant_idTousers")
+  payments_payments_payer_idTousers                           payments[]            @relation("payments_payer_idTousers")
+  payments_payments_user_idTousers                            payments[]            @relation("payments_user_idTousers")
+  sessions                                                    sessions[]
+  settlements_settlements_approved_byTousers                  settlements[]         @relation("settlements_approved_byTousers")
+  settlements_settlements_user_idTousers                      settlements[]         @relation("settlements_user_idTousers")
+  transaction_logs                                            transaction_logs[]
+  user_bank_accounts                                          user_bank_accounts[]
+  users                                                       users?                @relation("usersTousers", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_users                                                 users[]               @relation("usersTousers")
+  wallets                                                     wallets[]
+  webhook_endpoints                                           webhook_endpoints[]
+  webhooks                                                    webhooks[]
+  withdrawal_requests_withdrawal_requests_approved_byTousers  withdrawal_requests[] @relation("withdrawal_requests_approved_byTousers")
+  withdrawal_requests_withdrawal_requests_requested_byTousers withdrawal_requests[] @relation("withdrawal_requests_requested_byTousers")
+
+  @@index([email], map: "idx_users_email")
+  @@index([invite_code], map: "idx_users_invite_code")
+  @@index([parent_id], map: "idx_users_parent_id")
+  @@index([verification_status], map: "idx_users_verification_status")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model wallets {
+  id               String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id          String             @db.Uuid
+  wallet_address   String             @unique @db.VarChar(255)
+  balance          Decimal            @default(0) @db.Decimal(18, 6)
+  currency         String?            @default("THB") @db.VarChar(10)
+  is_active        Boolean?           @default(true)
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?          @default(now()) @db.Timestamp(6)
+  transaction_logs transaction_logs[]
+  users            users              @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model webhook_endpoints {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id        String    @db.Uuid
+  url            String    @db.VarChar(255)
+  enabled_events String[]
+  is_active      Boolean?  @default(true)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+  secret         String?   @db.VarChar(255)
+  users          users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model webhook_logs {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  webhook_id      String?   @db.Uuid
+  payment_id      String?   @db.Uuid
+  event_type      String    @db.VarChar(100)
+  payload         Json
+  response_status Int?
+  response_body   String?
+  attempt_number  Int?      @default(1)
+  success         Boolean?  @default(false)
+  error_message   String?
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+  provider        String?   @default("stripe") @db.VarChar(50)
+  event_id        String?   @db.VarChar(255)
+  status          String?   @db.VarChar(50)
+  processed_at    DateTime? @db.Timestamp(6)
+  webhooks        webhooks? @relation(fields: [webhook_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([webhook_id], map: "idx_webhook_logs_webhook_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model webhooks {
+  id             String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id        String         @db.Uuid
+  url            String         @db.VarChar(500)
+  events         String[]
+  secret         String         @db.VarChar(255)
+  is_active      Boolean?       @default(true)
+  last_triggered DateTime?      @db.Timestamp(6)
+  created_at     DateTime?      @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?      @default(now()) @db.Timestamp(6)
+  webhook_logs   webhook_logs[]
+  users          users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_webhooks_user_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model withdrawal_requests {
+  id                                            BigInt           @id @default(autoincrement())
+  agency_id                                     String           @db.Uuid
+  payout_account_id                             Int?
+  amount                                        Decimal          @db.Decimal(18, 2)
+  currency                                      String           @default("THB") @db.VarChar(3)
+  status                                        String           @default("PENDING") @db.VarChar(20)
+  method                                        String           @db.VarChar(30)
+  destination_details                           Json
+  requested_by                                  String?          @db.Uuid
+  approved_by                                   String?          @db.Uuid
+  processed_at                                  DateTime?        @db.Timestamp(6)
+  failure_reason                                String?
+  created_at                                    DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at                                    DateTime?        @default(now()) @db.Timestamp(6)
+  ledger_entries                                ledger_entries[]
+  agencies                                      agencies         @relation(fields: [agency_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_withdrawal_requests_approved_byTousers  users?           @relation("withdrawal_requests_approved_byTousers", fields: [approved_by], references: [id], onUpdate: NoAction)
+  payout_accounts                               payout_accounts? @relation(fields: [payout_account_id], references: [id], onUpdate: NoAction)
+  users_withdrawal_requests_requested_byTousers users?           @relation("withdrawal_requests_requested_byTousers", fields: [requested_by], references: [id], onUpdate: NoAction)
+
+  @@index([agency_id], map: "idx_withdrawal_requests_agency")
+  @@index([status], map: "idx_withdrawal_requests_status")
 }

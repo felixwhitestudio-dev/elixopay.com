@@ -1,0 +1,24 @@
+services:
+  # 1. Elixopay API (Node.js Backend)
+  - type: web
+    name: elixopay-api
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: elixopay-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      # The rest of the keys (Stripe, LINE, OpenAI) should be added manually via the Render Dashboard.
+      
+databases:
+  # 2. Managed PostgreSQL Database
+  - name: elixopay-db
+    plan: free # Can be upgraded to 'starter' or higher as needed
+    databaseName: elixopay
+    user: elixouser

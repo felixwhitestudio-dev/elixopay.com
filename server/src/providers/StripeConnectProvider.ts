@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import qrcode from 'qrcode';
 import {
     PaymentProvider,
     PaymentMethod,
@@ -107,10 +108,21 @@ export class StripeConnectProvider implements PaymentProvider {
 
             logger.info(`[StripeProvider] PaymentIntent created: ${paymentIntent.id} (status: ${paymentIntent.status})`);
 
+            let qrCodeBase64: string | undefined;
+            const promptpayData = (paymentIntent as any).next_action?.promptpay_display_qr_code?.data;
+            if (promptpayData) {
+                try {
+                    qrCodeBase64 = await qrcode.toDataURL(promptpayData);
+                } catch (err) {
+                    logger.error('[StripeProvider] Failed to generate QR code image:', err);
+                }
+            }
+
             return {
                 providerChargeId: paymentIntent.id,
                 status: this.mapStripeStatus(paymentIntent.status),
                 redirectUrl: (paymentIntent as any).next_action?.redirect_to_url?.url,
+                qrCode: qrCodeBase64,
                 rawResponse: {
                     clientSecret: paymentIntent.client_secret,
                     paymentIntentId: paymentIntent.id,
