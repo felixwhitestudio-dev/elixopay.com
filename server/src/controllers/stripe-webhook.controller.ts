@@ -5,7 +5,7 @@ import logger from '../utils/logger';
 import { StripeConnectService } from '../services/stripe-connect.service';
 import { WebhookService } from '../services/webhook.service';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummyKeyToPreventCrashOnStartup');
 
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 

@@ -3,7 +3,7 @@ import prisma from '../utils/prisma';
 import logger from '../utils/logger';
 import { AppError } from '../utils/AppError';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummyKeyToPreventCrashOnStartup');
 
 export class StripeConnectService {
     /**
