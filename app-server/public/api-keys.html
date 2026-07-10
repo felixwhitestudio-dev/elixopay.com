@@ -227,15 +227,10 @@
 
 	<script>
 		// Load User Info
-		document.addEventListener('DOMContentLoaded', async () => {
+		window.addEventListener('auth:ready', (e) => {
 			try {
-				const resp = await apiFetch(window.API_CONFIG.ENDPOINTS.auth.me);
-				if (resp.ok) {
-					const data = await resp.json();
-					const user = data.data.user;
-					document.getElementById('nav-user-name').textContent = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Merchant';
-					document.getElementById('nav-user-email').textContent = user.email;
-
+				const user = e.detail;
+				if (user) {
 					// Check KYC Status
 					if (user.kycStatus !== 'verified' && user.role !== 'admin') {
 						// Show Test Mode Warning Banner
@@ -272,7 +267,7 @@
 					loadWebhooks();
 				}
 			} catch (e) {
-				console.error('Failed to load user info');
+				console.error('Failed to load user info', e);
 			}
 		});
 
