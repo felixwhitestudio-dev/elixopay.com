@@ -39,7 +39,7 @@ export interface StripeChargeParams extends ChargeParams {
  */
 export class StripeConnectProvider implements PaymentProvider {
     readonly name = 'stripe';
-    readonly supportedMethods: PaymentMethod[] = ['card', 'bank_transfer'];
+    readonly supportedMethods: PaymentMethod[] = ['card', 'bank_transfer', 'qr'];
 
     private stripeClient: InstanceType<typeof Stripe> | null = null;
 
