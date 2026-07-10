@@ -101,20 +101,20 @@
 						<div>
 							<label class="block text-sm font-medium text-slate-400 mb-1.5" data-i18n="apikeys.keyName">Key Name</label>
 							<input id="key-name" type="text" placeholder="e.g. Production Web App"
-								class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm shadow-sm" />
+								class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm shadow-sm" />
 						</div>
 						<div class="flex flex-col md:flex-row gap-4">
 							<div class="flex-1">
 								<label class="block text-sm font-medium text-slate-400 mb-1.5" data-i18n="apikeys.environment">Environment</label>
 								<select id="key-type"
-									class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition appearance-none text-sm shadow-sm">
+									class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition appearance-none text-sm shadow-sm">
 									<option value="test">Test Mode</option>
 									<option value="live">Live Mode</option>
 								</select>
 							</div>
 							<div class="flex-1 flex items-end">
 								<button onclick="createKey()"
-									class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg px-4 py-2.5 transition shadow-sm active:scale-95 flex justify-center items-center gap-2 text-sm">
+									class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg px-4 py-3 transition shadow-sm active:scale-95 flex justify-center items-center gap-2 text-sm">
 									<i class="fas fa-plus"></i> <span data-i18n="apikeys.createKey">Create Key</span>
 								</button>
 							</div>
@@ -189,9 +189,9 @@
 							<label class="block text-sm font-medium text-slate-300 mb-1.5" data-i18n="apikeys.endpointUrl">Endpoint URL</label>
 							<div class="flex flex-col md:flex-row gap-3">
 								<input id="webhook-url" type="url" placeholder="https://yourdomain.com/webhook"
-									class="flex-1 bg-slate-900/50 border border-slate-700 text-white rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm shadow-sm" />
+									class="flex-1 bg-slate-900/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm shadow-sm" />
 								<button onclick="createWebhook()"
-									class="md:w-auto w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg px-4 py-2.5 transition flex justify-center items-center gap-2 border border-slate-700 hover:border-slate-600 text-sm shadow-sm">
+									class="md:w-auto w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg px-4 py-3 transition flex justify-center items-center gap-2 border border-slate-700 hover:border-slate-600 text-sm shadow-sm">
 									<i class="fas fa-plus"></i> <span data-i18n="apikeys.addEndpoint">Add Endpoint</span>
 								</button>
 							</div>
