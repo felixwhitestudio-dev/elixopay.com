@@ -126,6 +126,16 @@
                 <p class="auth-form-sub" data-i18n="login.subtitle">Enter your credentials to access your dashboard</p>
 
                 <form id="loginForm" onsubmit="handleLogin(event)">
+                    <!-- 🔒 Maintenance Message (Visible by default) -->
+                    <div id="maintenance-msg" style="text-align: center; padding: 2.5rem 1rem;">
+                        <i class="fas fa-tools" style="font-size: 3rem; color: var(--auth-primary); margin-bottom: 1rem; display:block;"></i>
+                        <h3 style="color: var(--auth-text); margin-bottom: 0.75rem; font-size: 1.3rem;">🔧 กำลังปรับปรุงระบบ</h3>
+                        <p style="color: var(--auth-muted); font-size: 0.9rem; line-height: 1.6;">ระบบกำลังอยู่ระหว่างการปรับปรุงและอัปเกรดเซิร์ฟเวอร์<br>กรุณากลับมาใหม่ในภายหลัง<br>ขออภัยในความไม่สะดวกครับ</p>
+                        <p style="color: var(--auth-muted); font-size: 0.8rem; margin-top: 1.5rem;"><i class="fas fa-envelope" style="margin-right: 0.3rem;"></i> ติดต่อ: support@elixopay.com</p>
+                    </div>
+
+                    <!-- Actual Form Content (Hidden by default, show with ?admin=1) -->
+                    <div id="actual-login-content" style="display: none;">
                     <input type="hidden" id="csrf_token" name="csrf_token" value="csrf_token_placeholder">
 
                     <!-- Email -->
@@ -196,13 +206,24 @@
                     </button>
                 </form>
 
-                <!-- Sign Up Link -->
-                <div style="text-align:center; margin-top:1.5rem;">
-                    <p style="font-size:0.85rem; color:var(--auth-muted);">
-                        <span data-i18n="login.noAccount">Don't have an account?</span>
-                        <a href="/signup.html" class="auth-link" data-i18n="login.signup">Sign up free</a>
-                    </p>
-                </div>
+                    <!-- Sign Up Link -->
+                    <div style="text-align:center; margin-top:1.5rem;">
+                        <p style="font-size:0.85rem; color:var(--auth-muted);">
+                            <span data-i18n="login.noAccount">Don't have an account?</span>
+                            <a href="/signup.html" class="auth-link" data-i18n="login.signup">Sign up free</a>
+                        </p>
+                    </div>
+                    </div> <!-- End of actual-login-content -->
+
+                    <script>
+                        (function() {
+                            var p = new URLSearchParams(window.location.search);
+                            if (p.get('admin') === '1') {
+                                document.getElementById('actual-login-content').style.display = 'block';
+                                document.getElementById('maintenance-msg').style.display = 'none';
+                            }
+                        })();
+                    </script>
 
                 <!-- Security -->
                 <div class="auth-security">
