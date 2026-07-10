@@ -211,8 +211,8 @@ logger.info(`[STATIC] Serving frontend from: ${frontendPath}`);
 // Enable HTML extensions so /login resolves to login.html
 app.use(express.static(frontendPath, { 
     extensions: ['html'],
-    setHeaders: (res, path) => {
-        if (path.endsWith('.html')) {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html') || filePath.endsWith('.css') || filePath.endsWith('.js')) {
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
