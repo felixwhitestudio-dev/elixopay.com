@@ -83,8 +83,49 @@ export class StripeConnectProvider implements PaymentProvider {
         }
 
         try {
-            const paymentMethodTypes = params.method === 'card' ? ['card'] : ['promptpay'];
+            if (params.method === 'card') {
+                const sessionParams: Record<string, any> = {
+                    payment_method_types: ['card'],
+                    line_items: [{
+                        price_data: {
+                            currency: params.currency.toLowerCase(),
+                            product_data: {
+                                name: params.description || 'Elixopay Payment',
+                            },
+                            unit_amount: Math.round(params.amount * 100),
+                        },
+                        quantity: 1,
+                    }],
+                    mode: 'payment',
+                    success_url: params.returnUrl || 'https://elixopay.com/success',
+                    cancel_url: params.returnUrl || 'https://elixopay.com/cancel',
+                    metadata: {
+                        orderId: params.orderId || '',
+                        ...(params.metadata || {}),
+                    },
+                };
 
+                if (stripeAccountId) {
+                    sessionParams.payment_intent_data = {
+                        transfer_data: {
+                            destination: stripeAccountId,
+                        },
+                        application_fee_amount: this.calculatePlatformFee(params.amount),
+                    };
+                }
+
+                const session = await client.checkout.sessions.create(sessionParams as any);
+                logger.info(`[StripeProvider] Checkout Session created: ${session.id}`);
+
+                return {
+                    providerChargeId: session.id,
+                    status: 'pending',
+                    redirectUrl: session.url,
+                    rawResponse: session,
+                };
+            }
+
+            // Fallback for QR (PromptPay)
             const intentParams: Record<string, any> = {
                 amount: Math.round(params.amount * 100), // Convert to smallest unit
                 currency: params.currency.toLowerCase(),
@@ -93,7 +134,7 @@ export class StripeConnectProvider implements PaymentProvider {
                     orderId: params.orderId || '',
                     ...(params.metadata || {}),
                 },
-                payment_method_types: paymentMethodTypes,
+                payment_method_types: ['promptpay'],
             };
 
             // Destination charge: money goes to platform, then transferred to connected account
