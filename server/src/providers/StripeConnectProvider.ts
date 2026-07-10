@@ -120,7 +120,7 @@ export class StripeConnectProvider implements PaymentProvider {
                 return {
                     providerChargeId: session.id,
                     status: 'pending',
-                    redirectUrl: session.url,
+                    redirectUrl: session.url || undefined,
                     rawResponse: session,
                 };
             }
