@@ -187,15 +187,13 @@
 					<div class="space-y-4 mb-6 pb-6 border-b border-white/5">
 						<div>
 							<label class="block text-sm font-medium text-slate-300 mb-1.5" data-i18n="apikeys.endpointUrl">Endpoint URL</label>
-							<div class="flex flex-col md:flex-row gap-3">
-								<input id="webhook-url" type="url" placeholder="https://yourdomain.com/webhook"
-									class="flex-1 bg-slate-900/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm shadow-sm" />
-								<button onclick="createWebhook()"
-									class="md:w-auto w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg px-4 py-3 transition flex justify-center items-center gap-2 border border-slate-700 hover:border-slate-600 text-sm shadow-sm">
-									<i class="fas fa-plus"></i> <span data-i18n="apikeys.addEndpoint">Add Endpoint</span>
-								</button>
-							</div>
+							<input id="webhook-url" type="url" placeholder="https://yourdomain.com/webhook"
+								class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm shadow-sm" />
 						</div>
+						<button onclick="createWebhook()"
+							class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg px-4 py-3 transition flex justify-center items-center gap-2 border border-slate-700 hover:border-slate-600 text-sm shadow-sm">
+							<i class="fas fa-plus"></i> <span data-i18n="apikeys.addEndpoint">Add Endpoint</span>
+						</button>
 					</div>
 
 					<!-- Webhooks List -->
