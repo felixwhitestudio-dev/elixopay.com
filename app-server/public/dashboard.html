@@ -779,17 +779,17 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                            <label class="block text-sm font-medium text-gray-700 mb-2"
                                 data-i18n="modal.account_name">Account Name</label>
                             <input type="text" name="account_name"
-                                class="block w-full rounded-xl border-gray-300 py-2.5 bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm border"
+                                class="block w-full rounded-xl border-gray-300 py-3 px-4 bg-gray-100 text-gray-500 cursor-not-allowed text-base border shadow-sm"
                                 readonly placeholder="Name on account" data-i18n="[placeholder]modal.account_name_ph">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                            <label class="block text-sm font-medium text-gray-700 mb-2"
                                 data-i18n="modal.account_number">Account Number</label>
                             <input type="text" name="account_number"
-                                class="block w-full rounded-xl border-gray-300 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white shadow-sm"
+                                class="block w-full rounded-xl border-gray-300 py-3 px-4 text-base focus:border-purple-500 focus:ring-purple-500 border bg-white shadow-sm"
                                 placeholder="012-3-45678-9" data-i18n="[placeholder]modal.account_number_ph">
                         </div>
                     </div>
@@ -805,11 +805,11 @@
                                     <span class="text-gray-500 sm:text-sm" id="currency-symbol">฿</span>
                                 </div>
                                 <input type="number" min="1" step="0.01" name="amount" id="amount-input"
-                                    class="block w-full rounded-l-xl border-gray-300 pl-7 py-2.5 focus:border-purple-500 focus:ring-purple-500 sm:text-sm border bg-white"
+                                    class="block w-full rounded-l-xl border-gray-300 pl-8 py-3 px-4 text-base focus:border-purple-500 focus:ring-purple-500 border bg-white shadow-sm"
                                     placeholder="0.00" required>
                             </div>
                             <select name="currency" id="currency-select"
-                                class="relative -ml-px block w-24 rounded-r-xl border border-gray-300 bg-gray-100 py-2.5 pl-3 pr-7 text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 sm:text-sm">
+                                class="relative -ml-px block w-24 rounded-r-xl border border-gray-300 bg-gray-100 py-3 pl-3 pr-7 text-gray-500 text-base focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 shadow-sm">
                                 <option value="THB">THB</option>
                             </select>
                         </div>
@@ -925,10 +925,10 @@
             <div id="add-bank-form-container" class="hidden mt-4 pt-4 border-t border-gray-100 animate-fade-in-down">
                 <form id="add-bank-form" onsubmit="handleAddBank(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1" data-i18n="modal.bank_name">Bank
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="modal.bank_name">Bank
                             Name</label>
                         <select name="bank_name"
-                            class="block w-full rounded-lg border-gray-300 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            class="block w-full rounded-xl border-gray-300 py-3 px-4 text-base focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                             required>
                             <option value="" disabled selected>Select Bank</option>
                             <option value="KBANK">Kasikornbank</option>
@@ -941,17 +941,17 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1"
+                        <label class="block text-sm font-medium text-gray-700 mb-2"
                             data-i18n="modal.account_number">Account Number</label>
                         <input type="text" name="account_number"
-                            class="block w-full rounded-lg border-gray-300 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            class="block w-full rounded-xl border-gray-300 py-3 px-4 text-base focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                             placeholder="012-3-45678-9" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1"
+                        <label class="block text-sm font-medium text-gray-700 mb-2"
                             data-i18n="modal.account_name">Account Name</label>
                         <input type="text" name="account_name"
-                            class="block w-full rounded-lg border-gray-300 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            class="block w-full rounded-xl border-gray-300 py-3 px-4 text-base focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                             placeholder="Name on account" required>
                     </div>
                     <div class="flex space-x-3 pt-2">
