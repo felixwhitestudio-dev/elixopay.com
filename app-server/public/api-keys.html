@@ -11,7 +11,7 @@
 
 	<script src="/js/api-config.js"></script>
 	<script src="/js/i18n.js"></script>
-	<script src="/js/auth-guard.js?v=1.2" data-require-role="user"></script>
+	<script src="/js/auth-guard.js?v=1.3" data-require-role="user"></script>
 
 	<style>
 		.glass-panel {
@@ -24,6 +24,46 @@
 			border: 1px solid var(--ep-border);
 		}
 		.blur-circle { display: none; }
+
+		/* Secret Key Banner - prominent display */
+		.secret-key-box {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background: rgba(0,0,0,0.4);
+			border: 1px solid rgba(34,197,94,0.2);
+			border-radius: 12px;
+			padding: 12px 16px;
+			margin-top: 8px;
+		}
+		.secret-key-box code {
+			flex: 1;
+			word-break: break-all;
+			font-size: 13px;
+			line-height: 1.5;
+			color: #86efac;
+			font-family: var(--ep-font-mono);
+			user-select: all;
+		}
+		.copy-btn-lg {
+			background: rgba(34,197,94,0.15);
+			border: 1px solid rgba(34,197,94,0.3);
+			color: #86efac;
+			border-radius: 10px;
+			padding: 10px 18px;
+			cursor: pointer;
+			transition: all 0.2s;
+			font-size: 14px;
+			font-weight: 600;
+			white-space: nowrap;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		.copy-btn-lg:hover {
+			background: rgba(34,197,94,0.3);
+			color: #fff;
+		}
 	</style>
 </head>
 
@@ -83,25 +123,21 @@
 					<div id="secret-key-banner"
 						class="hidden mt-6 bg-green-900/20 border border-green-500/30 rounded-xl p-5 relative overflow-hidden">
 						<div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-						<div class="flex items-start justify-between">
+						<div class="flex items-start justify-between mb-3">
 							<div>
 								<h3 class="text-green-400 font-bold mb-1"><i
-										class="fas fa-exclamation-triangle mr-2"></i> Important: Save this secret key
+										class="fas fa-exclamation-triangle mr-2"></i> ⚠️ สำคัญ: กรุณาคัดลอก Secret Key นี้
 								</h3>
-								<p class="text-sm text-slate-300 mb-3">This key will only be shown once. Please copy it
-									and store it somewhere safe.</p>
-								<div class="flex items-center gap-2">
-									<code id="secret-key-display"
-										class="bg-black/40 text-green-300 px-4 py-2 rounded-lg text-sm font-mono border border-green-500/20 select-all">...</code>
-									<button onclick="copyToClipboard('secret-key-display')"
-										class="p-2 text-slate-400 hover:text-white transitionbg-slate-800 rounded-lg"
-										title="Copy Key">
-										<i class="far fa-copy"></i>
-									</button>
-								</div>
+								<p class="text-sm text-slate-300">Key นี้จะแสดงครั้งเดียวเท่านั้น กรุณาคัดลอกและเก็บไว้ในที่ปลอดภัย</p>
 							</div>
 							<button onclick="document.getElementById('secret-key-banner').classList.add('hidden')"
-								class="text-slate-500 hover:text-white"><i class="fas fa-times"></i></button>
+								class="text-slate-500 hover:text-white ml-4 shrink-0"><i class="fas fa-times"></i></button>
+						</div>
+						<div class="secret-key-box">
+							<code id="secret-key-display">...</code>
+							<button onclick="copyToClipboard('secret-key-display')" class="copy-btn-lg" title="Copy Key">
+								<i class="far fa-copy"></i> Copy
+							</button>
 						</div>
 					</div>
 				</div>
@@ -255,10 +291,10 @@
 				}
 
 				keys.forEach(k => {
-					if (k.status !== 'active') return; // Hide revoked keys
+					if (!k.isActive) return; // Hide revoked keys
 
-					const date = new Date(k.created_at).toLocaleDateString();
-					const modeBadge = (k.public_key && k.public_key.includes('live'))
+					const date = new Date(k.createdAt).toLocaleDateString();
+					const modeBadge = (k.mode === 'live')
 						? '<span class="px-2 py-0.5 rounded text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/20">Live</span>'
 						: '<span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-500/20 text-slate-400 border border-slate-500/20">Test</span>';
 
@@ -266,7 +302,7 @@
 					tr.className = 'hover:bg-white/5 transition';
 					tr.innerHTML = `
                         <td class="py-3 pl-2 font-medium text-slate-300">${k.name}</td>
-                        <td class="py-3 font-mono text-xs text-slate-400">${k.public_key ? k.public_key.substring(0, 14) : ''}••••</td>
+                        <td class="py-3 font-mono text-xs text-slate-400">${k.keyPrefix ? k.keyPrefix : ''}••••</td>
                         <td class="py-3">${modeBadge}</td>
                         <td class="py-3 text-slate-400 text-sm">${date}</td>
                         <td class="py-3 text-right pr-2">
@@ -312,7 +348,7 @@
 					const newKey = data.data.apiKey;
 
 					// Show secret banner
-					document.getElementById('secret-key-display').textContent = newKey.secret_key;
+					document.getElementById('secret-key-display').textContent = newKey.secretKey || newKey.secret_key;
 					document.getElementById('secret-key-banner').classList.remove('hidden');
 
 					// Reset form
@@ -387,16 +423,21 @@
 				webhooks.forEach(w => {
 					const div = document.createElement('div');
 					div.className = 'glass-panel-light p-4 rounded-xl border border-white/5 flex flex-col gap-2';
-					div.innerHTML = `
+                    div.innerHTML = `
                         <div class="flex justify-between items-start">
-                            <div class="font-mono text-xs text-indigo-300 truncate max-w-[200px] sm:max-w-xs" title="${w.url}">${w.url}</div>
+                            <div class="font-mono text-xs text-indigo-300 truncate" style="max-width:100%;" title="${w.url}">${w.url}</div>
                             <button onclick="deleteWebhook('${w.id}')" class="text-slate-500 hover:text-red-400 transition" title="Delete">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Secret:</span>
-                            <code class="text-xs text-slate-400 font-mono blur-[4px] hover:blur-none transition-all cursor-pointer select-all" title="Click to reveal">${w.secret.substring(0, 16)}...</code>
+                        <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Secret:</span>
+                                <code id="secret-${w.id}" class="text-xs text-slate-300 font-mono select-all bg-black/20 px-2 py-1 rounded">${w.secret || 'N/A'}</code>
+                            </div>
+                            <button onclick="copyToClipboard('secret-${w.id}')" class="text-slate-500 hover:text-indigo-400 transition" title="Copy Secret">
+                                <i class="fas fa-copy"></i>
+                            </button>
                         </div>
                     `;
 					container.appendChild(div);

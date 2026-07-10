@@ -45,7 +45,16 @@ app.use(express.json({ limit: '100kb' })); // Limit body size
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // Serve static frontend files for the App Server
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+    extensions: ['html'],
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html') || filePath.endsWith('.css') || filePath.endsWith('.js')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
+}));
 // CORS Configuration
 const allowedOrigins = process.env.FRONTEND_ALLOWED_ORIGINS
   ? process.env.FRONTEND_ALLOWED_ORIGINS.split(',')
