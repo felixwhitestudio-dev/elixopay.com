@@ -62,6 +62,10 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
                 await handleAccountUpdated(event);
                 break;
 
+            case 'checkout.session.completed':
+                await handleCheckoutSessionCompleted(event);
+                break;
+
             case 'payment_intent.succeeded':
                 await handlePaymentIntentSucceeded(event);
                 break;
@@ -96,6 +100,71 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
 };
 
 // ─── Event Handlers ────────────────────────────────────────────────────────────
+
+/**
+ * checkout.session.completed — A Checkout Session (card payment) was successful.
+ * Update the transaction to COMPLETED, credit the merchant wallet, and dispatch webhook.
+ * Crucially, we update providerChargeId to the underlying PaymentIntent ID so that refunds work later.
+ */
+async function handleCheckoutSessionCompleted(event: any) {
+    const session = event.data.object;
+    logger.info(`[StripeWebhook] checkout.session.completed: ${session.id}`);
+
+    const transaction = await prisma.transaction.findFirst({
+        where: { providerChargeId: session.id },
+    });
+
+    if (!transaction) {
+        logger.warn(`[StripeWebhook] No transaction found for Checkout Session ${session.id}`);
+        return;
+    }
+
+    if (transaction.status === 'COMPLETED') {
+        logger.info(`[StripeWebhook] Transaction ${transaction.id} already COMPLETED, skipping`);
+        return;
+    }
+
+    // Determine if test mode
+    let isTestMode = false;
+    try {
+        if (transaction.metadata) {
+            const meta = JSON.parse(transaction.metadata);
+            isTestMode = meta.mode === 'test';
+        }
+    } catch (e) { /* ignore parse errors */ }
+
+    // Update transaction + credit wallet atomically
+    await prisma.$transaction(async (tx) => {
+        await tx.transaction.update({
+            where: { id: transaction.id },
+            data: { 
+                status: 'COMPLETED',
+                // Map the providerChargeId to the payment_intent so refunds work!
+                providerChargeId: (session.payment_intent as string) || session.id
+            },
+        });
+
+        const updateData = isTestMode
+            ? { testBalance: { increment: transaction.amount } }
+            : { balance: { increment: transaction.amount } };
+
+        await tx.wallet.update({
+            where: { userId: transaction.userId },
+            data: updateData,
+        });
+    });
+
+    // Dispatch webhook to merchant
+    WebhookService.dispatchEvent(transaction.userId, 'payment.success', {
+        id: transaction.id,
+        amount: transaction.amount,
+        status: 'COMPLETED',
+        reference: transaction.reference,
+        provider: 'stripe',
+        providerChargeId: (session.payment_intent as string) || session.id,
+        completedAt: new Date().toISOString(),
+    }).catch(err => logger.error('[StripeWebhook] Dispatch failed for payment.success:', err));
+}
 
 /**
  * account.updated — Stripe notifies us when a connected account's status changes
