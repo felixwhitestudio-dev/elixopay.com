@@ -82,14 +82,44 @@ export const getPayments = catchAsync(async (req: Request, res: Response, next: 
     // @ts-ignore
     const userId = req.user.id;
     const limit = parseInt(req.query.limit as string) || 20;
+    const offset = parseInt(req.query.offset as string) || 0;
+    const status = req.query.status as string;
+    const sort = req.query.sort as string || 'createdAt';
+    const order = req.query.order as string || 'desc';
 
-    const payments = await prisma.transaction.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        take: limit
+    const where: any = { userId };
+    if (status) {
+        where.status = status.toUpperCase();
+    }
+
+    const orderBy: any = {};
+    if (sort === 'created_at') orderBy['createdAt'] = order.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    else if (sort === 'amount') orderBy['amount'] = order.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    else if (sort === 'status') orderBy['status'] = order.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    else orderBy['createdAt'] = order.toLowerCase() === 'asc' ? 'asc' : 'desc';
+
+    const [payments, total] = await Promise.all([
+        prisma.transaction.findMany({
+            where,
+            orderBy,
+            take: limit,
+            skip: offset
+        }),
+        prisma.transaction.count({ where })
+    ]);
+
+    res.status(200).json({ 
+        success: true, 
+        data: { 
+            payments,
+            pagination: {
+                total,
+                limit,
+                offset,
+                hasMore: offset + limit < total
+            }
+        } 
     });
-
-    res.status(200).json({ success: true, data: { payments } });
 });
 
 export const getPaymentStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

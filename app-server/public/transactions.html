@@ -228,9 +228,7 @@
         // Load statistics
         async function loadStats() {
             try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/api/v1/payments/stats`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
+                const response = await apiFetch(`${API_CONFIG.BASE_URL}/api/v1/payments/stats`);
 
                 const result = await response.json();
                 if (result.success) {
@@ -259,9 +257,7 @@
                 let url = `${API_CONFIG.BASE_URL}/api/v1/payments?limit=${itemsPerPage}&offset=${offset}&sort=${sort}&order=${order}`;
                 if (status) url += `&status=${status}`;
 
-                const response = await fetch(url, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
+                const response = await apiFetch(url);
 
                 const result = await response.json();
                 if (result.success) {
@@ -343,9 +339,7 @@
         // View details
         async function viewDetails(paymentId) {
             try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/api/v1/payments/${paymentId}`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
+                const response = await apiFetch(`${API_CONFIG.BASE_URL}/api/v1/payments/${paymentId}`);
 
                 const result = await response.json();
                 if (result.success) {
