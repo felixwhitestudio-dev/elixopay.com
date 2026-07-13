@@ -142,10 +142,17 @@ export const me = catchAsync(async (req: Request, res: Response, next: NextFunct
         }
     }
 
+    // Map wallet → balance for frontend compatibility
+    // Dashboard reads user.balance.balance, but Prisma returns user.wallet.balance
+    const userData = { ...user } as any;
+    if (user.wallet) {
+        userData.balance = user.wallet;
+    }
+
     res.status(200).json({
         success: true,
         data: {
-            user
+            user: userData
         }
     });
 });

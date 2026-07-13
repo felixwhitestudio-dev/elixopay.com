@@ -28,6 +28,7 @@ import sandboxRouter from './routes/sandbox.routes';
 import notificationRouter from './routes/notification.routes';
 import contactRouter from './routes/contact.routes';
 import stripeConnectRouter from './routes/stripe-connect.routes';
+import balanceRouter from './routes/balance.routes';
 import path from 'path';
 
 const app = express();
@@ -197,6 +198,7 @@ app.use('/api/v1/sandbox', sandboxRouter);
 app.use('/api/v1/notifications', notificationRouter);
 app.use('/api/v1/contact', contactRouter);
 app.use('/api/v1/stripe-connect', stripeConnectRouter);
+app.use('/api/v1/balances', balanceRouter);
 
 // Serve static files (KYC documents)
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
