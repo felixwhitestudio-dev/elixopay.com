@@ -126,9 +126,12 @@ export const getPaymentStats = catchAsync(async (req: Request, res: Response, ne
     // @ts-ignore
     const userId = req.user.id;
 
-    // Simple mockup of stats needed for the dashboard
     const completedTxns = await prisma.transaction.count({
         where: { userId, status: 'COMPLETED' }
+    });
+
+    const pendingTxns = await prisma.transaction.count({
+        where: { userId, status: 'PENDING' }
     });
 
     const totalTxns = await prisma.transaction.count({
@@ -137,26 +140,38 @@ export const getPaymentStats = catchAsync(async (req: Request, res: Response, ne
 
     const successRate = totalTxns > 0 ? ((completedTxns / totalTxns) * 100).toFixed(1) : '0.0';
 
-    // Sum of revenue
+    // Sum of all completed revenue
     const revenueObj = await prisma.transaction.aggregate({
-        where: { userId, status: 'COMPLETED', type: 'DEPOSIT' },
+        where: { userId, status: 'COMPLETED' },
         _sum: { amount: true }
     });
-    const totalRevenue = revenueObj._sum.amount || 0;
+    const totalRevenue = Number(revenueObj._sum.amount || 0);
 
-    // We can return mocked chart data or actual array of daily sums
-    // For simplicity matching the frontend array expectations:
+    // Sum of all transaction amounts (regardless of status)
+    const totalAmountObj = await prisma.transaction.aggregate({
+        where: { userId },
+        _sum: { amount: true }
+    });
+    const totalAmount = Number(totalAmountObj._sum.amount || 0);
+
+    // Return both naming conventions so dashboard.html AND transactions.html both work
     res.status(200).json({
         success: true,
         data: {
             stats: {
+                // For transactions.html
+                totalPayments: totalTxns,
+                completedPayments: completedTxns,
+                pendingPayments: pendingTxns,
+                totalAmount: totalAmount,
+                // For dashboard.html
                 total_transactions: totalTxns,
                 success_rate: successRate,
                 total_revenue: totalRevenue
             },
             chart: {
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                data: [0, 0, 0, 0, 0, 0, totalRevenue] // Simplified
+                data: [0, 0, 0, 0, 0, 0, totalRevenue]
             }
         }
     });

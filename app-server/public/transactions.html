@@ -208,14 +208,19 @@
         let currentPage = 0;
         const itemsPerPage = 20;
 
-        // Status badges
-        const statusBadges = {
+        // Status badges — handle both lowercase and UPPERCASE from Prisma
+        const statusBadgeMap = {
             'succeeded': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"><i class="fas fa-check-circle mr-1"></i>สำเร็จ</span>',
+            'completed': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"><i class="fas fa-check-circle mr-1"></i>สำเร็จ</span>',
             'pending': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800"><i class="fas fa-clock mr-1"></i>รอดำเนินการ</span>',
             'failed': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i>ล้มเหลว</span>',
             'cancelled': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800"><i class="fas fa-ban mr-1"></i>ยกเลิก</span>',
             'refunded': '<span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800"><i class="fas fa-undo mr-1"></i>คืนเงิน</span>'
         };
+        function getStatusBadge(status) {
+            const s = (status || '').toLowerCase();
+            return statusBadgeMap[s] || `<span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">${status}</span>`;
+        }
 
         // Initialize after auth guard passes
         function initAfterAuth() {
@@ -295,15 +300,20 @@
                     minute: '2-digit'
                 });
 
+                const paymentIdStr = String(payment.id);
+                const displayId = paymentIdStr.length > 8 ? paymentIdStr.substring(0, 8) + '...' : paymentIdStr;
+                const description = payment.description || payment.reference || payment.type || '-';
+                const stripeId = payment.providerChargeId || payment.payment_intent_id || '-';
+
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formattedDate}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">${payment.id.substring(0, 8)}...</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">${payment.description || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">${displayId}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${description}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900">฿${parseFloat(payment.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 })}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">${statusBadges[payment.status] || payment.status}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">${payment.payment_intent_id || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">${getStatusBadge(payment.status)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">${stripeId}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                        <button onclick="viewDetails('${payment.id}')" class="text-blue-600 hover:text-blue-800 mr-3" title="รายละเอียด">
+                        <button onclick="viewDetails('${paymentIdStr}')" class="text-blue-600 hover:text-blue-800 mr-3" title="รายละเอียด">
                             <i class="fas fa-info-circle"></i>
                         </button>
                         ${getActionButton(payment)}
@@ -374,12 +384,14 @@
 
         // Helper helper to generate action button
         function getActionButton(payment) {
-            if (payment.status === 'pending') {
-                return `<button onclick="cancelPayment('${payment.id}')" class="text-red-600 hover:text-red-800 ml-3" title="ยกเลิกรายการ">
+            const s = (payment.status || '').toLowerCase();
+            const pid = String(payment.id);
+            if (s === 'pending') {
+                return `<button onclick="cancelPayment('${pid}')" class="text-red-600 hover:text-red-800 ml-3" title="ยกเลิกรายการ">
                             <i class="fas fa-ban"></i>
                         </button>`;
-            } else if (payment.status === 'succeeded' || payment.status === 'completed') {
-                return `<button onclick="refundPayment('${payment.id}')" class="text-orange-600 hover:text-orange-800 ml-3" title="คืนเงิน (Refund)">
+            } else if (s === 'succeeded' || s === 'completed') {
+                return `<button onclick="refundPayment('${pid}')" class="text-orange-600 hover:text-orange-800 ml-3" title="คืนเงิน (Refund)">
                             <i class="fas fa-undo"></i>
                         </button>`;
             }
