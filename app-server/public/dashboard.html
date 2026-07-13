@@ -1271,7 +1271,7 @@
                             failed: { label: 'Failed', cls: 'badge-red' }
                         };
                         const s = statusMap[t.status] || { label: t.status || 'Unknown', cls: 'badge-yellow' };
-                        const date = t.created_at ? new Date(t.created_at).toLocaleDateString('th-TH') : '—';
+                        const date = (t.createdAt || t.created_at) ? new Date(t.createdAt || t.created_at).toLocaleDateString('th-TH') : '—';
                         const icon = t.type === 'deposit' ? 'fa-arrow-down' : 'fa-receipt';
                         const iconColor = t.type === 'deposit' ? '#22c55e' : '#818cf8';
 
