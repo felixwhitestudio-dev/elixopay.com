@@ -1,6 +1,7 @@
 import express from 'express';
 import * as adminController from '../controllers/admin.controller';
 import { protect, restrictTo } from '../middlewares/auth.middleware';
+import { syncPendingPayments } from '../controllers/stripe-sync.controller';
 
 const router = express.Router();
 
@@ -28,5 +29,8 @@ router.get('/stats', adminController.getStats);
 router.get('/liquidity', adminController.getLiquidity);
 router.post('/liquidity/add', adminController.addLiquidity);
 router.get('/liquidity/history', adminController.getLiquidityHistory);
+
+// Sync pending Stripe payments — checks Stripe and updates PENDING → COMPLETED
+router.post('/sync-pending-payments', syncPendingPayments);
 
 export default router;
