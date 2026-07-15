@@ -223,6 +223,9 @@
         <div class="st-section">
             <div class="st-section-header">
                 <h2><i class="fas fa-building-columns"></i> <span data-i18n="settlement.bank_title">บัญชีธนาคารรับเงิน</span></h2>
+                <button type="button" id="btn-withdraw" class="hidden inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-purple-500 hover:to-blue-500 transition-all shadow-sm">
+                    <i class="fas fa-wallet"></i> <span data-i18n="settlement.withdraw_funds">ขอถอนเงิน</span>
+                </button>
             </div>
             <div class="st-bank-card" id="bankCard">
                 <div class="st-bank-logo"><i class="fas fa-university"></i></div>
@@ -310,6 +313,39 @@
             </div>
         </div>
 
+        <!-- Withdraw Modal -->
+        <div id="withdrawModal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeWithdrawModal()"></div>
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div class="inline-block align-bottom bg-slate-800 border border-slate-700 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10">
+                    <div class="px-6 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80">
+                        <h3 class="text-lg font-bold text-slate-100" data-i18n="settlement.withdraw_title">ขอถอนเงิน</h3>
+                        <button type="button" class="text-slate-400 hover:text-slate-200 transition-colors focus:outline-none" onclick="closeWithdrawModal()">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <form id="withdrawForm" onsubmit="submitWithdraw(event)">
+                        <div class="px-6 py-6">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-slate-400 mb-2">ยอดเงินที่ต้องการถอน (THB)</label>
+                                <input type="number" id="withdrawAmount" required min="1" step="0.01"
+                                    class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-colors"
+                                    placeholder="เช่น 500.00">
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-xs text-slate-400">เงินจะถูกโอนเข้าบัญชี: <strong id="withdrawBankName" class="text-slate-200">---</strong></p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t border-slate-700/50 bg-slate-800/80 flex justify-end gap-3">
+                            <button type="button" class="px-4 py-2 bg-slate-700 text-slate-200 rounded-xl hover:bg-slate-600 transition-colors" onclick="closeWithdrawModal()">ยกเลิก</button>
+                            <button type="submit" id="btnSubmitWithdraw" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-500 hover:to-blue-500 transition-colors shadow-sm">ยืนยันการถอน</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </main>
     </div>
     </div>
@@ -347,6 +383,12 @@
                 badge.textContent = 'Verified';
                 badge.classList.remove('not-set');
                 badge.classList.add('verified');
+
+                // Show withdraw button and set bank name in modal
+                const btnWithdraw = document.getElementById('btn-withdraw');
+                if (btnWithdraw) btnWithdraw.classList.remove('hidden');
+                const withdrawBankName = document.getElementById('withdrawBankName');
+                if (withdrawBankName) withdrawBankName.textContent = bank.bank_name + ' ' + bank.account_number;
             }
         } catch (e) {
             console.error('[Settlement] Failed to load bank info:', e);
@@ -381,47 +423,102 @@
             failed:     { icon: 'fa-times',           cls: 'status-failed' }
         };
 
-        try {
-            const histRes = await apiFetch('/api/v1/settlements');
-            const histData = await histRes.json();
+        const loadHistory = async () => {
+            try {
+                const histRes = await apiFetch('/api/v1/settlements');
+                const histData = await histRes.json();
 
-            if (histData.success && histData.data?.settlements?.length) {
-                const settlements = histData.data.settlements;
-                count.textContent = settlements.length + ' รายการ';
-                empty.style.display = 'none';
+                if (histData.success && histData.data?.settlements?.length) {
+                    const settlements = histData.data.settlements;
+                    count.textContent = settlements.length + ' รายการ';
+                    empty.style.display = 'none';
 
-                list.innerHTML = settlements.map(s => {
-                    const cfg = statusConfig[s.status] || statusConfig.completed;
-                    const dateStr = s.created_at
-                        ? new Date(s.created_at).toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' })
-                        : '';
-                    const badgeLabel = s.status ? s.status.charAt(0).toUpperCase() + s.status.slice(1) : '';
-                    return `
-                    <div class="st-history-item">
-                        <div class="st-history-icon ${cfg.cls}"><i class="fas ${cfg.icon}"></i></div>
-                        <div class="st-history-meta">
-                            <strong>${s.reference_id || s.id}${badgeLabel ? `<span class="st-status-badge ${s.status}">${badgeLabel}</span>` : ''}</strong>
-                            <span>${dateStr}${s.bank_name ? ' · ' + s.bank_name : ''}</span>
-                        </div>
-                        <div class="st-history-amounts">
-                            <span class="st-history-gross">${fmt(s.amount)}</span>
-                            <span class="st-history-fee">Fee: ${fmt(s.fee)}</span>
-                            <span class="st-history-net">Net: ${fmt(s.net_amount)}</span>
-                        </div>
-                    </div>`;
-                }).join('');
-            } else {
+                    list.innerHTML = settlements.map(s => {
+                        const cfg = statusConfig[s.status] || statusConfig.completed;
+                        const dateStr = s.created_at
+                            ? new Date(s.created_at).toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' })
+                            : '';
+                        const badgeLabel = s.status ? s.status.charAt(0).toUpperCase() + s.status.slice(1) : '';
+                        return `
+                        <div class="st-history-item">
+                            <div class="st-history-icon ${cfg.cls}"><i class="fas ${cfg.icon}"></i></div>
+                            <div class="st-history-meta">
+                                <strong>${s.reference_id || s.id}${badgeLabel ? `<span class="st-status-badge ${s.status}">${badgeLabel}</span>` : ''}</strong>
+                                <span>${dateStr}${s.bank_name ? ' · ' + s.bank_name : ''}</span>
+                            </div>
+                            <div class="st-history-amounts">
+                                <span class="st-history-gross">${fmt(s.amount)}</span>
+                                <span class="st-history-fee">Fee: ${fmt(s.fee)}</span>
+                                <span class="st-history-net">Net: ${fmt(s.net_amount)}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    count.textContent = '0 รายการ';
+                    empty.style.display = 'block';
+                    list.innerHTML = '';
+                }
+            } catch (e) {
+                console.error('[Settlement] Failed to load history:', e);
                 count.textContent = '0 รายการ';
                 empty.style.display = 'block';
                 list.innerHTML = '';
             }
-        } catch (e) {
-            console.error('[Settlement] Failed to load history:', e);
-            count.textContent = '0 รายการ';
-            empty.style.display = 'block';
-            list.innerHTML = '';
-        }
+        };
+
+        await loadHistory();
+        window.loadHistory = loadHistory; // Expose to global for refresh
     })();
+
+    // ── Withdraw Modal Logic ──
+    const withdrawModal = document.getElementById('withdrawModal');
+    const btnWithdraw = document.getElementById('btn-withdraw');
+
+    window.openWithdrawModal = () => {
+        withdrawModal.classList.remove('hidden');
+    };
+
+    window.closeWithdrawModal = () => {
+        withdrawModal.classList.add('hidden');
+        document.getElementById('withdrawForm').reset();
+    };
+
+    btnWithdraw.addEventListener('click', openWithdrawModal);
+
+    window.submitWithdraw = async (e) => {
+        e.preventDefault();
+        const amount = document.getElementById('withdrawAmount').value;
+        const btn = document.getElementById('btnSubmitWithdraw');
+        const originalText = btn.innerHTML;
+        const bankName = document.getElementById('withdrawBankName').textContent;
+        
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> กำลังดำเนินการ...';
+
+        try {
+            const res = await apiFetch('/api/v1/wallet/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: parseFloat(amount), bankAccount: bankName })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                alert('ส่งคำร้องขอถอนเงินเรียบร้อยแล้ว!');
+                closeWithdrawModal();
+                if (window.loadHistory) await window.loadHistory();
+                // Optionally reload page to update balance elsewhere
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                alert(data.message || 'เกิดข้อผิดพลาดในการถอนเงิน');
+            }
+        } catch (err) {
+            alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    };
     </script>
     <script src="/js/sidebar.js"></script>
 </body>
