@@ -64,6 +64,7 @@ export const createPaymentFromLink = catchAsync(async (req: Request, res: Respon
             metadata: JSON.stringify({
                 description: price.product.name,
                 mode: 'test',
+                currency: price.currency,
                 clientSecret: chargeResult.result.rawResponse?.clientSecret,
                 qrCodeBase64: chargeResult.result.qrCode,
                 stripeAccountId: merchant.stripeAccountId || undefined
@@ -153,6 +154,7 @@ export const createPayment = catchAsync(async (req: Request, res: Response, next
                 description: description || 'API Checkout',
                 returnUrl: actualReturnUrl,
                 mode: mode,
+                currency: currency || 'THB',
                 clientSecret: chargeResult.result.rawResponse?.clientSecret,
                 qrCodeBase64: chargeResult.result.qrCode,
                 stripeAccountId: user.stripeAccountId || undefined

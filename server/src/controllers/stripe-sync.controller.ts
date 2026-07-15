@@ -49,18 +49,22 @@ export const syncPendingPayments = async (req: Request, res: Response) => {
                 }
 
                 if (isPaid) {
-                    // Determine if test mode
+                    // Determine if test mode and extract currency from metadata
                     let isTestMode = false;
+                    let currency = 'THB';
                     try {
                         if (tx.metadata) {
                             const meta = JSON.parse(tx.metadata);
                             isTestMode = meta.mode === 'test';
+                            if (meta.currency) {
+                                currency = meta.currency;
+                            }
                         }
                     } catch (e) { /* ignore */ }
 
                     // Convert amount to THB for the wallet balance
                     let walletIncrementAmount = Number(tx.amount);
-                    if (tx.currency && tx.currency.toLowerCase() === 'usd') {
+                    if (currency.toLowerCase() === 'usd') {
                         walletIncrementAmount = walletIncrementAmount * 34.5;
                     }
 

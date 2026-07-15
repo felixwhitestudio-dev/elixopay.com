@@ -124,18 +124,22 @@ async function handleCheckoutSessionCompleted(event: any) {
         return;
     }
 
-    // Determine if test mode
+    // Determine if test mode and extract currency from metadata
     let isTestMode = false;
+    let currency = 'THB';
     try {
         if (transaction.metadata) {
             const meta = JSON.parse(transaction.metadata);
             isTestMode = meta.mode === 'test';
+            if (meta.currency) {
+                currency = meta.currency;
+            }
         }
     } catch (e) { /* ignore parse errors */ }
 
     // Convert amount to THB for the wallet balance
     let walletIncrementAmount = Number(transaction.amount);
-    if (transaction.currency && transaction.currency.toLowerCase() === 'usd') {
+    if (currency.toLowerCase() === 'usd') {
         walletIncrementAmount = walletIncrementAmount * 34.5;
     }
 
@@ -204,18 +208,22 @@ async function handlePaymentIntentSucceeded(event: any) {
         return;
     }
 
-    // Determine if test mode
+    // Determine if test mode and extract currency from metadata
     let isTestMode = false;
+    let currency = 'THB';
     try {
         if (transaction.metadata) {
             const meta = JSON.parse(transaction.metadata);
             isTestMode = meta.mode === 'test';
+            if (meta.currency) {
+                currency = meta.currency;
+            }
         }
     } catch (e) { /* ignore parse errors */ }
 
     // Convert amount to THB for the wallet balance
     let walletIncrementAmount = Number(transaction.amount);
-    if (transaction.currency && transaction.currency.toLowerCase() === 'usd') {
+    if (currency.toLowerCase() === 'usd') {
         walletIncrementAmount = walletIncrementAmount * 34.5;
     }
 
