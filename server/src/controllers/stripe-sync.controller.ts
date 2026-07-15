@@ -58,6 +58,12 @@ export const syncPendingPayments = async (req: Request, res: Response) => {
                         }
                     } catch (e) { /* ignore */ }
 
+                    // Convert amount to THB for the wallet balance
+                    let walletIncrementAmount = Number(tx.amount);
+                    if (tx.currency && tx.currency.toLowerCase() === 'usd') {
+                        walletIncrementAmount = walletIncrementAmount * 34.5;
+                    }
+
                     // Update transaction and wallet atomically
                     await prisma.$transaction(async (txn) => {
                         await txn.transaction.update({
@@ -69,8 +75,8 @@ export const syncPendingPayments = async (req: Request, res: Response) => {
                         });
 
                         const updateData = isTestMode
-                            ? { testBalance: { increment: tx.amount } }
-                            : { balance: { increment: tx.amount } };
+                            ? { testBalance: { increment: walletIncrementAmount } }
+                            : { balance: { increment: walletIncrementAmount } };
 
                         await txn.wallet.update({
                             where: { userId: tx.userId },

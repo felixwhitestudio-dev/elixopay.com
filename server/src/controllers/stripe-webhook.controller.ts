@@ -133,6 +133,12 @@ async function handleCheckoutSessionCompleted(event: any) {
         }
     } catch (e) { /* ignore parse errors */ }
 
+    // Convert amount to THB for the wallet balance
+    let walletIncrementAmount = Number(transaction.amount);
+    if (transaction.currency && transaction.currency.toLowerCase() === 'usd') {
+        walletIncrementAmount = walletIncrementAmount * 34.5;
+    }
+
     // Update transaction + credit wallet atomically
     await prisma.$transaction(async (tx) => {
         await tx.transaction.update({
@@ -145,8 +151,8 @@ async function handleCheckoutSessionCompleted(event: any) {
         });
 
         const updateData = isTestMode
-            ? { testBalance: { increment: transaction.amount } }
-            : { balance: { increment: transaction.amount } };
+            ? { testBalance: { increment: walletIncrementAmount } }
+            : { balance: { increment: walletIncrementAmount } };
 
         await tx.wallet.update({
             where: { userId: transaction.userId },
@@ -207,6 +213,12 @@ async function handlePaymentIntentSucceeded(event: any) {
         }
     } catch (e) { /* ignore parse errors */ }
 
+    // Convert amount to THB for the wallet balance
+    let walletIncrementAmount = Number(transaction.amount);
+    if (transaction.currency && transaction.currency.toLowerCase() === 'usd') {
+        walletIncrementAmount = walletIncrementAmount * 34.5;
+    }
+
     // Update transaction + credit wallet atomically
     await prisma.$transaction(async (tx) => {
         await tx.transaction.update({
@@ -215,8 +227,8 @@ async function handlePaymentIntentSucceeded(event: any) {
         });
 
         const updateData = isTestMode
-            ? { testBalance: { increment: transaction.amount } }
-            : { balance: { increment: transaction.amount } };
+            ? { testBalance: { increment: walletIncrementAmount } }
+            : { balance: { increment: walletIncrementAmount } };
 
         await tx.wallet.update({
             where: { userId: transaction.userId },
